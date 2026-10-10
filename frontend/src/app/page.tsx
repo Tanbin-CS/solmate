@@ -18,7 +18,7 @@ export default function MissionControl() {
     const fetchAnalogData = async () => {
       try {
         // REPLACE THIS URL WITH YOUR ACTUAL RENDER URL
-        const response = await fetch('https://solmate-api.onrender.com');
+        const response = await fetch('https://solmate-api.onrender.com/api/v1/match/?target=jezero');
         const data = await response.json();
         setAnalogs(data.analogs);
         setTelemetry(data.telemetry_status);
