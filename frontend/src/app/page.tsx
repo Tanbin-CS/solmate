@@ -229,16 +229,16 @@ export default function MissionControl() {
           <div className="xl:col-span-2 bg-slate-800 rounded-2xl overflow-hidden border border-slate-700 hover:border-slate-500 transition-colors group">
             <iframe 
               className="w-full aspect-video" 
-              src="https://www.youtube.com/embed/N0f-QkEVU7U?si=U4HnQ2pXFkR0nOQ_" 
+              src="https://www.youtube.com/embed/N0f-QkEVU7U?si=U4HnQ2pXFkR0nOQ_&autoplay=1&mute=1" 
               title="6 NASA Technologies to Get Humans to Mars" 
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
               allowFullScreen
             ></iframe>
             <div className="p-6">
               <span className="text-xs font-mono font-bold text-blue-400 mb-2 block uppercase tracking-widest flex items-center gap-2"><PlaySquare size={14}/> Featured Video</span>
-              <h3 className="text-xl font-bold mb-2 group-hover:text-blue-300 transition-colors">Artemis III: Return to the Lunar Surface</h3>
+              <h3 className="text-xl font-bold mb-2 group-hover:text-blue-300 transition-colors">6 NASA Technologies to Get Humans to Mars</h3>
               <p className="text-slate-400 text-sm leading-relaxed">
-                NASA's upcoming mission will land the first humans near the Lunar South Pole. To prepare for the harsh environment of Malapert Massif, astronauts utilize extreme Earth analog sites like Concordia Station, Antarctica for rigorous isolation and regolith mobility training.
+                NASA is advancing many technologies to send astronauts to Mars as early as the 2030s. Here are six things we are working on right now to make future human missions to the Red Planet possible.
               </p>
             </div>
           </div>
