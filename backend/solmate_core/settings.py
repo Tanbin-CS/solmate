@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-to*(*=sq00_7e*$va6bn-efawi0#r$qfgzg&r^tda@wadeido#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -44,8 +44,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-'corsheaders.middleware.CorsMiddleware', #mustbethetop
+    'corsheaders.middleware.CorsMiddleware', #mustbethetop
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -133,3 +134,6 @@ MAILERS = {
 
 CORS_ALLOW_ALL_ORIGINS = True  #For Next.js frontend to connect
 NASA_API_KEY = 'ZCl1J6PcKHre4DWH2DDeewKrUUNSBaFBgfoQ4nvG'
+
+import os
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
