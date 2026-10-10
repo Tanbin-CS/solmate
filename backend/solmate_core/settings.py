@@ -133,7 +133,7 @@ MAILERS = {
 }
 
 CORS_ALLOW_ALL_ORIGINS = True  #For Next.js frontend to connect
-NASA_API_KEY = 'ZCl1J6PcKHre4DWH2DDeewKrUUNSBaFBgfoQ4nvG'
+NASA_API_KEY = 'bsZaroHkeXlfL6X28BMCiyVcm0otCBfZAVTJX8HD'
 
 import os
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
