@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import StoryBanner from '@/components/StoryBanner';
 import InteractiveAnalogMap from '@/components/InteractiveAnalogMap';
 import { Crosshair, Database, Activity, SlidersHorizontal, Map, Rocket } from 'lucide-react';
@@ -8,6 +8,27 @@ import { motion } from 'framer-motion';
 export default function MissionControl() {
   const [geologyWeight, setGeologyWeight] = useState(80);
   const [environmentWeight, setEnvironmentWeight] = useState(90);
+  
+  // New State for Django API Data
+  const [analogs, setAnalogs] = useState<any[]>([]);
+  const [telemetry, setTelemetry] = useState<string>("Connecting to Backend...");
+
+  // Fetch from Django on component mount
+  useEffect(() => {
+    const fetchAnalogData = async () => {
+      try {
+        // REPLACE THIS URL WITH YOUR ACTUAL RENDER URL
+        const response = await fetch('https://solmate-api.onrender.com');
+        const data = await response.json();
+        setAnalogs(data.analogs);
+        setTelemetry(data.telemetry_status);
+      } catch (error) {
+        console.error("Backend connection failed:", error);
+        setTelemetry("Offline");
+      }
+    };
+    fetchAnalogData();
+  }, []);
   
   const container = {
     hidden: { opacity: 0 },
@@ -40,7 +61,7 @@ export default function MissionControl() {
             </div>
           </div>
           <div className="flex items-center gap-4 font-mono text-xs text-accent-cyan bg-accent-cyan/10 px-4 py-2 rounded border border-accent-cyan/20">
-            <span className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-accent-cyan animate-pulse"></div> Live API Sync Active</span>
+            <span className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-accent-cyan animate-pulse"></div> API: {telemetry}</span>
           </div>
         </motion.header>
 
@@ -88,18 +109,25 @@ export default function MissionControl() {
                     </tr>
                   </thead>
                   <tbody>
-                    <motion.tr whileHover={{ backgroundColor: "rgba(26, 32, 44, 0.8)", x: 5 }} className="border-b border-space-700/50 transition-colors cursor-pointer">
-                      <td className="py-3 font-semibold text-white">Lake Salda, Turkey</td>
-                      <td className="py-3"><span className="text-accent-cyan font-mono font-bold">89.4%</span></td>
-                      <td className="py-3">96% (Carbonates)</td>
-                      <td className="py-3">81%</td>
-                    </motion.tr>
-                    <motion.tr whileHover={{ backgroundColor: "rgba(26, 32, 44, 0.8)", x: 5 }} className="border-b border-space-700/50 transition-colors cursor-pointer">
-                      <td className="py-3 font-semibold text-white">Atacama, Chile</td>
-                      <td className="py-3"><span className="text-accent-amber font-mono font-bold">86.1%</span></td>
-                      <td className="py-3">82% (Sulfates)</td>
-                      <td className="py-3">88%</td>
-                    </motion.tr>
+                    {analogs.map((analog) => (
+                      <motion.tr 
+                        key={analog.site_id}
+                        whileHover={{ backgroundColor: "rgba(26, 32, 44, 0.8)", x: 5 }} 
+                        className="border-b border-space-700/50 transition-colors cursor-pointer"
+                      >
+                        <td className="py-3 font-semibold text-white">{analog.name}</td>
+                        <td className="py-3">
+                          <span className="text-accent-cyan font-mono font-bold">
+                            {(analog.match_score * 100).toFixed(1)}%
+                          </span>
+                        </td>
+                        <td className="py-3">{analog.spectral_fit}</td>
+                        <td className="py-3">{analog.topography_score}%</td>
+                      </motion.tr>
+                    ))}
+                    {analogs.length === 0 && (
+                      <tr><td colSpan={4} className="py-4 text-center text-gray-500 font-mono">Awaiting API Data...</td></tr>
+                    )}
                   </tbody>
                </table>
             </motion.div>
@@ -134,13 +162,13 @@ export default function MissionControl() {
                <h3 className="text-sm font-bold text-gray-400 mb-4 font-mono uppercase tracking-widest">API Telemetry Stream</h3>
                <div className="space-y-3 font-mono text-[10px] text-gray-500 overflow-y-auto max-h-[200px]">
                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="border-l-2 border-accent-cyan pl-2">
-                   <span className="text-accent-cyan">OK</span> [2026-10-10] Connected: NASA PDS Search API
+                   <span className="text-accent-cyan">OK</span> [{new Date().toISOString().split('T')[0]}] Connected: NASA PDS Search API
                  </motion.div>
                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="border-l-2 border-accent-cyan pl-2">
-                   <span className="text-accent-cyan">OK</span> [2026-10-10] Fetching: LEND hydrogen distributions
+                   <span className="text-accent-cyan">OK</span> [{new Date().toISOString().split('T')[0]}] Fetching: LEND hydrogen distributions
                  </motion.div>
                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }} className="border-l-2 border-accent-amber pl-2">
-                   <span className="text-accent-amber">WARN</span> [2026-10-10] Diviner/THEMIS thermal data sparse
+                   <span className="text-accent-amber">WARN</span> [{new Date().toISOString().split('T')[0]}] Diviner/THEMIS thermal data sparse
                  </motion.div>
                </div>
             </motion.div>
