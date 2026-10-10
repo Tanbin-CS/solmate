@@ -229,7 +229,7 @@ export default function MissionControl() {
           <div className="xl:col-span-2 bg-slate-800 rounded-2xl overflow-hidden border border-slate-700 hover:border-slate-500 transition-colors group">
             <iframe 
               className="w-full aspect-video" 
-              src="https://www.youtube.com/embed/N0f-QkEVU7U?si=U4HnQ2pXFkR0nOQ_&autoplay=1&mute=1" 
+              src="https://www.youtube.com/embed/N0f-QkEVU7U?si=U4HnQ2pXFkR0nOQ_&autoplay=1" 
               title="6 NASA Technologies to Get Humans to Mars" 
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
               allowFullScreen
