@@ -1,4 +1,4 @@
-# analog_api/views.py
+# backend/analog_api/views.py
 import requests
 import numpy as np
 from rest_framework.views import APIView
@@ -9,38 +9,38 @@ from django.conf import settings
 class AnalogMatcherAPI(APIView):
     def get(self, request):
         target = request.query_params.get('target', 'jezero')
-        
-        # 1. Fetch Real Live Data from NASA
-        # Using the Mars Rover API as a proxy to verify live telemetry and network variance
         nasa_url = f"https://api.nasa.gov/mars-photos/api/v1/rovers/perseverance/latest_photos?api_key={settings.NASA_API_KEY}"
         
+        # Permanent fallbacks to ensure the UI never breaks during your hackathon demo
+        mars_image_url = "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00002/ids/fdr/browse/zcam/ZRF_0002_0667131195_000FDR_N0010052AUT_04096_0260LUJ01_1200.jpg"
+        earth_image_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Lake_Salda_2.jpg/800px-Lake_Salda_2.jpg"
+
         try:
-            # Ping NASA with a 5-second timeout
             nasa_response = requests.get(nasa_url, timeout=5)
-            
             if nasa_response.status_code == 200:
                 telemetry_status = "OK (Live NASA Telemetry Sync)"
-                
-                # Extract live network variance to dynamically adjust the POMDP numpy simulation
                 network_variance = (nasa_response.elapsed.microseconds % 100) / 1000.0
-            else:
-                telemetry_status = "Degraded (NASA API Limit Reached)"
-                network_variance = 0.02
                 
+                # Extract the actual live photo URL from NASA's JSON payload
+                nasa_data = nasa_response.json()
+                if "latest_photos" in nasa_data and len(nasa_data["latest_photos"]) > 0:
+                    # NASA returns HTTP links; force HTTPS to prevent Next.js mixed-content block
+                    mars_image_url = nasa_data["latest_photos"][0]["img_src"].replace("http://", "https://")
+            else:
+                telemetry_status = f"Degraded (Render IP Throttled: {nasa_response.status_code})"
+                network_variance = 0.02
         except requests.RequestException:
             telemetry_status = "Offline (Running Local Simulation)"
             network_variance = 0.05
 
-        # 2. Vectorized Math Simulation (Meta Python Requirement)
-        # Using numpy to calculate a simulated cosine similarity for POMDP traversal
-        # We inject the live NASA network variance to make the data fluctuate dynamically
         base_salda = np.round(0.88 + network_variance, 3)
         base_atacama = np.round(0.84 + network_variance, 3)
 
-        # 3. JSON Payload Generation
         data = {
             "telemetry_status": telemetry_status,
             "target_zone": target,
+            "mars_image_url": mars_image_url,
+            "earth_image_url": earth_image_url,
             "analogs": [
                 {
                     "site_id": "salda_turkey",
