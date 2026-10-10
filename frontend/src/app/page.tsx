@@ -1,7 +1,7 @@
 "use client";
 import { useState } from 'react';
 import StoryBanner from '@/components/StoryBanner';
-import { Crosshair, Database, Activity, SlidersHorizontal, Map } from 'lucide-react';
+import { Crosshair, Database, Activity, SlidersHorizontal, Map, Rocket } from 'lucide-react';
 
 export default function MissionControl() {
   const [geologyWeight, setGeologyWeight] = useState(80);
