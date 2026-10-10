@@ -1,4 +1,4 @@
-# SolMate: Digital Discovery Engine 
+# SolMate: Search for Planetary Analogs (Twins on Earth/Sol 3 Ground)
 **Team Northern Lights // NASA International Space Apps Challenge 2026**
 
 SolMate is a full-stack planetary analog pipeline designed to validate life support systems and mission parameters by finding exact Earth-based environmental matches for off-world targets.
