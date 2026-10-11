@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as maplibregl from 'maplibre-gl'
 import type { GeoJSONSource, StyleSpecification } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
@@ -129,6 +129,8 @@ export function MapView({ results, selectedId, hoveredId, layer, onSelect, onHov
     if (ready.current && map.current) fn(map.current)
     else pending.current.push(fn)
   }
+  const layerInitialised = useRef(false)
+  const [loaded, setLoaded] = useState(false)
   const handlers = useRef({ onSelect, onHover })
   handlers.current = { onSelect, onHover }
 
@@ -145,8 +147,9 @@ export function MapView({ results, selectedId, hoveredId, layer, onSelect, onHov
     })
     m.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'bottom-right')
     m.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-left')
-    m.on('load', () => {
+    m.once('style.load', () => {
       ready.current = true
+      setLoaded(true)
       const queue = pending.current.splice(0)
       queue.forEach((fn) => fn(m))
     })
@@ -245,7 +248,9 @@ export function MapView({ results, selectedId, hoveredId, layer, onSelect, onHov
       m.setPaintProperty('s2', 'raster-saturation', terrain ? -0.85 : -0.1)
       m.setPaintProperty('s2', 'raster-brightness-max', terrain ? 0.55 : 1)
       m.setTerrain(terrain ? { source: 'terrain', exaggeration: 1.4 } : null)
-      if (selectedId) m.easeTo({ pitch: terrain ? 55 : 0, duration: reducedMotion ? 0 : 900 })
+      // the first application happens at load; the camera effect already sets pitch, so don't interrupt its flight
+      if (layerInitialised.current && selectedId) m.easeTo({ pitch: terrain ? 55 : 0, bearing: terrain ? -20 : 0, duration: reducedMotion ? 0 : 900 })
+      layerInitialised.current = true
     }
     whenReady(apply)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -253,8 +258,13 @@ export function MapView({ results, selectedId, hoveredId, layer, onSelect, onHov
 
   // maplibre-gl.css forces position:relative on the container, so size it inside an absolutely positioned wrapper
   return (
-    <div className="absolute inset-0" role="region" aria-label="Map of Earth candidate sites">
-      <div ref={container} className="h-full w-full" />
+    <div className="absolute inset-0" role="region" aria-label="Map of Earth candidate sites" aria-busy={!loaded}>
+      <div ref={container} className={`h-full w-full transition-opacity duration-1000 ${loaded ? 'opacity-100' : 'opacity-0'}`} />
+      {!loaded && (
+        <div className="pointer-events-none absolute inset-0 grid place-items-center">
+          <span className="label-mono animate-pulse">Loading globe</span>
+        </div>
+      )}
     </div>
   )
 }
