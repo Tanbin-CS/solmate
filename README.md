@@ -1,3 +1,7 @@
+##  Live Demo
+*   **Dashboard:** [https://hellorifat.github.io/solmate](https://hellorifat.github.io/solmate)
+*   **API Endpoint:** [https://solmate-api.onrender.com/api/v1/match/?target=jezero](https://solmate-api.onrender.com/api/v1/match/?target=jezero)
+
 # SolMate: Search for Planetary Analogs (Twins on Earth/Sol 3 Ground)
 **Team Northern Lights // NASA International Space Apps Challenge 2026**
 
@@ -12,7 +16,3 @@ We built a decoupled, fault-tolerant POMDP (Partially Observable Markov Decision
 
 ## Fault-Tolerant Engineering
 The Django API features graceful degradation. If NASA's endpoints experience downtime or rate limits, the backend automatically captures the `RequestException`, alerts the frontend dashboard, and injects simulated network variance into the `numpy` calculations to ensure uninterrupted mission planning.
-
-##  Live Demo
-*   **Dashboard:** [https://hellorifat.github.io/solmate](https://hellorifat.github.io/solmate)
-*   **API Endpoint:** [https://solmate-api.onrender.com/api/v1/match/?target=jezero](https://solmate-api.onrender.com/api/v1/match/?target=jezero)
