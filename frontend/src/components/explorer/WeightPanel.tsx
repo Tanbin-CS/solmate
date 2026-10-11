@@ -9,9 +9,11 @@ interface Props {
   isDefault: boolean
   onChange: (id: string, value: number) => void
   onReset: () => void
+  onBalanced: () => void
+  isBalanced: boolean
 }
 
-export function WeightPanel({ indicators, weights, isDefault, onChange, onReset }: Props) {
+export function WeightPanel({ indicators, weights, isDefault, onChange, onReset, onBalanced, isBalanced }: Props) {
   const total = indicators.reduce((s, m) => s + (weights[m.id] ?? 0), 0)
   return (
     <section aria-labelledby="weights-heading" className="space-y-3">
@@ -19,14 +21,32 @@ export function WeightPanel({ indicators, weights, isDefault, onChange, onReset 
         <h2 id="weights-heading" className="label-mono">
           Indicator weights
         </h2>
-        <button
-          type="button"
-          onClick={onReset}
-          disabled={isDefault}
-          className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-mono text-[11px] text-slate-400 transition-colors hover:text-slate-100 disabled:opacity-0"
-        >
-          <RotateCcw className="size-3" /> Equal
-        </button>
+        <div className="flex items-center gap-1">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={onBalanced}
+                aria-pressed={isBalanced}
+                className="rounded px-1.5 py-0.5 font-mono text-[11px] text-slate-400 transition-colors hover:text-slate-100 aria-pressed:text-data"
+              >
+                Balanced
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="max-w-64 text-xs leading-relaxed">
+              Median slope, local relief and ruggedness are almost perfectly correlated. This preset gives that group the same total weight as each
+              independent indicator.
+            </TooltipContent>
+          </Tooltip>
+          <button
+            type="button"
+            onClick={onReset}
+            aria-pressed={isDefault}
+            className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-mono text-[11px] text-slate-400 transition-colors hover:text-slate-100 aria-pressed:text-data"
+          >
+            <RotateCcw className="size-3" /> Equal
+          </button>
+        </div>
       </div>
       <div className="space-y-3.5">
         {indicators.map((m) => {

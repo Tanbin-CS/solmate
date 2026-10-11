@@ -56,5 +56,9 @@ export function useExplorerState(indicatorIds: readonly string[]) {
     setLayer: (l: Layer) => update({ layer: l === 'imagery' ? null : l }),
     setWeight,
     resetWeights: () => update({ w: null }),
+    setAllWeights: (w: Record<string, number>) => {
+      const v = indicatorIds.map((k) => w[k] ?? 1)
+      update({ w: v.every((x) => x === 1) ? null : v.map((x) => +x.toFixed(2)).join(',') })
+    },
   }
 }

@@ -20,6 +20,9 @@ import { useMediaQuery } from '@/hooks/useMediaQuery'
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
+// The roughness group (r ≈ 0.98–1.00 across sites) shares one indicator's worth of weight.
+const BALANCED: Record<string, number> = { slope_median: 0.35, local_relief: 0.35, ruggedness: 0.35, slope_p90: 1, hypsometric_integral: 1 }
+
 export default function ExplorerPage() {
   const state = useAnalysisData()
   if (state.status === 'error') {
@@ -71,7 +74,15 @@ function Explorer({ data }: { data: AnalysisData }) {
             <span className="font-mono text-sm text-positive">AUC {retrieval.auc_mars_documented.toFixed(2)}</span>
           </span>
         </Link>
-        <WeightPanel indicators={meta} weights={ui.weights} isDefault={ui.isDefaultWeights} onChange={ui.setWeight} onReset={ui.resetWeights} />
+        <WeightPanel
+          indicators={meta}
+          weights={ui.weights}
+          isDefault={ui.isDefaultWeights}
+          onChange={ui.setWeight}
+          onReset={ui.resetWeights}
+          onBalanced={() => ui.setAllWeights(BALANCED)}
+          isBalanced={Object.entries(BALANCED).every(([k, v]) => ui.weights[k] === v)}
+        />
       </div>
       <div className="flex items-center justify-between px-4 pb-2 pt-4">
         <h2 className="label-mono">Earth sites · ranked</h2>
