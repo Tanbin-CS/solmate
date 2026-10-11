@@ -202,3 +202,55 @@ def s2_thumbnail(lat: float, lon: float, size_m: float, px: int = 640):
     img = mosaic.crop(box).resize((px, px), Image.LANCZOS)
     img.save(key, quality=92)
     return img
+
+
+# ---------------------------------------------------------------- Moon (south pole)
+LOLA_SP_URL = "https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LDEM_80S_20MPP_ADJ.TIF"
+SUN_VIS_URL = "https://pgda.gsfc.nasa.gov/data/MoonIllumination/AVGVISIB_75S_120M_201608.TIF"
+MOON_ENV = dict(GDAL_ENV, GDAL_HTTP_UNSAFESSL="YES")  # pgda.gsfc.nasa.gov certificate revocation checks fail on some networks
+
+
+def _polar_window(url: str, lat: float, lon: float, size_m: float, cell: float, resampling) -> tuple[np.ndarray, dict]:
+    """Resample a south-polar-stereographic lunar raster onto an n x n grid of `cell`-metre ground spacing.
+
+    Works in the raster's own CRS (no cross-body transformation). Polar stereographic with true scale
+    at the pole stretches distances by k = 2 / (1 + sin|lat|), so projected pixels are k * cell wide.
+    """
+    from pyproj import CRS, Transformer
+
+    n, _ = grid(size_m, cell)
+    with rasterio.Env(**MOON_ENV), rasterio.open(f"/vsicurl/{url}") as src:
+        crs = CRS.from_wkt(src.crs.to_wkt())
+        cx, cy = Transformer.from_crs(crs.geodetic_crs, crs, always_xy=True).transform(lon, lat)
+        k = 2.0 / (1.0 + math.sin(math.radians(abs(lat))))
+        half = size_m / 2 * k
+        transform = Affine(cell * k, 0, cx - half, 0, -cell * k, cy + half)
+        out = np.full((n, n), np.nan, dtype=np.float32)
+        reproject(
+            source=rasterio.band(src, 1), destination=out,
+            src_transform=src.transform, src_crs=src.crs, src_nodata=src.nodata,
+            dst_transform=transform, dst_crs=src.crs, dst_nodata=np.nan,
+            resampling=resampling,
+        )
+        meta = {"crs": crs.name, "source_res_m": abs(src.transform.a), "scale_factor_k": k, "file": url.rsplit("/", 1)[-1]}
+    return out, meta
+
+
+def moon_window(lat: float, lon: float, size_m: float, cell: float) -> tuple[np.ndarray, dict]:
+    """LOLA 20 m south-pole DEM (PGDA product 90) on the common ground grid; cached."""
+    key = CACHE / f"moon_{lat:.4f}_{lon:.4f}_{int(size_m)}_{int(cell)}.npy"
+    meta_key = key.with_suffix(".json")
+    if key.exists() and meta_key.exists():
+        import json
+        return np.load(key), json.loads(meta_key.read_text())
+    out, meta = _polar_window(LOLA_SP_URL, lat, lon, size_m, cell, Resampling.average)
+    import json
+    np.save(key, out)
+    meta_key.write_text(json.dumps(meta))
+    return out, meta
+
+
+def moon_sun_visibility(lat: float, lon: float, size_m: float):
+    """Average Sun visibility (fraction of time, PGDA lunar polar illumination, 120 m) as a context image."""
+    out, _ = _polar_window(SUN_VIS_URL, lat, lon, size_m, 50, Resampling.bilinear)
+    return out

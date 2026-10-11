@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generated_at": "2026-10-11T18:48:30+00:00",
+ "generated_at": "2026-10-11T19:31:01+00:00",
  "profile": {
   "id": "terrain-morphometry",
   "label": "Terrain morphometry (rover traverse scale)",
@@ -48,34 +48,37 @@
   "note": "Absolute elevation is never compared; only derived terrain metrics on the same physical grid."
  },
  "reference": {
-  "id": "jezero",
-  "name": "Jezero Crater landing region",
-  "body": "mars",
-  "lat": 18.4447,
-  "lon": 77.4508,
-  "note": "Octavia E. Butler landing site of NASA's Perseverance rover, on the crater floor east of the western delta.",
-  "source": "https://science.nasa.gov/mission/mars-2020-perseverance/",
+  "id": "mons-mouton-plateau",
+  "name": "Mons Mouton Plateau, lunar south pole",
+  "short": "Mons Mouton Plateau",
+  "body": "moon",
+  "pair": "Moon",
+  "lat": -84.5338,
+  "lon": 30.6556,
+  "note": "One of NASA's nine Artemis III candidate landing regions (2024 update) and the region with the largest landing-suitable area in Wueller et al. (2026); window centred on the centroid of its 11 candidate landing sites.",
+  "source": "https://doi.org/10.1029/2025JE009434",
   "indicators": {
-   "slope_median": 2.058054208755493,
-   "slope_p90": 9.95586109161377,
-   "local_relief": 44.2633056640625,
-   "ruggedness": 11.07943344116211,
-   "hypsometric_integral": 0.25773201404727575
+   "slope_median": 6.253645896911621,
+   "slope_p90": 12.766617774963379,
+   "local_relief": 128.77783203125,
+   "ruggedness": 27.949283599853516,
+   "hypsometric_integral": 0.533699304610633
   },
   "valid_fraction": 1.0,
-  "elev_range": 832.0219262695311,
+  "elev_range": 862.0907910156257,
   "dem": {
-   "crs": "ESRI:103885",
+   "crs": "Moon (2015) - Sphere / Ocentric / South Polar",
    "source_res_m": 20.0,
-   "file": "JEZ_ctx_B_soc_008_DTM_MOLAtopography_DeltaGeoid_20m_Eqc_latTs0_lon0.tif"
+   "scale_factor_k": 1.0022788982634683,
+   "file": "LDEM_80S_20MPP_ADJ.TIF"
   },
   "quicklooks": {
-   "hillshade": "data/quicklooks/jezero-hillshade.webp",
-   "slope": "data/quicklooks/jezero-slope.webp",
-   "imagery": "data/quicklooks/jezero-imagery.webp"
+   "hillshade": "data/quicklooks/mons-mouton-plateau-hillshade.webp",
+   "slope": "data/quicklooks/mons-mouton-plateau-slope.webp",
+   "imagery": "data/quicklooks/mons-mouton-plateau-imagery.webp"
   },
-  "elev_min": -2685.77783203125,
-  "elev_max": -1736.9000244140625
+  "elev_min": 4531.5263671875,
+  "elev_max": 5870.0693359375
  },
  "sites": [
   {
@@ -733,11 +736,11 @@
    "window_m": 20000,
    "cell_m": 100,
    "reference": {
-    "slope_median": 2.058054208755493,
-    "slope_p90": 9.95586109161377,
-    "local_relief": 44.2633056640625,
-    "ruggedness": 11.07943344116211,
-    "hypsometric_integral": 0.25773201404727575
+    "slope_median": 6.253645896911621,
+    "slope_p90": 12.766617774963379,
+    "local_relief": 128.77783203125,
+    "ruggedness": 27.949283599853516,
+    "hypsometric_integral": 0.533699304610633
    },
    "sites": {
     "lake-salda": {
@@ -881,11 +884,11 @@
    "window_m": 20000,
    "cell_m": 200,
    "reference": {
-    "slope_median": 1.691823959350586,
-    "slope_p90": 8.96879768371582,
-    "local_relief": 33.125244140625,
-    "ruggedness": 18.667465209960938,
-    "hypsometric_integral": 0.2572942455814175
+    "slope_median": 5.847866058349609,
+    "slope_p90": 11.959685325622559,
+    "local_relief": 103.098876953125,
+    "ruggedness": 53.989933013916016,
+    "hypsometric_integral": 0.5339795146935264
    },
    "sites": {
     "lake-salda": {
@@ -1029,11 +1032,11 @@
    "window_m": 12000,
    "cell_m": 100,
    "reference": {
-    "slope_median": 1.5594913959503174,
-    "slope_p90": 5.25285005569458,
-    "local_relief": 34.368408203125,
-    "ruggedness": 8.514741897583008,
-    "hypsometric_integral": 0.3699094053059731
+    "slope_median": 6.472938537597656,
+    "slope_p90": 11.272185325622559,
+    "local_relief": 134.1708984375,
+    "ruggedness": 28.900962829589844,
+    "hypsometric_integral": 0.5266651535239925
    },
    "sites": {
     "lake-salda": {

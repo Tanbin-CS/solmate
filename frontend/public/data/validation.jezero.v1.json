@@ -1,6 +1,7 @@
 {
  "version": 1,
- "generated_at": "2026-10-11T18:48:30+00:00",
+ "generated_at": "2026-10-11T19:31:01+00:00",
+ "target": "jezero",
  "method": "robust-z gaussian similarity, weighted mean",
  "pool": [
   "lake-salda",
@@ -220,9 +221,10 @@
   }
  },
  "retrieval": {
-  "positives": "Earth sites paired with Mars in NASA's Planetary Analog Explorer",
+  "pair": "Mars",
+  "positives": "Earth sites NASA's Planetary Analog Explorer pairs with the Mars",
   "negatives": "negative controls",
-  "auc_mars_documented": 0.8333333333333334,
+  "auc_documented": 0.8333333333333334,
   "auc_all_documented": 0.8666666666666667,
   "n_positive": 6,
   "n_negative": 6,
@@ -236,7 +238,7 @@
   "documented_in_top5": 5,
   "controls_in_top5": 0,
   "mean_rank": {
-   "documented_mars": 8.166666666666666,
+   "documented_pair": 8.166666666666666,
    "documented_all": 7.2,
    "control": 14.833333333333334
   }
@@ -380,7 +382,7 @@
     "max": 19
    }
   },
-  "auc_mars_documented": {
+  "auc_documented": {
    "p5": 0.6388888888888888,
    "p50": 0.8055555555555556,
    "p95": 0.9444444444444444
@@ -392,7 +394,7 @@
    "label": "20 km window at 100 m",
    "window_m": 20000,
    "cell_m": 100,
-   "auc_mars_documented": 0.8333333333333334,
+   "auc_documented": 0.8333333333333334,
    "spearman_vs_primary": 1.0,
    "ranks": {
     "lake-salda": 17,
@@ -421,7 +423,7 @@
    "label": "20 km window at 200 m",
    "window_m": 20000,
    "cell_m": 200,
-   "auc_mars_documented": 0.7777777777777778,
+   "auc_documented": 0.7777777777777778,
    "spearman_vs_primary": 0.9719298245614034,
    "ranks": {
     "lake-salda": 17,
@@ -450,7 +452,7 @@
    "label": "12 km window at 100 m",
    "window_m": 12000,
    "cell_m": 100,
-   "auc_mars_documented": 0.5833333333333334,
+   "auc_documented": 0.5833333333333334,
    "spearman_vs_primary": 0.736842105263158,
    "ranks": {
     "lake-salda": 16,

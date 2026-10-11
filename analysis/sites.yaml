@@ -1,7 +1,7 @@
 # SolMate analysis sites (v1)
 #
 # Roles
-#   reference  - the planetary target every Earth site is compared with
+#   references - planetary targets; every Earth site is compared with each one
 #   documented - Earth field sites featured in NASA's Planetary Analog Explorer
 #                (https://science.nasa.gov/solar-system/analog-explorer/), used as the
 #                positive set in validation. `pair` records the world NASA pairs them with.
@@ -13,15 +13,27 @@
 # Coordinates are the centre of the analysis window (approximate field-area centre, WGS84 /
 # Mars 2000 planetocentric, east-positive). Windows are square and centred on these points.
 
-reference:
-  id: jezero
-  name: Jezero Crater landing region
-  body: mars
-  lat: 18.4447
-  lon: 77.4508
-  note: Octavia E. Butler landing site of NASA's Perseverance rover, on the crater floor east of the western delta.
-  source: https://science.nasa.gov/mission/mars-2020-perseverance/
-  dem: ctx_jezero
+references:
+  - id: jezero
+    name: Jezero Crater landing region
+    short: Jezero Crater
+    body: mars
+    pair: Mars
+    lat: 18.4447
+    lon: 77.4508
+    note: Octavia E. Butler landing site of NASA's Perseverance rover, on the crater floor east of the western delta.
+    source: https://science.nasa.gov/mission/mars-2020-perseverance/
+    dem: ctx_jezero
+  - id: mons-mouton-plateau
+    name: Mons Mouton Plateau, lunar south pole
+    short: Mons Mouton Plateau
+    body: moon
+    pair: Moon
+    lat: -84.5338
+    lon: 30.6556
+    note: One of NASA's nine Artemis III candidate landing regions (2024 update) and the region with the largest landing-suitable area in Wueller et al. (2026); window centred on the centroid of its 11 candidate landing sites.
+    source: https://doi.org/10.1029/2025JE009434
+    dem: lola_80s_20m
 
 sites:
   # --- documented analog sites (NASA Planetary Analog Explorer) ---

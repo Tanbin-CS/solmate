@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generated_at": "2026-10-11T18:48:30+00:00",
+ "generated_at": "2026-10-11T19:31:01+00:00",
  "datasets": [
   {
    "id": "ctx-jezero-dtm",
@@ -15,6 +15,32 @@
    "licence": "No access constraints; please cite authors (Fergason et al., 2020)",
    "citation": "Fergason, R. L., et al. (2020). Mars 2020 Terrain Relative Navigation Flight Product Generation. 51st LPSC, abstract 2020.",
    "quality": "Vertical registration between CTX DTMs 3.8 m; aligned to HRSC; manually edited for erroneous posts."
+  },
+  {
+   "id": "lola-sp-20m",
+   "name": "LOLA south-pole DEM mosaic, 20 m/pixel (LDEM_80S_20MPP_ADJ)",
+   "provider": "NASA Goddard Planetary Geodesy Data Archive (PGDA product 90)",
+   "body": "Moon",
+   "role": "Reference elevation (scored)",
+   "resolution": "20 m/pixel, polar stereographic, Moon (2015) sphere (R = 1,737,400 m)",
+   "coverage": "80–90°S",
+   "url": "https://pgda.gsfc.nasa.gov/products/90",
+   "licence": "NASA open data",
+   "quality": "Crossover-adjusted LOLA tracks; effective-resolution and error maps are published alongside the DEM.",
+   "citation": "Barker, M. K. et al. (2021). Improved LOLA elevation maps for south pole landing sites. Planetary and Space Science 203, 105119.",
+   "doi": "10.1016/j.pss.2020.105119"
+  },
+  {
+   "id": "pgda-sun-visibility",
+   "name": "Lunar polar average Sun visibility (AVGVISIB_75S_120M)",
+   "provider": "NASA Goddard Planetary Geodesy Data Archive (PGDA product 69)",
+   "body": "Moon",
+   "role": "Context imagery only (not scored)",
+   "resolution": "120 m/pixel, polar stereographic",
+   "url": "https://pgda.gsfc.nasa.gov/products/69",
+   "licence": "NASA open data",
+   "citation": "Mazarico, E. et al. (2011). Illumination conditions of the lunar polar regions using LOLA topography. Icarus 211, 1066-1081.",
+   "doi": "10.1016/j.icarus.2010.10.030"
   },
   {
    "id": "ctx-jezero-ortho",
@@ -58,11 +84,22 @@
    "role": "Validation labels (documented analog sites)",
    "url": "https://science.nasa.gov/solar-system/analog-explorer/",
    "licence": "Public NASA web content"
+  },
+  {
+   "id": "artemis-regions",
+   "name": "Artemis III candidate landing sites (Table A1)",
+   "provider": "Wueller et al. (2026), JGR Planets",
+   "body": "Moon",
+   "role": "Target definition (window centre)",
+   "url": "https://doi.org/10.1029/2025JE009434",
+   "licence": "Published article",
+   "doi": "10.1029/2025JE009434"
   }
  ],
  "processing": [
   "Earth: GLO-30 tiles covering each window are warped with area averaging to a local azimuthal-equidistant grid (WGS84) centred on the site.",
   "Mars: the CTX DTM is resampled with area averaging in its own equirectangular CRS, using a 1/cos(latitude) east-west pixel so cells are square on the ground.",
+  "Moon: the LOLA south-pole DEM is resampled with area averaging in its own polar stereographic CRS, with pixels enlarged by the projection scale factor k = 2/(1+sin|latitude|) so cells are 100 m on the ground.",
   "Primary grid: 200 x 200 cells of 100 m (20 km window). Sensitivity grids: 20 km at 200 m and 12 km at 100 m.",
   "Edge cells without a complete neighbourhood are excluded from every statistic.",
   "Windows with less than 90% valid elevation cells are excluded from scoring."
