@@ -122,30 +122,20 @@ function Explorer({ data }: { data: AnalysisData }) {
 
   return (
     <>
-      <MapView
-        results={analysis.results}
-        selectedId={ui.selected}
-        hoveredId={hovered}
-        layer={ui.layer}
-        onSelect={ui.select}
-        onHover={setHovered}
-        reducedMotion={reduced}
-        padding={isDesktop ? { left: 380, right: selected ? 440 : 0, top: 60, bottom: 40 } : { left: 0, right: 0, top: 60, bottom: 60 }}
-      />
 
       {isDesktop ? (
         <motion.aside
           initial={{ opacity: 0, x: reduced ? 0 : -16 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, ease: EASE }}
-          className="surface absolute bottom-4 left-4 top-4 w-[360px] overflow-clip rounded-xl"
+          className="surface absolute bottom-4 left-4 top-4 z-10 w-[360px] overflow-clip rounded-xl"
           aria-label="Analysis controls and ranking"
         >
           {panel}
         </motion.aside>
       ) : (
         <>
-          <div className="absolute inset-x-3 bottom-3 z-10 flex justify-center">
+          <div className="absolute inset-x-3 bottom-3 z-20 flex justify-center">
             <Button onClick={() => setListOpen(true)} className="rounded-full shadow-lg">
               <ListOrdered /> Ranking and weights
             </Button>
@@ -159,6 +149,17 @@ function Explorer({ data }: { data: AnalysisData }) {
         </>
       )}
 
+      {/* map comes after the panels in the DOM so keyboard focus reaches controls first; panels stay on top via z-index */}
+      <MapView
+        results={analysis.results}
+        selectedId={ui.selected}
+        hoveredId={hovered}
+        layer={ui.layer}
+        onSelect={ui.select}
+        onHover={setHovered}
+        reducedMotion={reduced}
+        padding={isDesktop ? { left: 380, right: selected ? 440 : 0, top: 60, bottom: 40 } : { left: 0, right: 0, top: 60, bottom: 60 }}
+      />
       <div className={`pointer-events-none absolute top-4 z-10 flex justify-center ${isDesktop ? 'left-[392px] right-4' : 'inset-x-3'}`}>
         <div className="pointer-events-auto">
           <LayerToggle layer={ui.layer} onChange={ui.setLayer} />
