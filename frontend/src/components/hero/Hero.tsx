@@ -210,15 +210,19 @@ export function Hero({ data }: { data: AllTargets | null }) {
           )}
         </motion.div>
 
-        {/* live analog links: synced with the 3D arcs */}
+        {/* live analog links, synced with the 3D arcs. Landscape: a slim dock under the globe so Earth stays fully visible. */}
         <motion.aside
           initial={{ opacity: 0, y: reduced ? 0 : 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: reduced ? 0 : 1.6, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="pointer-events-auto w-full max-w-sm self-start rounded-2xl border border-white/10 bg-ink-950/65 p-3 shadow-2xl backdrop-blur-md md:landscape:absolute md:landscape:bottom-16 md:landscape:right-10 md:landscape:self-auto"
+          className="pointer-events-auto w-full max-w-sm self-start rounded-2xl border border-white/10 bg-ink-950/65 p-3 shadow-2xl backdrop-blur-md md:landscape:absolute md:landscape:bottom-7 md:landscape:right-8 md:landscape:flex md:landscape:w-[min(860px,58vw)] md:landscape:max-w-none md:landscape:items-stretch md:landscape:gap-3 md:landscape:self-auto md:landscape:p-2.5"
           aria-label="Best Earth matches"
         >
-          <div role="radiogroup" aria-label="Planetary target" className="grid grid-cols-2 gap-1 rounded-xl bg-white/5 p-1">
+          <div
+            role="radiogroup"
+            aria-label="Planetary target"
+            className="grid grid-cols-2 gap-1 rounded-xl bg-white/5 p-1 md:landscape:w-52 md:landscape:shrink-0 md:landscape:grid-cols-1 md:landscape:content-center"
+          >
             {heroTargets.map((t) => {
               const on = t.id === target.id
               return (
@@ -243,34 +247,56 @@ export function Hero({ data }: { data: AllTargets | null }) {
             })}
           </div>
 
-          <div className="hidden sm:block">
-            <p className="label-mono mt-3 px-1.5">Closest Earth terrain</p>
-            <ol className="mt-1.5 space-y-0.5" onMouseLeave={() => setHovered(null)}>
+          <div className="hidden min-w-0 sm:block md:landscape:flex md:landscape:flex-1 md:landscape:flex-col">
+            <p className="label-mono mt-3 flex justify-between gap-2 px-1.5 md:landscape:mt-0.5">
+              <span>Closest Earth terrain</span>
+              {auc !== undefined && (
+                <span className="hidden normal-case tracking-normal md:landscape:inline">
+                  validation AUC <span className="text-positive">{auc.toFixed(2)}</span>
+                </span>
+              )}
+            </p>
+            <ol
+              className="mt-1.5 space-y-0.5 md:landscape:grid md:landscape:flex-1 md:landscape:grid-cols-5 md:landscape:gap-1 md:landscape:space-y-0"
+              onMouseLeave={() => setHovered(null)}
+            >
               <AnimatePresence mode="popLayout" initial={false}>
                 {target.top.length === 0 &&
-                  Array.from({ length: 5 }, (_, i) => <li key={`sk${i}`} className="mx-1.5 my-2 h-5 animate-pulse rounded bg-white/5" />)}
+                  Array.from({ length: 5 }, (_, i) => (
+                    <li key={`sk${i}`} className="mx-1.5 my-2 h-5 animate-pulse rounded bg-white/5 md:landscape:m-0 md:landscape:h-auto" />
+                  ))}
                 {target.top.map((s, i) => (
                   <motion.li
                     key={`${target.id}-${s.id}`}
-                    initial={{ opacity: 0, x: 12 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -12 }}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
                     transition={{ delay: i * 0.05, duration: 0.3 }}
+                    className="min-w-0"
                   >
                     <button
                       type="button"
+                      title={`${s.name} · ${pct(s.score)}/100`}
                       onMouseEnter={() => setHovered(s.id)}
                       onFocus={() => setHovered(s.id)}
                       onBlur={() => setHovered(null)}
                       onClick={() => openSite(target.id, s.id)}
                       className={cn(
-                        'grid w-full grid-cols-[1.25rem_1fr_auto] items-center gap-2 rounded-lg px-1.5 py-1.5 text-left transition-colors',
-                        hovered === s.id ? 'bg-white/10' : 'hover:bg-white/5',
+                        'grid w-full grid-cols-[1.25rem_1fr_auto] items-center gap-2 rounded-lg px-1.5 py-1.5 text-left transition-colors md:landscape:flex md:landscape:h-full md:landscape:flex-col md:landscape:items-stretch md:landscape:gap-1 md:landscape:px-2 md:landscape:py-2',
+                        hovered === s.id ? 'bg-white/10' : 'hover:bg-white/5 md:landscape:bg-white/[0.03]',
                       )}
                     >
-                      <span className="font-mono text-[10px] text-slate-500">{s.rank}</span>
-                      <span className="min-w-0">
-                        <span className="block truncate text-[13px] text-slate-100">{s.name}</span>
+                      <span className="font-mono text-[10px] text-slate-500 md:landscape:flex md:landscape:items-baseline md:landscape:justify-between">
+                        <span>
+                          <span className="hidden md:landscape:inline">#</span>
+                          {s.rank}
+                        </span>
+                        <span className="hidden font-sans text-base tabular text-slate-100 md:landscape:inline">{pct(s.score)}</span>
+                      </span>
+                      <span className="min-w-0 md:landscape:flex md:landscape:flex-1 md:landscape:flex-col md:landscape:justify-between md:landscape:gap-1.5">
+                        <span className="block truncate text-[13px] text-slate-100 md:landscape:line-clamp-2 md:landscape:whitespace-normal md:landscape:text-[12px] md:landscape:leading-tight">
+                          {s.name}
+                        </span>
                         <span className="block h-1 overflow-hidden rounded-full bg-white/10">
                           <motion.span
                             className="block h-full rounded-full"
@@ -281,13 +307,13 @@ export function Hero({ data }: { data: AllTargets | null }) {
                           />
                         </span>
                       </span>
-                      <span className="text-sm tabular text-slate-100">{pct(s.score)}</span>
+                      <span className="text-sm tabular text-slate-100 md:landscape:hidden">{pct(s.score)}</span>
                     </button>
                   </motion.li>
                 ))}
               </AnimatePresence>
             </ol>
-            <p className="mt-2 border-t border-white/10 px-1.5 pt-2 font-mono text-[10px] leading-relaxed text-slate-400">
+            <p className="mt-2 border-t border-white/10 px-1.5 pt-2 font-mono text-[10px] leading-relaxed text-slate-400 md:landscape:hidden">
               Terrain similarity /100 from real DEMs
               {auc !== undefined && (
                 <>
@@ -306,7 +332,7 @@ export function Hero({ data }: { data: AllTargets | null }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, y: reduced ? 0 : [0, 6, 0] }}
         transition={{ opacity: { delay: 2.2 }, y: { repeat: Infinity, duration: 2.2, ease: 'easeInOut' } }}
-        className="absolute bottom-4 left-1/2 hidden -translate-x-1/2 text-slate-400 hover:text-slate-100 md:block"
+        className="absolute bottom-4 left-8 hidden text-slate-400 hover:text-slate-100 md:landscape:block"
       >
         <ChevronDown className="size-6" />
       </motion.a>

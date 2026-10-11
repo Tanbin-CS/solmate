@@ -85,9 +85,9 @@ function useLayout(): Layout {
     return { earth: [0, 2.45, 0], earthR: 1.05, mars: [-1.2, 4.15, -1], marsR: 0.36, moon: [1.25, 4.05, -0.6], moonR: 0.28, camZ, look: [0, 0.6, 0], labels: false }
   }
   if (aspect < 1.45) {
-    return { earth: [2.0, 0.55, 0], earthR: 1.25, mars: [4.0, 2.1, -1.5], marsR: 0.5, moon: [0.5, 2.6, -1.6], moonR: 0.36, camZ: 10.5, look: [0.9, 0, 0], labels: true }
+    return { earth: [2.1, 0.75, 0], earthR: 1.3, mars: [4.75, 2.45, -1.5], marsR: 0.48, moon: [0.25, 2.55, -1.6], moonR: 0.34, camZ: 10.5, look: [0.9, 0, 0], labels: true }
   }
-  return { earth: [2.05, -0.05, 0], earthR: 1.5, mars: [4.7, 1.75, -1.5], marsR: 0.6, moon: [0.45, 2.5, -1.5], moonR: 0.42, camZ: 9.2, look: [0.9, 0, 0], labels: true }
+  return { earth: [2.25, 0.6, 0], earthR: 1.4, mars: [5.3, 2.2, -1.5], marsR: 0.56, moon: [0.3, 2.4, -1.5], moonR: 0.4, camZ: 9.2, look: [0.9, 0, 0], labels: true }
 }
 
 /* -------------------------------------------------------------------------------------- atmosphere */
