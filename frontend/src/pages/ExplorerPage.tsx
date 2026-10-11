@@ -151,7 +151,7 @@ function Explorer({ data }: { data: AnalysisData }) {
             </Button>
           </div>
           <Sheet open={listOpen} onOpenChange={setListOpen}>
-            <SheetContent side="bottom" className="h-[85dvh] border-border bg-ink-900 p-0">
+            <SheetContent side="bottom" className="h-[85dvh] border-border bg-ink-900 p-0 pt-8" onOpenAutoFocus={(e) => e.preventDefault()}>
               <SheetTitle className="sr-only">Ranking and weights</SheetTitle>
               {panel}
             </SheetContent>
@@ -189,7 +189,7 @@ function Explorer({ data }: { data: AnalysisData }) {
         </AnimatePresence>
       ) : (
         <Sheet open={!!detail} onOpenChange={(o) => !o && ui.select(null)}>
-          <SheetContent side="bottom" className="h-[88dvh] border-border bg-ink-900 p-0 [&>button]:hidden">
+          <SheetContent side="bottom" className="h-[88dvh] border-border bg-ink-900 p-0 [&>button]:hidden" onOpenAutoFocus={(e) => e.preventDefault()}>
             <SheetTitle className="sr-only">{selected?.site.name ?? 'Site details'}</SheetTitle>
             {detail}
           </SheetContent>

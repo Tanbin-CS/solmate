@@ -138,8 +138,11 @@
   .label-mono {
     @apply font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground;
   }
+  /* numbers: Inter tabular figures (JetBrains Mono's dotted zero reads as 8 at small sizes) */
   .tabular {
+    font-family: var(--font-sans) !important;
     font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
   }
   /* solid elevated surface used for floating map panels (no glassmorphism) */
   .surface {

@@ -5,6 +5,7 @@ import { useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { fadeUp, stagger } from '@/design/motion'
 import { asset } from '@/lib/asset'
+import { LiveResults } from '@/components/home/LiveResults'
 
 const STEPS = [
   {
@@ -75,7 +76,7 @@ function Hero() {
           </video>
         )}
       </motion.div>
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgb(5_8_13/0.92)_0%,rgb(5_8_13/0.55)_45%,rgb(5_8_13/0.1)_75%)]" />
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(0deg,rgb(5_8_13/0.95)_15%,rgb(5_8_13/0.6)_60%,rgb(5_8_13/0.25)_100%)] md:bg-[linear-gradient(90deg,rgb(5_8_13/0.92)_0%,rgb(5_8_13/0.55)_45%,rgb(5_8_13/0.1)_75%)]" />
       <div className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-ink-950/85 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 -z-10 h-2/5 bg-gradient-to-t from-background to-transparent" />
 
@@ -177,6 +178,10 @@ export default function HomePage() {
             <Link to="/method">Read the limitations</Link>
           </Button>
         </motion.div>
+      </Section>
+
+      <Section kicker="Current results" title="Computed from real elevation data, not typed in.">
+        <LiveResults />
       </Section>
 
       <Section kicker="Mission briefing" title="Why NASA rehearses on Earth.">
