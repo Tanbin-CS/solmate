@@ -154,3 +154,25 @@ export type ProvenanceDoc = z.infer<typeof ProvenanceDoc>
 export type Site = z.infer<typeof Site>
 export type Reference = z.infer<typeof Reference>
 export type IndicatorMeta = z.infer<typeof IndicatorMeta>
+
+export const ClaimsDoc = z.object({
+  version: z.literal(1),
+  generated_at: z.string(),
+  checker: z.string(),
+  model: z.string().nullable(),
+  threshold: z.number(),
+  scope: z.string(),
+  results: z.record(
+    z.string(),
+    z.object({
+      claim: z.string().nullable(),
+      source: z.string().nullable(),
+      status: z.enum(['supported', 'needs_review', 'contradicted', 'not_checked']),
+      reason: z.string().optional(),
+      relation: z.string().optional(),
+      confidence: z.number().optional(),
+      probabilities: z.record(z.string(), z.number()).optional(),
+    }),
+  ),
+})
+export type ClaimsDoc = z.infer<typeof ClaimsDoc>

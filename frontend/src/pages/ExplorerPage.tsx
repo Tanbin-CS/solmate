@@ -10,6 +10,7 @@ import { RankList } from '@/components/explorer/RankList'
 import { WeightPanel } from '@/components/explorer/WeightPanel'
 import { SiteDetail } from '@/components/explorer/SiteDetail'
 import { ReferenceCard } from '@/components/explorer/ReferenceCard'
+import { EvidenceBadge } from '@/components/explorer/EvidenceBadge'
 import { LayerToggle, MapLegend } from '@/components/explorer/MapOverlays'
 import { ErrorState, PanelSkeleton } from '@/components/common/States'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -29,7 +30,7 @@ export default function ExplorerPage() {
     return <ErrorState title="The analysis data could not be loaded." detail={state.error.message} onRetry={state.retry} />
   }
   return (
-    <div className="relative h-[calc(100dvh-4rem)] overflow-hidden bg-ink-950">
+    <div className="relative h-[calc(100dvh-4rem)] overflow-clip bg-ink-950">
       {state.status === 'loading' ? (
         <div className="surface absolute left-4 top-4 w-[360px] rounded-xl">
           <PanelSkeleton />
@@ -115,6 +116,7 @@ function Explorer({ data }: { data: AnalysisData }) {
       sensitivityRanks={sensitivityRanks}
       total={analysis.results.length}
       onClose={() => ui.select(null)}
+      evidence={<EvidenceBadge result={data.claims?.results[selected.site.id]} doc={data.claims} />}
     />
   )
 
@@ -136,7 +138,7 @@ function Explorer({ data }: { data: AnalysisData }) {
           initial={{ opacity: 0, x: reduced ? 0 : -16 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, ease: EASE }}
-          className="surface absolute bottom-4 left-4 top-4 w-[360px] overflow-hidden rounded-xl"
+          className="surface absolute bottom-4 left-4 top-4 w-[360px] overflow-clip rounded-xl"
           aria-label="Analysis controls and ranking"
         >
           {panel}
@@ -179,7 +181,7 @@ function Explorer({ data }: { data: AnalysisData }) {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: reduced ? 0 : 24 }}
               transition={{ duration: 0.45, ease: EASE }}
-              className="surface absolute bottom-4 right-4 top-4 z-20 w-[420px] overflow-hidden rounded-xl"
+              className="surface absolute bottom-4 right-4 top-4 z-20 w-[420px] overflow-clip rounded-xl"
             >
               {detail}
             </motion.aside>
