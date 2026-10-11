@@ -1,0 +1,190 @@
+# SolMate analysis sites (v1)
+#
+# Roles
+#   reference  - the planetary target every Earth site is compared with
+#   documented - Earth field sites featured in NASA's Planetary Analog Explorer
+#                (https://science.nasa.gov/solar-system/analog-explorer/), used as the
+#                positive set in validation. `pair` records the world NASA pairs them with.
+#   candidate  - other well-known analog field sites from the literature; ranked but not
+#                used to score the validation.
+#   control    - negative controls: terrain with no planetary-analog use (farmland, forest,
+#                alpine glaciers). The method should rank these below documented sites.
+#
+# Coordinates are the centre of the analysis window (approximate field-area centre, WGS84 /
+# Mars 2000 planetocentric, east-positive). Windows are square and centred on these points.
+
+reference:
+  id: jezero
+  name: Jezero Crater landing region
+  body: mars
+  lat: 18.4447
+  lon: 77.4508
+  note: Octavia E. Butler landing site of NASA's Perseverance rover, on the crater floor east of the western delta.
+  source: https://science.nasa.gov/mission/mars-2020-perseverance/
+  dem: ctx_jezero
+
+sites:
+  # --- documented analog sites (NASA Planetary Analog Explorer) ---
+  - id: lake-salda
+    name: Lake Salda
+    country: Türkiye
+    lat: 37.555
+    lon: 29.680
+    role: documented
+    pair: Mars
+    context: Lake-edge carbonate sediments compared with Jezero Crater.
+    source: https://science.nasa.gov/solar-system/analog-explorer/#life-turkey-mars
+  - id: death-valley
+    name: Death Valley
+    country: USA (California)
+    lat: 36.460
+    lon: -116.870
+    role: documented
+    pair: Mars
+    context: Rocky desert terrain where the Mars 2020 team practised hazard avoidance.
+    source: https://science.nasa.gov/solar-system/analog-explorer/#rocky-reconnaissance-california-mars
+  - id: atacama-yungay
+    name: Atacama Desert (Yungay)
+    country: Chile
+    lat: -24.083
+    lon: -70.017
+    role: documented
+    pair: Mars
+    context: Hyper-arid soils used to study how organic molecules persist under Mars-like dryness.
+    source: https://science.nasa.gov/solar-system/analog-explorer/#life-atacama-desert-mars
+  - id: pilot-valley
+    name: Pilot Valley
+    country: USA (Utah)
+    lat: 40.980
+    lon: -114.030
+    role: documented
+    pair: Mars
+    context: Salt-rich playa studied for perchlorate and brine habitability.
+    source: https://science.nasa.gov/solar-system/analog-explorer/#life-utah-mars
+  - id: verde-valley
+    name: Verde Valley
+    country: USA (Arizona)
+    lat: 34.560
+    lon: -111.860
+    role: documented
+    pair: Mars
+    context: Ancient saline lakebed deposits used to study biosignature preservation.
+    source: https://science.nasa.gov/solar-system/analog-explorer/#life-arizona-mars
+  - id: vikursundar
+    name: Vikursundar, Askja
+    country: Iceland
+    lat: 65.110
+    lon: -16.470
+    role: documented
+    pair: Mars
+    context: Gravel ripples monitored with drone-derived terrain models as analogs of Martian ridges.
+    source: https://science.nasa.gov/solar-system/analog-explorer/#land-ripples-iceland-mars
+  - id: askja
+    name: Askja volcano
+    country: Iceland
+    lat: 65.045
+    lon: -16.760
+    role: documented
+    pair: Moon
+    context: Buried-ice radar surveys rehearsed for the lunar south pole.
+    source: https://science.nasa.gov/solar-system/analog-explorer/#subsurface-ice-iceland-moon
+  - id: kilauea
+    name: Kīlauea volcano
+    country: USA (Hawaiʻi)
+    lat: 19.406
+    lon: -155.283
+    role: documented
+    pair: Moon
+    context: Basaltic field geology timed as a rehearsal for lunar surface operations.
+    source: https://science.nasa.gov/solar-system/analog-explorer/#basalt-landscapes-kilauea-moon
+  - id: lava-beds
+    name: Lava Beds, Medicine Lake Volcano
+    country: USA (California)
+    lat: 41.715
+    lon: -121.509
+    role: documented
+    pair: Moon
+    context: Lava caves explored as possible shelters on the Moon and Mars.
+    source: https://science.nasa.gov/solar-system/analog-explorer/#lava-caves-california-moon
+  - id: sf-volcanic-field
+    name: San Francisco Volcanic Field
+    country: USA (Arizona)
+    lat: 35.580
+    lon: -111.480
+    role: documented
+    pair: Moon
+    context: Desert volcanic terrain used for NASA's Artemis surface-operations field tests.
+    source: https://science.nasa.gov/missions/artemis/behind-the-scenes-of-a-nasa-moonwalk-in-the-arizona-desert/
+
+  # --- other literature candidates (ranked, not used to score validation) ---
+  - id: haughton
+    name: Haughton impact structure
+    country: Canada (Nunavut)
+    lat: 75.383
+    lon: -89.683
+    role: candidate
+    pair: Mars
+    context: High-Arctic impact crater that preserves intra-crater lake sediments.
+    source: https://doi.org/10.1111/j.1945-5100.2005.tb00152.x
+  - id: meteor-crater
+    name: Meteor Crater
+    country: USA (Arizona)
+    lat: 35.027
+    lon: -111.022
+    role: candidate
+    pair: Moon
+    context: Young, well-preserved simple impact crater in layered sedimentary rock.
+    source: https://doi.org/10.1130/0-8137-5402-x.399
+  - id: lonar
+    name: Lonar crater
+    country: India
+    lat: 19.976
+    lon: 76.508
+    role: candidate
+    pair: Mars
+    context: Impact crater in basalt whose shocked rocks are studied for comparison with Mars.
+    source: https://doi.org/10.1029/2010je003785
+
+  # --- negative controls ---
+  - id: flevoland
+    name: Flevoland polder
+    country: Netherlands
+    lat: 52.530
+    lon: 5.600
+    role: control
+    context: Reclaimed, intensively farmed polder; no planetary-analog use.
+  - id: iowa
+    name: Central Iowa cropland
+    country: USA (Iowa)
+    lat: 42.200
+    lon: -93.900
+    role: control
+    context: Glaciated cropland plain; no planetary-analog use.
+  - id: ganges-plain
+    name: Ganges plain
+    country: India
+    lat: 26.400
+    lon: 81.800
+    role: control
+    context: Alluvial farmland plain; no planetary-analog use.
+  - id: amazon-forest
+    name: Central Amazon rainforest
+    country: Brazil
+    lat: -2.600
+    lon: -60.200
+    role: control
+    context: Closed-canopy lowland forest; the surface model records canopy, not ground.
+  - id: black-forest
+    name: Black Forest
+    country: Germany
+    lat: 48.000
+    lon: 8.150
+    role: control
+    context: Forested low mountains; no planetary-analog use.
+  - id: aletsch
+    name: Aletsch glacier region
+    country: Switzerland
+    lat: 46.450
+    lon: 8.050
+    role: control
+    context: Glaciated high alpine relief, a different formation process.
