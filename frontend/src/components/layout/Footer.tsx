@@ -31,7 +31,7 @@ export function Footer() {
       </div>
       <div className="border-t border-border px-6 py-5 text-center font-mono text-[11px] text-slate-400">
         Planetary data: NASA / USGS. Earth elevation: Copernicus DEM GLO-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH
-        2014-2018, provided under COPERNICUS by the European Union and ESA.
+        2014-2018, provided under COPERNICUS by the European Union and ESA. Globe textures: NASA Blue Marble, USGS/NASA Ames Viking MDIM 2.1 colour mosaic, NASA LRO LROC WAC mosaic (via Moon Trek).
       </div>
     </footer>
   )
