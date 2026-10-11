@@ -8,7 +8,7 @@ import { spring } from '@/design/motion'
 const LINKS = [
   { to: '/explorer', label: 'Explorer' },
   { to: '/method', label: 'Method' },
-  { to: '/data', label: 'Data' },
+  { to: '/provenance', label: 'Data' },
 ]
 
 export const TEAM_URL = 'https://www.spaceappschallenge.org/2026/find-a-team/northern-lights3/'

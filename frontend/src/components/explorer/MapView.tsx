@@ -247,7 +247,10 @@ export function MapView({ results, selectedId, hoveredId, layer, onSelect, onHov
       m.setLayoutProperty('hillshade', 'visibility', terrain ? 'visible' : 'none')
       m.setPaintProperty('s2', 'raster-saturation', terrain ? -0.85 : -0.1)
       m.setPaintProperty('s2', 'raster-brightness-max', terrain ? 0.55 : 1)
-      m.setTerrain(terrain ? { source: 'terrain', exaggeration: 1.4 } : null)
+      // enabling terrain mid-flight cancels the camera animation, so wait for any flight to finish
+      const setTerrain = () => m.setTerrain(terrain ? { source: 'terrain', exaggeration: 1.4 } : null)
+      if (m.isMoving()) m.once('moveend', setTerrain)
+      else setTerrain()
       // the first application happens at load; the camera effect already sets pitch, so don't interrupt its flight
       if (layerInitialised.current && selectedId) m.easeTo({ pitch: terrain ? 55 : 0, bearing: terrain ? -20 : 0, duration: reducedMotion ? 0 : 900 })
       layerInitialised.current = true

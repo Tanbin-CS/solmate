@@ -27,7 +27,7 @@ function Thumb({ src, label, accent }: { src?: string; label: string; accent: st
   return (
     <figure className="relative overflow-hidden rounded-lg border border-border bg-ink-950">
       {src ? (
-        <img src={asset(src)} alt={label} className="aspect-square w-full object-cover" loading="lazy" decoding="async" />
+        <img src={asset(src)} alt={label} className="aspect-square w-full object-cover" decoding="async" />
       ) : (
         <div className="grid aspect-square w-full place-items-center font-mono text-[11px] text-slate-400">No imagery</div>
       )}

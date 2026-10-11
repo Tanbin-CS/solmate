@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
 import { MotionConfig } from 'motion/react'
 import { AppShell } from '@/components/layout/AppShell'
 import { TooltipProvider } from '@/components/ui/tooltip'
@@ -25,7 +25,8 @@ export default function App() {
                 <Route index element={<HomePage />} />
                 <Route path="explorer" element={<ExplorerPage />} />
                 <Route path="method" element={<MethodPage />} />
-                <Route path="data" element={<DataPage />} />
+                <Route path="provenance" element={<DataPage />} />
+                <Route path="data" element={<Navigate to="/provenance" replace />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Route>
             </Routes>

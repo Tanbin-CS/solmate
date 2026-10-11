@@ -99,7 +99,7 @@ function MethodBody({ data }: { data: AnalysisData }) {
             site. Downsampling only: no detail finer than the source is invented. Absolute elevation is never compared.
           </li>
         </ul>
-        <Link to="/data" className="inline-flex items-center gap-1.5 font-mono text-xs text-data hover:underline">
+        <Link to="/provenance" className="inline-flex items-center gap-1.5 font-mono text-xs text-data hover:underline">
           Full provenance and licences <ArrowRight className="size-3" />
         </Link>
       </Block>
@@ -226,7 +226,7 @@ function MethodBody({ data }: { data: AnalysisData }) {
             </Link>
           </Button>
           <Button asChild variant="outline">
-            <Link to="/data">See every data source</Link>
+            <Link to="/provenance">See every data source</Link>
           </Button>
         </div>
       </Block>
