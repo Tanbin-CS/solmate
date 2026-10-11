@@ -45,7 +45,7 @@ Prototype scope: two planetary targets (Jezero Crater on Mars and the Mons Mouto
 | Frontend | React 19, Vite 8, TypeScript 6, Tailwind CSS v4, shadcn/ui (Radix) | The team's preferred stack, replacing the single-page Next.js export. |
 | Map | MapLibre GL JS 6 | Open source (BSD), globe projection, raster-dem terrain. No API key. |
 | 3D hero | three.js via React Three Fiber and drei | Lazy-loaded after first paint (about 255 kB gzip), paused when off screen, poster fallback without WebGL. Textures are public-domain NASA/USGS mosaics. |
-| Motion | Motion for React | One animation system. GSAP is not needed. Lenis was skipped because it conflicts with map gestures. |
+| Motion | Motion for React, Lenis | One animation system (scroll-driven effects use Motion `useScroll`). GSAP is not needed. Lenis smooths wheel scrolling on content pages only; the map workspace keeps native gestures. |
 | Validation of artifacts | Zod | Malformed or stale JSON becomes a clear error state. |
 | Pipeline | Python 3.11, rasterio/GDAL, numpy, scipy | Windowed COG reads and area-averaged resampling. |
 | Tests | Vitest (TS, cross-checked against Python within 1e-9), pytest (analytic terrain checks) | |
