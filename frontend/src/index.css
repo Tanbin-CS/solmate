@@ -182,3 +182,45 @@
 .maplibregl-ctrl-attrib a {
   color: var(--slate-300) !important;
 }
+
+/* Explorer map markers (MapLibre owns the outer element's transform; animate the inner span) */
+.solmate-marker {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.solmate-marker > span {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  border: 2px solid var(--marker-color);
+  background: var(--ink-900);
+  color: var(--slate-100);
+  font: 500 11px/1 'JetBrains Mono', ui-monospace, monospace;
+  box-shadow: 0 0 0 3px rgb(5 8 13 / 0.55), 0 6px 16px -6px rgb(0 0 0 / 0.8);
+  transition: transform 220ms var(--ease-out-expo), background-color 220ms, color 220ms, box-shadow 220ms;
+}
+.solmate-marker[data-role='control'] > span {
+  border-style: dashed;
+  color: var(--slate-300);
+}
+.solmate-marker[data-hovered='true'] > span {
+  transform: scale(1.18);
+}
+.solmate-marker[data-selected='true'] > span {
+  transform: scale(1.35);
+  background: var(--marker-color);
+  color: var(--ink-950);
+  box-shadow: 0 0 0 4px rgb(5 8 13 / 0.6), 0 0 0 10px color-mix(in oklab, var(--marker-color) 25%, transparent);
+}
+.solmate-marker:focus-visible {
+  outline: none;
+}
+.solmate-marker:focus-visible > span {
+  box-shadow: 0 0 0 3px var(--ring);
+}
