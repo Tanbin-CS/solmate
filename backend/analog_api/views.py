@@ -16,7 +16,7 @@ class AnalogMatcherAPI(APIView):
         
         nasa_url = f"https://api.nasa.gov/mars-photos/api/v1/rovers/perseverance/latest_photos?api_key={settings.NASA_API_KEY}"
         mars_image_url = "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00002/ids/fdr/browse/zcam/ZRF_0002_0667131195_000FDR_N0010052AUT_04096_0260LUJ01_1200.jpg"
-        earth_image_url = "https://images.unsplash.com/photo-1541417904950-b855846fe074?auto=format&fit=crop&q=80&w=1000"
+        earth_image_url = "https://i.natgeofe.com/n/4c363dfb-f2c7-4a89-9547-a06318a87fc5/valley-moon-atacama-desert-chile_16x9.jpg?auto=format&fit=crop&q=80&w=1000"
 
         try:
             nasa_response = requests.get(nasa_url, timeout=5)
