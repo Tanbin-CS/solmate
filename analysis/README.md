@@ -16,5 +16,8 @@ python -m venv .venv && .venv/Scripts/pip install -r requirements.txt   # (.venv
 | `terrain.py` | Slope, local relief, ruggedness (TRI) and hypsometric integral (pure functions) |
 | `similarity.py` | Robust-z Gaussian similarity and weighted score (mirrored by `frontend/src/science/similarity.ts`) |
 | `run.py` | Pipeline: indicators for three analysis configurations, validation, weight perturbation, provenance |
+| `sources/` | Verbatim source excerpts (with URL and retrieval date) behind each site's context claim |
+| `claims_check.py` | Optional TypeSafe/Jev evidence check of context claims against `sources/` (needs `TYPESAFE_API_KEY`; `--offline` writes "not checked") |
 
-No credentials are needed for the terrain pipeline. All inputs are public open data.
+No credentials are needed for the terrain pipeline; all inputs are public open data. The evidence check reads `TYPESAFE_API_KEY`
+from the environment only, runs on the developer machine, and never affects scores.
