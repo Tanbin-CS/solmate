@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { Link } from 'react-router'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { ShieldCheck, TriangleAlert } from 'lucide-react'
@@ -11,8 +11,9 @@ import { CountUp } from '@/components/home/CountUp'
 import { TargetShowcase } from '@/components/home/TargetShowcase'
 import { WorldMap } from '@/components/home/WorldMap'
 import { LiveResults } from '@/components/home/LiveResults'
-import { IndicatorStrip } from '@/components/home/IndicatorStrip'
-import { Workflow } from '@/components/home/Workflow'
+import { IndicatorTrack } from '@/components/home/IndicatorTrack'
+import { HowItWorks } from '@/components/home/HowItWorks'
+import { ParallaxWorlds, ZoomOnScroll } from '@/components/home/ScrollFx'
 import { Hero } from '@/components/hero/Hero'
 
 const LESSONS = [
@@ -67,7 +68,7 @@ function Stats({ data }: { data: AllTargets }) {
   )
 }
 
-function Section({ kicker, title, intro, children, id, aside }: { kicker: string; title: string; intro?: string; children: React.ReactNode; id?: string; aside?: React.ReactNode }) {
+function Section({ kicker, title, intro, children, id, aside, className }: { kicker: string; title: string; intro?: string; children: ReactNode; id?: string; aside?: ReactNode; className?: string }) {
   const reduced = useReducedMotion()
   return (
     <motion.section
@@ -76,7 +77,7 @@ function Section({ kicker, title, intro, children, id, aside }: { kicker: string
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, margin: '-12% 0px' }}
-      className="mx-auto w-full max-w-6xl scroll-mt-20 px-6 py-20 md:px-10 md:py-24"
+      className={`relative mx-auto w-full max-w-6xl scroll-mt-20 px-6 py-20 md:px-10 md:py-24 ${className ?? ''}`}
     >
       <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div>
@@ -103,7 +104,7 @@ function Section({ kicker, title, intro, children, id, aside }: { kicker: string
   )
 }
 
-function Results({ data }: { data: AllTargets }) {
+function Results({ data, between }: { data: AllTargets; between?: ReactNode }) {
   const targets = data.common.targets.targets
   const [targetId, setTargetId] = useState(targets[0]!.id)
   const target = targets.find((t) => t.id === targetId) ?? targets[0]!
@@ -119,12 +120,16 @@ function Results({ data }: { data: AllTargets }) {
         intro="Each panel is a 20 × 20 km window resampled to 100 m cells. Pick a target, then compare it with its closest Earth sites."
         aside={switcher('compare')}
       >
-        <AnimatePresence mode="wait">
-          <motion.div key={target.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
-            <TargetShowcase target={target} bundle={bundle} />
-          </motion.div>
-        </AnimatePresence>
+        <ZoomOnScroll>
+          <AnimatePresence mode="wait">
+            <motion.div key={target.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
+              <TargetShowcase target={target} bundle={bundle} />
+            </motion.div>
+          </AnimatePresence>
+        </ZoomOnScroll>
       </Section>
+
+      {between}
 
       <Section
         id="map"
@@ -137,7 +142,9 @@ function Results({ data }: { data: AllTargets }) {
         }
         aside={switcher('map')}
       >
-        <WorldMap targetId={target.id} results={bundle.analysis.results} screened={bundle.analysis.screened} />
+        <ZoomOnScroll>
+          <WorldMap targetId={target.id} results={bundle.analysis.results} screened={bundle.analysis.screened} />
+        </ZoomOnScroll>
       </Section>
 
       <Section id="results" kicker="Current ranking" title="Computed from real elevation data, not typed in." aside={switcher('results')}>
@@ -168,34 +175,33 @@ export default function HomePage() {
       {data && (
         <>
           <Stats data={data} />
-          <Results data={data} />
+          <Results
+            data={data}
+            between={
+              <Section id="how" kicker="How it works" title="Five steps from a landing site to its Earth twins.">
+                <HowItWorks data={data} />
+                <motion.div variants={fadeUp(reduced)} className="mt-6 flex flex-wrap items-center gap-4 rounded-xl border border-border bg-ink-850 p-5">
+                  <ShieldCheck className="size-5 shrink-0 text-positive" />
+                  <p className="min-w-0 flex-1 basis-60 text-sm text-slate-300">
+                    A similarity score is not proof that two places are the same. Every result keeps its mismatches, its data source and its
+                    uncertainty visible.
+                  </p>
+                  <Button asChild variant="data" size="sm">
+                    <Link to="/method">Read the limitations</Link>
+                  </Button>
+                </motion.div>
+              </Section>
+            }
+          />
+          {meta && <IndicatorTrack meta={meta} targets={data.common.targets.targets} />}
         </>
       )}
 
-      <Section kicker="The workflow" title="Two targets, open datasets, one explainable method.">
-        <Workflow />
-        <motion.div variants={fadeUp(reduced)} className="mt-10 flex flex-wrap items-center gap-4 rounded-xl border border-border bg-ink-850 p-5">
-          <ShieldCheck className="size-5 shrink-0 text-positive" />
-          <p className="min-w-0 flex-1 basis-60 text-sm text-slate-300">
-            A similarity score is not proof that two places are the same. Every result keeps its mismatches, its data source and its uncertainty
-            visible.
-          </p>
-          <Button asChild variant="data" size="sm">
-            <Link to="/method">Read the limitations</Link>
-          </Button>
-        </motion.div>
-      </Section>
-
-      {data && meta && (
-        <Section kicker="What gets measured" title="Five terrain indicators, computed the same way on every world." intro="Absolute elevation is never compared, only the shape of the ground. Values below are measured at each target.">
-          <IndicatorStrip meta={meta} targets={data.common.targets.targets} />
-        </Section>
-      )}
-
-      <Section kicker="Why analogs matter" title="Testing on Earth is cheaper than learning on another world.">
+      <Section kicker="Why analogs matter" title="Testing on Earth is cheaper than learning on another world." className="isolate">
+        <ParallaxWorlds />
         <div className="grid gap-px overflow-hidden rounded-xl border border-border bg-border md:grid-cols-3">
           {LESSONS.map((l) => (
-            <motion.article key={l.title} variants={fadeUp(reduced)} className="bg-card p-7">
+            <motion.article key={l.title} variants={fadeUp(reduced)} className="bg-card/90 p-7 backdrop-blur-sm">
               <TriangleAlert className="size-5 text-reference" />
               <h3 className="mt-5 text-lg font-semibold">{l.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{l.body}</p>

@@ -9,6 +9,7 @@ import { pct } from '@/lib/format'
 import { cn } from '@/lib/utils'
 import type { AllTargets } from '@/hooks/useAllTargets'
 import { BODY, ROLE } from '@/components/explorer/roles'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 import type { HeroSite, HeroTarget } from './HeroScene'
 
 const HeroScene = lazy(() => import('./HeroScene'))
@@ -37,7 +38,11 @@ export function Hero({ data }: { data: AllTargets | null }) {
   const ref = useRef<HTMLElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
   const sceneY = useTransform(scrollYProgress, [0, 1], ['0%', reduced ? '0%' : '22%'])
-  const sceneFade = useTransform(scrollYProgress, [0, 0.9], [1, 0.25])
+  const sceneFade = useTransform(scrollYProgress, [0, 0.9], [1, 0.15])
+  const sceneScale = useTransform(scrollYProgress, [0, 1], [1, reduced ? 1 : 1.18])
+  // fade the copy away only where it overlays the scene (landscape); on phones it sits below and must stay readable
+  const wide = useMediaQuery('(min-width: 768px) and (orientation: landscape)')
+  const textFade = useTransform(scrollYProgress, [0, 0.55], [1, wide && !reduced ? 0 : 1])
   const textY = useTransform(scrollYProgress, [0, 1], ['0%', reduced ? '0%' : '-12%'])
 
   const [gl] = useState(webglAvailable)
@@ -128,7 +133,7 @@ export function Hero({ data }: { data: AllTargets | null }) {
         </motion.div>
       )}
 
-      <motion.div style={{ y: sceneY, opacity: sceneFade }} className="absolute inset-0 -z-10">
+      <motion.div style={{ y: sceneY, opacity: sceneFade, scale: sceneScale }} className="absolute inset-0 -z-10 origin-[70%_40%]">
         {gl ? (
           ready && (
             <Suspense fallback={null}>
@@ -160,7 +165,7 @@ export function Hero({ data }: { data: AllTargets | null }) {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-[5] h-32 bg-gradient-to-t from-background to-transparent" />
 
       <motion.div
-        style={{ y: textY }}
+        style={{ y: textY, opacity: textFade }}
         className="pointer-events-none relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end gap-8 px-6 pb-14 pt-[52svh] md:px-10 md:pb-20 md:landscape:justify-center md:landscape:pt-28"
       >
         <motion.div variants={stagger(0.11, 0.35)} initial="hidden" animate="show" className="max-w-xl">
@@ -215,7 +220,7 @@ export function Hero({ data }: { data: AllTargets | null }) {
           initial={{ opacity: 0, y: reduced ? 0 : 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: reduced ? 0 : 1.6, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="pointer-events-auto w-full max-w-sm self-start rounded-2xl border border-white/10 bg-ink-950/65 p-3 shadow-2xl backdrop-blur-md md:landscape:absolute md:landscape:bottom-7 md:landscape:right-8 md:landscape:flex md:landscape:w-[min(860px,58vw)] md:landscape:max-w-none md:landscape:items-stretch md:landscape:gap-3 md:landscape:self-auto md:landscape:p-2.5"
+          className="pointer-events-auto w-full max-w-sm self-start rounded-2xl border border-white/10 bg-ink-950/65 p-3 shadow-2xl backdrop-blur-md md:landscape:absolute md:landscape:bottom-7 md:landscape:right-[min(2rem,calc(2rem-(100vw-80rem)/2))] md:landscape:flex md:landscape:w-[min(860px,58vw)] md:landscape:max-w-none md:landscape:items-stretch md:landscape:gap-3 md:landscape:self-auto md:landscape:p-2.5"
           aria-label="Best Earth matches"
         >
           <div

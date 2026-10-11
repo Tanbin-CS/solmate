@@ -2,6 +2,7 @@ import { Outlet, useLocation } from 'react-router'
 import { useEffect } from 'react'
 import { NavBar } from './NavBar'
 import { Footer } from './Footer'
+import { scrollToTarget, useSmoothScroll } from '@/hooks/useSmoothScroll'
 
 // Page frame. The home page overlays the nav on the hero; the explorer is a full-height workspace without a footer.
 export function AppShell() {
@@ -9,8 +10,13 @@ export function AppShell() {
   const isHome = pathname === '/'
   const isWorkspace = pathname.startsWith('/explorer')
 
+  useSmoothScroll(!isWorkspace)
+
   useEffect(() => {
-    if (!isWorkspace) window.scrollTo({ top: 0 })
+    if (!isWorkspace) {
+      window.scrollTo({ top: 0 })
+      scrollToTarget(0)
+    }
   }, [pathname, isWorkspace])
 
   return (

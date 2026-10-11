@@ -84,10 +84,26 @@ function useLayout(): Layout {
     const camZ = Math.max(12.2, 2.05 / (0.344 * aspect))
     return { earth: [0, 2.45, 0], earthR: 1.05, mars: [-1.2, 4.15, -1], marsR: 0.36, moon: [1.25, 4.05, -0.6], moonR: 0.28, camZ, look: [0, 0.6, 0], labels: false }
   }
-  if (aspect < 1.45) {
-    return { earth: [2.1, 0.75, 0], earthR: 1.3, mars: [4.75, 2.45, -1.5], marsR: 0.48, moon: [0.25, 2.55, -1.6], moonR: 0.34, camZ: 10.5, look: [0.9, 0, 0], labels: true }
+  // Landscape: place worlds by screen fraction so wide monitors have no empty right side.
+  // Earth centres over the match dock (bottom right), Mars to its right, the Moon to its upper left.
+  const camZ = aspect < 1.45 ? 10.5 : 9.2
+  const half = (z: number) => (camZ - z) * Math.tan((19 * Math.PI) / 180)
+  const X = (f: number, z = 0) => (2 * f - 1) * half(z) * aspect
+  const Y = (f: number, z = 0) => (1 - 2 * f) * half(z)
+  const dockCentre = 1 - (32 + Math.min(860, 0.58 * size.width) / 2) / size.width
+  const ex = Math.min(0.76, Math.max(0.66, dockCentre - 0.01))
+  const h0 = half(0)
+  return {
+    earth: [X(ex), Y(0.4), 0],
+    earthR: h0 * (aspect > 1.9 ? 0.45 : 0.42),
+    mars: [X(Math.min(0.935, ex + 0.235), -1.5), Y(0.17, -1.5), -1.5],
+    marsR: h0 * 0.17,
+    moon: [X(ex - 0.2, -1.5), Y(0.15, -1.5), -1.5],
+    moonR: h0 * 0.125,
+    camZ,
+    look: [0, 0, 0],
+    labels: true,
   }
-  return { earth: [2.25, 0.6, 0], earthR: 1.4, mars: [5.3, 2.2, -1.5], marsR: 0.56, moon: [0.3, 2.4, -1.5], moonR: 0.4, camZ: 9.2, look: [0.9, 0, 0], labels: true }
 }
 
 /* -------------------------------------------------------------------------------------- atmosphere */
@@ -358,7 +374,7 @@ function Scene(props: Props) {
     const intro = reduced ? 1 : easeOut((now - introAt.current) / 2.6)
 
     // camera: dolly in on load, then drift with the pointer
-    camTarget.set(L.look[0] * 0.1 + pointer.x * 0.35, L.look[1] + pointer.y * 0.22, L.camZ + (1 - intro) * 9)
+    camTarget.set(L.look[0] + pointer.x * 0.35, L.look[1] + pointer.y * 0.22, L.camZ + (1 - intro) * 9)
     camera.position.lerp(camTarget, reduced ? 1 : 0.06)
     camera.lookAt(L.look[0], L.look[1], L.look[2])
 
