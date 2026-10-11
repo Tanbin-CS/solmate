@@ -1,14 +1,11 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router'
-import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
-import { ArrowRight, ChevronDown, ShieldCheck, TriangleAlert } from 'lucide-react'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { ShieldCheck, TriangleAlert } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { fadeUp, stagger } from '@/design/motion'
-import { asset } from '@/lib/asset'
-import { pct } from '@/lib/format'
 import { useAllTargets, type AllTargets } from '@/hooks/useAllTargets'
-import { BODY } from '@/components/explorer/roles'
 import { TargetSwitcher } from '@/components/explorer/TargetSwitcher'
 import { CountUp } from '@/components/home/CountUp'
 import { TargetShowcase } from '@/components/home/TargetShowcase'
@@ -16,6 +13,7 @@ import { WorldMap } from '@/components/home/WorldMap'
 import { LiveResults } from '@/components/home/LiveResults'
 import { IndicatorStrip } from '@/components/home/IndicatorStrip'
 import { Workflow } from '@/components/home/Workflow'
+import { Hero } from '@/components/hero/Hero'
 
 const LESSONS = [
   {
@@ -31,104 +29,6 @@ const LESSONS = [
     body: 'Death Valley, the Atacama and Haughton Crater are valuable, but they cannot represent every target, mission or instrument.',
   },
 ]
-
-function HeroMatches({ data }: { data: AllTargets }) {
-  const reduced = useReducedMotion()
-  return (
-    <motion.div variants={stagger(0.12, 0.6)} initial="hidden" animate="show" className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:w-80 lg:grid-cols-1">
-      {data.common.targets.targets.map((t) => {
-        const best = data.byId[t.id]?.analysis.results[0]
-        if (!best) return null
-        return (
-          <motion.div key={t.id} variants={fadeUp(reduced)} className="min-w-0">
-            <Link
-              to={`/explorer?${new URLSearchParams({ ...(t.id !== 'jezero' && { target: t.id }) })}`}
-              className="group flex items-center gap-3 rounded-xl border border-white/10 bg-ink-950/60 p-2.5 backdrop-blur-md transition-colors hover:border-white/25 hover:bg-ink-950/75"
-            >
-              <img src={asset(t.quicklooks.hillshade)} alt="" className="size-12 rounded-lg object-cover" />
-              <span className="min-w-0 flex-1">
-                <span className="block font-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: BODY[t.body].color }}>
-                  {t.short}
-                </span>
-                <span className="block truncate text-[13px] text-slate-100">
-                  Best Earth match: <span className="font-medium">{best.site.name}</span>
-                </span>
-              </span>
-              <span className="text-xl tabular text-slate-100">{pct(best.score)}</span>
-            </Link>
-          </motion.div>
-        )
-      })}
-    </motion.div>
-  )
-}
-
-function Hero({ data }: { data: AllTargets | null }) {
-  const reduced = useReducedMotion()
-  const ref = useRef<HTMLElement>(null)
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
-  const y = useTransform(scrollYProgress, [0, 1], ['0%', reduced ? '0%' : '18%'])
-  const fade = useTransform(scrollYProgress, [0, 0.8], [1, 0.2])
-
-  return (
-    <section ref={ref} className="relative isolate flex min-h-[100svh] items-end overflow-hidden">
-      <motion.div style={{ y }} className="absolute inset-0 -z-10">
-        {reduced ? (
-          <img src={asset('media/poster.jpg')} alt="" className="h-full w-full object-cover" />
-        ) : (
-          <video className="h-full w-full object-cover" autoPlay muted loop playsInline poster={asset('media/poster.jpg')} aria-hidden="true">
-            <source src={asset('media/hero.webm')} type="video/webm" />
-            <source src={asset('media/hero.mp4')} type="video/mp4" />
-          </video>
-        )}
-      </motion.div>
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(0deg,rgb(5_8_13/0.95)_15%,rgb(5_8_13/0.6)_60%,rgb(5_8_13/0.25)_100%)] md:bg-[linear-gradient(90deg,rgb(5_8_13/0.92)_0%,rgb(5_8_13/0.55)_45%,rgb(5_8_13/0.1)_75%)]" />
-      <div className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-ink-950/85 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 -z-10 h-2/5 bg-gradient-to-t from-background to-transparent" />
-
-      <motion.div style={{ opacity: fade }} className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 pb-16 md:px-10 md:pb-24 lg:flex-row lg:items-end lg:justify-between">
-        <motion.div variants={stagger(0.1, 0.15)} initial="hidden" animate="show">
-          <motion.p variants={fadeUp(reduced)} className="label-mono text-slate-300">
-            NASA Space Apps Challenge 2026 · Team Northern Lights
-          </motion.p>
-          <motion.h1
-            variants={fadeUp(reduced)}
-            className="mt-5 max-w-3xl text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-slate-100 sm:text-5xl md:text-6xl"
-          >
-            Find the places on Earth that look most like{' '}
-            <span className="text-mars">Mars</span> and the <span className="text-slate-200 underline decoration-slate-400/50 underline-offset-8">Moon</span>.
-          </motion.h1>
-          <motion.p variants={fadeUp(reduced)} className="mt-6 max-w-xl text-pretty text-base leading-relaxed text-slate-300 md:text-lg">
-            SolMate compares Jezero Crater and the Artemis candidate Mons Mouton Plateau with Earth terrain from real elevation models, ranks every
-            site with a transparent method, and shows exactly why each one lands where it does.
-          </motion.p>
-          <motion.div variants={fadeUp(reduced)} className="mt-9 flex flex-wrap gap-3">
-            <Button asChild size="lg" className="rounded-full px-6">
-              <Link to="/explorer">
-                Open the explorer <ArrowRight />
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="rounded-full border-slate-100/35 bg-ink-950/40 px-6 hover:bg-ink-950/60">
-              <Link to="/method">How the method works</Link>
-            </Button>
-          </motion.div>
-        </motion.div>
-        {data && <HeroMatches data={data} />}
-      </motion.div>
-
-      <motion.a
-        href="#numbers"
-        aria-label="Scroll to results"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1, y: reduced ? 0 : [0, 6, 0] }}
-        transition={{ opacity: { delay: 1.4 }, y: { repeat: Infinity, duration: 2.2, ease: 'easeInOut' } }}
-        className="absolute bottom-5 left-1/2 hidden -translate-x-1/2 text-slate-400 hover:text-slate-100 md:block"
-      >
-        <ChevronDown className="size-6" />
-      </motion.a>
-    </section>
-  )
-}
 
 function Stats({ data }: { data: AllTargets }) {
   const reduced = useReducedMotion()

@@ -1,0 +1,315 @@
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import { Link, useNavigate } from 'react-router'
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
+import { ArrowRight, ChevronDown, Hand, MousePointerClick } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { fadeUp, spring, stagger } from '@/design/motion'
+import { asset } from '@/lib/asset'
+import { pct } from '@/lib/format'
+import { cn } from '@/lib/utils'
+import type { AllTargets } from '@/hooks/useAllTargets'
+import { BODY, ROLE } from '@/components/explorer/roles'
+import type { HeroSite, HeroTarget } from './HeroScene'
+
+const HeroScene = lazy(() => import('./HeroScene'))
+
+function webglAvailable(): boolean {
+  try {
+    const c = document.createElement('canvas')
+    return !!(c.getContext('webgl2') ?? c.getContext('webgl'))
+  } catch {
+    return false
+  }
+}
+
+const WORD: Record<'mars' | 'moon', { text: string; className: string }> = {
+  mars: { text: 'Mars', className: 'text-mars' },
+  moon: { text: 'the Moon', className: 'text-slate-200' },
+}
+
+/**
+ * Landing hero: a live 3D view of Earth, Mars and the Moon. Arcs link the selected planetary target to
+ * its best-matching Earth terrain, computed from real elevation data. Drag to spin Earth; click a world to switch.
+ */
+export function Hero({ data }: { data: AllTargets | null }) {
+  const reduced = useReducedMotion() ?? false
+  const navigate = useNavigate()
+  const ref = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
+  const sceneY = useTransform(scrollYProgress, [0, 1], ['0%', reduced ? '0%' : '22%'])
+  const sceneFade = useTransform(scrollYProgress, [0, 0.9], [1, 0.25])
+  const textY = useTransform(scrollYProgress, [0, 1], ['0%', reduced ? '0%' : '-12%'])
+
+  const [gl] = useState(webglAvailable)
+  const [active, setActive] = useState(true)
+  const [ready, setReady] = useState(false)
+  const [sceneReady, setSceneReady] = useState(false)
+  const [interacted, setInteracted] = useState(false)
+  const [hovered, setHovered] = useState<string | null>(null)
+
+  const heroTargets: HeroTarget[] = useMemo(
+    () =>
+      data
+        ? data.common.targets.targets.map((t) => ({
+            id: t.id,
+            body: t.body,
+            short: t.short,
+            lat: t.lat,
+            lon: t.lon,
+            top: (data.byId[t.id]?.analysis.results ?? []).slice(0, 5).map(
+              (r): HeroSite => ({ id: r.site.id, name: r.site.name, lat: r.site.lat, lon: r.site.lon, score: r.score, rank: r.rank, role: r.site.role as HeroSite['role'] }),
+            ),
+          }))
+        : [
+            // worlds render before the analysis arrives; arcs appear once it does
+            { id: 'jezero', body: 'mars', short: 'Jezero Crater', lat: 18.4447, lon: 77.4508, top: [] },
+            { id: 'mons-mouton-plateau', body: 'moon', short: 'Mons Mouton Plateau', lat: -84.5338, lon: 30.6556, top: [] },
+          ],
+    [data],
+  )
+  const allSites = useMemo(() => {
+    const first = data ? Object.values(data.byId)[0] : undefined
+    return (first?.analysis.results ?? []).map((r) => ({ id: r.site.id, lat: r.site.lat, lon: r.site.lon, role: r.site.role as HeroSite['role'] }))
+  }, [data])
+  const screened = useMemo(() => (data?.common.screening?.windows ?? []).map((w) => ({ lat: w.lat, lon: w.lon })), [data])
+
+  const [selected, setSelected] = useState('jezero')
+  const target = heroTargets.find((t) => t.id === selected) ?? heroTargets[0]!
+
+  // gently alternate targets until the visitor takes over
+  useEffect(() => {
+    if (interacted || reduced || !data || !active) return
+    const id = setInterval(() => {
+      setSelected((cur) => {
+        const i = heroTargets.findIndex((t) => t.id === cur)
+        return heroTargets[(i + 1) % heroTargets.length]!.id
+      })
+    }, 9000)
+    return () => clearInterval(id)
+  }, [interacted, reduced, data, active, heroTargets])
+
+  // stop rendering the 3D scene when the hero is off screen
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const io = new IntersectionObserver(([e]) => setActive(!!e?.isIntersecting), { threshold: 0.02 })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const id = setTimeout(() => setReady(true), 150)
+    return () => clearTimeout(id)
+  }, [])
+
+  const choose = (id: string) => {
+    setInteracted(true)
+    setSelected(id)
+  }
+  const openSite = (targetId: string, siteId: string) =>
+    navigate(`/explorer?${new URLSearchParams({ ...(targetId !== 'jezero' && { target: targetId }), site: siteId })}`)
+  const auc = data?.common.targets.targets.find((t) => t.id === target.id)?.auc_documented
+
+  return (
+    <section ref={ref} className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-ink-950">
+      {/* deep-space backdrop that shows instantly, before WebGL loads */}
+      <div className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_70%_45%,rgb(40_80_110/0.35),transparent_55%),radial-gradient(ellipse_at_90%_15%,rgb(217_120_90/0.12),transparent_40%)]" />
+
+      {/* placeholder glow where Earth will appear, until the 3D scene and textures are ready */}
+      {gl && (
+        <motion.div
+          aria-hidden="true"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: sceneReady ? 0 : 1 }}
+          transition={{ duration: sceneReady ? 1.2 : 0.6 }}
+          className="pointer-events-none absolute left-1/2 top-[24svh] -z-10 size-56 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgb(127_216_230/0.35),rgb(127_216_230/0.06)_55%,transparent_70%)] blur-sm md:landscape:left-[68%] md:landscape:top-1/2 md:landscape:size-80"
+        >
+          <span className="absolute inset-0 animate-ping rounded-full border border-data/20 [animation-duration:2.4s]" />
+        </motion.div>
+      )}
+
+      <motion.div style={{ y: sceneY, opacity: sceneFade }} className="absolute inset-0 -z-10">
+        {gl ? (
+          ready && (
+            <Suspense fallback={null}>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.2 }} className="absolute inset-0">
+                <HeroScene
+                  targets={heroTargets}
+                  allSites={allSites}
+                  screened={screened}
+                  selected={target.id}
+                  hovered={hovered}
+                  onSelect={choose}
+                  onHoverSite={setHovered}
+                  onOpenSite={openSite}
+                  onInteract={() => setInteracted(true)}
+                  onReady={() => setSceneReady(true)}
+                  reduced={reduced}
+                  active={active}
+                />
+              </motion.div>
+            </Suspense>
+          )
+        ) : (
+          <img src={asset('media/poster.jpg')} alt="" className="h-full w-full object-cover opacity-60" />
+        )}
+      </motion.div>
+
+      {/* legibility scrims; never block the canvas */}
+      <div className="pointer-events-none absolute inset-0 -z-[5] bg-[linear-gradient(0deg,rgb(5_8_13/0.96)_8%,rgb(5_8_13/0.55)_42%,transparent_70%)] md:landscape:bg-[linear-gradient(90deg,rgb(5_8_13/0.9)_0%,rgb(5_8_13/0.5)_32%,transparent_58%)]" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-[5] h-32 bg-gradient-to-t from-background to-transparent" />
+
+      <motion.div
+        style={{ y: textY }}
+        className="pointer-events-none relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end gap-8 px-6 pb-14 pt-[52svh] md:px-10 md:pb-20 md:landscape:justify-center md:landscape:pt-28"
+      >
+        <motion.div variants={stagger(0.11, 0.35)} initial="hidden" animate="show" className="max-w-xl">
+          <motion.p variants={fadeUp(reduced)} className="label-mono text-slate-300">
+            NASA Space Apps 2026 · Team Northern Lights
+          </motion.p>
+          <motion.h1 variants={fadeUp(reduced)} className="mt-5 text-balance text-4xl font-semibold leading-[1.04] tracking-tight text-slate-100 sm:text-5xl lg:text-6xl">
+            Find Earth&apos;s terrain twins of{' '}
+            <span className="relative inline-block">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={target.body}
+                  initial={{ opacity: 0, y: reduced ? 0 : '0.35em', filter: 'blur(8px)' }}
+                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                  exit={{ opacity: 0, y: reduced ? 0 : '-0.35em', filter: 'blur(8px)' }}
+                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                  className={cn('inline-block', WORD[target.body].className)}
+                >
+                  {WORD[target.body].text}.
+                </motion.span>
+              </AnimatePresence>
+            </span>
+          </motion.h1>
+          <motion.p variants={fadeUp(reduced)} className="mt-6 text-pretty text-base leading-relaxed text-slate-300 md:text-lg">
+            SolMate measures the shape of the ground at Jezero Crater and the Artemis III candidate Mons Mouton Plateau, then finds the closest
+            Earth terrain in real elevation models. Every score is transparent and tested against NASA&apos;s own analog sites.
+          </motion.p>
+          <motion.div variants={fadeUp(reduced)} className="pointer-events-auto mt-8 flex flex-wrap gap-3">
+            <Button asChild size="lg" className="rounded-full px-6 shadow-[0_0_40px_rgb(127_216_230/0.25)]">
+              <Link to={`/explorer${target.id !== 'jezero' ? `?target=${target.id}` : ''}`}>
+                Open the explorer <ArrowRight />
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="rounded-full border-slate-100/30 bg-ink-950/40 px-6 backdrop-blur hover:bg-ink-950/60">
+              <Link to="/method">How it works</Link>
+            </Button>
+          </motion.div>
+          {gl && (
+            <motion.p variants={fadeUp(reduced)} className="mt-6 hidden items-center gap-4 font-mono text-[11px] text-slate-400 md:flex">
+              <span className="inline-flex items-center gap-1.5">
+                <Hand className="size-3.5" /> Drag to spin Earth
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <MousePointerClick className="size-3.5" /> Click Mars or the Moon
+              </span>
+            </motion.p>
+          )}
+        </motion.div>
+
+        {/* live analog links: synced with the 3D arcs */}
+        <motion.aside
+          initial={{ opacity: 0, y: reduced ? 0 : 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: reduced ? 0 : 1.6, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="pointer-events-auto w-full max-w-sm self-start rounded-2xl border border-white/10 bg-ink-950/65 p-3 shadow-2xl backdrop-blur-md md:landscape:absolute md:landscape:bottom-16 md:landscape:right-10 md:landscape:self-auto"
+          aria-label="Best Earth matches"
+        >
+          <div role="radiogroup" aria-label="Planetary target" className="grid grid-cols-2 gap-1 rounded-xl bg-white/5 p-1">
+            {heroTargets.map((t) => {
+              const on = t.id === target.id
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={on}
+                  onClick={() => choose(t.id)}
+                  className={cn('relative flex items-center gap-2 rounded-lg px-2 py-1.5 text-left transition-colors', on ? 'text-slate-100' : 'text-slate-400 hover:text-slate-200')}
+                >
+                  {on && <motion.span layoutId="hero-target-pill" transition={spring} className="absolute inset-0 rounded-lg bg-white/10" />}
+                  <img src={asset(t.body === 'mars' ? 'media/mars-2k.webp' : 'media/moon-2k.webp')} alt="" className="relative size-7 rounded-full object-cover object-[60%_50%]" />
+                  <span className="relative min-w-0">
+                    <span className="block font-mono text-[9px] uppercase tracking-[0.16em]" style={{ color: BODY[t.body].color }}>
+                      {BODY[t.body].label}
+                    </span>
+                    <span className="block truncate text-[12px] font-medium">{t.short}</span>
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+
+          <div className="hidden sm:block">
+            <p className="label-mono mt-3 px-1.5">Closest Earth terrain</p>
+            <ol className="mt-1.5 space-y-0.5" onMouseLeave={() => setHovered(null)}>
+              <AnimatePresence mode="popLayout" initial={false}>
+                {target.top.length === 0 &&
+                  Array.from({ length: 5 }, (_, i) => <li key={`sk${i}`} className="mx-1.5 my-2 h-5 animate-pulse rounded bg-white/5" />)}
+                {target.top.map((s, i) => (
+                  <motion.li
+                    key={`${target.id}-${s.id}`}
+                    initial={{ opacity: 0, x: 12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -12 }}
+                    transition={{ delay: i * 0.05, duration: 0.3 }}
+                  >
+                    <button
+                      type="button"
+                      onMouseEnter={() => setHovered(s.id)}
+                      onFocus={() => setHovered(s.id)}
+                      onBlur={() => setHovered(null)}
+                      onClick={() => openSite(target.id, s.id)}
+                      className={cn(
+                        'grid w-full grid-cols-[1.25rem_1fr_auto] items-center gap-2 rounded-lg px-1.5 py-1.5 text-left transition-colors',
+                        hovered === s.id ? 'bg-white/10' : 'hover:bg-white/5',
+                      )}
+                    >
+                      <span className="font-mono text-[10px] text-slate-500">{s.rank}</span>
+                      <span className="min-w-0">
+                        <span className="block truncate text-[13px] text-slate-100">{s.name}</span>
+                        <span className="block h-1 overflow-hidden rounded-full bg-white/10">
+                          <motion.span
+                            className="block h-full rounded-full"
+                            style={{ background: ROLE[s.role].color }}
+                            initial={{ width: 0 }}
+                            animate={{ width: `${s.score * 100}%` }}
+                            transition={{ duration: 0.8, delay: 0.2 + i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+                          />
+                        </span>
+                      </span>
+                      <span className="text-sm tabular text-slate-100">{pct(s.score)}</span>
+                    </button>
+                  </motion.li>
+                ))}
+              </AnimatePresence>
+            </ol>
+            <p className="mt-2 border-t border-white/10 px-1.5 pt-2 font-mono text-[10px] leading-relaxed text-slate-400">
+              Terrain similarity /100 from real DEMs
+              {auc !== undefined && (
+                <>
+                  {' '}
+                  · validation AUC <span className="text-positive">{auc.toFixed(2)}</span>
+                </>
+              )}
+            </p>
+          </div>
+        </motion.aside>
+      </motion.div>
+
+      <motion.a
+        href="#numbers"
+        aria-label="Scroll to results"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1, y: reduced ? 0 : [0, 6, 0] }}
+        transition={{ opacity: { delay: 2.2 }, y: { repeat: Infinity, duration: 2.2, ease: 'easeInOut' } }}
+        className="absolute bottom-4 left-1/2 hidden -translate-x-1/2 text-slate-400 hover:text-slate-100 md:block"
+      >
+        <ChevronDown className="size-6" />
+      </motion.a>
+    </section>
+  )
+}
