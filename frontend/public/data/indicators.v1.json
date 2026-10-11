@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generated_at": "2026-10-11T18:18:53+00:00",
+ "generated_at": "2026-10-11T18:43:21+00:00",
  "profile": {
   "id": "terrain-morphometry",
   "label": "Terrain morphometry (rover traverse scale)",
@@ -15,7 +15,7 @@
    },
    {
     "id": "slope_p90",
-    "label": "Steep-slope share (90th percentile)",
+    "label": "Steep slopes (90th-percentile slope)",
     "unit": "°",
     "description": "Slope exceeded by the steepest 10% of the window: scarps, crater walls, channel banks."
    },

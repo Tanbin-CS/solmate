@@ -44,7 +44,7 @@ SEED = 42
 INDICATOR_META = [
     {"id": "slope_median", "label": "Median slope", "unit": "°",
      "description": "Typical steepness of the ground, from Horn's 3×3 gradient on the 100 m grid."},
-    {"id": "slope_p90", "label": "Steep-slope share (90th percentile)", "unit": "°",
+    {"id": "slope_p90", "label": "Steep slopes (90th-percentile slope)", "unit": "°",
      "description": "Slope exceeded by the steepest 10% of the window: scarps, crater walls, channel banks."},
     {"id": "local_relief", "label": "Local relief", "unit": "m",
      "description": "Median elevation range inside a moving 1 km square: how much the ground rises and falls over rover-traverse distances."},
