@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generated_at": "2026-10-11T18:43:21+00:00",
+ "generated_at": "2026-10-11T18:48:30+00:00",
  "profile": {
   "id": "terrain-morphometry",
   "label": "Terrain morphometry (rover traverse scale)",
@@ -86,7 +86,7 @@
    "lon": 29.68,
    "role": "documented",
    "pair": "Mars",
-   "context": "Lake-edge carbonate sediments compared with Jezero Crater.",
+   "context": "Light-coloured lake-edge sediments; NASA notes Jezero shares geological and mineral characteristics with Lake Salda.",
    "source": "https://science.nasa.gov/solar-system/analog-explorer/#life-turkey-mars",
    "indicators": {
     "slope_median": 6.553799629211426,
@@ -119,7 +119,7 @@
    "lon": -116.87,
    "role": "documented",
    "pair": "Mars",
-   "context": "Rocky desert terrain where the Mars 2020 team practised hazard avoidance.",
+   "context": "Landscape NASA likens to Viking 2's view of Utopia Planitia; the Mars 2020 team practised hazard avoidance here.",
    "source": "https://science.nasa.gov/solar-system/analog-explorer/#rocky-reconnaissance-california-mars",
    "indicators": {
     "slope_median": 3.2749550342559814,
@@ -153,7 +153,7 @@
    "lon": -70.017,
    "role": "documented",
    "pair": "Mars",
-   "context": "Hyper-arid soils used to study how organic molecules persist under Mars-like dryness.",
+   "context": "One of the driest places on Earth, used to study how the building blocks of life respond to Martian conditions.",
    "source": "https://science.nasa.gov/solar-system/analog-explorer/#life-atacama-desert-mars",
    "indicators": {
     "slope_median": 4.252979755401611,
@@ -189,7 +189,7 @@
    "lon": -114.03,
    "role": "documented",
    "pair": "Mars",
-   "context": "Salt-rich playa studied for perchlorate and brine habitability.",
+   "context": "Salt deposits that help explain how perchlorate, also observed on Mars, can serve as an energy source for microbes.",
    "source": "https://science.nasa.gov/solar-system/analog-explorer/#life-utah-mars",
    "indicators": {
     "slope_median": 3.5792200565338135,
@@ -225,7 +225,7 @@
    "lon": -111.86,
    "role": "documented",
    "pair": "Mars",
-   "context": "Ancient saline lakebed deposits used to study biosignature preservation.",
+   "context": "Field and laboratory research on how biosignatures are preserved, to guide what Mars rovers look for.",
    "source": "https://science.nasa.gov/solar-system/analog-explorer/#life-arizona-mars",
    "indicators": {
     "slope_median": 3.882017135620117,
@@ -291,7 +291,7 @@
    "lon": -16.76,
    "role": "documented",
    "pair": "Moon",
-   "context": "Buried-ice radar surveys rehearsed for the lunar south pole.",
+   "context": "Ground-penetrating radar finds buried ice here; the same technology is planned for ice near the lunar south pole.",
    "source": "https://science.nasa.gov/solar-system/analog-explorer/#subsurface-ice-iceland-moon",
    "indicators": {
     "slope_median": 3.66805100440979,
@@ -327,7 +327,7 @@
    "lon": -155.283,
    "role": "documented",
    "pair": "Moon",
-   "context": "Basaltic field geology timed as a rehearsal for lunar surface operations.",
+   "context": "Researchers measure how long volcanic field-geology tasks take, to plan similar work on the lunar surface.",
    "source": "https://science.nasa.gov/solar-system/analog-explorer/#basalt-landscapes-kilauea-moon",
    "indicators": {
     "slope_median": 2.7548184394836426,
@@ -360,7 +360,7 @@
    "lon": -121.509,
    "role": "documented",
    "pair": "Moon",
-   "context": "Lava caves explored as possible shelters on the Moon and Mars.",
+   "context": "Lava caves explored from inside and out, working towards detecting hidden caves from above ground.",
    "source": "https://science.nasa.gov/solar-system/analog-explorer/#lava-caves-california-moon",
    "indicators": {
     "slope_median": 2.330451488494873,
@@ -393,7 +393,7 @@
    "lon": -111.48,
    "role": "documented",
    "pair": "Moon",
-   "context": "Desert volcanic terrain used for NASA's Artemis surface-operations field tests.",
+   "context": "Moon-like volcanic field where NASA astronauts rehearsed Artemis moonwalks and tested surface technology.",
    "source": "https://science.nasa.gov/missions/artemis/behind-the-scenes-of-a-nasa-moonwalk-in-the-arizona-desert/",
    "indicators": {
     "slope_median": 1.1306023597717285,
@@ -426,7 +426,7 @@
    "lon": -89.683,
    "role": "candidate",
    "pair": "Mars",
-   "context": "High-Arctic impact crater that preserves intra-crater lake sediments.",
+   "context": "High-Arctic impact structure with intra-crater sedimentary deposits, including later paleolacustrine (lake) sediments.",
    "source": "https://doi.org/10.1111/j.1945-5100.2005.tb00152.x",
    "indicators": {
     "slope_median": 3.8055620193481445,
@@ -460,8 +460,8 @@
    "lon": -111.022,
    "role": "candidate",
    "pair": "Moon",
-   "context": "Young, well-preserved simple impact crater in layered sedimentary rock.",
-   "source": "https://doi.org/10.1130/0-8137-5402-x.399",
+   "context": "Impact crater whose shocked Coconino Sandstone contains high-pressure silica phases such as coesite and stishovite.",
+   "source": "https://doi.org/10.1029/jb076i023p05449",
    "indicators": {
     "slope_median": 0.9403917789459229,
     "slope_p90": 1.7426815032958984,

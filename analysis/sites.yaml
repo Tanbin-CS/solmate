@@ -32,7 +32,7 @@ sites:
     lon: 29.680
     role: documented
     pair: Mars
-    context: Lake-edge carbonate sediments compared with Jezero Crater.
+    context: Light-coloured lake-edge sediments; NASA notes Jezero shares geological and mineral characteristics with Lake Salda.
     source: https://science.nasa.gov/solar-system/analog-explorer/#life-turkey-mars
   - id: death-valley
     name: Death Valley
@@ -41,7 +41,7 @@ sites:
     lon: -116.870
     role: documented
     pair: Mars
-    context: Rocky desert terrain where the Mars 2020 team practised hazard avoidance.
+    context: Landscape NASA likens to Viking 2's view of Utopia Planitia; the Mars 2020 team practised hazard avoidance here.
     source: https://science.nasa.gov/solar-system/analog-explorer/#rocky-reconnaissance-california-mars
   - id: atacama-yungay
     name: Atacama Desert (Yungay)
@@ -50,7 +50,7 @@ sites:
     lon: -70.017
     role: documented
     pair: Mars
-    context: Hyper-arid soils used to study how organic molecules persist under Mars-like dryness.
+    context: One of the driest places on Earth, used to study how the building blocks of life respond to Martian conditions.
     source: https://science.nasa.gov/solar-system/analog-explorer/#life-atacama-desert-mars
   - id: pilot-valley
     name: Pilot Valley
@@ -59,7 +59,7 @@ sites:
     lon: -114.030
     role: documented
     pair: Mars
-    context: Salt-rich playa studied for perchlorate and brine habitability.
+    context: Salt deposits that help explain how perchlorate, also observed on Mars, can serve as an energy source for microbes.
     source: https://science.nasa.gov/solar-system/analog-explorer/#life-utah-mars
   - id: verde-valley
     name: Verde Valley
@@ -68,7 +68,7 @@ sites:
     lon: -111.860
     role: documented
     pair: Mars
-    context: Ancient saline lakebed deposits used to study biosignature preservation.
+    context: Field and laboratory research on how biosignatures are preserved, to guide what Mars rovers look for.
     source: https://science.nasa.gov/solar-system/analog-explorer/#life-arizona-mars
   - id: vikursundar
     name: Vikursundar, Askja
@@ -86,7 +86,7 @@ sites:
     lon: -16.760
     role: documented
     pair: Moon
-    context: Buried-ice radar surveys rehearsed for the lunar south pole.
+    context: Ground-penetrating radar finds buried ice here; the same technology is planned for ice near the lunar south pole.
     source: https://science.nasa.gov/solar-system/analog-explorer/#subsurface-ice-iceland-moon
   - id: kilauea
     name: Kīlauea volcano
@@ -95,7 +95,7 @@ sites:
     lon: -155.283
     role: documented
     pair: Moon
-    context: Basaltic field geology timed as a rehearsal for lunar surface operations.
+    context: Researchers measure how long volcanic field-geology tasks take, to plan similar work on the lunar surface.
     source: https://science.nasa.gov/solar-system/analog-explorer/#basalt-landscapes-kilauea-moon
   - id: lava-beds
     name: Lava Beds, Medicine Lake Volcano
@@ -104,7 +104,7 @@ sites:
     lon: -121.509
     role: documented
     pair: Moon
-    context: Lava caves explored as possible shelters on the Moon and Mars.
+    context: Lava caves explored from inside and out, working towards detecting hidden caves from above ground.
     source: https://science.nasa.gov/solar-system/analog-explorer/#lava-caves-california-moon
   - id: sf-volcanic-field
     name: San Francisco Volcanic Field
@@ -113,7 +113,7 @@ sites:
     lon: -111.480
     role: documented
     pair: Moon
-    context: Desert volcanic terrain used for NASA's Artemis surface-operations field tests.
+    context: Moon-like volcanic field where NASA astronauts rehearsed Artemis moonwalks and tested surface technology.
     source: https://science.nasa.gov/missions/artemis/behind-the-scenes-of-a-nasa-moonwalk-in-the-arizona-desert/
 
   # --- other literature candidates (ranked, not used to score validation) ---
@@ -124,7 +124,7 @@ sites:
     lon: -89.683
     role: candidate
     pair: Mars
-    context: High-Arctic impact crater that preserves intra-crater lake sediments.
+    context: High-Arctic impact structure with intra-crater sedimentary deposits, including later paleolacustrine (lake) sediments.
     source: https://doi.org/10.1111/j.1945-5100.2005.tb00152.x
   - id: meteor-crater
     name: Meteor Crater
@@ -133,8 +133,8 @@ sites:
     lon: -111.022
     role: candidate
     pair: Moon
-    context: Young, well-preserved simple impact crater in layered sedimentary rock.
-    source: https://doi.org/10.1130/0-8137-5402-x.399
+    context: Impact crater whose shocked Coconino Sandstone contains high-pressure silica phases such as coesite and stishovite.
+    source: https://doi.org/10.1029/jb076i023p05449
   - id: lonar
     name: Lonar crater
     country: India
