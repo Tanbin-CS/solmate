@@ -33,6 +33,7 @@
   --mars-400: #d9785a;
   --green-400: #8fd3a8;
   --red-400: #ef7d72;
+  --pink-400: #e7a1c9;
 
   /* semantic (shadcn names) */
   --background: var(--ink-900);
@@ -61,6 +62,7 @@
   --mars: var(--mars-400);
   --positive: var(--green-400);
   --negative: var(--red-400);
+  --screen: var(--pink-400);
 }
 
 @theme inline {
@@ -103,6 +105,7 @@
   --color-mars: var(--mars);
   --color-positive: var(--positive);
   --color-negative: var(--negative);
+  --color-screen: var(--screen);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

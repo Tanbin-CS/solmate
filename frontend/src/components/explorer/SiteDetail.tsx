@@ -5,7 +5,7 @@ import type { SiteResult } from '@/science/analysis'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { asset } from '@/lib/asset'
 import { fmtCoord, pct } from '@/lib/format'
-import { ROLE } from './roles'
+import { BODY, ROLE } from './roles'
 import { ScoreBreakdown } from './ScoreBreakdown'
 
 type View = 'imagery' | 'hillshade' | 'slope'
@@ -16,7 +16,7 @@ interface Props {
   referenceValues: number[]
   indicators: IndicatorMeta[]
   weights: Record<string, number>
-  rankRange: ValidationDoc['weight_perturbation']['rank_range'][string] | undefined
+  rankRange?: ValidationDoc['weight_perturbation']['rank_range'][string]
   sensitivityRanks: { label: string; rank: number }[]
   total: number
   onClose: () => void
@@ -56,7 +56,8 @@ export function SiteDetail({ result, reference, referenceValues, indicators, wei
             {site.name}
           </h2>
           <p className="mt-1 font-mono text-[11px] text-slate-400">
-            {site.country} · {fmtCoord(site.lat, site.lon)}
+            {site.country ? `${site.country} · ` : ''}
+            {fmtCoord(site.lat, site.lon)}
           </p>
         </div>
         <button type="button" onClick={onClose} className="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-ink-700 hover:text-slate-100" aria-label="Close site details">
@@ -100,12 +101,12 @@ export function SiteDetail({ result, reference, referenceValues, indicators, wei
             </Tabs>
           </div>
           <div className="grid grid-cols-2 gap-2">
-            <Thumb src={reference.quicklooks[view]} label="Jezero · Mars" accent="var(--reference)" />
-            <Thumb src={site.quicklooks[view]} label="Earth site" accent="var(--data)" />
+            <Thumb src={reference.quicklooks[view]} label={`${reference.short} · ${BODY[reference.body].label}`} accent="var(--reference)" />
+            <Thumb src={site.quicklooks?.[view]} label="Earth site" accent={role.color} />
           </div>
           <p className="mt-2 font-mono text-[10.5px] leading-relaxed text-slate-400">
             {view === 'imagery'
-              ? 'Context imagery only: Mars CTX orthomosaic (USGS) and Sentinel-2 cloudless (EOX). Not used in scoring.'
+              ? `Context imagery only: ${reference.body === 'mars' ? 'Mars CTX orthomosaic (USGS)' : 'average Sun visibility at the lunar south pole (PGDA; dark = more shadow)'} and Sentinel-2 cloudless (EOX). Not used in scoring.`
               : view === 'hillshade'
                 ? 'Shaded relief of the elevation grid actually scored (100 m cells).'
                 : 'Slope from the scored grid, 0° (dark) to 30°+ (light).'}
@@ -114,7 +115,7 @@ export function SiteDetail({ result, reference, referenceValues, indicators, wei
 
         <div>
           <p className="label-mono mb-2">Why it scores this way</p>
-          <ScoreBreakdown result={result} reference={referenceValues} indicators={indicators} weights={weights} />
+          <ScoreBreakdown result={result} reference={referenceValues} referenceLabel={reference.short} indicators={indicators} weights={weights} />
           <p className="mt-2 text-xs leading-relaxed text-slate-400">
             {mismatches.length === 0
               ? 'No indicator falls below 50 similarity under the current weights.'
@@ -122,7 +123,18 @@ export function SiteDetail({ result, reference, referenceValues, indicators, wei
           </p>
         </div>
 
-        {site.context && (
+        {site.role === 'screened' && (
+          <div className="rounded-lg border border-screen/30 bg-screen/[0.06] p-4">
+            <p className="label-mono text-screen">Unreviewed screening result</p>
+            <p className="mt-2 text-sm leading-relaxed text-slate-200">{site.context}</p>
+            <p className="mt-2 text-xs text-slate-400">
+              {site.nearestKnown ? `${site.nearestKnown.km} km from ${site.nearestKnown.name} (a site already in the curated list).` : 'More than 50 km from every curated site.'}{' '}
+              Expert and field review would be needed before calling it an analog.
+            </p>
+          </div>
+        )}
+
+        {site.context && site.role !== 'screened' && (
           <div className="rounded-lg border border-border bg-ink-850 p-4">
             <p className="label-mono">Documented context · not scored</p>
             <p className="mt-2 text-sm leading-relaxed text-slate-200">{site.context}</p>

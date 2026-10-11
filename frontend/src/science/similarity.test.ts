@@ -1,7 +1,7 @@
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { IndicatorsDoc, ValidationDoc } from '@/data/schema'
+import { IndicatorsDoc, ScreeningDoc, TargetsDoc, ValidationDoc } from '@/data/schema'
 import { analyse, equalWeights } from './analysis'
 import { auc, contributions, perIndicatorSimilarity, rank, robustScaling, weightedScore } from './similarity'
 
@@ -49,9 +49,11 @@ describe('similarity primitives', () => {
   })
 })
 
-describe('agreement with the Python pipeline artifacts', () => {
-  const doc = IndicatorsDoc.parse(load('indicators.v1.json'))
-  const val = ValidationDoc.parse(load('validation.v1.json'))
+const targets = TargetsDoc.parse(load('targets.v1.json')).targets.map((t) => t.id)
+
+describe.each(targets)('agreement with the Python pipeline artifacts: %s', (target) => {
+  const doc = IndicatorsDoc.parse(load(`indicators.${target}.v1.json`))
+  const val = ValidationDoc.parse(load(`validation.${target}.v1.json`))
   const res = analyse(doc, equalWeights(doc.profile.scored))
 
   it('reproduces the robust scaling', () => {
@@ -70,8 +72,20 @@ describe('agreement with the Python pipeline artifacts', () => {
   })
 
   it('reproduces the known-analog retrieval AUC', () => {
-    const pos = res.results.filter((r) => r.site.role === 'documented' && r.site.pair === 'Mars').map((r) => r.score)
+    const pos = res.results.filter((r) => r.site.role === 'documented' && r.site.pair === val.retrieval.pair).map((r) => r.score)
     const neg = res.results.filter((r) => r.site.role === 'control').map((r) => r.score)
-    expect(auc(pos, neg)).toBeCloseTo(val.retrieval.auc_mars_documented, 12)
+    expect(auc(pos, neg)).toBeCloseTo(val.retrieval.auc_documented, 12)
+  })
+})
+
+describe('screened windows use the curated scaling', () => {
+  const screeningPath = new URL('../../public/data/screening.v1.json', import.meta.url)
+  const doc = IndicatorsDoc.parse(load('indicators.jezero.v1.json'))
+  it.skipIf(!existsSync(fileURLToPath(screeningPath)))('matches the Python top-10 equal-weight scores', () => {
+    const screening = ScreeningDoc.parse(load('screening.v1.json'))
+    const res = analyse(doc, equalWeights(doc.profile.scored), screening)
+    for (const top of screening.top_equal_weights['jezero'] ?? []) {
+      expect(res.byId.get(top.id)!.score).toBeCloseTo(top.score, 9)
+    }
   })
 })

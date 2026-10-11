@@ -1,4 +1,5 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { TargetSwitcher } from '@/components/explorer/TargetSwitcher'
 import { Link, useLocation } from 'react-router'
 import { motion, useReducedMotion } from 'motion/react'
 import { ArrowRight } from 'lucide-react'
@@ -13,13 +14,14 @@ import { ROLE } from '@/components/explorer/roles'
 import type { AnalysisData } from '@/data/load'
 
 export default function MethodPage() {
-  const state = useAnalysisData()
+  const [target, setTarget] = useState('jezero')
+  const state = useAnalysisData(target)
   return (
     <>
       <PageHeader
         kicker="Method"
         title="How SolMate compares terrain."
-        lead="One Mars target, Earth elevation data on the same grid, five terrain indicators and a weighted score you can inspect. Then a test of whether the method finds sites NASA already uses."
+        lead="Two planetary targets, Earth elevation data on the same grid, five terrain indicators and a weighted score you can inspect. Then a test of whether the method finds sites NASA already uses."
       />
       {state.status === 'loading' && (
         <div className="mx-auto w-full max-w-4xl px-6">
@@ -27,7 +29,19 @@ export default function MethodPage() {
         </div>
       )}
       {state.status === 'error' && <ErrorState title="Results could not be loaded." detail={state.error.message} onRetry={state.retry} />}
-      {state.status === 'ready' && <MethodBody data={state.data} />}
+      {state.status === 'ready' && (
+        <>
+          <div className="sticky top-16 z-20 border-y border-border bg-background/95 py-3">
+            <div className="mx-auto flex w-full max-w-4xl flex-wrap items-center justify-between gap-3 px-6">
+              <span className="label-mono">Results shown for</span>
+              <div className="w-full max-w-sm">
+                <TargetSwitcher targets={state.data.targets.targets} value={state.data.indicators.reference.id} onChange={setTarget} />
+              </div>
+            </div>
+          </div>
+          <MethodBody data={state.data} />
+        </>
+      )}
     </>
   )
 }
@@ -70,7 +84,7 @@ function MethodBody({ data }: { data: AnalysisData }) {
   const res = useMemo(() => analyse(doc, equalWeights(doc.profile.scored)), [doc])
   const meta = doc.profile.indicators
   const r = v.retrieval
-  const p = v.weight_perturbation.auc_mars_documented
+  const p = v.weight_perturbation.auc_documented
   const groups = (['documented', 'candidate', 'control'] as const).map((role) => ({ role, items: res.results.filter((x) => x.site.role === role) }))
   const corr = v.correlation
 
@@ -78,7 +92,7 @@ function MethodBody({ data }: { data: AnalysisData }) {
     <div className="mx-auto w-full max-w-4xl px-6 pb-24">
       <Block kicker="01 · Scope" title="A terrain profile, not a claim of sameness.">
         <p>
-          The reference is the <strong className="text-slate-100">{doc.reference.name}</strong> on Mars. {doc.reference.note} The comparison asks one narrow question: which Earth sites have ground that is shaped like this at rover-traverse scale? That is useful for
+          The reference is the <strong className="text-slate-100">{doc.reference.name}</strong> on the {doc.reference.pair}. {doc.reference.note} The comparison asks one narrow question: which Earth sites have ground that is shaped like this at rover-traverse scale? That is useful for
           mobility, navigation and field-geology rehearsal. It says nothing about chemistry, climate, radiation or gravity.
         </p>
         <p>
@@ -90,6 +104,9 @@ function MethodBody({ data }: { data: AnalysisData }) {
         <ul className="list-disc space-y-2 pl-5 marker:text-slate-500">
           <li>
             <strong className="text-slate-100">Mars:</strong> USGS Mars 2020 Terrain Relative Navigation CTX digital terrain model of Jezero, 20 m per pixel.
+          </li>
+          <li>
+            <strong className="text-slate-100">Moon:</strong> LOLA south-pole elevation mosaic from NASA Goddard (PGDA), 20 m per pixel, polar stereographic.
           </li>
           <li>
             <strong className="text-slate-100">Earth:</strong> Copernicus DEM GLO-30 (about 30 m), read directly from the AWS Open Data registry.
@@ -147,16 +164,16 @@ function MethodBody({ data }: { data: AnalysisData }) {
 
       <Block id="validation" kicker="05 · Validation" title="Does it find the sites NASA already uses?">
         <p>
-          If terrain similarity is meaningful, Earth sites that NASA pairs with Mars in its{' '}
+          If terrain similarity is meaningful, Earth sites that NASA pairs with the {r.pair} in its{' '}
           <a className="text-data hover:underline" href="https://science.nasa.gov/solar-system/analog-explorer/" target="_blank" rel="noreferrer">
             Planetary Analog Explorer
           </a>{' '}
           should score above farmland, rainforest and alpine glaciers. They do, at equal weights:
         </p>
         <div className="grid gap-3 sm:grid-cols-3">
-          <Stat label="Retrieval AUC" value={r.auc_mars_documented.toFixed(2)} note={`${r.n_positive} Mars-paired sites vs ${r.n_negative} controls. 0.5 = chance, 1 = perfect.`} tone="text-positive" />
+          <Stat label="Retrieval AUC" value={r.auc_documented.toFixed(2)} note={`${r.n_positive} ${r.pair}-paired sites vs ${r.n_negative} controls. 0.5 = chance, 1 = perfect.`} tone="text-positive" />
           <Stat label="Under random weights" value={`${p.p5.toFixed(2)}–${p.p95.toFixed(2)}`} note={`5th–95th percentile over ${v.weight_perturbation.n.toLocaleString()} Dirichlet weightings`} />
-          <Stat label="Top five" value={`${r.documented_in_top5}/5`} note="are NASA-documented analog sites; no control in the top five" />
+          <Stat label="Top five" value={`${r.documented_in_top5}/5`} note={`are NASA-documented analog sites; ${r.controls_in_top5 === 0 ? 'no control' : `${r.controls_in_top5} control`} in the top five`} />
         </div>
 
         <ScoreStrip groups={groups} />
@@ -178,7 +195,7 @@ function MethodBody({ data }: { data: AnalysisData }) {
                     {c.label}
                     {c.id === 'primary' && <span className="ml-2 font-mono text-[11px] text-slate-400">(primary)</span>}
                   </td>
-                  <td className={`px-4 py-3 text-right font-mono tabular ${c.auc_mars_documented < 0.7 ? 'text-negative' : 'text-slate-100'}`}>{c.auc_mars_documented.toFixed(2)}</td>
+                  <td className={`px-4 py-3 text-right font-mono tabular ${c.auc_documented < 0.7 ? 'text-negative' : 'text-slate-100'}`}>{c.auc_documented.toFixed(2)}</td>
                   <td className="px-4 py-3 text-right font-mono tabular text-slate-100">ρ = {c.spearman_vs_primary.toFixed(2)}</td>
                 </tr>
               ))}
@@ -187,18 +204,27 @@ function MethodBody({ data }: { data: AnalysisData }) {
         </div>
         <ul className="list-disc space-y-2 pl-5 marker:text-slate-500">
           <li>
-            <strong className="text-slate-100">Scale matters.</strong> Shrinking the window to 12 km drops the retrieval AUC to{' '}
-            {v.sensitivity.find((c) => c.id === 'smaller-window')?.auc_mars_documented.toFixed(2)} and reshuffles the ranking. Results describe a 20 km
-            traverse-scale landscape, not a landing-site patch.
+            <strong className="text-slate-100">Scale matters.</strong> In a 12 km window the retrieval AUC is{' '}
+            {v.sensitivity.find((c) => c.id === 'smaller-window')?.auc_documented.toFixed(2)} (rank agreement ρ ={' '}
+            {v.sensitivity.find((c) => c.id === 'smaller-window')?.spearman_vs_primary.toFixed(2)}). Results describe a 20 km traverse-scale landscape, not a
+            landing-site patch.
           </li>
           <li>
             <strong className="text-slate-100">Forest canopy looks like rough ground.</strong> GLO-30 is a surface model, so the Amazon control ranks{' '}
             {ordinal(res.byId.get('amazon-forest')?.rank ?? 0)}: tree crowns add apparent roughness.
           </li>
-          <li>
-            <strong className="text-slate-100">Lake Salda ranks {ordinal(res.byId.get('lake-salda')?.rank ?? 0)}.</strong> NASA pairs it with Jezero for its carbonate
-            sediments, not its landforms. A terrain-only profile cannot see mineralogy, which is why mineralogy stays a separate, unscored layer.
-          </li>
+          {doc.reference.body === 'mars' ? (
+            <li>
+              <strong className="text-slate-100">Lake Salda ranks {ordinal(res.byId.get('lake-salda')?.rank ?? 0)}.</strong> NASA pairs it with Jezero for its lake-edge
+              sediments, not its landforms. A terrain-only profile cannot see mineralogy, which is why mineralogy stays a separate, unscored layer.
+            </li>
+          ) : (
+            <li>
+              <strong className="text-slate-100">Light and cold are not scored.</strong> The south pole&apos;s defining conditions (long shadows, permanently shadowed
+              regions, extreme cold) have no Earth equivalent and are shown only as context. NASA&apos;s Moon-paired sites are chosen for basaltic geology, so they
+              are a loose test for a polar massif.
+            </li>
+          )}
         </ul>
       </Block>
 

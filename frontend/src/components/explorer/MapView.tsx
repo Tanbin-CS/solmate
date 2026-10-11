@@ -49,6 +49,7 @@ const STYLE: StyleSpecification = {
       attribution: 'Terrain Tiles: Mapzen / AWS Open Data',
     },
     windows: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+    screened: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
   },
   layers: [
     { id: 'bg', type: 'background', paint: { 'background-color': '#05080d' } },
@@ -89,6 +90,31 @@ const STYLE: StyleSpecification = {
         'line-dasharray': [3, 2],
       },
     },
+    {
+      id: 'screened-halo',
+      type: 'circle',
+      source: 'screened',
+      layout: { visibility: 'none' },
+      paint: {
+        'circle-radius': ['interpolate', ['linear'], ['zoom'], 1, ['*', 6, ['get', 'score']], 6, ['*', 16, ['get', 'score']], 10, ['*', 30, ['get', 'score']]],
+        'circle-color': '#e7a1c9',
+        'circle-opacity': ['*', 0.18, ['get', 'score']],
+        'circle-blur': 0.6,
+      },
+    },
+    {
+      id: 'screened',
+      type: 'circle',
+      source: 'screened',
+      layout: { visibility: 'none' },
+      paint: {
+        'circle-radius': ['interpolate', ['linear'], ['zoom'], 1, 2.5, 6, 5, 10, 8],
+        'circle-color': ['interpolate', ['linear'], ['get', 'score'], 0, '#2c3d56', 0.5, '#7d6a8e', 0.8, '#e7a1c9', 1, '#fff2fa'],
+        'circle-stroke-color': '#05080d',
+        'circle-stroke-width': ['case', ['get', 'selected'], 2.5, 1],
+        'circle-opacity': 0.95,
+      },
+    },
   ],
 }
 
@@ -109,6 +135,8 @@ function windowPolygon(lat: number, lon: number): { type: 'Polygon'; coordinates
 
 interface Props {
   results: SiteResult[]
+  screened: SiteResult[]
+  showScreened: boolean
   selectedId: string | null
   hoveredId: string | null
   layer: Layer
@@ -119,7 +147,7 @@ interface Props {
   padding: { left: number; right: number; top: number; bottom: number }
 }
 
-export function MapView({ results, selectedId, hoveredId, layer, onSelect, onHover, reducedMotion, padding }: Props) {
+export function MapView({ results, screened, showScreened, selectedId, hoveredId, layer, onSelect, onHover, reducedMotion, padding }: Props) {
   const container = useRef<HTMLDivElement>(null)
   const map = useRef<maplibregl.Map | null>(null)
   const markers = useRef(new Map<string, { marker: maplibregl.Marker; el: HTMLButtonElement }>())
@@ -147,6 +175,12 @@ export function MapView({ results, selectedId, hoveredId, layer, onSelect, onHov
     })
     m.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'bottom-right')
     m.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-left')
+    m.on('click', 'screened', (e) => {
+      const id = e.features?.[0]?.properties?.id
+      if (typeof id === 'string') handlers.current.onSelect(id)
+    })
+    m.on('mouseenter', 'screened', () => (m.getCanvas().style.cursor = 'pointer'))
+    m.on('mouseleave', 'screened', () => (m.getCanvas().style.cursor = ''))
     m.once('style.load', () => {
       ready.current = true
       setLoaded(true)
@@ -199,10 +233,11 @@ export function MapView({ results, selectedId, hoveredId, layer, onSelect, onHov
           markers.current.delete(id)
         }
       })
+      const selScreen = screened.find((r) => r.site.id === selectedId)
       const src = m.getSource('windows') as GeoJSONSource | undefined
       src?.setData({
         type: 'FeatureCollection',
-        features: results.map((r) => ({
+        features: [...results, ...(selScreen ? [selScreen] : [])].map((r) => ({
           type: 'Feature',
           properties: { id: r.site.id, color: cssColor(ROLE[r.site.role].color), selected: r.site.id === selectedId },
           geometry: windowPolygon(r.site.lat, r.site.lon),
@@ -211,7 +246,24 @@ export function MapView({ results, selectedId, hoveredId, layer, onSelect, onHov
     }
     whenReady(apply)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [results, selectedId])
+  }, [results, screened, selectedId])
+
+  // screening layer: one point per screened window, coloured by similarity
+  useEffect(() => {
+    whenReady((m) => {
+      const src = m.getSource('screened') as GeoJSONSource | undefined
+      src?.setData({
+        type: 'FeatureCollection',
+        features: screened.map((r) => ({
+          type: 'Feature',
+          properties: { id: r.site.id, score: r.score, selected: r.site.id === selectedId },
+          geometry: { type: 'Point', coordinates: [r.site.lon, r.site.lat] },
+        })),
+      })
+      for (const id of ['screened', 'screened-halo']) m.setLayoutProperty(id, 'visibility', showScreened ? 'visible' : 'none')
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [screened, showScreened, selectedId])
 
   // selection and hover styling
   useEffect(() => {
@@ -223,7 +275,7 @@ export function MapView({ results, selectedId, hoveredId, layer, onSelect, onHov
 
   // camera follows the selected site
   useEffect(() => {
-    const target = results.find((r) => r.site.id === selectedId)
+    const target = results.find((r) => r.site.id === selectedId) ?? screened.find((r) => r.site.id === selectedId)
     const go = (m: maplibregl.Map) => {
       if (target) {
         const opts = { center: [target.site.lon, target.site.lat] as [number, number], zoom: 10.3, pitch: layer === 'terrain' ? 55 : 0, bearing: layer === 'terrain' ? -20 : 0, padding }

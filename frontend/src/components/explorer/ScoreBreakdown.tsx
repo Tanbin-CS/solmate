@@ -7,19 +7,22 @@ import { cn } from '@/lib/utils'
 interface Props {
   result: SiteResult
   reference: number[]
+  referenceLabel: string
   indicators: IndicatorMeta[]
   weights: Record<string, number>
 }
 
 /** Per-indicator explanation: reference vs site value, similarity, and its share of the overall score. */
-export function ScoreBreakdown({ result, reference, indicators, weights }: Props) {
+export function ScoreBreakdown({ result, reference, referenceLabel, indicators, weights }: Props) {
   const reduced = useReducedMotion()
   const total = indicators.reduce((s, m) => s + (weights[m.id] ?? 0), 0)
   return (
     <div className="space-y-1">
       <div className="grid grid-cols-[1fr_4.5rem_4.5rem] gap-2 px-1 pb-1">
         <span className="label-mono">Indicator</span>
-        <span className="label-mono text-right text-reference">Jezero</span>
+        <span className="label-mono truncate text-right text-reference" title={referenceLabel}>
+          {referenceLabel.split(' ')[0]}
+        </span>
         <span className="label-mono text-right text-data">Site</span>
       </div>
       {indicators.map((m, j) => {
@@ -50,7 +53,7 @@ export function ScoreBreakdown({ result, reference, indicators, weights }: Props
               </span>
             </div>
             <p className="mt-1.5 font-mono text-[10.5px] text-slate-400">
-              {Math.abs(gap) < 0.25 ? 'Close match' : `${gap > 0 ? 'Higher' : 'Lower'} than Jezero by ${Math.abs(gap).toFixed(1)} σ`}
+              {Math.abs(gap) < 0.25 ? 'Close match' : `${gap > 0 ? 'Higher' : 'Lower'} than ${referenceLabel} by ${Math.abs(gap).toFixed(1)} σ`}
               {mismatch && <span className="text-negative"> · mismatch</span>}
             </p>
           </div>

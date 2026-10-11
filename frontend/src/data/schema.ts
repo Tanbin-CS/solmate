@@ -36,7 +36,9 @@ export const Site = z.object({
 export const Reference = z.object({
   id: z.string(),
   name: z.string(),
-  body: z.string(),
+  short: z.string(),
+  body: z.enum(['mars', 'moon']),
+  pair: z.string(),
   lat: z.number(),
   lon: z.number(),
   note: z.string(),
@@ -81,6 +83,7 @@ const triple = z.object({ p5: z.number(), p50: z.number(), p95: z.number() })
 export const ValidationDoc = z.object({
   version: z.literal(1),
   generated_at: z.string(),
+  target: z.string(),
   method: z.string(),
   pool: z.array(z.string()),
   excluded: z.array(z.string()),
@@ -91,23 +94,24 @@ export const ValidationDoc = z.object({
     ranks: indicatorValues,
   }),
   retrieval: z.object({
+    pair: z.string(),
     positives: z.string(),
     negatives: z.string(),
-    auc_mars_documented: z.number(),
+    auc_documented: z.number(),
     auc_all_documented: z.number(),
     n_positive: z.number(),
     n_negative: z.number(),
     top5: z.array(z.string()),
     documented_in_top5: z.number(),
     controls_in_top5: z.number(),
-    mean_rank: z.object({ documented_mars: z.number(), documented_all: z.number(), control: z.number() }),
+    mean_rank: z.object({ documented_pair: z.number(), documented_all: z.number(), control: z.number() }),
   }),
   weight_perturbation: z.object({
     n: z.number(),
     seed: z.number(),
     distribution: z.string(),
     rank_range: z.record(z.string(), rankRange),
-    auc_mars_documented: triple,
+    auc_documented: triple,
   }),
   sensitivity: z.array(
     z.object({
@@ -115,7 +119,7 @@ export const ValidationDoc = z.object({
       label: z.string(),
       window_m: z.number(),
       cell_m: z.number(),
-      auc_mars_documented: z.number(),
+      auc_documented: z.number(),
       spearman_vs_primary: z.number(),
       ranks: indicatorValues,
     }),
@@ -176,3 +180,53 @@ export const ClaimsDoc = z.object({
   ),
 })
 export type ClaimsDoc = z.infer<typeof ClaimsDoc>
+
+export const TargetsDoc = z.object({
+  version: z.literal(1),
+  generated_at: z.string(),
+  targets: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      short: z.string(),
+      body: z.enum(['mars', 'moon']),
+      pair: z.string(),
+      lat: z.number(),
+      lon: z.number(),
+      note: z.string(),
+      quicklooks,
+      indicators: indicatorValues,
+      auc_documented: z.number(),
+      top: z.array(z.object({ id: z.string(), score: z.number() })),
+    }),
+  ),
+})
+export type TargetsDoc = z.infer<typeof TargetsDoc>
+export type TargetSummary = TargetsDoc['targets'][number]
+
+export const ScreenWindow = z.object({
+  id: z.string(),
+  region: z.string(),
+  lat: z.number(),
+  lon: z.number(),
+  indicators: indicatorValues,
+  valid_fraction: z.number(),
+  elev_min: z.number(),
+  elev_max: z.number(),
+  nearest_known: z.object({ name: z.string(), km: z.number() }).nullable(),
+  quicklooks: quicklooks.optional(),
+})
+export type ScreenWindow = z.infer<typeof ScreenWindow>
+
+export const ScreeningDoc = z.object({
+  version: z.literal(1),
+  generated_at: z.string(),
+  window_m: z.number(),
+  cell_m: z.number(),
+  method: z.string(),
+  status: z.string(),
+  regions: z.array(z.object({ id: z.string(), name: z.string(), country: z.string(), type: z.string(), box: z.array(z.number()) })),
+  windows: z.array(ScreenWindow),
+  top_equal_weights: z.record(z.string(), z.array(z.object({ id: z.string(), score: z.number() }))),
+})
+export type ScreeningDoc = z.infer<typeof ScreeningDoc>

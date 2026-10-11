@@ -1,13 +1,12 @@
 import { ExternalLink } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { ErrorState, PanelSkeleton } from '@/components/common/States'
-import { useAnalysisData } from '@/hooks/useAnalysisData'
+import { useAllTargets, type AllTargets } from '@/hooks/useAllTargets'
 import { ROLE } from '@/components/explorer/roles'
 import { fmtCoord } from '@/lib/format'
-import type { AnalysisData } from '@/data/load'
 
 export default function DataPage() {
-  const state = useAnalysisData()
+  const state = useAllTargets()
   return (
     <>
       <PageHeader
@@ -20,7 +19,7 @@ export default function DataPage() {
           <PanelSkeleton />
         </div>
       )}
-      {state.status === 'error' && <ErrorState title="Provenance could not be loaded." detail={state.error.message} onRetry={state.retry} />}
+      {state.status === 'error' && <ErrorState title="Provenance could not be loaded." detail={state.error.message} onRetry={() => location.reload()} />}
       {state.status === 'ready' && <DataBody data={state.data} />}
     </>
   )
@@ -36,8 +35,10 @@ function Field({ label, value }: { label: string; value?: string }) {
   )
 }
 
-function DataBody({ data }: { data: AnalysisData }) {
-  const { provenance: p, indicators: doc } = data
+function DataBody({ data }: { data: AllTargets }) {
+  const { provenance: p, screening } = data.common
+  const bundles = data.common.targets.targets.map((t) => ({ t, doc: data.byId[t.id]!.indicators }))
+  const doc = bundles[0]!.doc
   return (
     <div className="mx-auto w-full max-w-5xl space-y-16 px-6 pb-24">
       <section aria-labelledby="datasets">
@@ -106,13 +107,15 @@ function DataBody({ data }: { data: AnalysisData }) {
               </tr>
             </thead>
             <tbody>
-              <tr className="border-t border-border">
-                <td className="px-4 py-3 text-slate-100">{doc.reference.name}</td>
-                <td className="px-4 py-3 text-reference">Reference</td>
-                <td className="px-4 py-3 font-mono text-xs text-slate-300">{fmtCoord(doc.reference.lat, doc.reference.lon)}</td>
-                <td className="px-4 py-3 text-right font-mono text-xs tabular">{Math.round(doc.reference.valid_fraction * 100)}%</td>
-                <td className="px-4 py-3 font-mono text-[11px] text-slate-400">CTX DTM mosaic</td>
-              </tr>
+              {bundles.map(({ t, doc: d }) => (
+                <tr key={t.id} className="border-t border-border">
+                  <td className="px-4 py-3 text-slate-100">{d.reference.name}</td>
+                  <td className="px-4 py-3 text-reference">Reference · {t.pair}</td>
+                  <td className="px-4 py-3 font-mono text-xs text-slate-300">{fmtCoord(d.reference.lat, d.reference.lon)}</td>
+                  <td className="px-4 py-3 text-right font-mono text-xs tabular">{Math.round(d.reference.valid_fraction * 100)}%</td>
+                  <td className="px-4 py-3 font-mono text-[11px] text-slate-400">{t.body === 'mars' ? 'CTX DTM mosaic' : 'LOLA LDEM 80°S 20 m'}</td>
+                </tr>
+              ))}
               {doc.sites.map((s) => (
                 <tr key={s.id} className="border-t border-border">
                   <td className="px-4 py-3 text-slate-100">
@@ -139,6 +142,25 @@ function DataBody({ data }: { data: AnalysisData }) {
           </table>
         </div>
       </section>
+
+      {screening && (
+        <section aria-labelledby="screening">
+          <h2 id="screening" className="label-mono mb-5">
+            Regional screening
+          </h2>
+          <p className="mb-5 max-w-3xl text-[15px] leading-relaxed text-slate-300">
+            {screening.windows.length} windows of {screening.window_m / 1000} km on a {screening.cell_m} m grid, sampled across {screening.regions.length} regions
+            from the same GLO-30 tiles. Windows with less than 90% valid cells or more than 5% water were dropped. Results are unreviewed leads, not analogs.
+          </p>
+          <ul className="flex flex-wrap gap-2">
+            {screening.regions.map((r) => (
+              <li key={r.id} className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-slate-300">
+                {r.name} <span className="text-slate-500">· {r.country}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section aria-labelledby="software" className="grid gap-6 md:grid-cols-2">
         <div>
