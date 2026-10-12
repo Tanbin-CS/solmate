@@ -59,6 +59,7 @@ const COLORS = {
   moon: new Color('#c9d3de'),
   screen: new Color('#e7a1c9'),
 }
+const MARS_HAZE = new Color('#f0a882')
 const ROLE_COLOR = { documented: COLORS.data, candidate: COLORS.derived, control: COLORS.control }
 const easeOut = (t: number) => 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 3)
 
@@ -360,7 +361,7 @@ function Scene(props: Props) {
     () =>
       Object.fromEntries(
         targets.map((t) => {
-          const f = faceCamera(t.lat, t.lon, t.body === 'moon' ? 0.62 : 0.8)
+          const f = faceCamera(t.lat, t.lon, t.body === 'moon' ? 0.42 : 0.8)
           return [t.body, { x: f.x, y: f.y - 0.5 }] // turn the reference point slightly toward Earth
         }),
       ) as Record<'mars' | 'moon', { x: number; y: number }>,
@@ -449,9 +450,10 @@ function Scene(props: Props) {
 
   return (
     <>
-      <ambientLight intensity={0.4} />
-      <directionalLight position={[-5, 3, 7]} intensity={3.4} color="#fff6ea" />
-      <directionalLight position={[6, -2, -4]} intensity={0.25} color="#7fd8e6" />
+      {/* key light sits just left of the camera so every visible face is lit; a cool rim light adds depth */}
+      <ambientLight intensity={0.55} />
+      <directionalLight position={[-3, 2.5, 8]} intensity={2.1} color="#fff8ef" />
+      <directionalLight position={[6, 1, -6]} intensity={0.6} color="#9fdcff" />
       <Stars radius={80} depth={40} count={reduced ? 1500 : 4000} factor={3.2} saturation={0} fade speed={reduced ? 0 : 0.6} />
 
       {/* Earth */}
@@ -459,7 +461,7 @@ function Scene(props: Props) {
         <group ref={earthSpin} rotation={[facing.x, facing.y - 1.6, 0]}>
           <mesh>
             <sphereGeometry args={[1, 96, 96]} />
-            <meshStandardMaterial map={tex.earth} roughness={0.85} metalness={0.05} />
+            <meshStandardMaterial map={tex.earth} emissiveMap={tex.earth} emissive="#ffffff" emissiveIntensity={0.12} roughness={0.85} metalness={0.05} />
           </mesh>
           {/* every curated site, faint */}
           {allSites.map((s) =>
@@ -518,27 +520,33 @@ function Scene(props: Props) {
                     onPointerLeave={() => onHoverSite(null)}
                     onClick={() => onOpenSite(selected, s.id)}
                   >
-                    <span className="text-slate-400">#{s.rank}</span> {s.name.split(',')[0]} <span className="text-data">{Math.round(s.score * 100)}</span>
+                    <span className="text-slate-400">#{s.rank}</span> {s.name.split(',')[0]} <span className="text-data">{Math.round(s.score * 100)}/100</span>
                   </div>
                 </Html>}
               </group>
             )
           })}
         </group>
-        <Atmosphere radius={1} color={COLORS.data} strength={0.75} power={4.2} scale={1.09} />
+        <Atmosphere radius={1} color={COLORS.data} strength={0.55} power={4.6} scale={1.08} />
       </group>
 
       {/* Mars and the Moon */}
       {targets.map((t) => {
         const body = t.body
         const isSel = t.id === selected
-        const color = body === 'mars' ? COLORS.mars : COLORS.moon
         return (
           <group key={t.id} ref={body === 'mars' ? marsGroup : moonGroup} scale={0.001} {...worldEvents(t)}>
             <group ref={body === 'mars' ? marsSpin : moonSpin}>
               <mesh>
                 <sphereGeometry args={[1, 64, 64]} />
-                <meshStandardMaterial map={body === 'mars' ? tex.mars : tex.moon} roughness={1} metalness={0} />
+                <meshStandardMaterial
+                  map={body === 'mars' ? tex.mars : tex.moon}
+                  emissiveMap={body === 'mars' ? tex.mars : tex.moon}
+                  emissive="#ffffff"
+                  emissiveIntensity={body === 'mars' ? 0.28 : 0.32}
+                  roughness={1}
+                  metalness={0}
+                />
               </mesh>
               <mesh position={refPos.get(t.id)} scale={0.045}>
                 <sphereGeometry args={[1, 12, 12]} />
@@ -546,7 +554,7 @@ function Scene(props: Props) {
               </mesh>
               {isSel && <PulseRing position={refPos.get(t.id)!} color={COLORS.amber} size={0.07} strong />}
             </group>
-            <Atmosphere radius={1} color={color} strength={body === 'mars' ? 0.45 : 0.18} power={4.5} scale={1.08} />
+            {body === 'mars' && <Atmosphere radius={1} color={MARS_HAZE} strength={0.16} power={5.5} scale={1.05} />}
             {/* invisible, larger hit area so small worlds are easy to tap */}
             <mesh scale={1.35} visible={false}>
               <sphereGeometry args={[1, 12, 12]} />
@@ -593,6 +601,7 @@ export default function HeroScene(props: Props) {
     <Canvas
       className="!absolute inset-0"
       style={{ touchAction: 'pan-y' }}
+      flat
       dpr={[1, 1.75]}
       camera={{ position: [0, 0, 18], fov: 38, near: 0.1, far: 300 }}
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}

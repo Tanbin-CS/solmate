@@ -13,7 +13,8 @@ import { WorldMap } from '@/components/home/WorldMap'
 import { LiveResults } from '@/components/home/LiveResults'
 import { IndicatorTrack } from '@/components/home/IndicatorTrack'
 import { HowItWorks } from '@/components/home/HowItWorks'
-import { ParallaxWorlds, ZoomOnScroll } from '@/components/home/ScrollFx'
+import { ParallaxWorlds, ScrollRevealText, StackCards, TiltCard, ZoomOnScroll } from '@/components/home/ScrollFx'
+import { OrbitZoom } from '@/components/home/OrbitZoom'
 import { Hero } from '@/components/hero/Hero'
 
 const LESSONS = [
@@ -55,12 +56,14 @@ function Stats({ data }: { data: AllTargets }) {
     >
       <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border lg:grid-cols-4">
         {items.map((s) => (
-          <motion.div key={s.label} variants={fadeUp(reduced)} className="bg-card p-5 md:p-6">
-            <p className="text-3xl font-semibold text-slate-100 md:text-4xl">
-              <CountUp value={s.value} decimals={s.decimals ?? 0} />
-            </p>
-            <p className="mt-2 text-sm text-slate-200">{s.label}</p>
-            <p className="mt-0.5 text-xs text-slate-400">{s.sub}</p>
+          <motion.div key={s.label} variants={fadeUp(reduced)} className="bg-card">
+            <TiltCard className="h-full p-5 md:p-6">
+              <p className="text-3xl font-semibold text-slate-100 md:text-4xl">
+                <CountUp value={s.value} decimals={s.decimals ?? 0} />
+              </p>
+              <p className="mt-2 text-sm text-slate-200">{s.label}</p>
+              <p className="mt-0.5 text-xs text-slate-400">{s.sub}</p>
+            </TiltCard>
           </motion.div>
         ))}
       </div>
@@ -175,21 +178,22 @@ export default function HomePage() {
       {data && (
         <>
           <Stats data={data} />
+          <OrbitZoom data={data} />
           <Results
             data={data}
             between={
               <Section id="how" kicker="How it works" title="Five steps from a landing site to its Earth twins.">
                 <HowItWorks data={data} />
-                <motion.div variants={fadeUp(reduced)} className="mt-6 flex flex-wrap items-center gap-4 rounded-xl border border-border bg-ink-850 p-5">
-                  <ShieldCheck className="size-5 shrink-0 text-positive" />
-                  <p className="min-w-0 flex-1 basis-60 text-sm text-slate-300">
-                    A similarity score is not proof that two places are the same. Every result keeps its mismatches, its data source and its
-                    uncertainty visible.
-                  </p>
-                  <Button asChild variant="data" size="sm">
+                <div className="mx-auto mt-24 max-w-4xl text-center">
+                  <ShieldCheck className="mx-auto size-6 text-positive" />
+                  <ScrollRevealText
+                    className="mt-6 justify-center text-balance text-2xl font-semibold leading-snug tracking-tight text-slate-100 md:text-4xl"
+                    text="A similarity score is not proof that two places are the same. Every result keeps its mismatches, its data source and its uncertainty in plain view."
+                  />
+                  <Button asChild variant="data" size="sm" className="mt-8">
                     <Link to="/method">Read the limitations</Link>
                   </Button>
-                </motion.div>
+                </div>
               </Section>
             }
           />
@@ -199,15 +203,18 @@ export default function HomePage() {
 
       <Section kicker="Why analogs matter" title="Testing on Earth is cheaper than learning on another world." className="isolate">
         <ParallaxWorlds />
-        <div className="grid gap-px overflow-hidden rounded-xl border border-border bg-border md:grid-cols-3">
-          {LESSONS.map((l) => (
-            <motion.article key={l.title} variants={fadeUp(reduced)} className="bg-card/90 p-7 backdrop-blur-sm">
-              <TriangleAlert className="size-5 text-reference" />
-              <h3 className="mt-5 text-lg font-semibold">{l.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{l.body}</p>
-            </motion.article>
+        <StackCards
+          items={LESSONS.map((l, i) => (
+            <article key={l.title} className="mx-auto grid max-w-4xl gap-6 rounded-2xl border border-border bg-card p-8 shadow-2xl md:grid-cols-[auto_1fr] md:p-10">
+              <span className="font-mono text-5xl text-white/10">0{i + 1}</span>
+              <div>
+                <TriangleAlert className="size-5 text-reference" />
+                <h3 className="mt-4 text-2xl font-semibold tracking-tight">{l.title}</h3>
+                <p className="mt-3 text-pretty leading-relaxed text-muted-foreground">{l.body}</p>
+              </div>
+            </article>
           ))}
-        </div>
+        />
       </Section>
 
       <Section kicker="Mission briefing" title="Why NASA rehearses on Earth.">

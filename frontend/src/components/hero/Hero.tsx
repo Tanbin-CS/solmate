@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
-import { ArrowRight, ChevronDown, Hand, MousePointerClick } from 'lucide-react'
+import { ArrowRight, ChevronDown, Hand } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { fadeUp, spring, stagger } from '@/design/motion'
 import { asset } from '@/lib/asset'
@@ -11,6 +11,8 @@ import type { AllTargets } from '@/hooks/useAllTargets'
 import { BODY, ROLE } from '@/components/explorer/roles'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import type { HeroSite, HeroTarget } from './HeroScene'
+import { Magnetic } from './Magnetic'
+import { Narrative } from './Narrative'
 
 const HeroScene = lazy(() => import('./HeroScene'))
 
@@ -169,11 +171,11 @@ export function Hero({ data }: { data: AllTargets | null }) {
         className="pointer-events-none relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end gap-8 px-6 pb-14 pt-[52svh] md:px-10 md:pb-20 md:landscape:justify-center md:landscape:pt-28"
       >
         <motion.div variants={stagger(0.11, 0.35)} initial="hidden" animate="show" className="max-w-xl">
-          <motion.p variants={fadeUp(reduced)} className="label-mono text-slate-300">
+          <motion.p variants={fadeUp(reduced)} className="label-mono text-slate-400">
             NASA Space Apps 2026 · Team Northern Lights
           </motion.p>
-          <motion.h1 variants={fadeUp(reduced)} className="mt-5 text-balance text-4xl font-semibold leading-[1.04] tracking-tight text-slate-100 sm:text-5xl lg:text-6xl">
-            Find Earth&apos;s terrain twins of{' '}
+          <motion.h1 variants={fadeUp(reduced)} className="mt-4 text-balance text-4xl font-semibold leading-[1.04] tracking-tight text-slate-100 sm:text-5xl lg:text-6xl">
+            Where on Earth looks like{' '}
             <span className="relative inline-block">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.span
@@ -184,45 +186,53 @@ export function Hero({ data }: { data: AllTargets | null }) {
                   transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                   className={cn('inline-block', WORD[target.body].className)}
                 >
-                  {WORD[target.body].text}.
+                  {WORD[target.body].text}?
                 </motion.span>
               </AnimatePresence>
             </span>
           </motion.h1>
-          <motion.p variants={fadeUp(reduced)} className="mt-6 text-pretty text-base leading-relaxed text-slate-300 md:text-lg">
-            SolMate measures the shape of the ground at Jezero Crater and the Artemis III candidate Mons Mouton Plateau, then finds the closest
-            Earth terrain in real elevation models. Every score is transparent and tested against NASA&apos;s own analog sites.
+          <motion.p variants={fadeUp(reduced)} className="mt-5 max-w-md text-pretty text-base leading-relaxed text-slate-300 md:text-lg">
+            We match real terrain data to find the best places on Earth to rehearse Mars and Moon missions.
           </motion.p>
           <motion.div variants={fadeUp(reduced)} className="pointer-events-auto mt-8 flex flex-wrap gap-3">
-            <Button asChild size="lg" className="rounded-full px-6 shadow-[0_0_40px_rgb(127_216_230/0.25)]">
-              <Link to={`/explorer${target.id !== 'jezero' ? `?target=${target.id}` : ''}`}>
-                Open the explorer <ArrowRight />
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="rounded-full border-slate-100/30 bg-ink-950/40 px-6 backdrop-blur hover:bg-ink-950/60">
-              <Link to="/method">How it works</Link>
-            </Button>
+            <Magnetic>
+              <Button asChild size="lg" className="rounded-full px-6 shadow-[0_0_40px_rgb(127_216_230/0.25)]">
+                <Link to={`/explorer${target.id !== 'jezero' ? `?target=${target.id}` : ''}`}>
+                  Explore the matches <ArrowRight />
+                </Link>
+              </Button>
+            </Magnetic>
+            <Magnetic>
+              <Button asChild size="lg" variant="outline" className="rounded-full border-slate-100/30 bg-ink-950/40 px-6 backdrop-blur hover:bg-ink-950/60">
+                <a href="#how">How it works</a>
+              </Button>
+            </Magnetic>
           </motion.div>
-          {gl && (
-            <motion.p variants={fadeUp(reduced)} className="mt-6 hidden items-center gap-4 font-mono text-[11px] text-slate-400 md:flex">
-              <span className="inline-flex items-center gap-1.5">
-                <Hand className="size-3.5" /> Drag to spin Earth
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <MousePointerClick className="size-3.5" /> Click Mars or the Moon
-              </span>
-            </motion.p>
-          )}
         </motion.div>
 
         {/* live analog links, synced with the 3D arcs. Landscape: a slim dock under the globe so Earth stays fully visible. */}
         <motion.aside
           initial={{ opacity: 0, y: reduced ? 0 : 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: reduced ? 0 : 1.6, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="pointer-events-auto w-full max-w-sm self-start rounded-2xl border border-white/10 bg-ink-950/65 p-3 shadow-2xl backdrop-blur-md md:landscape:absolute md:landscape:bottom-7 md:landscape:right-[min(2rem,calc(2rem-(100vw-80rem)/2))] md:landscape:flex md:landscape:w-[min(860px,58vw)] md:landscape:max-w-none md:landscape:items-stretch md:landscape:gap-3 md:landscape:self-auto md:landscape:p-2.5"
+          transition={{ delay: reduced ? 0 : 0.9, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="pointer-events-auto w-full max-w-sm self-start rounded-2xl border border-white/10 bg-ink-950/65 p-3 shadow-2xl backdrop-blur-md md:landscape:absolute md:landscape:bottom-7 md:landscape:right-[min(2rem,calc(2rem-(100vw-80rem)/2))] md:landscape:flex md:landscape:w-[min(860px,58vw)] md:landscape:max-w-none md:landscape:flex-wrap md:landscape:items-stretch md:landscape:gap-x-3 md:landscape:gap-y-1 md:landscape:self-auto md:landscape:p-2.5"
           aria-label="Best Earth matches"
         >
+          <div className="mb-2 flex items-center justify-between gap-3 border-b border-white/10 px-1.5 pb-2 md:landscape:mb-0 md:landscape:basis-full">
+            <Narrative
+              body={target.body}
+              place={target.short}
+              best={target.top[0] && { name: target.top[0].name.split(',')[0]!, score: target.top[0].score }}
+              curated={allSites.length || 19}
+              screened={screened.length}
+              reduced={reduced}
+            />
+            {gl && (
+              <span className="hidden shrink-0 items-center gap-1.5 font-mono text-[10px] text-slate-500 lg:inline-flex">
+                <Hand className="size-3.5" /> drag Earth · click a planet
+              </span>
+            )}
+          </div>
           <div
             role="radiogroup"
             aria-label="Planetary target"
@@ -254,7 +264,7 @@ export function Hero({ data }: { data: AllTargets | null }) {
 
           <div className="hidden min-w-0 sm:block md:landscape:flex md:landscape:flex-1 md:landscape:flex-col">
             <p className="label-mono mt-3 flex justify-between gap-2 px-1.5 md:landscape:mt-0.5">
-              <span>Closest Earth terrain</span>
+              <span>Closest Earth terrain · terrain match /100</span>
               {auc !== undefined && (
                 <span className="hidden normal-case tracking-normal md:landscape:inline">
                   validation AUC <span className="text-positive">{auc.toFixed(2)}</span>
