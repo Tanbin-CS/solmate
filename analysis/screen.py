@@ -127,7 +127,7 @@ def main() -> None:
 
     doc = {
         "version": 1,
-        "generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
+        "generated_at": dt.datetime.now(dt.UTC).replace(microsecond=0).isoformat(),
         "window_m": WINDOW_M, "cell_m": CELL_M,
         "method": "Regular grid (0.3° latitude spacing) inside each region, random subset per region (fixed seed); windows with <90% valid cells or >5% open water are dropped.",
         "status": "Unreviewed candidates: terrain similarity only. Expert and field review are required before any site is called an analog.",

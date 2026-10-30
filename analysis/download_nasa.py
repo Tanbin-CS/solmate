@@ -96,8 +96,8 @@ def search(product: Product) -> list[Granule]:
         with urllib.request.urlopen(f"{CMR}?{urllib.parse.urlencode(params)}", timeout=60) as r:
             entries = json.load(r)["feed"]["entry"]
         for e in entries:
-            links = [l["href"] for l in e.get("links", [])
-                     if l.get("rel", "").endswith("/data#") and l["href"].startswith("https://")]
+            links = [link["href"] for link in e.get("links", [])
+                     if link.get("rel", "").endswith("/data#") and link["href"].startswith("https://")]
             if links:
                 granules.append(Granule(product.short_name, links[0], e.get("time_start", "")))
         if len(entries) < 200:
