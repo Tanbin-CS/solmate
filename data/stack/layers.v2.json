@@ -1,0 +1,424 @@
+{
+ "version": 2,
+ "generated_at": "2026-10-30T20:34:10+00:00",
+ "grid": {
+  "res_deg": 0.1,
+  "rows": 1800,
+  "cols": 3600,
+  "origin": "row 0 = 89.95N, col 0 = 179.95W (MODIS CMG orientation)"
+ },
+ "file": "cache/stack/stack_v2.npz",
+ "sha256": "a04a9664a1d18051316a14d45792502463c42a764091ed1f09c0da1b7e3e7fa1",
+ "layers": {
+  "albedo_wsa_sw": {
+   "units": "fraction",
+   "source": "MCD43C3 v061, 2023-24 mid-month",
+   "land_coverage": 0.9893424582221779,
+   "land_p1_p50_p99": [
+    0.0976250022649765,
+    0.2874687612056732,
+    0.8507500290870667
+   ]
+  },
+  "aridity_index": {
+   "units": "P/PET",
+   "source": "NASA POWER MERRA-2 climatology",
+   "land_coverage": 0.7853132829305911,
+   "land_p1_p50_p99": [
+    0.003818139643408359,
+    0.5856435298919678,
+    17.000681495666655
+   ]
+  },
+  "barren_pct": {
+   "units": "%",
+   "source": "MCD12C1 v061, 2023",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    0.0,
+    0.0,
+    100.0
+   ]
+  },
+  "carbonate_index": {
+   "units": "ratio",
+   "source": "ASTER GED (Ninomiya 2005)",
+   "land_coverage": 0.9863301933089068,
+   "land_p1_p50_p99": [
+    0.9874905258417129,
+    1.0046035051345825,
+    1.0082136392593384
+   ]
+  },
+  "cropland_pct": {
+   "units": "%",
+   "source": "MCD12C1 v061, 2023",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    0.0,
+    0.0,
+    100.0
+   ]
+  },
+  "dust_aod_mean": {
+   "units": "AOD 550 nm",
+   "source": "MERRA-2 M2TMNXAER 5.12.4, 2023-24",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    0.0017181185248773545,
+    0.012653052806854248,
+    0.35339320898055987
+   ]
+  },
+  "elev_mean_m": {
+   "units": "m",
+   "source": "SRTMGL30 v002",
+   "land_coverage": 0.7202924539789017,
+   "land_p1_p50_p99": [
+    0.0,
+    361.40277099609375,
+    4559.192509765629
+   ]
+  },
+  "elev_std_m": {
+   "units": "m",
+   "source": "SRTMGL30 v002",
+   "land_coverage": 0.7202924539789017,
+   "land_p1_p50_p99": [
+    0.0,
+    21.94052219390869,
+    416.0558517456058
+   ]
+  },
+  "emis_b10": {
+   "units": "emissivity",
+   "source": "ASTER GED AG5KMMOH v041, 2013-15",
+   "land_coverage": 0.9863301933089068,
+   "land_p1_p50_p99": [
+    0.7574999928474426,
+    0.9779028296470642,
+    0.9808055758476257
+   ]
+  },
+  "emis_b11": {
+   "units": "emissivity",
+   "source": "ASTER GED AG5KMMOH v041, 2013-15",
+   "land_coverage": 0.9863301933089068,
+   "land_p1_p50_p99": [
+    0.7850000262260437,
+    0.9774166941642761,
+    0.9801111221313477
+   ]
+  },
+  "emis_b12": {
+   "units": "emissivity",
+   "source": "ASTER GED AG5KMMOH v041, 2013-15",
+   "land_coverage": 0.9863301933089068,
+   "land_p1_p50_p99": [
+    0.7490000128746033,
+    0.9778611063957214,
+    0.9819999933242798
+   ]
+  },
+  "emis_b13": {
+   "units": "emissivity",
+   "source": "ASTER GED AG5KMMOH v041, 2013-15",
+   "land_coverage": 0.9863301933089068,
+   "land_p1_p50_p99": [
+    0.9445000290870667,
+    0.979722261428833,
+    0.984000027179718
+   ]
+  },
+  "emis_b14": {
+   "units": "emissivity",
+   "source": "ASTER GED AG5KMMOH v041, 2013-15",
+   "land_coverage": 0.9863301933089068,
+   "land_p1_p50_p99": [
+    0.9545000195503235,
+    0.9754583835601807,
+    0.978569507598877
+   ]
+  },
+  "forest_pct": {
+   "units": "%",
+   "source": "MCD12C1 v061, 2023",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    0.0,
+    0.0,
+    100.0
+   ]
+  },
+  "frost_days_per_year": {
+   "units": "days",
+   "source": "NASA POWER MERRA-2 climatology",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    0.0,
+    220.77483367919922,
+    365.20001220703125
+   ]
+  },
+  "grass_savanna_pct": {
+   "units": "%",
+   "source": "MCD12C1 v061, 2023",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    0.0,
+    1.75,
+    100.0
+   ]
+  },
+  "land_frac": {
+   "units": "fraction",
+   "source": "MYD11C3 v061 Percent_land_in_grid",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    0.6499999761581421,
+    1.0,
+    1.0
+   ]
+  },
+  "lst_day_max_k": {
+   "units": "K",
+   "source": "MYD11C3 v061, 2023-24",
+   "land_coverage": 0.9943038628573115,
+   "land_p1_p50_p99": [
+    239.4199981689453,
+    298.43499755859375,
+    332.0400085449219
+   ]
+  },
+  "lst_day_mean_k": {
+   "units": "K",
+   "source": "MYD11C3 v061, 2023-24",
+   "land_coverage": 0.9943038628573115,
+   "land_p1_p50_p99": [
+    217.28688049316406,
+    277.31280517578125,
+    320.7774963378906
+   ]
+  },
+  "lst_diurnal_range_k": {
+   "units": "K",
+   "source": "MYD11C3 v061, 2023-24",
+   "land_coverage": 0.9943038628573115,
+   "land_p1_p50_p99": [
+    -0.5616664886474609,
+    8.748749732971191,
+    30.406076526641826
+   ]
+  },
+  "lst_night_mean_k": {
+   "units": "K",
+   "source": "MYD11C3 v061, 2023-24",
+   "land_coverage": 0.9943038628573115,
+   "land_p1_p50_p99": [
+    213.78375015258788,
+    266.5774841308594,
+    296.1331146240234
+   ]
+  },
+  "lst_night_min_k": {
+   "units": "K",
+   "source": "MYD11C3 v061, 2023-24",
+   "land_coverage": 0.9943038628573115,
+   "land_p1_p50_p99": [
+    200.45999145507812,
+    247.57998657226562,
+    293.2250061035156
+   ]
+  },
+  "mafic_index": {
+   "units": "ratio",
+   "source": "ASTER GED (Ninomiya 2005)",
+   "land_coverage": 0.9863301933089068,
+   "land_p1_p50_p99": [
+    0.791556715965271,
+    0.9979674220085144,
+    1.0025521516799927
+   ]
+  },
+  "pet_mm_day": {
+   "units": "mm/day (Hargreaves)",
+   "source": "NASA POWER MERRA-2 climatology",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    0.0,
+    2.736865282058716,
+    7.914149904251097
+   ]
+  },
+  "precip_mm_day": {
+   "units": "mm/day",
+   "source": "NASA POWER MERRA-2 climatology",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    0.037149187549948705,
+    1.1850097179412842,
+    7.211665368080136
+   ]
+  },
+  "quartz_index": {
+   "units": "ratio",
+   "source": "ASTER GED (Ninomiya 2005)",
+   "land_coverage": 0.9863301933089068,
+   "land_p1_p50_p99": [
+    0.9951363188028336,
+    0.9988222718238831,
+    1.0877488303184504
+   ]
+  },
+  "rh2m_pct": {
+   "units": "%",
+   "source": "NASA POWER MERRA-2 climatology",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    22.18701410293579,
+    83.23841857910156,
+    95.9879467010498
+   ]
+  },
+  "shrub_pct": {
+   "units": "%",
+   "source": "MCD12C1 v061, 2023",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    0.0,
+    0.0,
+    100.0
+   ]
+  },
+  "slope_median_deg": {
+   "units": "deg",
+   "source": "SRTMGL30 v002",
+   "land_coverage": 0.7202924539789017,
+   "land_p1_p50_p99": [
+    0.0,
+    0.6085248589515686,
+    13.372991552352905
+   ]
+  },
+  "slope_p90_proxy_deg": {
+   "units": "deg",
+   "source": "SRTMGL30 v002 (cell max)",
+   "land_coverage": 0.7202924539789017,
+   "land_p1_p50_p99": [
+    0.0,
+    2.031156539916992,
+    30.031029548645026
+   ]
+  },
+  "snow_cover_mean_pct": {
+   "units": "%",
+   "source": "MOD10CM v61, 2023-24",
+   "land_coverage": 0.9844294822833992,
+   "land_p1_p50_p99": [
+    0.0,
+    47.51041793823242,
+    100.0
+   ]
+  },
+  "snow_ice_pct": {
+   "units": "%",
+   "source": "MCD12C1 v061, 2023",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    0.0,
+    0.0,
+    100.0
+   ]
+  },
+  "snow_months_per_year": {
+   "units": "months",
+   "source": "MOD10CM v61, 2023-24",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    0.0,
+    5.0,
+    12.0
+   ]
+  },
+  "surface_pressure_hpa": {
+   "units": "hPa",
+   "source": "NASA POWER MERRA-2 climatology",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    593.5541778564453,
+    941.01904296875,
+    1013.4056182861328
+   ]
+  },
+  "t2m_coldest_month_c": {
+   "units": "degC",
+   "source": "NASA POWER MERRA-2 climatology",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    -63.75916156768799,
+    -17.646119117736816,
+    25.882003784179688
+   ]
+  },
+  "t2m_mean_c": {
+   "units": "degC",
+   "source": "NASA POWER MERRA-2 climatology",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    -52.653107452392575,
+    -0.7711874842643738,
+    28.646204948425293
+   ]
+  },
+  "t2m_warmest_month_c": {
+   "units": "degC",
+   "source": "NASA POWER MERRA-2 climatology",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    -32.956003761291505,
+    16.035212516784668,
+    36.40100040435791
+   ]
+  },
+  "urban_pct": {
+   "units": "%",
+   "source": "MCD12C1 v061, 2023",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    0.0,
+    0.0,
+    9.5
+   ]
+  },
+  "water_pct": {
+   "units": "%",
+   "source": "MCD12C1 v061, 2023",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    0.0,
+    0.0,
+    100.0
+   ]
+  },
+  "wetland_pct": {
+   "units": "%",
+   "source": "MCD12C1 v061, 2023",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    0.0,
+    0.0,
+    22.25
+   ]
+  },
+  "ws10m_m_s": {
+   "units": "m/s",
+   "source": "NASA POWER MERRA-2 climatology",
+   "land_coverage": 1.0,
+   "land_p1_p50_p99": [
+    0.7198076367378234,
+    4.380390167236328,
+    12.360600852966307
+   ]
+  }
+ }
+}
