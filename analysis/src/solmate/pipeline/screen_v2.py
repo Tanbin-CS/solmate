@@ -22,6 +22,7 @@ import numpy as np
 import yaml
 
 from solmate.compute import aggregate, grid, modes, novelty, score
+from solmate.targets import load_targets
 
 ANALYSIS = Path(__file__).resolve().parents[3]
 STACK = ANALYSIS / "cache" / "stack" / "stack_v2.npz"
@@ -62,7 +63,7 @@ def _entry(i: int, lat, lon, sai, cov, dim_scores, sites, idx_known, dist_known)
 
 def main() -> None:
     dims = _yaml("dimensions.yaml")["dimensions"]
-    targets = _yaml("targets.yaml")["targets"]
+    targets = load_targets()
     known = _yaml("known_analogs.yaml")
     stats_doc = json.loads(EARTH_STATS.read_text(encoding="utf-8"))["indicators"]
     stats = {k: modes.EarthStats(tuple(v["quantiles"]), v["median"], v["sigma"]) for k, v in stats_doc.items()}

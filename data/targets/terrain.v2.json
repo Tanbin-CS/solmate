@@ -1,0 +1,84 @@
+{
+ "version": 2,
+ "generated_at": "2026-10-30T21:41:14+00:00",
+ "scale": "12 x 12 pixels of 926.6 m (matches Earth 0.1 degree SRTMGL30 cells)",
+ "targets": {
+  "peak_near_cabeus_b": {
+   "slope_median_deg": 15.1645,
+   "slope_p90_proxy_deg": 26.9174,
+   "elev_std_m": 731.0693,
+   "source": "LRO LOLA LDEM_80S_20MPP_ADJ (NASA GSFC PGDA), area-averaged to 926 m",
+   "pixel_m": 926.6
+  },
+  "haworth": {
+   "slope_median_deg": 6.1316,
+   "slope_p90_proxy_deg": 18.6835,
+   "elev_std_m": 202.3529,
+   "source": "LRO LOLA LDEM_80S_20MPP_ADJ (NASA GSFC PGDA), area-averaged to 926 m",
+   "pixel_m": 926.6
+  },
+  "malapert_massif": {
+   "slope_median_deg": 15.85,
+   "slope_p90_proxy_deg": 23.5661,
+   "elev_std_m": 673.8945,
+   "source": "LRO LOLA LDEM_80S_20MPP_ADJ (NASA GSFC PGDA), area-averaged to 926 m",
+   "pixel_m": 926.6
+  },
+  "mons_mouton_plateau": {
+   "slope_median_deg": 3.9158,
+   "slope_p90_proxy_deg": 10.9991,
+   "elev_std_m": 166.6261,
+   "source": "LRO LOLA LDEM_80S_20MPP_ADJ (NASA GSFC PGDA), area-averaged to 926 m",
+   "pixel_m": 926.6
+  },
+  "mons_mouton": {
+   "slope_median_deg": 7.524,
+   "slope_p90_proxy_deg": 23.8092,
+   "elev_std_m": 316.8065,
+   "source": "LRO LOLA LDEM_80S_20MPP_ADJ (NASA GSFC PGDA), area-averaged to 926 m",
+   "pixel_m": 926.6
+  },
+  "nobile_rim_1": {
+   "slope_median_deg": 10.0317,
+   "slope_p90_proxy_deg": 27.6131,
+   "elev_std_m": 635.3973,
+   "source": "LRO LOLA LDEM_80S_20MPP_ADJ (NASA GSFC PGDA), area-averaged to 926 m",
+   "pixel_m": 926.6
+  },
+  "nobile_rim_2": {
+   "slope_median_deg": 6.2072,
+   "slope_p90_proxy_deg": 15.8982,
+   "elev_std_m": 225.3967,
+   "source": "LRO LOLA LDEM_80S_20MPP_ADJ (NASA GSFC PGDA), area-averaged to 926 m",
+   "pixel_m": 926.6
+  },
+  "de_gerlache_rim_2": {
+   "slope_median_deg": 11.7041,
+   "slope_p90_proxy_deg": 20.7498,
+   "elev_std_m": 568.7455,
+   "source": "LRO LOLA LDEM_80S_20MPP_ADJ (NASA GSFC PGDA), area-averaged to 926 m",
+   "pixel_m": 926.6
+  },
+  "slater_plain": {
+   "slope_median_deg": 4.8223,
+   "slope_p90_proxy_deg": 10.7387,
+   "elev_std_m": 161.0934,
+   "source": "LRO LOLA LDEM_80S_20MPP_ADJ (NASA GSFC PGDA), area-averaged to 926 m",
+   "pixel_m": 926.6
+  },
+  "jezero_crater": {
+   "slope_median_deg": 1.1244,
+   "slope_p90_proxy_deg": 6.1877,
+   "elev_std_m": 64.2953,
+   "source": "MOLA MEGDR 64 px/deg (MGS, NASA PDS)",
+   "pixel_m": 926.6
+  },
+  "arcadia_planitia": {
+   "slope_median_deg": 0.1247,
+   "slope_p90_proxy_deg": 0.5547,
+   "elev_std_m": 4.8286,
+   "source": "MOLA MEGDR 64 px/deg (MGS, NASA PDS)",
+   "pixel_m": 926.6
+  }
+ }
+}
