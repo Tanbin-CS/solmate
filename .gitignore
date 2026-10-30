@@ -1,0 +1,37 @@
+# Secrets: never commit credentials (see .env.example for the variable names)
+.env
+.env.*
+!.env.example
+.netrc
+*.pem
+*-key.json
+service-account*.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+
+# Firebase / GCP local state
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Editors and OS
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+
+# Large local data (mirrored to GCS, tracked by data/manifest.v2.json)
+data/raw/
