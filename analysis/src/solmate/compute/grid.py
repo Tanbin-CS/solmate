@@ -57,13 +57,15 @@ def block_reduce(a: np.ndarray, factor: int, how: str = "mean") -> np.ndarray:
     return out.astype(np.float32)
 
 
-def slope_deg_latlon(z: np.ndarray, top_lat: float, res_deg: float) -> np.ndarray:
+METRES_PER_DEG = {"earth": 111_195.0, "mars": 59_274.7, "moon": 30_323.2}  # 2*pi*R/360, mean radius
+
+
+def slope_deg_latlon(z: np.ndarray, top_lat: float, res_deg: float, metres_per_deg: float = 111_195.0) -> np.ndarray:
     """Slope (degrees) of a geographic-grid DEM with Horn's method and per-row cell width.
 
     z: elevations (m), rows north to south starting at `top_lat` (upper edge), square
     `res_deg` cells. East-west spacing shrinks with cos(latitude). Border cells are NaN.
     """
-    metres_per_deg = 111_195.0
     lat = top_lat - res_deg * (np.arange(z.shape[0]) + 0.5)
     dy = res_deg * metres_per_deg
     dx = (res_deg * metres_per_deg * np.cos(np.radians(lat)))[:, None]
@@ -74,6 +76,21 @@ def slope_deg_latlon(z: np.ndarray, top_lat: float, res_deg: float) -> np.ndarra
     dzdx = ((c + 2 * f + i) - (a + 2 * d + g)) / (8 * dx)
     dzdy = ((g + 2 * h + i) - (a + 2 * b + c)) / (8 * dy)
     return np.degrees(np.arctan(np.hypot(dzdx, dzdy))).astype(np.float32)
+
+
+def cell_terrain_stats(z: np.ndarray, slope: np.ndarray) -> dict[str, float]:
+    """Stage-1 terrain indicators for one ~0.1 degree cell from ~1 km elevations and slopes.
+
+    Matches the Earth stack: median slope, maximum slope (the p90 proxy) and elevation
+    standard deviation over the cell's pixels.
+    """
+    s = slope[np.isfinite(slope)]
+    e = z[np.isfinite(z)]
+    return {
+        "slope_median_deg": float(np.median(s)) if s.size else float("nan"),
+        "slope_p90_proxy_deg": float(np.max(s)) if s.size else float("nan"),
+        "elev_std_m": float(np.std(e)) if e.size else float("nan"),
+    }
 
 
 def regrid_bilinear(values: np.ndarray, src_lat: np.ndarray, src_lon: np.ndarray) -> np.ndarray:

@@ -80,3 +80,18 @@ def test_hargreaves_pet_never_negative_in_extreme_cold():
     pet = grid.hargreaves_pet_mm_day(np.array(-40.0), np.array(-35.0), np.array(-45.0), np.array(5.0))
     assert pet == 0.0
     assert np.isnan(grid.aridity_index(np.array(0.01), pet))
+
+
+def test_slope_uses_planet_scale():
+    res = 1 / 64
+    z = np.arange(20)[:, None] * np.ones((1, 20)) * 10.0
+    earth = np.nanmedian(grid.slope_deg_latlon(z, 0.2, res, grid.METRES_PER_DEG["earth"]))
+    mars = np.nanmedian(grid.slope_deg_latlon(z, 0.2, res, grid.METRES_PER_DEG["mars"]))
+    assert mars > earth  # same angular step is shorter on smaller Mars, so the same rise is steeper
+
+
+def test_cell_terrain_stats():
+    z = np.array([[0.0, 2.0], [4.0, np.nan]])
+    s = np.array([[1.0, 3.0], [np.nan, 5.0]])
+    out = grid.cell_terrain_stats(z, s)
+    assert out == {"slope_median_deg": 3.0, "slope_p90_proxy_deg": 5.0, "elev_std_m": pytest.approx(np.std([0, 2, 4]))}
