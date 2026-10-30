@@ -55,3 +55,44 @@ def test_token_not_forwarded_to_non_earthdata_host():
 def test_token_kept_for_earthdata_login_host():
     new = _redirect("https://urs.earthdata.nasa.gov/oauth/authorize?client_id=x")
     assert new.get_header("Authorization") == "Bearer secret"
+
+
+class _FakeResponse(io.BytesIO):
+    def __init__(self, data, length):
+        super().__init__(data)
+        self.headers = {"Content-Length": str(length)}
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+
+def test_truncated_download_is_retried_then_fails(monkeypatch, tmp_path):
+    monkeypatch.setattr(dn, "RAW", tmp_path)
+    monkeypatch.setattr(dn.time, "sleep", lambda s: None)
+    calls = []
+
+    def fake_open(req, timeout):
+        calls.append(req.full_url)
+        return _FakeResponse(b"x" * 10, 100)  # server promised 100 bytes, sent 10
+
+    monkeypatch.setattr(dn.OPENER, "open", fake_open)
+    g = dn.Granule("MCD43C3", "https://data.lpdaac.earthdatacloud.nasa.gov/x/a.hdf", "2024-01-15")
+    try:
+        dn.download(g, "token")
+        raise AssertionError("expected failure")
+    except RuntimeError as exc:
+        assert "failed after 4 attempts" in str(exc)
+    assert len(calls) == 4
+    assert not (tmp_path / "MCD43C3" / "a.hdf").exists()
+
+
+def test_complete_download_is_kept(monkeypatch, tmp_path):
+    monkeypatch.setattr(dn, "ROOT", tmp_path)
+    monkeypatch.setattr(dn, "RAW", tmp_path)
+    monkeypatch.setattr(dn.OPENER, "open", lambda req, timeout: _FakeResponse(b"y" * 100, 100))
+    g = dn.Granule("MCD43C3", "https://data.lpdaac.earthdatacloud.nasa.gov/x/b.hdf", "2024-01-15")
+    rec = dn.download(g, "token")
+    assert rec["bytes"] == 100 and (tmp_path / "MCD43C3" / "b.hdf").exists()
