@@ -5,9 +5,14 @@ Challenge: *Identify Earth Locations that Analog the Permanent Moon Base Locatio
 
 ## Live
 
-- **Web app:** https://hellorifat.github.io/solmate
-- **Prototype preview (fork):** https://tanbin-cs.github.io/solmate/
-- **Legacy API (unchanged):** https://solmate-api.onrender.com/api/v1/match/?target=jezero
+- **Submission repository:** https://github.com/Tanbin-CS/solmate (this repo)
+- **Web app (prototype, v0.2.0):** https://tanbin-cs.github.io/solmate/
+- **v2 (in progress):** moves to Firebase at https://solmate-13571.web.app
+
+The prototype started from a team member's repository
+([hellorifat/solmate](https://github.com/hellorifat/solmate)); its history and
+authorship are kept here. Tag `v0.2.0-prototype` marks the version that passed
+Bangladesh prescreening.
 
 ## What the prototype does
 
@@ -27,8 +32,8 @@ SolMate compares two planetary targets, **Jezero Crater on Mars** and the **Mons
 |---|---|
 | `frontend/` | Vite + React 19 + TypeScript + Tailwind v4 + shadcn/ui app (deployed to GitHub Pages) |
 | `analysis/` | Python pipeline that computes indicators, validation and provenance into `frontend/public/data/` |
-| `backend/` | Original Django REST API (unchanged by the prototype) |
 | `docs/DECISIONS.md` | Technology, data-source and TypeSafe decisions; security note |
+| `CLAUDE.md`, `CONTRIBUTING.md`, `SECURITY.md` | Engineering rules, commit conventions, security policy |
 
 ## Run locally
 
@@ -42,3 +47,7 @@ cd analysis && python -m venv .venv && .venv/Scripts/pip install -r requirements
 ## Data credits
 
 USGS Astrogeology (Mars 2020 TRN CTX DTM and orthomosaic, Fergason et al. 2020) · NASA GSFC Planetary Geodesy Data Archive (LOLA south-pole DEM and Sun visibility) · Copernicus DEM GLO-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018, provided under COPERNICUS by the European Union and ESA · Sentinel-2 cloudless by EOX IT Services GmbH (contains modified Copernicus Sentinel data) · NASA GIBS Blue Marble · Globe textures: NASA Blue Marble Next Generation, USGS/NASA Ames Viking MDIM 2.1 colourised mosaic, NASA LRO LROC WAC global mosaic (NASA Moon Trek) · AWS Terrain Tiles · NASA Planetary Analog Explorer.
+
+## Licence
+
+Code: Apache-2.0 (see `LICENSE`). Data keep their own terms; see `NOTICE`.
