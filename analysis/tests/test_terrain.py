@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-import terrain  # noqa: E402
+from solmate.compute import terrain  # noqa: E402
 
 CELL = 100.0
 
