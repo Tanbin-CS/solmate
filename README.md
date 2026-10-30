@@ -39,9 +39,11 @@ SolMate compares two planetary targets, **Jezero Crater on Mars** and the **Mons
 
 ```bash
 cd frontend && npm install && npm run dev          # http://localhost:5173/solmate/
-cd analysis && python -m venv .venv && .venv/Scripts/pip install -r requirements.txt
-.venv/Scripts/python run.py                         # recompute the data artifacts
-.venv/Scripts/python screen.py                      # regional screening (slow: ~250 DEM windows)
+cd analysis && uv sync --all-groups                  # locked Python env (uv.lock)
+uv run pytest                                       # science tests
+uv run python download_nasa.py                      # NASA v2 inputs (Earthdata token required)
+uv run python run.py                                # recompute the data artifacts
+uv run python screen.py                             # regional screening (slow: ~250 DEM windows)
 ```
 
 ## Data credits
