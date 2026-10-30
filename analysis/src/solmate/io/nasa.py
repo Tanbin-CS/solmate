@@ -155,3 +155,20 @@ def power_climatology(cache_dir: Path) -> dict[str, np.ndarray]:
     cache.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(cache, **out)
     return out
+
+
+def mola_window(raw_dir: Path, lat: float, lon_east: float, n: int) -> tuple[np.ndarray, float]:
+    """n x n MOLA MEGDR 64 px/deg elevation window (m) centred on (lat, lon_east in 0..360).
+
+    Northern-hemisphere tiles megt90n000gb (0-180E) and megt90n180gb (180-360E) are big-endian
+    int16, row 0 at 90N, sample 0 at the tile's western edge. Returns (z, top_lat_of_window).
+    """
+    if not 0 <= lat < 90:
+        raise ValueError("only northern-hemisphere MOLA tiles are cached")
+    west = 0 if lon_east < 180 else 180
+    path = raw_dir / f"megt90n{west:03d}gb.img"
+    tile = np.memmap(path, dtype=">i2", mode="r", shape=(5760, 11520))
+    r0 = int(round((90.0 - lat) * 64)) - n // 2
+    c0 = int(round((lon_east - west) * 64)) - n // 2
+    z = np.asarray(tile[r0:r0 + n, c0:c0 + n], dtype=np.float32)
+    return z, 90.0 - r0 / 64.0
