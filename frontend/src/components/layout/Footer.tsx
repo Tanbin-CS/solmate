@@ -25,7 +25,7 @@ export function Footer() {
           <p className="label-mono">Team</p>
           <ul className="space-y-2 text-slate-300">
             <li><a className="hover:text-slate-100" href={TEAM_URL} target="_blank" rel="noreferrer">Team page</a></li>
-            <li><a className="hover:text-slate-100" href="https://github.com/hellorifat/solmate" target="_blank" rel="noreferrer">Source on GitHub</a></li>
+            <li><a className="hover:text-slate-100" href="https://github.com/Tanbin-CS/solmate" target="_blank" rel="noreferrer">Source on GitHub</a></li>
           </ul>
         </div>
       </div>
