@@ -1,0 +1,15 @@
+{
+  "name": "solmate-repo",
+  "private": true,
+  "description": "Repository tooling: git hooks and commit linting. App code lives in frontend/, analysis/ and api/.",
+  "license": "Apache-2.0",
+  "scripts": {
+    "prepare": "lefthook install",
+    "commitlint": "commitlint"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
+    "lefthook": "^2.2.2"
+  }
+}

@@ -1,0 +1,14 @@
+# Local guard rails; CI runs the same checks, so nothing here is optional.
+pre-commit:
+  parallel: true
+  commands:
+    secrets:
+      run: gitleaks git --pre-commit --staged --redact --no-banner .
+    web-lint:
+      root: frontend/
+      glob: "*.{ts,tsx}"
+      run: npx oxlint {staged_files}
+commit-msg:
+  commands:
+    commitlint:
+      run: npx --no -- commitlint --edit {1}
