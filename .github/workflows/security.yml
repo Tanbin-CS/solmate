@@ -69,5 +69,9 @@ jobs:
         run: >
           npx -y license-checker-rseidelsohn@4 --production --excludePrivatePackages
           --onlyAllow "MIT;ISC;Apache-2.0;BSD-2-Clause;BSD-3-Clause;0BSD;OFL-1.1;(MIT OR Apache-2.0);MIT*"
-      - name: pip-audit (analysis requirements)
-        run: pip install pip-audit==2.10.1 && pip-audit -r analysis/requirements.txt
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - name: pip-audit (locked analysis dependencies)
+        working-directory: analysis
+        run: |
+          uv export --locked --all-extras --no-dev --no-emit-project --format requirements-txt > /tmp/req.txt
+          pip install pip-audit==2.10.1 && pip-audit --require-hashes -r /tmp/req.txt

@@ -1,0 +1,47 @@
+[project]
+name = "solmate"
+version = "2.0.0.dev0"
+description = "SolMate science pipeline: Earth analogs for Artemis base regions and Mars sites from NASA data"
+license = "Apache-2.0"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "numpy>=2.0",
+  "scipy>=1.13",
+  "rasterio>=1.4",
+  "pyproj>=3.6",
+  "pyyaml>=6.0",
+  "pillow>=10.0",
+  "pyhdf>=0.11",
+  "h5py>=3.11",
+]
+
+[project.optional-dependencies]
+evidence = ["typesafe-sdk>=0.7"]
+
+[dependency-groups]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.7"]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/solmate"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 130
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S"]
+ignore = ["S101", "S310", "S603"]
+
+[tool.ruff.lint.per-file-ignores]
+# Legacy v1 scripts; rewritten into src/solmate/pipeline/ in Sprint 1, then this goes.
+"run.py" = ["E501"]
+"screen.py" = ["E501"]
+"claims_check.py" = ["E501"]
