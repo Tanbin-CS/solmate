@@ -32,6 +32,9 @@ sites:
   - {id: sudbury, lat: 46.60, lon: -81.20, source: Artemis geology training}
   - {id: teide-tenerife, lat: 28.27, lon: -16.64, source: ExoMars rover field tests}
   - {id: arkaroola, lat: -30.30, lon: 139.30, source: Mars analog field research}
+  - {id: qaidam-east, lat: 37.50, lon: 95.00, source: 'Qaidam Basin Mars analog (Xiao et al. 2017, Earth-Science Reviews)'}
+  - {id: licancabur-high-lakes, lat: -22.83, lon: -67.88, source: NASA High Lakes Project}
+  - {id: qaidam-dalangtan, lat: 38.40, lon: 91.90, source: 'Qaidam Basin Mars analog (Xiao et al. 2017, Earth-Science Reviews)'}
   # Widely studied regions named in the challenge (representative points)
   - {id: antarctica-dry-valleys, lat: -77.50, lon: 162.00, source: challenge statement}
   - {id: atacama-core, lat: -23.50, lon: -69.50, source: challenge statement}
