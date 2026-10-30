@@ -141,8 +141,12 @@ def download(g: Granule, token: str) -> dict:
             try:
                 req = urllib.request.Request(g.url, headers={"Authorization": f"Bearer {token}"})
                 with OPENER.open(req, timeout=300) as r, open(tmp, "wb") as f:
+                    expected = int(r.headers.get("Content-Length") or -1)
                     while chunk := r.read(1 << 20):
                         f.write(chunk)
+                got = tmp.stat().st_size
+                if expected >= 0 and got != expected:  # a dropped connection ends the stream early
+                    raise ConnectionError(f"truncated download: {got} of {expected} bytes")
                 tmp.replace(dest)
                 break
             except (urllib.error.URLError, TimeoutError, ConnectionError) as exc:

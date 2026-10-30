@@ -614,8 +614,8 @@
    "file": "cache/raw/MCD43C3/MCD43C3.A2024106.061.2024117055112.hdf",
    "url": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/MCD43C3.061/MCD43C3.A2024106.061.2024117055112/MCD43C3.A2024106.061.2024117055112.hdf",
    "time_start": "2024-04-15T00:00:00.000Z",
-   "bytes": 52554576,
-   "sha256": "91f5d15666d85bf2699f632a48e4742de5e82d233c1ecdf757283277d157482f"
+   "bytes": 204157420,
+   "sha256": "a44fea2d5b194c0274be91e8f494293f3bc3f8cee4440feedd9dc1c3bd1beb9e"
   },
   {
    "product": "MCD43C3",
