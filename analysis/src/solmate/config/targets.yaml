@@ -1,0 +1,2380 @@
+version: 1
+status: 'reviewed: values verified against cited sources by research pass; proxies flagged (method: proxy)'
+generated: '2026-10-31'
+description: 'SolMate target-side indicator values (Moon Artemis III candidate regions + Mars sites) with citations. Units
+  and meaning follow the Earth layers in dimensions.yaml. Methods: literature (number from a source), proxy (estimate/derivation,
+  rationale in excerpt), computed (filled later by the pipeline).'
+conventions:
+  moon_coordinates: planetocentric latitude, east-positive longitude (-180..180)
+  mars_coordinates: planetocentric latitude, east-positive longitude (0..360)
+  temperatures: lst_* in K (surface/skin temperature); t2m_mean_c in degC (Moon = mean SURFACE temperature; Mars = air at
+    ~1.45 m where measured)
+  wind: ws10m normalised to 10 m with a neutral log profile, z0 = 0.01 m
+notes:
+- 'Lunar polar temperatures vary enormously over metres: sunlit ridges reach ~200-300 K while PSRs a few km away stay at ~25-110
+  K. All lunar thermal indicators describe the ILLUMINATED landing area. No Earth place matches them, so lunar thermal indicators
+  should use ''toward'' mode.'
+- 'Lunar thermal values are literature-bounded estimates (method: proxy) shared across the 9 regions, not per-site Diviner
+  samples. Next step: sample the Williams et al. 2019 Diviner polar max/min/avg products (diviner.ucla.edu/data, PDS Geosciences)
+  at each centroid and switch to method: computed. That needs a data download, which was not done here.'
+- Artemis centroids are spherical means of the Wueller et al. 2026 (JGR Planets, LPI) candidate landing sites inside each
+  NASA region; NASA's 28 Oct 2024 release gives no coordinates. Every site is within ~8-32 km of its centroid. The centroids
+  are approximate and are not NASA polygon centroids.
+- Mineral indices (mafic/carbonate/quartz) are ASTER-specific and not transferable. Targets carry a mineral_class with booleans
+  instead, and scoring should compare classes, not index values.
+- 'frost_days_per_year uses the Earth definition (Tmin < 0 degC) and saturates at 365 for every target. snow_months_per_year
+  is a documented proxy: Moon by PSR access class (0/6/12), Jezero 0, Arcadia 2 (surface frost; alt 12 if buried ground ice
+  is counted).'
+- 'Mars radiation values come from MSL RAD at Gale (Hassler et al. 2014: 0.64 +/- 0.12 mSv/day, not the 0.67 in the brief).
+  The lunar value is the Chang''e-4 far-side measurement (1.369 mSv/day, 2019 solar minimum); no polar in-situ dose exists.'
+- Arcadia Planitia values are mostly proxies because no lander has been there. Thermal values come from Bramson et al. 2017
+  TES albedo/TI plus Jezero analogs, wind from InSight, and pressure scaled from MEDA. A Mars Climate Database (v6) query
+  at 39.8 N 202.1 E would firm them up; the MCD web form was not submitted.
+- Jezero MEDA statistics cover mostly Ls ~13-241 of MY36 (northern spring, summer and early autumn). Full-year means may differ
+  by a few K, and dust opacity is higher in the perihelion season.
+- MEDA RH is relative to the sensor temperature at 1.5 m. The 5% Mars RH values are diurnal-mean estimates, not published
+  numbers.
+- 'Albedo: the Earth layer is MODIS white-sky shortwave albedo. The Moon value is a white-sky integral of the Diviner incidence-dependent
+  albedo model, and the Mars values are TES bolometric (Lambert) albedos. All are broadband, but they are not identical products.'
+- t2m_coldest_month_c (used by dimension I in dimensions.yaml) was not requested and is not provided.
+targets:
+- id: peak_near_cabeus_b
+  name: Peak near Cabeus B
+  body: moon
+  group: artemis_iii_candidate_region
+  centroid:
+    lat: -83.576
+    lon: -69.076
+    frame: planetocentric, east-positive (Mean Earth/Polar Axis)
+    approximate: true
+    method: Spherical (vector) mean of the 5 candidate landing sites for region PCB in Wueller et al. 2026 Appendix A; max
+      site distance from centroid 9.8 km
+    source: Wueller et al. 2026, JGR Planets 131, e2025JE009434 (Appendix A candidate landing sites)
+    doi: 10.1029/2025JE009434
+    url: https://www.nasa.gov/news-release/nasa-provides-update-on-artemis-iii-moon-landing-regions/
+    excerpt: NASA's 28 Oct 2024 release names the region but gives no coordinates. Wueller et al. (LPI/Kring group) publish
+      lat/lon for 130 candidate landing sites that meet HLS slope rules inside the NASA regions. This is the centroid of those
+      sunlit landing sites, not of NASA's region polygon.
+  region_notes: Smallest suitable landing area of all regions (2.1 km2, 0.5%). Wueller et al. list no PSR <125 K within 2
+    km of its sites; the large Cabeus PSR (LCROSS impact, confirmed water) is nearby at regional scale.
+  indicators:
+    lst_diurnal_range_k:
+      value: 130
+      unit: K
+      method: proxy
+      source: 'Synthesis of LRO Diviner polar results: Williams et al. 2019, JGR Planets 124, 2505-2521 (Diviner seasonal
+        polar temperatures); Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif, Diviner via QuickMap); Jia et
+        al. 2022, Remote Sensing 14, 4863'
+      doi: 10.1029/2019JE006028
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-50 K (plausible 80-230 K); PSRs inside the region swing only ~20-70 K
+      excerpt: Estimate for the sunlit landing area, not a per-site sample. Sunlit polar slopes peak ~200-300 K in summer
+        (Jia et al. report up to ~300 K on high ground), and the same surfaces fall to ~70-100 K when shadowed during the
+        lunation. Williams et al. 2019 give PSR floor amplitudes of only ~20-70 K.
+      applies_to: illuminated landing area (not PSR)
+    lst_night_min_k:
+      value: 70
+      unit: K
+      method: proxy
+      source: 'Synthesis of Diviner polar results: Williams et al. 2019, JGR Planets 124, 2505-2521 (Diviner seasonal polar
+        temperatures); Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif, Diviner via QuickMap); Flahaut et al.
+        2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1029/2019JE006028
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-30 K (40-100 K); adjacent PSRs reach ~25-40 K
+      excerpt: Estimate of the typical annual minimum of the illuminated landing surface when shadowed (winter). At Malapert
+        the lowest Diviner seasonal-AVERAGE values in the sunlit quadrants are ~46-124 K, so minima are lower still; PSR floors
+        near the pole reach ~25-40 K.
+      applies_to: illuminated landing area (not PSR)
+    t2m_mean_c:
+      value: -123
+      unit: degC
+      method: proxy
+      source: 'Diviner-based seasonal average temperatures: Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif,
+        Diviner via QuickMap); Flahaut et al. 2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1016/j.pss.2019.104750
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-40 K (mean surface T ~110-190 K, i.e. -163 to -83 degC)
+      excerpt: Mean surface (not air) temperature of ~150 K for the sunlit landing area. Malapert's sunlit quadrants have
+        Diviner seasonal averages up to ~171-193 K, while Flahaut et al. report site-averaged Diviner means of ~83-98 K for
+        ROIs that include PSR-adjacent ground.
+      value_k: 150
+      applies_to: illuminated landing area (not PSR)
+    rh2m_pct:
+      value: 0
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no atmosphere. NASA NSSDCA Moon Fact Sheet'
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: 0
+      excerpt: The Moon has only a collisionless exosphere (night surface pressure ~3e-15 bar per the NASA fact sheet), so
+        relative humidity is undefined and set to 0.
+    albedo_wsa_sw:
+      value: 0.24
+      unit: unitless (broadband, white-sky)
+      method: proxy
+      source: Vasavada et al. 2012, JGR Planets 117 (Diviner equatorial temps, albedo model)
+      doi: 10.1029/2011JE003987
+      url: http://luna1.diviner.ucla.edu/~dap/pubs/057.pdf
+      uncertainty: 0.20-0.24 (A0 = 0.12-0.16). LOLA 1064 nm normal albedo is a different quantity (~0.36-0.37 in cold polar
+        terrain; Fisher et al. 2017, doi 10.1016/j.icarus.2017.03.023)
+      excerpt: Vasavada et al. give Diviner highland normal albedo A0 ~0.16 and A(i) = A0 + 0.045(i/45)^3 + 0.14(i/90)^8.
+        Integrating over incidence (white-sky, like MODIS WSA) gives ~0.24 for A0 = 0.16 (0.20 for A0 = 0.12). Polar sunlight
+        arrives at ~85 deg incidence, where directional albedo is ~0.5.
+      derivation: WSA = integral_0^90 A(i) 2 cos(i) sin(i) di, computed by the SolMate research agent
+    mineral_class:
+      mafic: false
+      carbonate: false
+      quartz_rich: false
+      dominant: feldspathic highlands (plagioclase-rich, anorthositic) with a minor pyroxene (noritic) component
+      method: literature
+      source: Moriarty & Petro 2024, JGR Planets 129, e2023JE008266 (south polar mineralogy, Artemis exploration zone)
+      doi: 10.1029/2023JE008266
+      uncertainty: Region-scale; the mafic signal is strongest near the de Gerlache-Kocher Massif (not in this target list)
+      excerpt: Moon Mineralogy Mapper data show a detectable pyroxene signature in the south polar region, tied to South Pole-Aitken
+        ejecta, on a plagioclase-dominated crust. No quartz or carbonate is reported. Earth ASTER indices are not transferable,
+        so booleans only.
+    snow_months_per_year:
+      value: 0
+      unit: months
+      method: proxy
+      source: Wueller et al. 2026, JGR Planets 131, e2025JE009434 (Appendix A candidate landing sites)
+      doi: 10.1029/2025JE009434
+      uncertainty: Scheme value; 0/6/12 classes
+      excerpt: No PSR <125 K within the 2 km walking radius of any candidate site (Wueller et al. 2026). The illuminated landing
+        surface itself carries no ice, so 0; larger PSRs exist at regional scale.
+      psr_access_class: none
+    frost_days_per_year:
+      value: 365
+      unit: days
+      method: proxy
+      source: 'Earth definition (days with Tmin < 0 degC) applied to Diviner polar temperatures: Williams et al. 2019, JGR
+        Planets 124, 2505-2521 (Diviner seasonal polar temperatures)'
+      doi: 10.1029/2019JE006028
+      uncertainty: Saturated at maximum; no Earth place can exceed it
+      excerpt: Surface minima at the south polar landing regions are far below 273 K every day of the year, so every day counts
+        as a frost day. PSRs inside the regions never exceed ~110-125 K.
+    precip_mm_day:
+      value: 0
+      unit: mm/day
+      method: literature
+      source: Physical basis (no atmosphere (surface-bounded exosphere only))
+      uncertainty: 0
+      excerpt: No rainfall occurs; set to 0 by definition. The Earth layer is liquid-equivalent precipitation, so the target
+        sits at the dry extreme.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    aridity_index:
+      value: 0
+      unit: unitless (P/PET)
+      method: literature
+      source: 'Physical basis: P = 0 so P/PET = 0'
+      uncertainty: 0
+      excerpt: With zero precipitation the UNEP-style aridity index is 0 (hyper-arid end-member).
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    barren_pct:
+      value: 100
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation on the Moon'
+      uncertainty: 0
+      excerpt: No plant cover; the whole surface is bare regolith/rock, matching the Earth 'barren' land-cover class.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    forest_pct:
+      value: 0
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation'
+      uncertainty: 0
+      excerpt: No forest cover exists; set to 0.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    slope_median_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    slope_p90_proxy_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    elev_std_m:
+      value: null
+      unit: m
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    t2m_coldest_month_c:
+      value: -123
+      unit: degC
+      method: proxy
+      source: 'Diviner-based seasonal average temperatures: Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif,
+        Diviner via QuickMap); Flahaut et al. 2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1016/j.pss.2019.104750
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-40 K (mean surface T ~110-190 K, i.e. -163 to -83 degC)
+      excerpt: The Moon's 1.5 degree axial tilt gives no meaningful seasons at the landing areas, so the coldest-month mean
+        equals the annual mean surface temperature from the same Diviner-based estimate.
+      value_k: 150
+      applies_to: illuminated landing area (not PSR)
+  breaks_down:
+    gravity_m_s2:
+      value: 1.62
+      unit: m/s^2
+      method: literature
+      source: NASA NSSDCA Moon Fact Sheet
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: ~0.01 (latitude/topography variation is small)
+      excerpt: NASA lists lunar surface gravity as 1.62 m/s^2, 0.165 of Earth's.
+    surface_pressure_hpa:
+      value: 3.0e-12
+      unit: hPa
+      method: literature
+      source: NASA NSSDCA Moon Fact Sheet
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: order of magnitude; the daytime exosphere is denser
+      excerpt: 'The fact sheet gives a night-time surface pressure of 3e-15 bar (= 3e-12 hPa): effectively vacuum.'
+    radiation_dose_msv_day:
+      value: 1.369
+      unit: mSv/day
+      method: literature
+      source: Zhang et al. 2020, Science Advances 6, eaaz1334 (Chang'e-4 LND, first lunar surface dose)
+      doi: 10.1126/sciadv.aaz1334
+      uncertainty: +/-0.069 mSv/day (paper); varies with the solar cycle
+      excerpt: Chang'e-4's LND measured an average dose equivalent of 1369 uSv/day on the far side (Von Karman crater, ~45.5
+        S) near solar minimum in 2019, ~2.6x the ISS GCR dose. No polar surface measurement exists, but with no atmosphere
+        or global field the value should carry over to the pole.
+      agency: CNSA (non-NASA extra; breaks-down context only, never scored)
+- id: haworth
+  name: Haworth
+  body: moon
+  group: artemis_iii_candidate_region
+  centroid:
+    lat: -86.8
+    lon: -22.898
+    frame: planetocentric, east-positive (Mean Earth/Polar Axis)
+    approximate: true
+    method: Spherical (vector) mean of the 11 candidate landing sites for region HW in Wueller et al. 2026 Appendix A; max
+      site distance from centroid 16.4 km
+    source: Wueller et al. 2026, JGR Planets 131, e2025JE009434 (Appendix A candidate landing sites)
+    doi: 10.1029/2025JE009434
+    url: https://www.nasa.gov/news-release/nasa-provides-update-on-artemis-iii-moon-landing-regions/
+    excerpt: NASA's 28 Oct 2024 release names the region but gives no coordinates. Wueller et al. (LPI/Kring group) publish
+      lat/lon for 130 candidate landing sites that meet HLS slope rules inside the NASA regions. This is the centroid of those
+      sunlit landing sites, not of NASA's region polygon.
+  region_notes: Rim/plateau sites west of Haworth crater; HW10 has an accessible PSR that never exceeds 110 K, HW03 one at
+    110-125 K.
+  indicators:
+    lst_diurnal_range_k:
+      value: 130
+      unit: K
+      method: proxy
+      source: 'Synthesis of LRO Diviner polar results: Williams et al. 2019, JGR Planets 124, 2505-2521 (Diviner seasonal
+        polar temperatures); Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif, Diviner via QuickMap); Jia et
+        al. 2022, Remote Sensing 14, 4863'
+      doi: 10.1029/2019JE006028
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-50 K (plausible 80-230 K); PSRs inside the region swing only ~20-70 K
+      excerpt: Estimate for the sunlit landing area, not a per-site sample. Sunlit polar slopes peak ~200-300 K in summer
+        (Jia et al. report up to ~300 K on high ground), and the same surfaces fall to ~70-100 K when shadowed during the
+        lunation. Williams et al. 2019 give PSR floor amplitudes of only ~20-70 K.
+      applies_to: illuminated landing area (not PSR)
+    lst_night_min_k:
+      value: 70
+      unit: K
+      method: proxy
+      source: 'Synthesis of Diviner polar results: Williams et al. 2019, JGR Planets 124, 2505-2521 (Diviner seasonal polar
+        temperatures); Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif, Diviner via QuickMap); Flahaut et al.
+        2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1029/2019JE006028
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-30 K (40-100 K); adjacent PSRs reach ~25-40 K
+      excerpt: Estimate of the typical annual minimum of the illuminated landing surface when shadowed (winter). At Malapert
+        the lowest Diviner seasonal-AVERAGE values in the sunlit quadrants are ~46-124 K, so minima are lower still; PSR floors
+        near the pole reach ~25-40 K.
+      applies_to: illuminated landing area (not PSR)
+    t2m_mean_c:
+      value: -123
+      unit: degC
+      method: proxy
+      source: 'Diviner-based seasonal average temperatures: Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif,
+        Diviner via QuickMap); Flahaut et al. 2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1016/j.pss.2019.104750
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-40 K (mean surface T ~110-190 K, i.e. -163 to -83 degC)
+      excerpt: Mean surface (not air) temperature of ~150 K for the sunlit landing area. Malapert's sunlit quadrants have
+        Diviner seasonal averages up to ~171-193 K, while Flahaut et al. report site-averaged Diviner means of ~83-98 K for
+        ROIs that include PSR-adjacent ground.
+      value_k: 150
+      applies_to: illuminated landing area (not PSR)
+    rh2m_pct:
+      value: 0
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no atmosphere. NASA NSSDCA Moon Fact Sheet'
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: 0
+      excerpt: The Moon has only a collisionless exosphere (night surface pressure ~3e-15 bar per the NASA fact sheet), so
+        relative humidity is undefined and set to 0.
+    albedo_wsa_sw:
+      value: 0.24
+      unit: unitless (broadband, white-sky)
+      method: proxy
+      source: Vasavada et al. 2012, JGR Planets 117 (Diviner equatorial temps, albedo model)
+      doi: 10.1029/2011JE003987
+      url: http://luna1.diviner.ucla.edu/~dap/pubs/057.pdf
+      uncertainty: 0.20-0.24 (A0 = 0.12-0.16). LOLA 1064 nm normal albedo is a different quantity (~0.36-0.37 in cold polar
+        terrain; Fisher et al. 2017, doi 10.1016/j.icarus.2017.03.023)
+      excerpt: Vasavada et al. give Diviner highland normal albedo A0 ~0.16 and A(i) = A0 + 0.045(i/45)^3 + 0.14(i/90)^8.
+        Integrating over incidence (white-sky, like MODIS WSA) gives ~0.24 for A0 = 0.16 (0.20 for A0 = 0.12). Polar sunlight
+        arrives at ~85 deg incidence, where directional albedo is ~0.5.
+      derivation: WSA = integral_0^90 A(i) 2 cos(i) sin(i) di, computed by the SolMate research agent
+    mineral_class:
+      mafic: false
+      carbonate: false
+      quartz_rich: false
+      dominant: feldspathic highlands (plagioclase-rich, anorthositic) with a minor pyroxene (noritic) component
+      method: literature
+      source: Moriarty & Petro 2024, JGR Planets 129, e2023JE008266 (south polar mineralogy, Artemis exploration zone)
+      doi: 10.1029/2023JE008266
+      uncertainty: Region-scale; the mafic signal is strongest near the de Gerlache-Kocher Massif (not in this target list)
+      excerpt: Moon Mineralogy Mapper data show a detectable pyroxene signature in the south polar region, tied to South Pole-Aitken
+        ejecta, on a plagioclase-dominated crust. No quartz or carbonate is reported. Earth ASTER indices are not transferable,
+        so booleans only.
+    snow_months_per_year:
+      value: 12
+      unit: months
+      method: proxy
+      source: Wueller et al. 2026, JGR Planets 131, e2025JE009434 (Appendix A candidate landing sites)
+      doi: 10.1029/2025JE009434
+      uncertainty: Scheme value; 0/6/12 classes
+      excerpt: At least one candidate site has a PSR that stays <110 K all year within a 2 km walk (Wueller et al. 2026).
+        That is a perennial cold trap where surface/near-surface water ice is thermally stable, mapped to 12 'ice months'.
+      psr_access_class: lt110
+    frost_days_per_year:
+      value: 365
+      unit: days
+      method: proxy
+      source: 'Earth definition (days with Tmin < 0 degC) applied to Diviner polar temperatures: Williams et al. 2019, JGR
+        Planets 124, 2505-2521 (Diviner seasonal polar temperatures)'
+      doi: 10.1029/2019JE006028
+      uncertainty: Saturated at maximum; no Earth place can exceed it
+      excerpt: Surface minima at the south polar landing regions are far below 273 K every day of the year, so every day counts
+        as a frost day. PSRs inside the regions never exceed ~110-125 K.
+    precip_mm_day:
+      value: 0
+      unit: mm/day
+      method: literature
+      source: Physical basis (no atmosphere (surface-bounded exosphere only))
+      uncertainty: 0
+      excerpt: No rainfall occurs; set to 0 by definition. The Earth layer is liquid-equivalent precipitation, so the target
+        sits at the dry extreme.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    aridity_index:
+      value: 0
+      unit: unitless (P/PET)
+      method: literature
+      source: 'Physical basis: P = 0 so P/PET = 0'
+      uncertainty: 0
+      excerpt: With zero precipitation the UNEP-style aridity index is 0 (hyper-arid end-member).
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    barren_pct:
+      value: 100
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation on the Moon'
+      uncertainty: 0
+      excerpt: No plant cover; the whole surface is bare regolith/rock, matching the Earth 'barren' land-cover class.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    forest_pct:
+      value: 0
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation'
+      uncertainty: 0
+      excerpt: No forest cover exists; set to 0.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    slope_median_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    slope_p90_proxy_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    elev_std_m:
+      value: null
+      unit: m
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    t2m_coldest_month_c:
+      value: -123
+      unit: degC
+      method: proxy
+      source: 'Diviner-based seasonal average temperatures: Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif,
+        Diviner via QuickMap); Flahaut et al. 2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1016/j.pss.2019.104750
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-40 K (mean surface T ~110-190 K, i.e. -163 to -83 degC)
+      excerpt: The Moon's 1.5 degree axial tilt gives no meaningful seasons at the landing areas, so the coldest-month mean
+        equals the annual mean surface temperature from the same Diviner-based estimate.
+      value_k: 150
+      applies_to: illuminated landing area (not PSR)
+  breaks_down:
+    gravity_m_s2:
+      value: 1.62
+      unit: m/s^2
+      method: literature
+      source: NASA NSSDCA Moon Fact Sheet
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: ~0.01 (latitude/topography variation is small)
+      excerpt: NASA lists lunar surface gravity as 1.62 m/s^2, 0.165 of Earth's.
+    surface_pressure_hpa:
+      value: 3.0e-12
+      unit: hPa
+      method: literature
+      source: NASA NSSDCA Moon Fact Sheet
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: order of magnitude; the daytime exosphere is denser
+      excerpt: 'The fact sheet gives a night-time surface pressure of 3e-15 bar (= 3e-12 hPa): effectively vacuum.'
+    radiation_dose_msv_day:
+      value: 1.369
+      unit: mSv/day
+      method: literature
+      source: Zhang et al. 2020, Science Advances 6, eaaz1334 (Chang'e-4 LND, first lunar surface dose)
+      doi: 10.1126/sciadv.aaz1334
+      uncertainty: +/-0.069 mSv/day (paper); varies with the solar cycle
+      excerpt: Chang'e-4's LND measured an average dose equivalent of 1369 uSv/day on the far side (Von Karman crater, ~45.5
+        S) near solar minimum in 2019, ~2.6x the ISS GCR dose. No polar surface measurement exists, but with no atmosphere
+        or global field the value should carry over to the pole.
+      agency: CNSA (non-NASA extra; breaks-down context only, never scored)
+- id: malapert_massif
+  name: Malapert Massif
+  body: moon
+  group: artemis_iii_candidate_region
+  centroid:
+    lat: -86.047
+    lon: 0.149
+    frame: planetocentric, east-positive (Mean Earth/Polar Axis)
+    approximate: true
+    method: Spherical (vector) mean of the 5 candidate landing sites for region MMA in Wueller et al. 2026 Appendix A; max
+      site distance from centroid 8.1 km
+    source: Wueller et al. 2026, JGR Planets 131, e2025JE009434 (Appendix A candidate landing sites)
+    doi: 10.1029/2025JE009434
+    url: https://www.nasa.gov/news-release/nasa-provides-update-on-artemis-iii-moon-landing-regions/
+    excerpt: NASA's 28 Oct 2024 release names the region but gives no coordinates. Wueller et al. (LPI/Kring group) publish
+      lat/lon for 130 candidate landing sites that meet HLS slope rules inside the NASA regions. This is the centroid of those
+      sunlit landing sites, not of NASA's region polygon.
+  region_notes: Wueller et al. call the region 'Mons Malapert (MMA)'. Only 110-125 K PSRs are accessible (site MMA04). Diviner/QuickMap
+    seasonal-average temperatures on the sunlit northern quadrants reach ~171-193 K (Bourque & Thomson 2024).
+  indicators:
+    lst_diurnal_range_k:
+      value: 130
+      unit: K
+      method: proxy
+      source: 'Synthesis of LRO Diviner polar results: Williams et al. 2019, JGR Planets 124, 2505-2521 (Diviner seasonal
+        polar temperatures); Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif, Diviner via QuickMap); Jia et
+        al. 2022, Remote Sensing 14, 4863'
+      doi: 10.1029/2019JE006028
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-50 K (plausible 80-230 K); PSRs inside the region swing only ~20-70 K
+      excerpt: Estimate for the sunlit landing area, not a per-site sample. Sunlit polar slopes peak ~200-300 K in summer
+        (Jia et al. report up to ~300 K on high ground), and the same surfaces fall to ~70-100 K when shadowed during the
+        lunation. Williams et al. 2019 give PSR floor amplitudes of only ~20-70 K.
+      applies_to: illuminated landing area (not PSR)
+    lst_night_min_k:
+      value: 70
+      unit: K
+      method: proxy
+      source: 'Synthesis of Diviner polar results: Williams et al. 2019, JGR Planets 124, 2505-2521 (Diviner seasonal polar
+        temperatures); Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif, Diviner via QuickMap); Flahaut et al.
+        2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1029/2019JE006028
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-30 K (40-100 K); adjacent PSRs reach ~25-40 K
+      excerpt: Estimate of the typical annual minimum of the illuminated landing surface when shadowed (winter). At Malapert
+        the lowest Diviner seasonal-AVERAGE values in the sunlit quadrants are ~46-124 K, so minima are lower still; PSR floors
+        near the pole reach ~25-40 K.
+      applies_to: illuminated landing area (not PSR)
+    t2m_mean_c:
+      value: -123
+      unit: degC
+      method: proxy
+      source: 'Diviner-based seasonal average temperatures: Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif,
+        Diviner via QuickMap); Flahaut et al. 2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1016/j.pss.2019.104750
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-40 K (mean surface T ~110-190 K, i.e. -163 to -83 degC)
+      excerpt: Mean surface (not air) temperature of ~150 K for the sunlit landing area. Malapert's sunlit quadrants have
+        Diviner seasonal averages up to ~171-193 K, while Flahaut et al. report site-averaged Diviner means of ~83-98 K for
+        ROIs that include PSR-adjacent ground.
+      value_k: 150
+      applies_to: illuminated landing area (not PSR)
+    rh2m_pct:
+      value: 0
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no atmosphere. NASA NSSDCA Moon Fact Sheet'
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: 0
+      excerpt: The Moon has only a collisionless exosphere (night surface pressure ~3e-15 bar per the NASA fact sheet), so
+        relative humidity is undefined and set to 0.
+    albedo_wsa_sw:
+      value: 0.24
+      unit: unitless (broadband, white-sky)
+      method: proxy
+      source: Vasavada et al. 2012, JGR Planets 117 (Diviner equatorial temps, albedo model)
+      doi: 10.1029/2011JE003987
+      url: http://luna1.diviner.ucla.edu/~dap/pubs/057.pdf
+      uncertainty: 0.20-0.24 (A0 = 0.12-0.16). LOLA 1064 nm normal albedo is a different quantity (~0.36-0.37 in cold polar
+        terrain; Fisher et al. 2017, doi 10.1016/j.icarus.2017.03.023)
+      excerpt: Vasavada et al. give Diviner highland normal albedo A0 ~0.16 and A(i) = A0 + 0.045(i/45)^3 + 0.14(i/90)^8.
+        Integrating over incidence (white-sky, like MODIS WSA) gives ~0.24 for A0 = 0.16 (0.20 for A0 = 0.12). Polar sunlight
+        arrives at ~85 deg incidence, where directional albedo is ~0.5.
+      derivation: WSA = integral_0^90 A(i) 2 cos(i) sin(i) di, computed by the SolMate research agent
+    mineral_class:
+      mafic: false
+      carbonate: false
+      quartz_rich: false
+      dominant: feldspathic highlands (plagioclase-rich, anorthositic) with a minor pyroxene (noritic) component
+      method: literature
+      source: Moriarty & Petro 2024, JGR Planets 129, e2023JE008266 (south polar mineralogy, Artemis exploration zone)
+      doi: 10.1029/2023JE008266
+      uncertainty: Region-scale; the mafic signal is strongest near the de Gerlache-Kocher Massif (not in this target list)
+      excerpt: Moon Mineralogy Mapper data show a detectable pyroxene signature in the south polar region, tied to South Pole-Aitken
+        ejecta, on a plagioclase-dominated crust. No quartz or carbonate is reported. Earth ASTER indices are not transferable,
+        so booleans only.
+    snow_months_per_year:
+      value: 6
+      unit: months
+      method: proxy
+      source: Wueller et al. 2026, JGR Planets 131, e2025JE009434 (Appendix A candidate landing sites)
+      doi: 10.1029/2025JE009434
+      uncertainty: Scheme value; 0/6/12 classes
+      excerpt: Only PSRs peaking at 110-125 K are within 2 km (Wueller et al. 2026). Ice may persist seasonally or under regolith
+        but is not stable at the surface all year, mapped to 6 'ice months' (mid value).
+      psr_access_class: 110to125
+    frost_days_per_year:
+      value: 365
+      unit: days
+      method: proxy
+      source: 'Earth definition (days with Tmin < 0 degC) applied to Diviner polar temperatures: Williams et al. 2019, JGR
+        Planets 124, 2505-2521 (Diviner seasonal polar temperatures)'
+      doi: 10.1029/2019JE006028
+      uncertainty: Saturated at maximum; no Earth place can exceed it
+      excerpt: Surface minima at the south polar landing regions are far below 273 K every day of the year, so every day counts
+        as a frost day. PSRs inside the regions never exceed ~110-125 K.
+    precip_mm_day:
+      value: 0
+      unit: mm/day
+      method: literature
+      source: Physical basis (no atmosphere (surface-bounded exosphere only))
+      uncertainty: 0
+      excerpt: No rainfall occurs; set to 0 by definition. The Earth layer is liquid-equivalent precipitation, so the target
+        sits at the dry extreme.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    aridity_index:
+      value: 0
+      unit: unitless (P/PET)
+      method: literature
+      source: 'Physical basis: P = 0 so P/PET = 0'
+      uncertainty: 0
+      excerpt: With zero precipitation the UNEP-style aridity index is 0 (hyper-arid end-member).
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    barren_pct:
+      value: 100
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation on the Moon'
+      uncertainty: 0
+      excerpt: No plant cover; the whole surface is bare regolith/rock, matching the Earth 'barren' land-cover class.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    forest_pct:
+      value: 0
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation'
+      uncertainty: 0
+      excerpt: No forest cover exists; set to 0.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    slope_median_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    slope_p90_proxy_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    elev_std_m:
+      value: null
+      unit: m
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    t2m_coldest_month_c:
+      value: -123
+      unit: degC
+      method: proxy
+      source: 'Diviner-based seasonal average temperatures: Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif,
+        Diviner via QuickMap); Flahaut et al. 2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1016/j.pss.2019.104750
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-40 K (mean surface T ~110-190 K, i.e. -163 to -83 degC)
+      excerpt: The Moon's 1.5 degree axial tilt gives no meaningful seasons at the landing areas, so the coldest-month mean
+        equals the annual mean surface temperature from the same Diviner-based estimate.
+      value_k: 150
+      applies_to: illuminated landing area (not PSR)
+  breaks_down:
+    gravity_m_s2:
+      value: 1.62
+      unit: m/s^2
+      method: literature
+      source: NASA NSSDCA Moon Fact Sheet
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: ~0.01 (latitude/topography variation is small)
+      excerpt: NASA lists lunar surface gravity as 1.62 m/s^2, 0.165 of Earth's.
+    surface_pressure_hpa:
+      value: 3.0e-12
+      unit: hPa
+      method: literature
+      source: NASA NSSDCA Moon Fact Sheet
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: order of magnitude; the daytime exosphere is denser
+      excerpt: 'The fact sheet gives a night-time surface pressure of 3e-15 bar (= 3e-12 hPa): effectively vacuum.'
+    radiation_dose_msv_day:
+      value: 1.369
+      unit: mSv/day
+      method: literature
+      source: Zhang et al. 2020, Science Advances 6, eaaz1334 (Chang'e-4 LND, first lunar surface dose)
+      doi: 10.1126/sciadv.aaz1334
+      uncertainty: +/-0.069 mSv/day (paper); varies with the solar cycle
+      excerpt: Chang'e-4's LND measured an average dose equivalent of 1369 uSv/day on the far side (Von Karman crater, ~45.5
+        S) near solar minimum in 2019, ~2.6x the ISS GCR dose. No polar surface measurement exists, but with no atmosphere
+        or global field the value should carry over to the pole.
+      agency: CNSA (non-NASA extra; breaks-down context only, never scored)
+- id: mons_mouton_plateau
+  name: Mons Mouton Plateau
+  body: moon
+  group: artemis_iii_candidate_region
+  centroid:
+    lat: -84.534
+    lon: 30.655
+    frame: planetocentric, east-positive (Mean Earth/Polar Axis)
+    approximate: true
+    method: Spherical (vector) mean of the 11 candidate landing sites for region MMP in Wueller et al. 2026 Appendix A; max
+      site distance from centroid 31.7 km
+    source: Wueller et al. 2026, JGR Planets 131, e2025JE009434 (Appendix A candidate landing sites)
+    doi: 10.1029/2025JE009434
+    url: https://www.nasa.gov/news-release/nasa-provides-update-on-artemis-iii-moon-landing-regions/
+    excerpt: NASA's 28 Oct 2024 release names the region but gives no coordinates. Wueller et al. (LPI/Kring group) publish
+      lat/lon for 130 candidate landing sites that meet HLS slope rules inside the NASA regions. This is the centroid of those
+      sunlit landing sites, not of NASA's region polygon.
+  region_notes: Largest and flattest region (564.8 km2 suitable); sites spread over ~30 km so the centroid is coarse. MMP02/05/06
+    reach PSRs <110 K.
+  indicators:
+    lst_diurnal_range_k:
+      value: 130
+      unit: K
+      method: proxy
+      source: 'Synthesis of LRO Diviner polar results: Williams et al. 2019, JGR Planets 124, 2505-2521 (Diviner seasonal
+        polar temperatures); Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif, Diviner via QuickMap); Jia et
+        al. 2022, Remote Sensing 14, 4863'
+      doi: 10.1029/2019JE006028
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-50 K (plausible 80-230 K); PSRs inside the region swing only ~20-70 K
+      excerpt: Estimate for the sunlit landing area, not a per-site sample. Sunlit polar slopes peak ~200-300 K in summer
+        (Jia et al. report up to ~300 K on high ground), and the same surfaces fall to ~70-100 K when shadowed during the
+        lunation. Williams et al. 2019 give PSR floor amplitudes of only ~20-70 K.
+      applies_to: illuminated landing area (not PSR)
+    lst_night_min_k:
+      value: 70
+      unit: K
+      method: proxy
+      source: 'Synthesis of Diviner polar results: Williams et al. 2019, JGR Planets 124, 2505-2521 (Diviner seasonal polar
+        temperatures); Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif, Diviner via QuickMap); Flahaut et al.
+        2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1029/2019JE006028
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-30 K (40-100 K); adjacent PSRs reach ~25-40 K
+      excerpt: Estimate of the typical annual minimum of the illuminated landing surface when shadowed (winter). At Malapert
+        the lowest Diviner seasonal-AVERAGE values in the sunlit quadrants are ~46-124 K, so minima are lower still; PSR floors
+        near the pole reach ~25-40 K.
+      applies_to: illuminated landing area (not PSR)
+    t2m_mean_c:
+      value: -123
+      unit: degC
+      method: proxy
+      source: 'Diviner-based seasonal average temperatures: Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif,
+        Diviner via QuickMap); Flahaut et al. 2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1016/j.pss.2019.104750
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-40 K (mean surface T ~110-190 K, i.e. -163 to -83 degC)
+      excerpt: Mean surface (not air) temperature of ~150 K for the sunlit landing area. Malapert's sunlit quadrants have
+        Diviner seasonal averages up to ~171-193 K, while Flahaut et al. report site-averaged Diviner means of ~83-98 K for
+        ROIs that include PSR-adjacent ground.
+      value_k: 150
+      applies_to: illuminated landing area (not PSR)
+    rh2m_pct:
+      value: 0
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no atmosphere. NASA NSSDCA Moon Fact Sheet'
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: 0
+      excerpt: The Moon has only a collisionless exosphere (night surface pressure ~3e-15 bar per the NASA fact sheet), so
+        relative humidity is undefined and set to 0.
+    albedo_wsa_sw:
+      value: 0.24
+      unit: unitless (broadband, white-sky)
+      method: proxy
+      source: Vasavada et al. 2012, JGR Planets 117 (Diviner equatorial temps, albedo model)
+      doi: 10.1029/2011JE003987
+      url: http://luna1.diviner.ucla.edu/~dap/pubs/057.pdf
+      uncertainty: 0.20-0.24 (A0 = 0.12-0.16). LOLA 1064 nm normal albedo is a different quantity (~0.36-0.37 in cold polar
+        terrain; Fisher et al. 2017, doi 10.1016/j.icarus.2017.03.023)
+      excerpt: Vasavada et al. give Diviner highland normal albedo A0 ~0.16 and A(i) = A0 + 0.045(i/45)^3 + 0.14(i/90)^8.
+        Integrating over incidence (white-sky, like MODIS WSA) gives ~0.24 for A0 = 0.16 (0.20 for A0 = 0.12). Polar sunlight
+        arrives at ~85 deg incidence, where directional albedo is ~0.5.
+      derivation: WSA = integral_0^90 A(i) 2 cos(i) sin(i) di, computed by the SolMate research agent
+    mineral_class:
+      mafic: false
+      carbonate: false
+      quartz_rich: false
+      dominant: feldspathic highlands (plagioclase-rich, anorthositic) with a minor pyroxene (noritic) component
+      method: literature
+      source: Moriarty & Petro 2024, JGR Planets 129, e2023JE008266 (south polar mineralogy, Artemis exploration zone)
+      doi: 10.1029/2023JE008266
+      uncertainty: Region-scale; the mafic signal is strongest near the de Gerlache-Kocher Massif (not in this target list)
+      excerpt: Moon Mineralogy Mapper data show a detectable pyroxene signature in the south polar region, tied to South Pole-Aitken
+        ejecta, on a plagioclase-dominated crust. No quartz or carbonate is reported. Earth ASTER indices are not transferable,
+        so booleans only.
+    snow_months_per_year:
+      value: 12
+      unit: months
+      method: proxy
+      source: Wueller et al. 2026, JGR Planets 131, e2025JE009434 (Appendix A candidate landing sites)
+      doi: 10.1029/2025JE009434
+      uncertainty: Scheme value; 0/6/12 classes
+      excerpt: At least one candidate site has a PSR that stays <110 K all year within a 2 km walk (Wueller et al. 2026).
+        That is a perennial cold trap where surface/near-surface water ice is thermally stable, mapped to 12 'ice months'.
+      psr_access_class: lt110
+    frost_days_per_year:
+      value: 365
+      unit: days
+      method: proxy
+      source: 'Earth definition (days with Tmin < 0 degC) applied to Diviner polar temperatures: Williams et al. 2019, JGR
+        Planets 124, 2505-2521 (Diviner seasonal polar temperatures)'
+      doi: 10.1029/2019JE006028
+      uncertainty: Saturated at maximum; no Earth place can exceed it
+      excerpt: Surface minima at the south polar landing regions are far below 273 K every day of the year, so every day counts
+        as a frost day. PSRs inside the regions never exceed ~110-125 K.
+    precip_mm_day:
+      value: 0
+      unit: mm/day
+      method: literature
+      source: Physical basis (no atmosphere (surface-bounded exosphere only))
+      uncertainty: 0
+      excerpt: No rainfall occurs; set to 0 by definition. The Earth layer is liquid-equivalent precipitation, so the target
+        sits at the dry extreme.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    aridity_index:
+      value: 0
+      unit: unitless (P/PET)
+      method: literature
+      source: 'Physical basis: P = 0 so P/PET = 0'
+      uncertainty: 0
+      excerpt: With zero precipitation the UNEP-style aridity index is 0 (hyper-arid end-member).
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    barren_pct:
+      value: 100
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation on the Moon'
+      uncertainty: 0
+      excerpt: No plant cover; the whole surface is bare regolith/rock, matching the Earth 'barren' land-cover class.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    forest_pct:
+      value: 0
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation'
+      uncertainty: 0
+      excerpt: No forest cover exists; set to 0.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    slope_median_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    slope_p90_proxy_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    elev_std_m:
+      value: null
+      unit: m
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    t2m_coldest_month_c:
+      value: -123
+      unit: degC
+      method: proxy
+      source: 'Diviner-based seasonal average temperatures: Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif,
+        Diviner via QuickMap); Flahaut et al. 2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1016/j.pss.2019.104750
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-40 K (mean surface T ~110-190 K, i.e. -163 to -83 degC)
+      excerpt: The Moon's 1.5 degree axial tilt gives no meaningful seasons at the landing areas, so the coldest-month mean
+        equals the annual mean surface temperature from the same Diviner-based estimate.
+      value_k: 150
+      applies_to: illuminated landing area (not PSR)
+  breaks_down:
+    gravity_m_s2:
+      value: 1.62
+      unit: m/s^2
+      method: literature
+      source: NASA NSSDCA Moon Fact Sheet
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: ~0.01 (latitude/topography variation is small)
+      excerpt: NASA lists lunar surface gravity as 1.62 m/s^2, 0.165 of Earth's.
+    surface_pressure_hpa:
+      value: 3.0e-12
+      unit: hPa
+      method: literature
+      source: NASA NSSDCA Moon Fact Sheet
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: order of magnitude; the daytime exosphere is denser
+      excerpt: 'The fact sheet gives a night-time surface pressure of 3e-15 bar (= 3e-12 hPa): effectively vacuum.'
+    radiation_dose_msv_day:
+      value: 1.369
+      unit: mSv/day
+      method: literature
+      source: Zhang et al. 2020, Science Advances 6, eaaz1334 (Chang'e-4 LND, first lunar surface dose)
+      doi: 10.1126/sciadv.aaz1334
+      uncertainty: +/-0.069 mSv/day (paper); varies with the solar cycle
+      excerpt: Chang'e-4's LND measured an average dose equivalent of 1369 uSv/day on the far side (Von Karman crater, ~45.5
+        S) near solar minimum in 2019, ~2.6x the ISS GCR dose. No polar surface measurement exists, but with no atmosphere
+        or global field the value should carry over to the pole.
+      agency: CNSA (non-NASA extra; breaks-down context only, never scored)
+- id: mons_mouton
+  name: Mons Mouton
+  body: moon
+  group: artemis_iii_candidate_region
+  centroid:
+    lat: -85.399
+    lon: 31.18
+    frame: planetocentric, east-positive (Mean Earth/Polar Axis)
+    approximate: true
+    method: Spherical (vector) mean of the 10 candidate landing sites for region MMO in Wueller et al. 2026 Appendix A; max
+      site distance from centroid 11.4 km
+    source: Wueller et al. 2026, JGR Planets 131, e2025JE009434 (Appendix A candidate landing sites)
+    doi: 10.1029/2025JE009434
+    url: https://www.nasa.gov/news-release/nasa-provides-update-on-artemis-iii-moon-landing-regions/
+    excerpt: NASA's 28 Oct 2024 release names the region but gives no coordinates. Wueller et al. (LPI/Kring group) publish
+      lat/lon for 130 candidate landing sites that meet HLS slope rules inside the NASA regions. This is the centroid of those
+      sunlit landing sites, not of NASA's region polygon.
+  region_notes: Summit sites of Mons Mouton; MMO07/08 reach PSRs <110 K.
+  indicators:
+    lst_diurnal_range_k:
+      value: 130
+      unit: K
+      method: proxy
+      source: 'Synthesis of LRO Diviner polar results: Williams et al. 2019, JGR Planets 124, 2505-2521 (Diviner seasonal
+        polar temperatures); Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif, Diviner via QuickMap); Jia et
+        al. 2022, Remote Sensing 14, 4863'
+      doi: 10.1029/2019JE006028
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-50 K (plausible 80-230 K); PSRs inside the region swing only ~20-70 K
+      excerpt: Estimate for the sunlit landing area, not a per-site sample. Sunlit polar slopes peak ~200-300 K in summer
+        (Jia et al. report up to ~300 K on high ground), and the same surfaces fall to ~70-100 K when shadowed during the
+        lunation. Williams et al. 2019 give PSR floor amplitudes of only ~20-70 K.
+      applies_to: illuminated landing area (not PSR)
+    lst_night_min_k:
+      value: 70
+      unit: K
+      method: proxy
+      source: 'Synthesis of Diviner polar results: Williams et al. 2019, JGR Planets 124, 2505-2521 (Diviner seasonal polar
+        temperatures); Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif, Diviner via QuickMap); Flahaut et al.
+        2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1029/2019JE006028
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-30 K (40-100 K); adjacent PSRs reach ~25-40 K
+      excerpt: Estimate of the typical annual minimum of the illuminated landing surface when shadowed (winter). At Malapert
+        the lowest Diviner seasonal-AVERAGE values in the sunlit quadrants are ~46-124 K, so minima are lower still; PSR floors
+        near the pole reach ~25-40 K.
+      applies_to: illuminated landing area (not PSR)
+    t2m_mean_c:
+      value: -123
+      unit: degC
+      method: proxy
+      source: 'Diviner-based seasonal average temperatures: Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif,
+        Diviner via QuickMap); Flahaut et al. 2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1016/j.pss.2019.104750
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-40 K (mean surface T ~110-190 K, i.e. -163 to -83 degC)
+      excerpt: Mean surface (not air) temperature of ~150 K for the sunlit landing area. Malapert's sunlit quadrants have
+        Diviner seasonal averages up to ~171-193 K, while Flahaut et al. report site-averaged Diviner means of ~83-98 K for
+        ROIs that include PSR-adjacent ground.
+      value_k: 150
+      applies_to: illuminated landing area (not PSR)
+    rh2m_pct:
+      value: 0
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no atmosphere. NASA NSSDCA Moon Fact Sheet'
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: 0
+      excerpt: The Moon has only a collisionless exosphere (night surface pressure ~3e-15 bar per the NASA fact sheet), so
+        relative humidity is undefined and set to 0.
+    albedo_wsa_sw:
+      value: 0.24
+      unit: unitless (broadband, white-sky)
+      method: proxy
+      source: Vasavada et al. 2012, JGR Planets 117 (Diviner equatorial temps, albedo model)
+      doi: 10.1029/2011JE003987
+      url: http://luna1.diviner.ucla.edu/~dap/pubs/057.pdf
+      uncertainty: 0.20-0.24 (A0 = 0.12-0.16). LOLA 1064 nm normal albedo is a different quantity (~0.36-0.37 in cold polar
+        terrain; Fisher et al. 2017, doi 10.1016/j.icarus.2017.03.023)
+      excerpt: Vasavada et al. give Diviner highland normal albedo A0 ~0.16 and A(i) = A0 + 0.045(i/45)^3 + 0.14(i/90)^8.
+        Integrating over incidence (white-sky, like MODIS WSA) gives ~0.24 for A0 = 0.16 (0.20 for A0 = 0.12). Polar sunlight
+        arrives at ~85 deg incidence, where directional albedo is ~0.5.
+      derivation: WSA = integral_0^90 A(i) 2 cos(i) sin(i) di, computed by the SolMate research agent
+    mineral_class:
+      mafic: false
+      carbonate: false
+      quartz_rich: false
+      dominant: feldspathic highlands (plagioclase-rich, anorthositic) with a minor pyroxene (noritic) component
+      method: literature
+      source: Moriarty & Petro 2024, JGR Planets 129, e2023JE008266 (south polar mineralogy, Artemis exploration zone)
+      doi: 10.1029/2023JE008266
+      uncertainty: Region-scale; the mafic signal is strongest near the de Gerlache-Kocher Massif (not in this target list)
+      excerpt: Moon Mineralogy Mapper data show a detectable pyroxene signature in the south polar region, tied to South Pole-Aitken
+        ejecta, on a plagioclase-dominated crust. No quartz or carbonate is reported. Earth ASTER indices are not transferable,
+        so booleans only.
+    snow_months_per_year:
+      value: 12
+      unit: months
+      method: proxy
+      source: Wueller et al. 2026, JGR Planets 131, e2025JE009434 (Appendix A candidate landing sites)
+      doi: 10.1029/2025JE009434
+      uncertainty: Scheme value; 0/6/12 classes
+      excerpt: At least one candidate site has a PSR that stays <110 K all year within a 2 km walk (Wueller et al. 2026).
+        That is a perennial cold trap where surface/near-surface water ice is thermally stable, mapped to 12 'ice months'.
+      psr_access_class: lt110
+    frost_days_per_year:
+      value: 365
+      unit: days
+      method: proxy
+      source: 'Earth definition (days with Tmin < 0 degC) applied to Diviner polar temperatures: Williams et al. 2019, JGR
+        Planets 124, 2505-2521 (Diviner seasonal polar temperatures)'
+      doi: 10.1029/2019JE006028
+      uncertainty: Saturated at maximum; no Earth place can exceed it
+      excerpt: Surface minima at the south polar landing regions are far below 273 K every day of the year, so every day counts
+        as a frost day. PSRs inside the regions never exceed ~110-125 K.
+    precip_mm_day:
+      value: 0
+      unit: mm/day
+      method: literature
+      source: Physical basis (no atmosphere (surface-bounded exosphere only))
+      uncertainty: 0
+      excerpt: No rainfall occurs; set to 0 by definition. The Earth layer is liquid-equivalent precipitation, so the target
+        sits at the dry extreme.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    aridity_index:
+      value: 0
+      unit: unitless (P/PET)
+      method: literature
+      source: 'Physical basis: P = 0 so P/PET = 0'
+      uncertainty: 0
+      excerpt: With zero precipitation the UNEP-style aridity index is 0 (hyper-arid end-member).
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    barren_pct:
+      value: 100
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation on the Moon'
+      uncertainty: 0
+      excerpt: No plant cover; the whole surface is bare regolith/rock, matching the Earth 'barren' land-cover class.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    forest_pct:
+      value: 0
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation'
+      uncertainty: 0
+      excerpt: No forest cover exists; set to 0.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    slope_median_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    slope_p90_proxy_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    elev_std_m:
+      value: null
+      unit: m
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    t2m_coldest_month_c:
+      value: -123
+      unit: degC
+      method: proxy
+      source: 'Diviner-based seasonal average temperatures: Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif,
+        Diviner via QuickMap); Flahaut et al. 2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1016/j.pss.2019.104750
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-40 K (mean surface T ~110-190 K, i.e. -163 to -83 degC)
+      excerpt: The Moon's 1.5 degree axial tilt gives no meaningful seasons at the landing areas, so the coldest-month mean
+        equals the annual mean surface temperature from the same Diviner-based estimate.
+      value_k: 150
+      applies_to: illuminated landing area (not PSR)
+  breaks_down:
+    gravity_m_s2:
+      value: 1.62
+      unit: m/s^2
+      method: literature
+      source: NASA NSSDCA Moon Fact Sheet
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: ~0.01 (latitude/topography variation is small)
+      excerpt: NASA lists lunar surface gravity as 1.62 m/s^2, 0.165 of Earth's.
+    surface_pressure_hpa:
+      value: 3.0e-12
+      unit: hPa
+      method: literature
+      source: NASA NSSDCA Moon Fact Sheet
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: order of magnitude; the daytime exosphere is denser
+      excerpt: 'The fact sheet gives a night-time surface pressure of 3e-15 bar (= 3e-12 hPa): effectively vacuum.'
+    radiation_dose_msv_day:
+      value: 1.369
+      unit: mSv/day
+      method: literature
+      source: Zhang et al. 2020, Science Advances 6, eaaz1334 (Chang'e-4 LND, first lunar surface dose)
+      doi: 10.1126/sciadv.aaz1334
+      uncertainty: +/-0.069 mSv/day (paper); varies with the solar cycle
+      excerpt: Chang'e-4's LND measured an average dose equivalent of 1369 uSv/day on the far side (Von Karman crater, ~45.5
+        S) near solar minimum in 2019, ~2.6x the ISS GCR dose. No polar surface measurement exists, but with no atmosphere
+        or global field the value should carry over to the pole.
+      agency: CNSA (non-NASA extra; breaks-down context only, never scored)
+- id: nobile_rim_1
+  name: Nobile Rim 1
+  body: moon
+  group: artemis_iii_candidate_region
+  centroid:
+    lat: -85.188
+    lon: 37.24
+    frame: planetocentric, east-positive (Mean Earth/Polar Axis)
+    approximate: true
+    method: Spherical (vector) mean of the 9 candidate landing sites for region NR1 in Wueller et al. 2026 Appendix A; max
+      site distance from centroid 10.9 km
+    source: Wueller et al. 2026, JGR Planets 131, e2025JE009434 (Appendix A candidate landing sites)
+    doi: 10.1029/2025JE009434
+    url: https://www.nasa.gov/news-release/nasa-provides-update-on-artemis-iii-moon-landing-regions/
+    excerpt: NASA's 28 Oct 2024 release names the region but gives no coordinates. Wueller et al. (LPI/Kring group) publish
+      lat/lon for 130 candidate landing sites that meet HLS slope rules inside the NASA regions. This is the centroid of those
+      sunlit landing sites, not of NASA's region polygon.
+  region_notes: Southwestern rim of Nobile crater; no accessible PSR <125 K within 2 km of the candidate sites.
+  indicators:
+    lst_diurnal_range_k:
+      value: 130
+      unit: K
+      method: proxy
+      source: 'Synthesis of LRO Diviner polar results: Williams et al. 2019, JGR Planets 124, 2505-2521 (Diviner seasonal
+        polar temperatures); Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif, Diviner via QuickMap); Jia et
+        al. 2022, Remote Sensing 14, 4863'
+      doi: 10.1029/2019JE006028
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-50 K (plausible 80-230 K); PSRs inside the region swing only ~20-70 K
+      excerpt: Estimate for the sunlit landing area, not a per-site sample. Sunlit polar slopes peak ~200-300 K in summer
+        (Jia et al. report up to ~300 K on high ground), and the same surfaces fall to ~70-100 K when shadowed during the
+        lunation. Williams et al. 2019 give PSR floor amplitudes of only ~20-70 K.
+      applies_to: illuminated landing area (not PSR)
+    lst_night_min_k:
+      value: 70
+      unit: K
+      method: proxy
+      source: 'Synthesis of Diviner polar results: Williams et al. 2019, JGR Planets 124, 2505-2521 (Diviner seasonal polar
+        temperatures); Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif, Diviner via QuickMap); Flahaut et al.
+        2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1029/2019JE006028
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-30 K (40-100 K); adjacent PSRs reach ~25-40 K
+      excerpt: Estimate of the typical annual minimum of the illuminated landing surface when shadowed (winter). At Malapert
+        the lowest Diviner seasonal-AVERAGE values in the sunlit quadrants are ~46-124 K, so minima are lower still; PSR floors
+        near the pole reach ~25-40 K.
+      applies_to: illuminated landing area (not PSR)
+    t2m_mean_c:
+      value: -123
+      unit: degC
+      method: proxy
+      source: 'Diviner-based seasonal average temperatures: Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif,
+        Diviner via QuickMap); Flahaut et al. 2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1016/j.pss.2019.104750
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-40 K (mean surface T ~110-190 K, i.e. -163 to -83 degC)
+      excerpt: Mean surface (not air) temperature of ~150 K for the sunlit landing area. Malapert's sunlit quadrants have
+        Diviner seasonal averages up to ~171-193 K, while Flahaut et al. report site-averaged Diviner means of ~83-98 K for
+        ROIs that include PSR-adjacent ground.
+      value_k: 150
+      applies_to: illuminated landing area (not PSR)
+    rh2m_pct:
+      value: 0
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no atmosphere. NASA NSSDCA Moon Fact Sheet'
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: 0
+      excerpt: The Moon has only a collisionless exosphere (night surface pressure ~3e-15 bar per the NASA fact sheet), so
+        relative humidity is undefined and set to 0.
+    albedo_wsa_sw:
+      value: 0.24
+      unit: unitless (broadband, white-sky)
+      method: proxy
+      source: Vasavada et al. 2012, JGR Planets 117 (Diviner equatorial temps, albedo model)
+      doi: 10.1029/2011JE003987
+      url: http://luna1.diviner.ucla.edu/~dap/pubs/057.pdf
+      uncertainty: 0.20-0.24 (A0 = 0.12-0.16). LOLA 1064 nm normal albedo is a different quantity (~0.36-0.37 in cold polar
+        terrain; Fisher et al. 2017, doi 10.1016/j.icarus.2017.03.023)
+      excerpt: Vasavada et al. give Diviner highland normal albedo A0 ~0.16 and A(i) = A0 + 0.045(i/45)^3 + 0.14(i/90)^8.
+        Integrating over incidence (white-sky, like MODIS WSA) gives ~0.24 for A0 = 0.16 (0.20 for A0 = 0.12). Polar sunlight
+        arrives at ~85 deg incidence, where directional albedo is ~0.5.
+      derivation: WSA = integral_0^90 A(i) 2 cos(i) sin(i) di, computed by the SolMate research agent
+    mineral_class:
+      mafic: false
+      carbonate: false
+      quartz_rich: false
+      dominant: feldspathic highlands (plagioclase-rich, anorthositic) with a minor pyroxene (noritic) component
+      method: literature
+      source: Moriarty & Petro 2024, JGR Planets 129, e2023JE008266 (south polar mineralogy, Artemis exploration zone)
+      doi: 10.1029/2023JE008266
+      uncertainty: Region-scale; the mafic signal is strongest near the de Gerlache-Kocher Massif (not in this target list)
+      excerpt: Moon Mineralogy Mapper data show a detectable pyroxene signature in the south polar region, tied to South Pole-Aitken
+        ejecta, on a plagioclase-dominated crust. No quartz or carbonate is reported. Earth ASTER indices are not transferable,
+        so booleans only.
+    snow_months_per_year:
+      value: 0
+      unit: months
+      method: proxy
+      source: Wueller et al. 2026, JGR Planets 131, e2025JE009434 (Appendix A candidate landing sites)
+      doi: 10.1029/2025JE009434
+      uncertainty: Scheme value; 0/6/12 classes
+      excerpt: No PSR <125 K within the 2 km walking radius of any candidate site (Wueller et al. 2026). The illuminated landing
+        surface itself carries no ice, so 0; larger PSRs exist at regional scale.
+      psr_access_class: none
+    frost_days_per_year:
+      value: 365
+      unit: days
+      method: proxy
+      source: 'Earth definition (days with Tmin < 0 degC) applied to Diviner polar temperatures: Williams et al. 2019, JGR
+        Planets 124, 2505-2521 (Diviner seasonal polar temperatures)'
+      doi: 10.1029/2019JE006028
+      uncertainty: Saturated at maximum; no Earth place can exceed it
+      excerpt: Surface minima at the south polar landing regions are far below 273 K every day of the year, so every day counts
+        as a frost day. PSRs inside the regions never exceed ~110-125 K.
+    precip_mm_day:
+      value: 0
+      unit: mm/day
+      method: literature
+      source: Physical basis (no atmosphere (surface-bounded exosphere only))
+      uncertainty: 0
+      excerpt: No rainfall occurs; set to 0 by definition. The Earth layer is liquid-equivalent precipitation, so the target
+        sits at the dry extreme.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    aridity_index:
+      value: 0
+      unit: unitless (P/PET)
+      method: literature
+      source: 'Physical basis: P = 0 so P/PET = 0'
+      uncertainty: 0
+      excerpt: With zero precipitation the UNEP-style aridity index is 0 (hyper-arid end-member).
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    barren_pct:
+      value: 100
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation on the Moon'
+      uncertainty: 0
+      excerpt: No plant cover; the whole surface is bare regolith/rock, matching the Earth 'barren' land-cover class.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    forest_pct:
+      value: 0
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation'
+      uncertainty: 0
+      excerpt: No forest cover exists; set to 0.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    slope_median_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    slope_p90_proxy_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    elev_std_m:
+      value: null
+      unit: m
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    t2m_coldest_month_c:
+      value: -123
+      unit: degC
+      method: proxy
+      source: 'Diviner-based seasonal average temperatures: Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif,
+        Diviner via QuickMap); Flahaut et al. 2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1016/j.pss.2019.104750
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-40 K (mean surface T ~110-190 K, i.e. -163 to -83 degC)
+      excerpt: The Moon's 1.5 degree axial tilt gives no meaningful seasons at the landing areas, so the coldest-month mean
+        equals the annual mean surface temperature from the same Diviner-based estimate.
+      value_k: 150
+      applies_to: illuminated landing area (not PSR)
+  breaks_down:
+    gravity_m_s2:
+      value: 1.62
+      unit: m/s^2
+      method: literature
+      source: NASA NSSDCA Moon Fact Sheet
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: ~0.01 (latitude/topography variation is small)
+      excerpt: NASA lists lunar surface gravity as 1.62 m/s^2, 0.165 of Earth's.
+    surface_pressure_hpa:
+      value: 3.0e-12
+      unit: hPa
+      method: literature
+      source: NASA NSSDCA Moon Fact Sheet
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: order of magnitude; the daytime exosphere is denser
+      excerpt: 'The fact sheet gives a night-time surface pressure of 3e-15 bar (= 3e-12 hPa): effectively vacuum.'
+    radiation_dose_msv_day:
+      value: 1.369
+      unit: mSv/day
+      method: literature
+      source: Zhang et al. 2020, Science Advances 6, eaaz1334 (Chang'e-4 LND, first lunar surface dose)
+      doi: 10.1126/sciadv.aaz1334
+      uncertainty: +/-0.069 mSv/day (paper); varies with the solar cycle
+      excerpt: Chang'e-4's LND measured an average dose equivalent of 1369 uSv/day on the far side (Von Karman crater, ~45.5
+        S) near solar minimum in 2019, ~2.6x the ISS GCR dose. No polar surface measurement exists, but with no atmosphere
+        or global field the value should carry over to the pole.
+      agency: CNSA (non-NASA extra; breaks-down context only, never scored)
+- id: nobile_rim_2
+  name: Nobile Rim 2
+  body: moon
+  group: artemis_iii_candidate_region
+  centroid:
+    lat: -83.888
+    lon: 58.403
+    frame: planetocentric, east-positive (Mean Earth/Polar Axis)
+    approximate: true
+    method: Spherical (vector) mean of the 9 candidate landing sites for region NR2 in Wueller et al. 2026 Appendix A; max
+      site distance from centroid 9.3 km
+    source: Wueller et al. 2026, JGR Planets 131, e2025JE009434 (Appendix A candidate landing sites)
+    doi: 10.1029/2025JE009434
+    url: https://www.nasa.gov/news-release/nasa-provides-update-on-artemis-iii-moon-landing-regions/
+    excerpt: NASA's 28 Oct 2024 release names the region but gives no coordinates. Wueller et al. (LPI/Kring group) publish
+      lat/lon for 130 candidate landing sites that meet HLS slope rules inside the NASA regions. This is the centroid of those
+      sunlit landing sites, not of NASA's region polygon.
+  region_notes: Northeastern rim of Nobile crater; NR204 reaches a PSR <110 K.
+  indicators:
+    lst_diurnal_range_k:
+      value: 130
+      unit: K
+      method: proxy
+      source: 'Synthesis of LRO Diviner polar results: Williams et al. 2019, JGR Planets 124, 2505-2521 (Diviner seasonal
+        polar temperatures); Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif, Diviner via QuickMap); Jia et
+        al. 2022, Remote Sensing 14, 4863'
+      doi: 10.1029/2019JE006028
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-50 K (plausible 80-230 K); PSRs inside the region swing only ~20-70 K
+      excerpt: Estimate for the sunlit landing area, not a per-site sample. Sunlit polar slopes peak ~200-300 K in summer
+        (Jia et al. report up to ~300 K on high ground), and the same surfaces fall to ~70-100 K when shadowed during the
+        lunation. Williams et al. 2019 give PSR floor amplitudes of only ~20-70 K.
+      applies_to: illuminated landing area (not PSR)
+    lst_night_min_k:
+      value: 70
+      unit: K
+      method: proxy
+      source: 'Synthesis of Diviner polar results: Williams et al. 2019, JGR Planets 124, 2505-2521 (Diviner seasonal polar
+        temperatures); Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif, Diviner via QuickMap); Flahaut et al.
+        2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1029/2019JE006028
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-30 K (40-100 K); adjacent PSRs reach ~25-40 K
+      excerpt: Estimate of the typical annual minimum of the illuminated landing surface when shadowed (winter). At Malapert
+        the lowest Diviner seasonal-AVERAGE values in the sunlit quadrants are ~46-124 K, so minima are lower still; PSR floors
+        near the pole reach ~25-40 K.
+      applies_to: illuminated landing area (not PSR)
+    t2m_mean_c:
+      value: -123
+      unit: degC
+      method: proxy
+      source: 'Diviner-based seasonal average temperatures: Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif,
+        Diviner via QuickMap); Flahaut et al. 2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1016/j.pss.2019.104750
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-40 K (mean surface T ~110-190 K, i.e. -163 to -83 degC)
+      excerpt: Mean surface (not air) temperature of ~150 K for the sunlit landing area. Malapert's sunlit quadrants have
+        Diviner seasonal averages up to ~171-193 K, while Flahaut et al. report site-averaged Diviner means of ~83-98 K for
+        ROIs that include PSR-adjacent ground.
+      value_k: 150
+      applies_to: illuminated landing area (not PSR)
+    rh2m_pct:
+      value: 0
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no atmosphere. NASA NSSDCA Moon Fact Sheet'
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: 0
+      excerpt: The Moon has only a collisionless exosphere (night surface pressure ~3e-15 bar per the NASA fact sheet), so
+        relative humidity is undefined and set to 0.
+    albedo_wsa_sw:
+      value: 0.24
+      unit: unitless (broadband, white-sky)
+      method: proxy
+      source: Vasavada et al. 2012, JGR Planets 117 (Diviner equatorial temps, albedo model)
+      doi: 10.1029/2011JE003987
+      url: http://luna1.diviner.ucla.edu/~dap/pubs/057.pdf
+      uncertainty: 0.20-0.24 (A0 = 0.12-0.16). LOLA 1064 nm normal albedo is a different quantity (~0.36-0.37 in cold polar
+        terrain; Fisher et al. 2017, doi 10.1016/j.icarus.2017.03.023)
+      excerpt: Vasavada et al. give Diviner highland normal albedo A0 ~0.16 and A(i) = A0 + 0.045(i/45)^3 + 0.14(i/90)^8.
+        Integrating over incidence (white-sky, like MODIS WSA) gives ~0.24 for A0 = 0.16 (0.20 for A0 = 0.12). Polar sunlight
+        arrives at ~85 deg incidence, where directional albedo is ~0.5.
+      derivation: WSA = integral_0^90 A(i) 2 cos(i) sin(i) di, computed by the SolMate research agent
+    mineral_class:
+      mafic: false
+      carbonate: false
+      quartz_rich: false
+      dominant: feldspathic highlands (plagioclase-rich, anorthositic) with a minor pyroxene (noritic) component
+      method: literature
+      source: Moriarty & Petro 2024, JGR Planets 129, e2023JE008266 (south polar mineralogy, Artemis exploration zone)
+      doi: 10.1029/2023JE008266
+      uncertainty: Region-scale; the mafic signal is strongest near the de Gerlache-Kocher Massif (not in this target list)
+      excerpt: Moon Mineralogy Mapper data show a detectable pyroxene signature in the south polar region, tied to South Pole-Aitken
+        ejecta, on a plagioclase-dominated crust. No quartz or carbonate is reported. Earth ASTER indices are not transferable,
+        so booleans only.
+    snow_months_per_year:
+      value: 12
+      unit: months
+      method: proxy
+      source: Wueller et al. 2026, JGR Planets 131, e2025JE009434 (Appendix A candidate landing sites)
+      doi: 10.1029/2025JE009434
+      uncertainty: Scheme value; 0/6/12 classes
+      excerpt: At least one candidate site has a PSR that stays <110 K all year within a 2 km walk (Wueller et al. 2026).
+        That is a perennial cold trap where surface/near-surface water ice is thermally stable, mapped to 12 'ice months'.
+      psr_access_class: lt110
+    frost_days_per_year:
+      value: 365
+      unit: days
+      method: proxy
+      source: 'Earth definition (days with Tmin < 0 degC) applied to Diviner polar temperatures: Williams et al. 2019, JGR
+        Planets 124, 2505-2521 (Diviner seasonal polar temperatures)'
+      doi: 10.1029/2019JE006028
+      uncertainty: Saturated at maximum; no Earth place can exceed it
+      excerpt: Surface minima at the south polar landing regions are far below 273 K every day of the year, so every day counts
+        as a frost day. PSRs inside the regions never exceed ~110-125 K.
+    precip_mm_day:
+      value: 0
+      unit: mm/day
+      method: literature
+      source: Physical basis (no atmosphere (surface-bounded exosphere only))
+      uncertainty: 0
+      excerpt: No rainfall occurs; set to 0 by definition. The Earth layer is liquid-equivalent precipitation, so the target
+        sits at the dry extreme.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    aridity_index:
+      value: 0
+      unit: unitless (P/PET)
+      method: literature
+      source: 'Physical basis: P = 0 so P/PET = 0'
+      uncertainty: 0
+      excerpt: With zero precipitation the UNEP-style aridity index is 0 (hyper-arid end-member).
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    barren_pct:
+      value: 100
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation on the Moon'
+      uncertainty: 0
+      excerpt: No plant cover; the whole surface is bare regolith/rock, matching the Earth 'barren' land-cover class.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    forest_pct:
+      value: 0
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation'
+      uncertainty: 0
+      excerpt: No forest cover exists; set to 0.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    slope_median_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    slope_p90_proxy_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    elev_std_m:
+      value: null
+      unit: m
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    t2m_coldest_month_c:
+      value: -123
+      unit: degC
+      method: proxy
+      source: 'Diviner-based seasonal average temperatures: Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif,
+        Diviner via QuickMap); Flahaut et al. 2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1016/j.pss.2019.104750
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-40 K (mean surface T ~110-190 K, i.e. -163 to -83 degC)
+      excerpt: The Moon's 1.5 degree axial tilt gives no meaningful seasons at the landing areas, so the coldest-month mean
+        equals the annual mean surface temperature from the same Diviner-based estimate.
+      value_k: 150
+      applies_to: illuminated landing area (not PSR)
+  breaks_down:
+    gravity_m_s2:
+      value: 1.62
+      unit: m/s^2
+      method: literature
+      source: NASA NSSDCA Moon Fact Sheet
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: ~0.01 (latitude/topography variation is small)
+      excerpt: NASA lists lunar surface gravity as 1.62 m/s^2, 0.165 of Earth's.
+    surface_pressure_hpa:
+      value: 3.0e-12
+      unit: hPa
+      method: literature
+      source: NASA NSSDCA Moon Fact Sheet
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: order of magnitude; the daytime exosphere is denser
+      excerpt: 'The fact sheet gives a night-time surface pressure of 3e-15 bar (= 3e-12 hPa): effectively vacuum.'
+    radiation_dose_msv_day:
+      value: 1.369
+      unit: mSv/day
+      method: literature
+      source: Zhang et al. 2020, Science Advances 6, eaaz1334 (Chang'e-4 LND, first lunar surface dose)
+      doi: 10.1126/sciadv.aaz1334
+      uncertainty: +/-0.069 mSv/day (paper); varies with the solar cycle
+      excerpt: Chang'e-4's LND measured an average dose equivalent of 1369 uSv/day on the far side (Von Karman crater, ~45.5
+        S) near solar minimum in 2019, ~2.6x the ISS GCR dose. No polar surface measurement exists, but with no atmosphere
+        or global field the value should carry over to the pole.
+      agency: CNSA (non-NASA extra; breaks-down context only, never scored)
+- id: de_gerlache_rim_2
+  name: de Gerlache Rim 2
+  body: moon
+  group: artemis_iii_candidate_region
+  centroid:
+    lat: -88.174
+    lon: -68.787
+    frame: planetocentric, east-positive (Mean Earth/Polar Axis)
+    approximate: true
+    method: Spherical (vector) mean of the 7 candidate landing sites for region dGR2 in Wueller et al. 2026 Appendix A; max
+      site distance from centroid 9.7 km
+    source: Wueller et al. 2026, JGR Planets 131, e2025JE009434 (Appendix A candidate landing sites)
+    doi: 10.1029/2025JE009434
+    url: https://www.nasa.gov/news-release/nasa-provides-update-on-artemis-iii-moon-landing-regions/
+    excerpt: NASA's 28 Oct 2024 release names the region but gives no coordinates. Wueller et al. (LPI/Kring group) publish
+      lat/lon for 130 candidate landing sites that meet HLS slope rules inside the NASA regions. This is the centroid of those
+      sunlit landing sites, not of NASA's region polygon.
+  region_notes: Closest region to the pole. Wueller et al. find no accessible PSR within 2 km of dGR2 sites (the de Gerlache
+    crater PSR lies beyond the walking radius).
+  indicators:
+    lst_diurnal_range_k:
+      value: 130
+      unit: K
+      method: proxy
+      source: 'Synthesis of LRO Diviner polar results: Williams et al. 2019, JGR Planets 124, 2505-2521 (Diviner seasonal
+        polar temperatures); Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif, Diviner via QuickMap); Jia et
+        al. 2022, Remote Sensing 14, 4863'
+      doi: 10.1029/2019JE006028
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-50 K (plausible 80-230 K); PSRs inside the region swing only ~20-70 K
+      excerpt: Estimate for the sunlit landing area, not a per-site sample. Sunlit polar slopes peak ~200-300 K in summer
+        (Jia et al. report up to ~300 K on high ground), and the same surfaces fall to ~70-100 K when shadowed during the
+        lunation. Williams et al. 2019 give PSR floor amplitudes of only ~20-70 K.
+      applies_to: illuminated landing area (not PSR)
+    lst_night_min_k:
+      value: 70
+      unit: K
+      method: proxy
+      source: 'Synthesis of Diviner polar results: Williams et al. 2019, JGR Planets 124, 2505-2521 (Diviner seasonal polar
+        temperatures); Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif, Diviner via QuickMap); Flahaut et al.
+        2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1029/2019JE006028
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-30 K (40-100 K); adjacent PSRs reach ~25-40 K
+      excerpt: Estimate of the typical annual minimum of the illuminated landing surface when shadowed (winter). At Malapert
+        the lowest Diviner seasonal-AVERAGE values in the sunlit quadrants are ~46-124 K, so minima are lower still; PSR floors
+        near the pole reach ~25-40 K.
+      applies_to: illuminated landing area (not PSR)
+    t2m_mean_c:
+      value: -123
+      unit: degC
+      method: proxy
+      source: 'Diviner-based seasonal average temperatures: Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif,
+        Diviner via QuickMap); Flahaut et al. 2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1016/j.pss.2019.104750
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-40 K (mean surface T ~110-190 K, i.e. -163 to -83 degC)
+      excerpt: Mean surface (not air) temperature of ~150 K for the sunlit landing area. Malapert's sunlit quadrants have
+        Diviner seasonal averages up to ~171-193 K, while Flahaut et al. report site-averaged Diviner means of ~83-98 K for
+        ROIs that include PSR-adjacent ground.
+      value_k: 150
+      applies_to: illuminated landing area (not PSR)
+    rh2m_pct:
+      value: 0
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no atmosphere. NASA NSSDCA Moon Fact Sheet'
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: 0
+      excerpt: The Moon has only a collisionless exosphere (night surface pressure ~3e-15 bar per the NASA fact sheet), so
+        relative humidity is undefined and set to 0.
+    albedo_wsa_sw:
+      value: 0.24
+      unit: unitless (broadband, white-sky)
+      method: proxy
+      source: Vasavada et al. 2012, JGR Planets 117 (Diviner equatorial temps, albedo model)
+      doi: 10.1029/2011JE003987
+      url: http://luna1.diviner.ucla.edu/~dap/pubs/057.pdf
+      uncertainty: 0.20-0.24 (A0 = 0.12-0.16). LOLA 1064 nm normal albedo is a different quantity (~0.36-0.37 in cold polar
+        terrain; Fisher et al. 2017, doi 10.1016/j.icarus.2017.03.023)
+      excerpt: Vasavada et al. give Diviner highland normal albedo A0 ~0.16 and A(i) = A0 + 0.045(i/45)^3 + 0.14(i/90)^8.
+        Integrating over incidence (white-sky, like MODIS WSA) gives ~0.24 for A0 = 0.16 (0.20 for A0 = 0.12). Polar sunlight
+        arrives at ~85 deg incidence, where directional albedo is ~0.5.
+      derivation: WSA = integral_0^90 A(i) 2 cos(i) sin(i) di, computed by the SolMate research agent
+    mineral_class:
+      mafic: false
+      carbonate: false
+      quartz_rich: false
+      dominant: feldspathic highlands (plagioclase-rich, anorthositic) with a minor pyroxene (noritic) component
+      method: literature
+      source: Moriarty & Petro 2024, JGR Planets 129, e2023JE008266 (south polar mineralogy, Artemis exploration zone)
+      doi: 10.1029/2023JE008266
+      uncertainty: Region-scale; the mafic signal is strongest near the de Gerlache-Kocher Massif (not in this target list)
+      excerpt: Moon Mineralogy Mapper data show a detectable pyroxene signature in the south polar region, tied to South Pole-Aitken
+        ejecta, on a plagioclase-dominated crust. No quartz or carbonate is reported. Earth ASTER indices are not transferable,
+        so booleans only.
+    snow_months_per_year:
+      value: 0
+      unit: months
+      method: proxy
+      source: Wueller et al. 2026, JGR Planets 131, e2025JE009434 (Appendix A candidate landing sites)
+      doi: 10.1029/2025JE009434
+      uncertainty: Scheme value; 0/6/12 classes
+      excerpt: No PSR <125 K within the 2 km walking radius of any candidate site (Wueller et al. 2026). The illuminated landing
+        surface itself carries no ice, so 0; larger PSRs exist at regional scale.
+      psr_access_class: none
+    frost_days_per_year:
+      value: 365
+      unit: days
+      method: proxy
+      source: 'Earth definition (days with Tmin < 0 degC) applied to Diviner polar temperatures: Williams et al. 2019, JGR
+        Planets 124, 2505-2521 (Diviner seasonal polar temperatures)'
+      doi: 10.1029/2019JE006028
+      uncertainty: Saturated at maximum; no Earth place can exceed it
+      excerpt: Surface minima at the south polar landing regions are far below 273 K every day of the year, so every day counts
+        as a frost day. PSRs inside the regions never exceed ~110-125 K.
+    precip_mm_day:
+      value: 0
+      unit: mm/day
+      method: literature
+      source: Physical basis (no atmosphere (surface-bounded exosphere only))
+      uncertainty: 0
+      excerpt: No rainfall occurs; set to 0 by definition. The Earth layer is liquid-equivalent precipitation, so the target
+        sits at the dry extreme.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    aridity_index:
+      value: 0
+      unit: unitless (P/PET)
+      method: literature
+      source: 'Physical basis: P = 0 so P/PET = 0'
+      uncertainty: 0
+      excerpt: With zero precipitation the UNEP-style aridity index is 0 (hyper-arid end-member).
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    barren_pct:
+      value: 100
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation on the Moon'
+      uncertainty: 0
+      excerpt: No plant cover; the whole surface is bare regolith/rock, matching the Earth 'barren' land-cover class.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    forest_pct:
+      value: 0
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation'
+      uncertainty: 0
+      excerpt: No forest cover exists; set to 0.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    slope_median_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    slope_p90_proxy_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    elev_std_m:
+      value: null
+      unit: m
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    t2m_coldest_month_c:
+      value: -123
+      unit: degC
+      method: proxy
+      source: 'Diviner-based seasonal average temperatures: Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif,
+        Diviner via QuickMap); Flahaut et al. 2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1016/j.pss.2019.104750
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-40 K (mean surface T ~110-190 K, i.e. -163 to -83 degC)
+      excerpt: The Moon's 1.5 degree axial tilt gives no meaningful seasons at the landing areas, so the coldest-month mean
+        equals the annual mean surface temperature from the same Diviner-based estimate.
+      value_k: 150
+      applies_to: illuminated landing area (not PSR)
+  breaks_down:
+    gravity_m_s2:
+      value: 1.62
+      unit: m/s^2
+      method: literature
+      source: NASA NSSDCA Moon Fact Sheet
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: ~0.01 (latitude/topography variation is small)
+      excerpt: NASA lists lunar surface gravity as 1.62 m/s^2, 0.165 of Earth's.
+    surface_pressure_hpa:
+      value: 3.0e-12
+      unit: hPa
+      method: literature
+      source: NASA NSSDCA Moon Fact Sheet
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: order of magnitude; the daytime exosphere is denser
+      excerpt: 'The fact sheet gives a night-time surface pressure of 3e-15 bar (= 3e-12 hPa): effectively vacuum.'
+    radiation_dose_msv_day:
+      value: 1.369
+      unit: mSv/day
+      method: literature
+      source: Zhang et al. 2020, Science Advances 6, eaaz1334 (Chang'e-4 LND, first lunar surface dose)
+      doi: 10.1126/sciadv.aaz1334
+      uncertainty: +/-0.069 mSv/day (paper); varies with the solar cycle
+      excerpt: Chang'e-4's LND measured an average dose equivalent of 1369 uSv/day on the far side (Von Karman crater, ~45.5
+        S) near solar minimum in 2019, ~2.6x the ISS GCR dose. No polar surface measurement exists, but with no atmosphere
+        or global field the value should carry over to the pole.
+      agency: CNSA (non-NASA extra; breaks-down context only, never scored)
+- id: slater_plain
+  name: Slater Plain
+  body: moon
+  group: artemis_iii_candidate_region
+  centroid:
+    lat: -87.207
+    lon: 126.606
+    frame: planetocentric, east-positive (Mean Earth/Polar Axis)
+    approximate: true
+    method: Spherical (vector) mean of the 11 candidate landing sites for region SP in Wueller et al. 2026 Appendix A; max
+      site distance from centroid 10.3 km
+    source: Wueller et al. 2026, JGR Planets 131, e2025JE009434 (Appendix A candidate landing sites)
+    doi: 10.1029/2025JE009434
+    url: https://www.nasa.gov/news-release/nasa-provides-update-on-artemis-iii-moon-landing-regions/
+    excerpt: NASA's 28 Oct 2024 release names the region but gives no coordinates. Wueller et al. (LPI/Kring group) publish
+      lat/lon for 130 candidate landing sites that meet HLS slope rules inside the NASA regions. This is the centroid of those
+      sunlit landing sites, not of NASA's region polygon.
+  region_notes: Highest fractional landing area (19.3%); SP01/02/10/11 reach PSRs <110 K and SP04/08 PSRs at 110-125 K.
+  indicators:
+    lst_diurnal_range_k:
+      value: 130
+      unit: K
+      method: proxy
+      source: 'Synthesis of LRO Diviner polar results: Williams et al. 2019, JGR Planets 124, 2505-2521 (Diviner seasonal
+        polar temperatures); Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif, Diviner via QuickMap); Jia et
+        al. 2022, Remote Sensing 14, 4863'
+      doi: 10.1029/2019JE006028
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-50 K (plausible 80-230 K); PSRs inside the region swing only ~20-70 K
+      excerpt: Estimate for the sunlit landing area, not a per-site sample. Sunlit polar slopes peak ~200-300 K in summer
+        (Jia et al. report up to ~300 K on high ground), and the same surfaces fall to ~70-100 K when shadowed during the
+        lunation. Williams et al. 2019 give PSR floor amplitudes of only ~20-70 K.
+      applies_to: illuminated landing area (not PSR)
+    lst_night_min_k:
+      value: 70
+      unit: K
+      method: proxy
+      source: 'Synthesis of Diviner polar results: Williams et al. 2019, JGR Planets 124, 2505-2521 (Diviner seasonal polar
+        temperatures); Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif, Diviner via QuickMap); Flahaut et al.
+        2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1029/2019JE006028
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-30 K (40-100 K); adjacent PSRs reach ~25-40 K
+      excerpt: Estimate of the typical annual minimum of the illuminated landing surface when shadowed (winter). At Malapert
+        the lowest Diviner seasonal-AVERAGE values in the sunlit quadrants are ~46-124 K, so minima are lower still; PSR floors
+        near the pole reach ~25-40 K.
+      applies_to: illuminated landing area (not PSR)
+    t2m_mean_c:
+      value: -123
+      unit: degC
+      method: proxy
+      source: 'Diviner-based seasonal average temperatures: Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif,
+        Diviner via QuickMap); Flahaut et al. 2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1016/j.pss.2019.104750
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-40 K (mean surface T ~110-190 K, i.e. -163 to -83 degC)
+      excerpt: Mean surface (not air) temperature of ~150 K for the sunlit landing area. Malapert's sunlit quadrants have
+        Diviner seasonal averages up to ~171-193 K, while Flahaut et al. report site-averaged Diviner means of ~83-98 K for
+        ROIs that include PSR-adjacent ground.
+      value_k: 150
+      applies_to: illuminated landing area (not PSR)
+    rh2m_pct:
+      value: 0
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no atmosphere. NASA NSSDCA Moon Fact Sheet'
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: 0
+      excerpt: The Moon has only a collisionless exosphere (night surface pressure ~3e-15 bar per the NASA fact sheet), so
+        relative humidity is undefined and set to 0.
+    albedo_wsa_sw:
+      value: 0.24
+      unit: unitless (broadband, white-sky)
+      method: proxy
+      source: Vasavada et al. 2012, JGR Planets 117 (Diviner equatorial temps, albedo model)
+      doi: 10.1029/2011JE003987
+      url: http://luna1.diviner.ucla.edu/~dap/pubs/057.pdf
+      uncertainty: 0.20-0.24 (A0 = 0.12-0.16). LOLA 1064 nm normal albedo is a different quantity (~0.36-0.37 in cold polar
+        terrain; Fisher et al. 2017, doi 10.1016/j.icarus.2017.03.023)
+      excerpt: Vasavada et al. give Diviner highland normal albedo A0 ~0.16 and A(i) = A0 + 0.045(i/45)^3 + 0.14(i/90)^8.
+        Integrating over incidence (white-sky, like MODIS WSA) gives ~0.24 for A0 = 0.16 (0.20 for A0 = 0.12). Polar sunlight
+        arrives at ~85 deg incidence, where directional albedo is ~0.5.
+      derivation: WSA = integral_0^90 A(i) 2 cos(i) sin(i) di, computed by the SolMate research agent
+    mineral_class:
+      mafic: false
+      carbonate: false
+      quartz_rich: false
+      dominant: feldspathic highlands (plagioclase-rich, anorthositic) with a minor pyroxene (noritic) component
+      method: literature
+      source: Moriarty & Petro 2024, JGR Planets 129, e2023JE008266 (south polar mineralogy, Artemis exploration zone)
+      doi: 10.1029/2023JE008266
+      uncertainty: Region-scale; the mafic signal is strongest near the de Gerlache-Kocher Massif (not in this target list)
+      excerpt: Moon Mineralogy Mapper data show a detectable pyroxene signature in the south polar region, tied to South Pole-Aitken
+        ejecta, on a plagioclase-dominated crust. No quartz or carbonate is reported. Earth ASTER indices are not transferable,
+        so booleans only.
+    snow_months_per_year:
+      value: 12
+      unit: months
+      method: proxy
+      source: Wueller et al. 2026, JGR Planets 131, e2025JE009434 (Appendix A candidate landing sites)
+      doi: 10.1029/2025JE009434
+      uncertainty: Scheme value; 0/6/12 classes
+      excerpt: At least one candidate site has a PSR that stays <110 K all year within a 2 km walk (Wueller et al. 2026).
+        That is a perennial cold trap where surface/near-surface water ice is thermally stable, mapped to 12 'ice months'.
+      psr_access_class: lt110
+    frost_days_per_year:
+      value: 365
+      unit: days
+      method: proxy
+      source: 'Earth definition (days with Tmin < 0 degC) applied to Diviner polar temperatures: Williams et al. 2019, JGR
+        Planets 124, 2505-2521 (Diviner seasonal polar temperatures)'
+      doi: 10.1029/2019JE006028
+      uncertainty: Saturated at maximum; no Earth place can exceed it
+      excerpt: Surface minima at the south polar landing regions are far below 273 K every day of the year, so every day counts
+        as a frost day. PSRs inside the regions never exceed ~110-125 K.
+    precip_mm_day:
+      value: 0
+      unit: mm/day
+      method: literature
+      source: Physical basis (no atmosphere (surface-bounded exosphere only))
+      uncertainty: 0
+      excerpt: No rainfall occurs; set to 0 by definition. The Earth layer is liquid-equivalent precipitation, so the target
+        sits at the dry extreme.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    aridity_index:
+      value: 0
+      unit: unitless (P/PET)
+      method: literature
+      source: 'Physical basis: P = 0 so P/PET = 0'
+      uncertainty: 0
+      excerpt: With zero precipitation the UNEP-style aridity index is 0 (hyper-arid end-member).
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    barren_pct:
+      value: 100
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation on the Moon'
+      uncertainty: 0
+      excerpt: No plant cover; the whole surface is bare regolith/rock, matching the Earth 'barren' land-cover class.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    forest_pct:
+      value: 0
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation'
+      uncertainty: 0
+      excerpt: No forest cover exists; set to 0.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+    slope_median_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    slope_p90_proxy_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    elev_std_m:
+      value: null
+      unit: m
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    t2m_coldest_month_c:
+      value: -123
+      unit: degC
+      method: proxy
+      source: 'Diviner-based seasonal average temperatures: Bourque & Thomson 2024, LPSC 55 abstract 2493 (Malapert Massif,
+        Diviner via QuickMap); Flahaut et al. 2020, Planet. Space Sci. 180, 104750 (south pole ROIs, Diviner site averages)'
+      doi: 10.1016/j.pss.2019.104750
+      url: https://www.hou.usra.edu/meetings/lpsc2024/pdf/2493.pdf
+      uncertainty: +/-40 K (mean surface T ~110-190 K, i.e. -163 to -83 degC)
+      excerpt: The Moon's 1.5 degree axial tilt gives no meaningful seasons at the landing areas, so the coldest-month mean
+        equals the annual mean surface temperature from the same Diviner-based estimate.
+      value_k: 150
+      applies_to: illuminated landing area (not PSR)
+  breaks_down:
+    gravity_m_s2:
+      value: 1.62
+      unit: m/s^2
+      method: literature
+      source: NASA NSSDCA Moon Fact Sheet
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: ~0.01 (latitude/topography variation is small)
+      excerpt: NASA lists lunar surface gravity as 1.62 m/s^2, 0.165 of Earth's.
+    surface_pressure_hpa:
+      value: 3.0e-12
+      unit: hPa
+      method: literature
+      source: NASA NSSDCA Moon Fact Sheet
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+      uncertainty: order of magnitude; the daytime exosphere is denser
+      excerpt: 'The fact sheet gives a night-time surface pressure of 3e-15 bar (= 3e-12 hPa): effectively vacuum.'
+    radiation_dose_msv_day:
+      value: 1.369
+      unit: mSv/day
+      method: literature
+      source: Zhang et al. 2020, Science Advances 6, eaaz1334 (Chang'e-4 LND, first lunar surface dose)
+      doi: 10.1126/sciadv.aaz1334
+      uncertainty: +/-0.069 mSv/day (paper); varies with the solar cycle
+      excerpt: Chang'e-4's LND measured an average dose equivalent of 1369 uSv/day on the far side (Von Karman crater, ~45.5
+        S) near solar minimum in 2019, ~2.6x the ISS GCR dose. No polar surface measurement exists, but with no atmosphere
+        or global field the value should carry over to the pole.
+      agency: CNSA (non-NASA extra; breaks-down context only, never scored)
+- id: jezero_crater
+  name: Jezero Crater
+  body: mars
+  group: mars_2020_landing_site
+  centroid:
+    lat: 18.4446
+    lon: 77.4509
+    frame: planetocentric, east-positive
+    approximate: false
+    method: Mars 2020 landing site coordinates as specified by SolMate (consistent with 18.44 N, 77.45 E in Sanchez-Lavega
+      et al. 2023)
+    source: Sanchez-Lavega et al. 2023, JGR Planets 128, e2022JE007480 (MEDA pressure, sols 15-460)
+    doi: 10.1029/2022JE007480
+    excerpt: Perseverance landed in Jezero crater at 77.45 E, 18.44 N (Octavia E. Butler landing site). Martinez et al. 2023
+      quote 77.5945 E, 18.3628 N, -2656 m.
+  indicators:
+    lst_diurnal_range_k:
+      value: 90
+      unit: K
+      method: literature
+      source: Munguira et al. 2023, JGR Planets 128, e2022JE007559 (MEDA near-surface temperatures, table of diurnal stats)
+      doi: 10.1029/2022JE007559
+      url: https://addi.ehu.es/bitstream/handle/10810/61121/JGR%20Planets%20-%202023%20-%20Munguira%20-%20Near%20Surface%20Atmospheric%20Temperatures%20at%20Jezero%20From%20Mars%202020%20MEDA%20Measurements.pdf
+      uncertainty: +/-15 K; 56-104 K depending on terrain thermal inertia and season
+      excerpt: MEDA TIRS ground temperature ranged 86 K a day at Ls 90 (277/191 K) and 104 K at Ls 180 (293/189 K) in Munguira
+        et al.'s table. Martinez et al. 2023 report 56-87 K swings across terrains with TI 525 vs 230 SI.
+    lst_night_min_k:
+      value: 190
+      unit: K
+      method: literature
+      source: Munguira et al. 2023, JGR Planets 128, e2022JE007559 (MEDA near-surface temperatures, table of diurnal stats)
+      doi: 10.1029/2022JE007559
+      url: https://addi.ehu.es/bitstream/handle/10810/61121/JGR%20Planets%20-%202023%20-%20Munguira%20-%20Near%20Surface%20Atmospheric%20Temperatures%20at%20Jezero%20From%20Mars%202020%20MEDA%20Measurements.pdf
+      uncertainty: +/-5 K (Ls 25-180); colder nights <185 K occur in some seasons (Zorzano et al. 2024, doi 10.1038/s41598-024-57458-4)
+      excerpt: MEDA ground minima were 191 K (Ls 90) and 189 K (Ls 180) at ~05:00-05:30 LTST. Zorzano et al. 2024 note night
+        ground temperatures below 190 K, with transient frost possible below ~185 K.
+    t2m_mean_c:
+      value: -53
+      unit: degC
+      method: literature
+      source: Munguira et al. 2023, JGR Planets 128, e2022JE007559 (MEDA near-surface temperatures, table of diurnal stats)
+      doi: 10.1029/2022JE007559
+      url: https://addi.ehu.es/bitstream/handle/10810/61121/JGR%20Planets%20-%202023%20-%20Munguira%20-%20Near%20Surface%20Atmospheric%20Temperatures%20at%20Jezero%20From%20Mars%202020%20MEDA%20Measurements.pdf
+      uncertainty: +/-5 degC; data cover Ls 25-180 of MY36 only
+      excerpt: MEDA air temperature at 1.45 m averaged 216 K (Ls 25), 219 K (Ls 90) and 224 K (Ls 180), so ~220 K = -53 degC.
+        Ground means were 227-230 K (~ -45 degC).
+      value_k: 220
+      height_m: 1.45
+    rh2m_pct:
+      value: 5
+      unit: '%'
+      method: proxy
+      source: Rodriguez-Manfredi et al. 2023, Nature Geoscience 16, 19 (MEDA, first 250 sols; text read from Research Square
+        preprint)
+      doi: 10.1038/s41561-022-01084-0
+      url: https://www.researchsquare.com/article/rs-1634885/latest.pdf
+      uncertainty: diurnal range ~0-30%; daytime <=2%
+      excerpt: MEDA HS daily-maximum RH is typically 15-30% (relative to sensor temperature, early morning) and daytime RH
+        is at or below the ~2% uncertainty (Zorzano et al. 2024). The 5% diurnal mean is our estimate from that shape, not
+        a published number.
+      height_m: 1.5
+    albedo_wsa_sw:
+      value: 0.147
+      unit: unitless (TES bolometric Lambert albedo)
+      method: literature
+      source: Martinez et al. 2023, JGR Planets 128, e2022JE007537 (MEDA surface energy budget, albedo, thermal inertia)
+      doi: 10.1029/2022JE007537
+      uncertainty: MEDA local values 0.10-0.18; traverse average 0.14
+      excerpt: Martinez et al. compare MEDA broadband albedo (avg 0.14 along the traverse) with the collocated TES bolometric
+        albedo of 0.147 and find very good agreement.
+    mineral_class:
+      mafic: true
+      carbonate: true
+      quartz_rich: false
+      dominant: olivine- and pyroxene-bearing igneous floor units with Mg-rich carbonates (olivine-carbonate unit; delta/margin
+        carbonates)
+      method: literature
+      source: Horgan et al. 2020, Icarus 339, 113526 (mineral diversity of Jezero crater, CRISM)
+      doi: 10.1016/j.icarus.2019.113526
+      also: Olivine-carbonate mineralogy of the Jezero crater region, https://pmc.ncbi.nlm.nih.gov/articles/PMC7592698/
+      uncertainty: Hydrated silica is reported locally from orbit; no quartz-rich unit
+      excerpt: CRISM maps of Jezero show olivine and olivine+carbonate assemblages on the floor and delta, read by Horgan
+        et al. as possible lacustrine carbonates. Perseverance later confirmed olivine- and pyroxene-rich igneous rocks on
+        the floor.
+    snow_months_per_year:
+      value: 0
+      unit: months
+      method: proxy
+      source: Zorzano et al. 2024, Scientific Reports 14, 7175 (thermal and water-activity environment of the MSR collection)
+      doi: 10.1038/s41598-024-57458-4
+      uncertainty: 0-0.5
+      excerpt: Jezero has no lasting surface ice. MEDA shows the surface can reach ice saturation and frost can be transiently
+        stable for a few hours on some nights when ground T < ~185 K, so persistent snow/ice cover is 0.
+    frost_days_per_year:
+      value: 365
+      unit: days
+      method: proxy
+      source: Munguira et al. 2023, JGR Planets 128, e2022JE007559 (MEDA near-surface temperatures, table of diurnal stats);
+        Zorzano et al. 2024, Scientific Reports 14, 7175 (thermal and water-activity environment of the MSR collection)
+      doi: 10.1029/2022JE007559
+      uncertainty: Saturated at maximum (Earth definition)
+      excerpt: Under the Earth definition (Tmin < 0 degC) every day is a frost day, since MEDA ground minima are ~185-191
+        K every sol. Water frost actually forms only on a subset of nights.
+    dust_aod_mean:
+      value: 0.5
+      unit: unitless (visible column optical depth)
+      method: proxy
+      source: Rodriguez-Manfredi et al. 2023, Nature Geoscience 16, 19 (MEDA, first 250 sols; text read from Research Square
+        preprint)
+      doi: 10.1038/s41561-022-01084-0
+      url: https://www.researchsquare.com/article/rs-1634885/latest.pdf
+      uncertainty: +/-0.2; aphelion 0.3-0.6, regional dust storms >1
+      excerpt: During the first 250 sols (aphelion season) OD was ~0.5 in the morning and ~0.4 in the afternoon, with low-dust-season
+        OD of 0.3-0.6. The dusty season (high-opacity epoch Ls ~130-360 per Sanchez-Lavega et al.) runs higher, so 0.5 is
+        a central estimate. The Mastcam-Z record (Lemmon et al., Mendeley doi 10.17632/gktjp9jptb.1) can give a computed annual
+        mean.
+    ws10m_m_s:
+      value: 4.4
+      unit: m/s
+      method: proxy
+      source: Viudez-Moreiras et al. 2022, JGR Planets 127, e2022JE007523 (Winds at the Mars 2020 landing site 2)
+      doi: 10.1029/2022JE007523
+      url: https://pmc.ncbi.nlm.nih.gov/articles/PMC10078282/
+      uncertainty: +/-3 m/s; measured 3.2 +/- 2.3 m/s at 1.5 m
+      excerpt: MEDA mean wind was 3.2 +/- 2.3 m/s at 1.5 m in northern spring-summer (Weibull c = 3.57 m/s, k = 1.49), the
+        calmest of the instrumented sites. Scaled to 10 m with a neutral log profile, z0 = 0.01 m (x1.38).
+      measured_value: 3.2
+      measured_height_m: 1.5
+    precip_mm_day:
+      value: 0
+      unit: mm/day
+      method: literature
+      source: Physical basis (no liquid precipitation at present-day Mars surface pressure/temperature; only trace H2O/CO2
+        ice deposition)
+      uncertainty: 0
+      excerpt: No rainfall occurs; set to 0 by definition. The Earth layer is liquid-equivalent precipitation, so the target
+        sits at the dry extreme.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html
+    aridity_index:
+      value: 0
+      unit: unitless (P/PET)
+      method: literature
+      source: 'Physical basis: P = 0 so P/PET = 0'
+      uncertainty: 0
+      excerpt: With zero precipitation the UNEP-style aridity index is 0 (hyper-arid end-member).
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html
+    barren_pct:
+      value: 100
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation on the Mars'
+      uncertainty: 0
+      excerpt: No plant cover; the whole surface is bare regolith/rock, matching the Earth 'barren' land-cover class.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html
+    forest_pct:
+      value: 0
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation'
+      uncertainty: 0
+      excerpt: No forest cover exists; set to 0.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html
+    slope_median_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    slope_p90_proxy_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    elev_std_m:
+      value: null
+      unit: m
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    t2m_coldest_month_c:
+      value: -58
+      unit: degC
+      method: proxy
+      source: Munguira et al. 2023, JGR Planets 128, e2022JE007559 (MEDA near-surface temperatures, table of diurnal stats)
+      doi: 10.1029/2022JE007559
+      uncertainty: +/-8 degC; MEDA coverage Ls 25-180 only
+      excerpt: Coldest seasonal mean air temperature observed by MEDA was about 216 K (Ls 25); rounded to -58 degC pending
+        full-year data.
+  breaks_down:
+    gravity_m_s2:
+      value: 3.73
+      unit: m/s^2
+      method: literature
+      source: NASA NSSDCA Mars Fact Sheet
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html
+      uncertainty: 3.69 (equator) to 3.73 (mean)
+      excerpt: NASA lists Mars mean surface gravity as 3.73 m/s^2 (0.38 g) and 3.69 at the equator.
+    surface_pressure_hpa:
+      value: 7.0
+      unit: hPa
+      method: literature
+      source: Sanchez-Lavega et al. 2023, JGR Planets 128, e2022JE007480 (MEDA pressure, sols 15-460)
+      doi: 10.1029/2022JE007480
+      url: https://pmc.ncbi.nlm.nih.gov/articles/PMC10078360/
+      uncertainty: 6.25-7.61 hPa daily means over sols 15-460
+      excerpt: MEDA daily-mean pressure rose from 735 Pa (Ls 13-16) to 761 Pa (Ls 55), then fell to ~625 Pa at the seasonal
+        minimum, so ~7 hPa is typical.
+    radiation_dose_msv_day:
+      value: 0.64
+      unit: mSv/day
+      method: literature
+      source: Hassler et al. 2014, Science 343, 1244797 (MSL RAD, Gale crater surface)
+      doi: 10.1126/science.1244797
+      url: https://www.swsc-journal.org/articles/swsc/full_html/2016/01/swsc150074/swsc150074.html
+      uncertainty: +/-0.12 mSv/day; measured at Gale (-4.5 km), not Jezero
+      excerpt: MSL RAD measured 0.21 +/- 0.04 mGy/day absorbed and 0.64 +/- 0.12 mSv/day dose equivalent at Gale crater. Jezero
+        sits ~2 km higher with less atmospheric shielding, so its dose is likely slightly higher. The task brief's 0.67 mSv/day
+        does not match the paper.
+- id: arcadia_planitia
+  name: Arcadia Planitia (site AP-1)
+  body: mars
+  group: swim_human_base_ice_target
+  centroid:
+    lat: 39.8
+    lon: 202.1
+    lon_west: 157.9
+    frame: planetocentric, east-positive (0-360)
+    approximate: true
+    method: Representative site AP-1 from the downselected Starship/human landing sites (Golombek et al. 2021, Table 1); elevation
+      -3.9 km (MOLA geoid)
+    source: Golombek et al. 2021, LPSC 52 abstract 2420 (SpaceX Starship landing sites on Mars, Table 1)
+    url: https://www.hou.usra.edu/meetings/lpsc2021/pdf/2420.pdf
+    also: Luzzi et al. 2025, JGR Planets 130, e2024JE008724 (near-surface ice at AP-1/AP-8/AP-9) doi:10.1029/2024JE008724;
+      Morgan et al. 2021, Nature Astronomy 5, 230-236 (SWIM ice consistency, northern mid-latitudes) doi:10.1038/s41550-020-01290-z
+    excerpt: Of the 12 Arcadia sites, AP-1 on the sinuous (possibly glacial) unit is judged the safest, with a moderate combined
+      SWIM ice score, and was one of four primary downselected sites. Luzzi et al. 2025 map polygons there suggesting ice
+      ~8-12 cm deep. The site lies on the Arcadia/northern Amazonis boundary.
+  indicators:
+    lst_diurnal_range_k:
+      value: 70
+      unit: K
+      method: proxy
+      source: Bramson et al. 2017, JGR Planets 122, 2250-2266 (preservation of midlatitude ice sheets; TES albedo/TI for Arcadia);
+        Martinez et al. 2023, JGR Planets 128, e2022JE007537 (MEDA surface energy budget, albedo, thermal inertia)
+      doi: 10.1002/2017JE005357
+      uncertainty: +/-25 K (40-95 K); not an observed value
+      excerpt: Estimate only. Arcadia's TES thermal inertia (~196 SI) and albedo (0.23) from Bramson et al. are close to Jezero
+        terrain where MEDA saw ~87 K swings (TI ~230, 18 N). Arcadia lies at ~40 N with a brighter surface, so its annual-typical
+        range should be smaller, especially in winter.
+    lst_night_min_k:
+      value: 165
+      unit: K
+      method: proxy
+      source: Bramson et al. 2017, JGR Planets 122, 2250-2266 (preservation of midlatitude ice sheets; TES albedo/TI for Arcadia)
+      doi: 10.1002/2017JE005357
+      uncertainty: +/-15 K; winter nights approach the CO2 frost point (~148 K)
+      excerpt: Estimate only. Bramson et al.'s Arcadia thermal model pins surface temperature at the CO2 frost point (~148
+        K) when frost forms; non-frosted nights at 40 N should be ~150-185 K. A Mars Climate Database or MARSTHERM run at
+        the centroid can replace this.
+    t2m_mean_c:
+      value: -73
+      unit: degC
+      method: proxy
+      source: Bramson et al. 2017, JGR Planets 122, 2250-2266 (preservation of midlatitude ice sheets; TES albedo/TI for Arcadia)
+      doi: 10.1002/2017JE005357
+      uncertainty: +/-8 degC
+      excerpt: Bramson et al. use annual-average temperatures of ~195-215 K (excess-ice interface ~195-205 K) for Arcadia.
+        Annual-mean surface/near-surface temperature is taken as ~200 K = -73 degC.
+      value_k: 200
+    rh2m_pct:
+      value: 5
+      unit: '%'
+      method: proxy
+      source: Placeholder borrowed from Jezero MEDA (Rodriguez-Manfredi et al. 2023, Nature Geoscience 16, 19 (MEDA, first
+        250 sols; text read from Research Square preprint))
+      doi: 10.1038/s41561-022-01084-0
+      uncertainty: unknown; likely saturated with respect to ice on winter nights (Viking Lander 2 frost analog)
+      excerpt: No published near-surface RH exists for Arcadia, so the Jezero diurnal-mean estimate is reused as a placeholder.
+        Viking Lander 2 (48 N) saw winter water frost, so night RH(ice) reaches 100% in some seasons.
+    albedo_wsa_sw:
+      value: 0.23
+      unit: unitless (TES bolometric Lambert albedo)
+      method: literature
+      source: Bramson et al. 2017, JGR Planets 122, 2250-2266 (preservation of midlatitude ice sheets; TES albedo/TI for Arcadia)
+      doi: 10.1002/2017JE005357
+      uncertainty: +/-0.03 (regional average)
+      excerpt: Bramson et al. take an average TES albedo of 0.23 for Arcadia Planitia (vs 0.12 for Utopia), citing Christensen
+        et al. 2001.
+    mineral_class:
+      mafic: true
+      carbonate: false
+      quartz_rich: false
+      dominant: dust-mantled northern-plains volcanic/sedimentary plains; TES lowland 'Surface Type 2' (plagioclase + volcanic
+        glass, andesitic or weathered basalt)
+      method: literature
+      source: Bandfield, Hamilton & Christensen 2000, Science 287, 1626-1630 (MGS-TES global surface compositions)
+      doi: 10.1126/science.287.5458.1626
+      uncertainty: Arcadia is relatively bright and dusty, so TES spectral unmixing there is weak; 'basaltic plains' is a
+        class-level call
+      excerpt: 'TES finds two low-albedo surface types: plagioclase+clinopyroxene basalt on older terrain and a more silicic
+        plagioclase+glass composition concentrated in the younger northern plains. Neither is carbonate- or quartz-rich.'
+    snow_months_per_year:
+      value: 2
+      unit: months
+      method: proxy
+      source: Chevrier 2025, Communications Earth & Environment 6, 447 (frost at the Viking Lander 2 site; reviews Svitek
+        & Murray 1990); Morgan et al. 2021, Nature Astronomy 5, 230-236 (SWIM ice consistency, northern mid-latitudes)
+      doi: 10.1038/s43247-025-02411-0
+      url: https://pmc.ncbi.nlm.nih.gov/articles/PMC12151863/
+      uncertainty: 0-3 for surface frost; 12 if buried ground ice is counted
+      excerpt: Viking Lander 2 (48 N) saw H2O frost from about Ls 240 until it vanished at Ls ~330-360, about a quarter of
+        the Mars year (~3 Earth-month equivalents). AP-1 is ~8 deg further south, so 2 is proposed. SWIM (Morgan et al. 2021)
+        maps excess ground ice within ~1 m year-round, which matters for an ice base but is not surface snow cover.
+      alt_value_if_ground_ice: 12
+    frost_days_per_year:
+      value: 365
+      unit: days
+      method: proxy
+      source: Bramson et al. 2017, JGR Planets 122, 2250-2266 (preservation of midlatitude ice sheets; TES albedo/TI for Arcadia)
+      doi: 10.1002/2017JE005357
+      uncertainty: Saturated at maximum (Earth definition)
+      excerpt: With annual-mean temperature ~200 K and nightly minima ~150-185 K, Tmin < 0 degC every sol, so every day is
+        a frost day under the Earth definition.
+    dust_aod_mean:
+      value: 0.5
+      unit: unitless (visible column optical depth)
+      method: proxy
+      source: Analogy to Jezero MEDA/Mastcam-Z (Rodriguez-Manfredi et al. 2023, Nature Geoscience 16, 19 (MEDA, first 250
+        sols; text read from Research Square preprint))
+      doi: 10.1038/s41561-022-01084-0
+      uncertainty: +/-0.25
+      excerpt: No site-specific record exists, so this is set equal to the Jezero central value. Replace it with the Montabone
+        et al. multi-year dust climatology (gridded column dust optical depth) sampled at AP-1.
+    ws10m_m_s:
+      value: 7.9
+      unit: m/s
+      method: proxy
+      source: Viudez-Moreiras et al. 2022, JGR Planets 127, e2022JE007523 (Winds at the Mars 2020 landing site 2) (InSight
+        Elysium Planitia Weibull fit used as plains analog)
+      doi: 10.1029/2022JE007523
+      url: https://pmc.ncbi.nlm.nih.gov/articles/PMC10078282/
+      uncertainty: +/-3 m/s
+      excerpt: No Arcadia wind data exist. Viudez-Moreiras et al. fit InSight Elysium Planitia winds with Weibull c = 6.20
+        m/s, k = 1.92 (mean ~5.5 m/s near 1.2 m). That is used as a smooth northern-plains analog, scaled to 10 m with a log
+        profile, z0 = 0.01 m (x1.44).
+      measured_value_analog: 5.5
+      measured_height_m: 1.2
+    precip_mm_day:
+      value: 0
+      unit: mm/day
+      method: literature
+      source: Physical basis (no liquid precipitation at present-day Mars surface pressure/temperature; only trace H2O/CO2
+        ice deposition)
+      uncertainty: 0
+      excerpt: No rainfall occurs; set to 0 by definition. The Earth layer is liquid-equivalent precipitation, so the target
+        sits at the dry extreme.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html
+    aridity_index:
+      value: 0
+      unit: unitless (P/PET)
+      method: literature
+      source: 'Physical basis: P = 0 so P/PET = 0'
+      uncertainty: 0
+      excerpt: With zero precipitation the UNEP-style aridity index is 0 (hyper-arid end-member).
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html
+    barren_pct:
+      value: 100
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation on the Mars'
+      uncertainty: 0
+      excerpt: No plant cover; the whole surface is bare regolith/rock, matching the Earth 'barren' land-cover class.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html
+    forest_pct:
+      value: 0
+      unit: '%'
+      method: literature
+      source: 'Physical basis: no vegetation'
+      uncertainty: 0
+      excerpt: No forest cover exists; set to 0.
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html
+    slope_median_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    slope_p90_proxy_deg:
+      value: null
+      unit: deg
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    elev_std_m:
+      value: null
+      unit: m
+      method: computed
+      source: SolMate DEM pipeline (to be computed from LOLA/MOLA/HRSC/HiRISE DEMs)
+      uncertainty: null
+      excerpt: Left null on purpose; filled by the terrain stage from DEMs.
+    t2m_coldest_month_c:
+      value: -100
+      unit: degC
+      method: proxy
+      source: Bramson et al. 2017, JGR Planets 122, 2250-2266 (preservation of midlatitude ice sheets; TES albedo/TI for Arcadia)
+      doi: 10.1002/2017JE005357
+      uncertainty: +/-20 degC (modelled, no in-situ record)
+      excerpt: Winter at ~40 N on Mars brings surface temperatures near the CO2 frost point (~150 K); the coldest seasonal
+        mean near-surface temperature is estimated at about 173 K.
+  breaks_down:
+    gravity_m_s2:
+      value: 3.73
+      unit: m/s^2
+      method: literature
+      source: NASA NSSDCA Mars Fact Sheet
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html
+      uncertainty: ~0.02 with latitude
+      excerpt: NASA lists Mars mean surface gravity as 3.73 m/s^2.
+    surface_pressure_hpa:
+      value: 7.9
+      unit: hPa
+      method: proxy
+      source: Sanchez-Lavega et al. 2023, JGR Planets 128, e2022JE007480 (MEDA pressure, sols 15-460); NASA NSSDCA Mars Fact
+        Sheet
+      doi: 10.1029/2022JE007480
+      url: https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html
+      uncertainty: +/-1 hPa plus seasonal +/-~10%
+      excerpt: 'Estimate: Jezero''s (-2.6 km) MEDA mean of ~7.0 hPa scaled to AP-1 (-3.9 km) with a ~11 km scale height (x1.12).
+        NASA''s global mean is 6.36 mb at the datum, ranging 4.0-8.7 mb.'
+    radiation_dose_msv_day:
+      value: 0.64
+      unit: mSv/day
+      method: literature
+      source: Hassler et al. 2014, Science 343, 1244797 (MSL RAD, Gale crater surface)
+      doi: 10.1126/science.1244797
+      url: https://www.swsc-journal.org/articles/swsc/full_html/2016/01/swsc150074/swsc150074.html
+      uncertainty: +/-0.12 mSv/day; Gale (-4.5 km) elevation similar to AP-1 (-3.9 km)
+      excerpt: MSL RAD measured 0.64 +/- 0.12 mSv/day dose equivalent at Gale crater. AP-1 sits at a similar low elevation,
+        so atmospheric shielding is comparable.
