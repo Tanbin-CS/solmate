@@ -1,0 +1,5 @@
+# Historical findings in the removed legacy backend (original author's commits).
+# The key owner was asked to rotate them; the files no longer exist on main.
+ddc5cbabf50681957a8db0bffd18bf234767adba:backend/solmate_core/settings.py:generic-api-key:136
+0303c7010dc74c2a904e57f4e6f0270bae3938e2:backend/solmate_core/settings.py:generic-api-key:136
+27615b1ee71ab0ab40bad343b221ff57ad8954b6:backend/solmate_core/settings.py:generic-api-key:135
