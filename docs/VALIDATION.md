@@ -52,3 +52,36 @@ Falling short is reported, not hidden.
 - Some dimensions are proxies on the target side (lunar thermal; most of Arcadia).
 - Controls are by construction easy negatives; the background percentile guards
   against that.
+
+---
+
+## Results (computed 31 Oct 2026, unedited; `data/validation/validation.v2.json`)
+
+| Target | AUC (95% CI) | Positives' median land percentile | Learned-weight CV AUC |
+|---|---|---|---|
+| Jezero Crater | **0.844** (0.694–0.962) | 79.2 | 0.821 |
+| Artemis regions (9) | 0.735–0.800, median **0.760** | 47.7–70.8, median 51.6 | 0.712–0.782 |
+| Arcadia Planitia | 0.582 (0.382–0.768) | 48.6 | 0.843 |
+
+**Against the thresholds**
+- AUC ≥ 0.75: met for Jezero and the Artemis median; not met for Arcadia.
+- Median percentile ≥ 80: not met (Jezero 79.2 comes closest).
+
+**What we learn**
+1. **Jezero:** documented Mars analogs are clearly retrieved from all 1.9 M land
+   cells using NASA data alone.
+2. **Moon:**
+   - Lunar analog training sites separate from controls (AUC ≈ 0.76), but they sit
+     mid-pack among all land.
+   - Hawaiʻi, Iceland, Lanzarote and Sudbury are used for volcanic and impact
+     *geology* in humid climates. The environment dimensions do not reward that.
+     Process tags and site-scale geology are the right complement.
+3. **Arcadia:** most labelled Mars analogs are warm deserts, while the Arcadia target
+   is a cold, ice-rich plain. The labels describe science-site analogs better than
+   human-base ice analogs.
+4. **Mineralogy:** the learned weights put zero weight on it. At 5 km, the ASTER
+   indices do not separate the documented sites. Climate, surface and thermal
+   dimensions carry the signal.
+
+The equal preset stays the default. The learned weights are shipped as the
+"Learned" preset, labelled exploratory.
