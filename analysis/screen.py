@@ -23,8 +23,8 @@ import yaml
 
 import fetch
 import run
-import similarity as sim
-import terrain
+from solmate.compute import similarity as sim
+from solmate.compute import terrain
 
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT.parent / "frontend" / "public" / "data"
