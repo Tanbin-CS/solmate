@@ -1,0 +1,26 @@
+SolMate — Earth analogs for Moon base and Mars sites
+Copyright 2026 Team Northern Lights (NASA International Space Apps Challenge 2026)
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This product uses open data. Data are not covered by the Apache License;
+each dataset keeps its own terms, listed in docs/DATA_SOURCES.md and in
+frontend/public/data/provenance.v1.json.
+
+NASA data (public domain / NASA open data policy):
+  - Mars 2020 TRN CTX DTM and orthomosaic, USGS Astrogeology (Fergason et al. 2020)
+  - LRO LOLA south-pole DEM and Sun-visibility products, NASA GSFC Planetary Geodesy Data Archive
+  - NASA GIBS imagery (Blue Marble) and NASA Planetary Analog Explorer site list
+  - Globe textures: NASA Blue Marble Next Generation, USGS/NASA Ames Viking MDIM 2.1,
+    NASA LRO LROC WAC mosaic (NASA Moon Trek)
+
+Other agency / third-party data (optional extras, attribution required):
+  - Copernicus DEM GLO-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH
+    2014-2018, provided under COPERNICUS by the European Union and ESA
+  - AWS Terrain Tiles (Mapzen/Terrarium), various open sources
+  - Sentinel-2 cloudless by EOX IT Services GmbH (CC BY-NC-SA 4.0) — scheduled for
+    removal in v2 because its non-commercial terms do not meet the Space Apps rules
+
+Original prototype repository: https://github.com/hellorifat/solmate (team member
+Rifatul). This repository, https://github.com/Tanbin-CS/solmate, is the team's
+submission repository.
