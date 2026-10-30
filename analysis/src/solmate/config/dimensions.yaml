@@ -1,0 +1,75 @@
+# SolMate v2 analog dimensions. Every scored indicator is a NASA layer from the
+# global stack (data/stack/layers.v2.json). Each indicator's mode (match / toward)
+# is chosen by rule from the target value; nothing here is hand-tuned per target.
+#
+# weight: relative weight of the indicator inside its dimension.
+# applies_to: target bodies where the dimension is meaningful.
+version: 2
+dimensions:
+  T:
+    name: Terrain
+    description: Slope and relief at ~1 km (stage 1); 100 m ASTER GDEM windows refine it (stage 2).
+    applies_to: [moon, mars]
+    indicators:
+      slope_median_deg: {weight: 1.0}
+      slope_p90_proxy_deg: {weight: 1.0}
+      elev_std_m: {weight: 1.0}
+  C:
+    name: Climate & aridity
+    description: Dryness of the air and ground; precipitation keeps polar deserts dry where P/PET fails.
+    applies_to: [moon, mars]
+    indicators:
+      aridity_index: {weight: 1.0}
+      precip_mm_day: {weight: 1.0}
+      rh2m_pct: {weight: 0.5}
+  Th:
+    name: Thermal
+    description: Day-night surface temperature swing and cold extremes (MODIS LST).
+    applies_to: [moon, mars]
+    indicators:
+      lst_diurnal_range_k: {weight: 1.0}
+      lst_night_min_k: {weight: 1.0}
+      t2m_mean_c: {weight: 0.5}
+  S:
+    name: Surface & barrenness
+    description: Bare ground, no vegetation, and how bright the surface is.
+    applies_to: [moon, mars]
+    indicators:
+      barren_pct: {weight: 1.0}
+      forest_pct: {weight: 0.5}
+      albedo_wsa_sw: {weight: 0.5}
+  M:
+    name: Mineralogy
+    description: ASTER thermal-infrared indices for quartz, carbonate and mafic (basaltic) rock.
+    applies_to: [moon, mars]
+    indicators:
+      mafic_index: {weight: 1.0}
+      carbonate_index: {weight: 1.0}
+      quartz_index: {weight: 1.0}
+  I:
+    name: Ice & cold-trap
+    description: Lasting snow/ice and freezing conditions (permafrost proxy) for ice-bearing bases.
+    applies_to: [moon, mars]
+    indicators:
+      snow_months_per_year: {weight: 1.0}
+      frost_days_per_year: {weight: 1.0}
+      t2m_coldest_month_c: {weight: 0.5}
+  D:
+    name: Dust & wind
+    description: Mineral dust load and wind, analog of Martian dust processes.
+    applies_to: [mars]
+    indicators:
+      dust_aod_mean: {weight: 1.0}
+      ws10m_m_s: {weight: 0.5}
+  O:
+    name: Mission operations
+    description: Gentle terrain and moderate wind for landing, roving and building (off by default).
+    applies_to: [moon, mars]
+    indicators:
+      slope_median_deg: {weight: 1.0, direction: lower_is_better}
+      ws10m_m_s: {weight: 0.5, direction: lower_is_better}
+presets:
+  equal:      {T: 1, C: 1, Th: 1, S: 1, M: 1, I: 1, D: 1, O: 0}
+  expert:     {T: 1.5, C: 1, Th: 1, S: 1, M: 1, I: 1, D: 0.5, O: 0}
+  mission_ops: {T: 1, C: 0.5, Th: 1, S: 1, M: 0.5, I: 0.5, D: 0.5, O: 2}
+  # learned: filled by validation (cross-validated logistic regression), see docs/VALIDATION.md
