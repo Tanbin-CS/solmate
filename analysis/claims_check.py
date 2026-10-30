@@ -123,7 +123,7 @@ def main() -> None:
 
     doc = {
         "version": 1,
-        "generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
+        "generated_at": dt.datetime.now(dt.UTC).replace(microsecond=0).isoformat(),
         "checker": "TypeSafe System One Choice (supports / contradicts / says_nothing)",
         "model": model_used,
         "threshold": THRESHOLD,

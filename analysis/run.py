@@ -16,7 +16,6 @@ import argparse
 import datetime as dt
 import json
 import platform
-import shutil
 from pathlib import Path
 
 import numpy as np
@@ -164,7 +163,7 @@ def main() -> None:
     ids = [s["id"] for s in earth]
     roles = {s["id"]: s["role"] for s in earth}
     pairs = {s["id"]: s.get("pair") for s in earth}
-    now = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()
+    now = dt.datetime.now(dt.UTC).replace(microsecond=0).isoformat()
     equal = np.ones(len(IND))
     targets_index = []
 
@@ -255,10 +254,10 @@ def main() -> None:
             "method": "robust-z gaussian similarity, weighted mean",
             "pool": ids,
             "excluded": excluded,
-            "scaling": {"centre": dict(zip(IND, prim["centre"].tolist())), "scale": dict(zip(IND, prim["scale"].tolist()))},
+            "scaling": {"centre": dict(zip(IND, prim["centre"].tolist(), strict=True)), "scale": dict(zip(IND, prim["scale"].tolist(), strict=True))},
             "equal_weights": {
                 "scores": {i: float(prim["scores"][k]) for k, i in enumerate(ids)},
-                "per_indicator": {i: dict(zip(IND, prim["sims"][k].tolist())) for k, i in enumerate(ids)},
+                "per_indicator": {i: dict(zip(IND, prim["sims"][k].tolist(), strict=True)) for k, i in enumerate(ids)},
                 "ranks": {i: prim["ranks"][k] for k, i in enumerate(ids)},
             },
             "retrieval": {

@@ -162,6 +162,7 @@ S2_TILES = "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/
 def s2_thumbnail(lat: float, lon: float, size_m: float, px: int = 640):
     """Sentinel-2 cloudless (EOX) true-colour image of the window, for context only. Returns a PIL image or None."""
     import io
+
     from PIL import Image
 
     key = CACHE / f"s2_{lat:.4f}_{lon:.4f}_{int(size_m)}.jpg"
