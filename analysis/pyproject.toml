@@ -13,6 +13,9 @@ dependencies = [
   "pillow>=10.0",
   "pyhdf>=0.11",
   "h5py>=3.11",
+  "xarray>=2024.10",
+  "zarr>=2.18",
+  "s3fs>=2024.10",
 ]
 
 [project.optional-dependencies]
