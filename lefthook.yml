@@ -4,6 +4,10 @@ pre-commit:
   commands:
     secrets:
       run: gitleaks git --pre-commit --staged --redact --no-banner .
+    science-lint:
+      root: analysis/
+      glob: "*.py"
+      run: uv run ruff check {staged_files}
     web-lint:
       root: frontend/
       glob: "*.{ts,tsx}"
