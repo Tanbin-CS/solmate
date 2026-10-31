@@ -7,6 +7,7 @@ import { Toaster } from '@/components/ui/sonner'
 import HomePage from '@/pages/HomePage'
 
 const ExplorerPage = lazy(() => import('@/pages/ExplorerPage'))
+const PrototypeExplorerPage = lazy(() => import('@/pages/PrototypeExplorerPage'))
 const MethodPage = lazy(() => import('@/pages/MethodPage'))
 const DataPage = lazy(() => import('@/pages/DataPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
@@ -24,6 +25,7 @@ export default function App() {
               <Route element={<AppShell />}>
                 <Route index element={<HomePage />} />
                 <Route path="explorer" element={<ExplorerPage />} />
+                <Route path="prototype" element={<PrototypeExplorerPage />} />
                 <Route path="method" element={<MethodPage />} />
                 <Route path="provenance" element={<DataPage />} />
                 <Route path="data" element={<Navigate to="/provenance" replace />} />
