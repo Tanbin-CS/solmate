@@ -1,0 +1,88 @@
+{
+ "version": 2,
+ "generated_at": "2026-10-31T06:14:43+00:00",
+ "window": "12 x 926.6 m square around the region centroid (matches Earth stage-1 cells)",
+ "targets": {
+  "peak_near_cabeus_b": {
+   "lst_diurnal_range_k": 203.1,
+   "lst_night_min_k": 74.7,
+   "t2m_mean_c": -113.6,
+   "t2m_coldest_month_c": -118.6,
+   "snow_months_per_year": 0,
+   "coldest_max_within_2km_k": 219.3,
+   "source": "LRO Diviner seasonal polar temperatures, Williams et al. 2019 (doi 10.1029/2019JE006028)"
+  },
+  "haworth": {
+   "lst_diurnal_range_k": 168.4,
+   "lst_night_min_k": 51.1,
+   "t2m_mean_c": -164.0,
+   "t2m_coldest_month_c": -176.7,
+   "snow_months_per_year": 0,
+   "coldest_max_within_2km_k": 180.7,
+   "source": "LRO Diviner seasonal polar temperatures, Williams et al. 2019 (doi 10.1029/2019JE006028)"
+  },
+  "malapert_massif": {
+   "lst_diurnal_range_k": 181.5,
+   "lst_night_min_k": 62.3,
+   "t2m_mean_c": -142.0,
+   "t2m_coldest_month_c": -177.3,
+   "snow_months_per_year": 0,
+   "coldest_max_within_2km_k": 178.7,
+   "source": "LRO Diviner seasonal polar temperatures, Williams et al. 2019 (doi 10.1029/2019JE006028)"
+  },
+  "mons_mouton_plateau": {
+   "lst_diurnal_range_k": 164.2,
+   "lst_night_min_k": 53.7,
+   "t2m_mean_c": -162.6,
+   "t2m_coldest_month_c": -165.4,
+   "snow_months_per_year": 12,
+   "coldest_max_within_2km_k": 86.6,
+   "source": "LRO Diviner seasonal polar temperatures, Williams et al. 2019 (doi 10.1029/2019JE006028)"
+  },
+  "mons_mouton": {
+   "lst_diurnal_range_k": 177.2,
+   "lst_night_min_k": 58.5,
+   "t2m_mean_c": -147.3,
+   "t2m_coldest_month_c": -161.9,
+   "snow_months_per_year": 0,
+   "coldest_max_within_2km_k": 166.4,
+   "source": "LRO Diviner seasonal polar temperatures, Williams et al. 2019 (doi 10.1029/2019JE006028)"
+  },
+  "nobile_rim_1": {
+   "lst_diurnal_range_k": 177.8,
+   "lst_night_min_k": 63.6,
+   "t2m_mean_c": -138.6,
+   "t2m_coldest_month_c": -140.5,
+   "snow_months_per_year": 0,
+   "coldest_max_within_2km_k": 173.9,
+   "source": "LRO Diviner seasonal polar temperatures, Williams et al. 2019 (doi 10.1029/2019JE006028)"
+  },
+  "nobile_rim_2": {
+   "lst_diurnal_range_k": 180.5,
+   "lst_night_min_k": 60.9,
+   "t2m_mean_c": -149.5,
+   "t2m_coldest_month_c": -148.7,
+   "snow_months_per_year": 0,
+   "coldest_max_within_2km_k": 159.5,
+   "source": "LRO Diviner seasonal polar temperatures, Williams et al. 2019 (doi 10.1029/2019JE006028)"
+  },
+  "de_gerlache_rim_2": {
+   "lst_diurnal_range_k": 189.8,
+   "lst_night_min_k": 65.6,
+   "t2m_mean_c": -139.6,
+   "t2m_coldest_month_c": -142.0,
+   "snow_months_per_year": 0,
+   "coldest_max_within_2km_k": 200.7,
+   "source": "LRO Diviner seasonal polar temperatures, Williams et al. 2019 (doi 10.1029/2019JE006028)"
+  },
+  "slater_plain": {
+   "lst_diurnal_range_k": 154.0,
+   "lst_night_min_k": 43.2,
+   "t2m_mean_c": -182.1,
+   "t2m_coldest_month_c": -195.2,
+   "snow_months_per_year": 0,
+   "coldest_max_within_2km_k": 172.7,
+   "source": "LRO Diviner seasonal polar temperatures, Williams et al. 2019 (doi 10.1029/2019JE006028)"
+  }
+ }
+}
