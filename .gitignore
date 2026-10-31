@@ -35,3 +35,7 @@ Thumbs.db
 
 # Large local data (mirrored to GCS, tracked by data/manifest.v2.json)
 data/raw/
+
+# Web tiles (binary, ~60 MB): rebuilt by solmate.pipeline.export_web --tiles,
+# mirrored to gs://solmate-13571-data/web/tiles and restored before deploy
+frontend/public/data/v2/tiles/
