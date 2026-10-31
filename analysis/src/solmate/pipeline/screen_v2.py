@@ -21,7 +21,7 @@ from pathlib import Path
 import numpy as np
 import yaml
 
-from solmate.compute import aggregate, grid, modes, novelty, score
+from solmate.compute import aggregate, grid, modes, novelty, score, verdict
 from solmate.targets import load_targets
 
 ANALYSIS = Path(__file__).resolve().parents[3]
@@ -34,6 +34,9 @@ SITES_V1 = ANALYSIS / "sites.yaml"
 N_STAGE2 = 400
 N_NOVEL = 25
 N_LEADERS = 5
+N_VERDICTS = 25
+CONTEXT_LAYERS = ("surface_pressure_hpa", "shrub_pct", "grass_savanna_pct", "cropland_pct", "wetland_pct",
+                  "water_pct", "urban_pct", "snow_ice_pct", "elev_mean_m")
 SPACING_KM = 50.0
 MIN_COVERAGE = aggregate.MIN_COVERAGE
 
@@ -63,6 +66,7 @@ def _entry(i: int, lat, lon, sai, cov, dim_scores, sites, idx_known, dist_known)
 
 def main() -> None:
     dims = _yaml("dimensions.yaml")["dimensions"]
+    process_cfg = _yaml("processes.yaml")
     targets = load_targets()
     known = _yaml("known_analogs.yaml")
     stats_doc = json.loads(EARTH_STATS.read_text(encoding="utf-8"))["indicators"]
@@ -74,7 +78,7 @@ def main() -> None:
     with np.load(STACK) as z:
         land = (z["land_frac"] > 0.5) & (np.abs(lat_c[:, None]) <= 83.0)
         rows, cols = np.nonzero(land)
-        layers = {k: z[k][land] for k in stats}
+        layers = {k: z[k][land] for k in (*stats, *CONTEXT_LAYERS)}
     lat, lon = lat_c[rows], lon_c[cols]
     dist_known, idx_known = novelty.nearest_known(lat, lon, known["sites"])
     _log(f"{land.sum()} land cells, {len(targets)} targets")
@@ -121,11 +125,17 @@ def main() -> None:
         for sid, (i, role, pair) in site_cells.items():
             pct[sid] = {"role": role, "pair": pair, "sai": _r(sai[i], 2),
                         "percentile": _r(float((valid < sai[i]).mean() * 100), 1) if np.isfinite(sai[i]) else None}
+        def with_verdict(i: int, t=t, entry=entry) -> dict:
+            e = entry(i)
+            values = {k: float(v[i]) for k, v in layers.items()}
+            e["verdict"] = verdict.explain(values, t, dims, stats, process_cfg)
+            return e
+
         result[t["id"]] = {
             "name": t["name"], "body": body, "weights": weights, "plans": plans_doc,
             "land_cells_scored": int(ok.sum()),
-            "top": [entry(i) for i in top],
-            "novel_leads": [entry(i) for i in novel],
+            "top": [with_verdict(i) if n < N_VERDICTS else entry(i) for n, i in enumerate(top)],
+            "novel_leads": [with_verdict(i) for i in novel],
             "dimension_leaders": leaders,
             "documented_sites": pct,
         }
