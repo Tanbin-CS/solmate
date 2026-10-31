@@ -261,3 +261,29 @@ export function explain(
     use_it_for: usesFor(values, model.processes, stats),
   }
 }
+
+/**
+ * The verdict with the ~1 km terrain dimension replaced by a measured 100 m terrain score
+ * (0-1): SAI, bands, contributions, matches and differs all follow, with the same wording.
+ */
+export function withRefinedTerrain(verdict: Verdict, t100: number, weights: Readonly<Record<string, number>>): Verdict {
+  if (!Number.isFinite(t100) || !verdict.dimensions.some((d) => d.id === 'T')) return verdict
+  const scores = Object.fromEntries(verdict.dimensions.map((d) => [d.id, d.id === 'T' ? t100 : (d.score ?? Number.NaN)]))
+  const result = sai(scores, Object.fromEntries(verdict.dimensions.map((d) => [d.id, weights[d.id] ?? 1])))
+  const strong = result.dimensions.filter((d) => d.band === 'strong').sort((a, b) => b.score - a.score)
+  return {
+    ...verdict,
+    sai: Number.isFinite(result.sai) ? pyRound(result.sai, 2) : null,
+    coverage: pyRound(result.coverage, 3),
+    insufficient: result.insufficient,
+    dimensions: result.dimensions.map((d) => ({
+      id: d.id,
+      name: DIMENSION_NAMES[d.id] ?? d.id,
+      score: Number.isFinite(d.score) ? pyRound(d.score, 4) : null,
+      band: d.band,
+      contribution: pyRound(d.contribution, 4),
+    })),
+    matches: strong.map((d) => ({ id: d.id, text: `${DIMENSION_NAMES[d.id] ?? d.id} matches (score ${d.score.toFixed(2)}).` })),
+    differs: dimensionLimits(scores, Object.keys(scores)),
+  }
+}
