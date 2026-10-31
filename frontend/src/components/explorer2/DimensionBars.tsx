@@ -5,21 +5,20 @@ import { cn } from '@/lib/utils'
 import { BAND_STYLE } from './labels'
 
 /** One bar per dimension: score 0-100, band, and share of the SAI. */
-export function DimensionBars({ verdict, model, t100 }: { verdict: Verdict; model: Model; t100?: number | null }) {
+export function DimensionBars({ verdict, model, refined = false }: { verdict: Verdict; model: Model; refined?: boolean }) {
   const reduced = useReducedMotion()
   return (
     <ul className="space-y-2" aria-label="Dimension scores">
       {verdict.dimensions.map((d) => {
-        const refined = d.id === 'T' && t100 !== undefined && t100 !== null && Number.isFinite(t100)
-        const s = refined ? t100 : d.score
-        const band = s === null ? 'n/a' : s >= 0.75 ? 'strong' : s >= 0.4 ? 'partial' : 'weak'
+        const s = d.score
+        const band = d.band
         const dim = model.dimensions[d.id]
         return (
           <li key={d.id} title={dim?.description}>
             <div className="flex items-baseline justify-between gap-2 text-[12.5px]">
               <span className="text-slate-200">
                 {d.name}
-                {refined && <span className="ml-1.5 font-mono text-[10px] text-data">100 m</span>}
+                {refined && d.id === 'T' && <span className="ml-1.5 font-mono text-[10px] text-data">100 m</span>}
               </span>
               <span className="font-mono text-[11px] tabular">
                 <span className="text-slate-100">{s === null ? '–' : Math.round(s * 100)}</span>

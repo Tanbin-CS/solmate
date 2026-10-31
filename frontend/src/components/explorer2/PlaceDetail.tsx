@@ -3,10 +3,9 @@ import type { TerrainResult } from '@/api/client'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { Async } from '@/hooks/useV2'
-import { sai } from '@/science/v2/aggregate'
 import type { Model, Target } from '@/science/v2/model'
 import type { PlaceResult } from '@/science/v2/place'
-import { withTerrain100 } from '@/science/v2/screening'
+import { withRefinedTerrain } from '@/science/v2/verdict'
 import { fmtCoord } from '@/lib/format'
 import { BAND_STYLE } from './labels'
 import { DimensionBars } from './DimensionBars'
@@ -30,15 +29,10 @@ export function PlaceDetail({ state, target, model, weights, isBox, terrain, sto
   const r = state.status === 'ready' ? state.data : null
   const live = terrain.status === 'done' && terrain.result.ok ? terrain.result.data.terrain_score : null
   const t100 = live ?? (!isBox && storedT100 !== undefined && storedT100 !== null && Number.isFinite(storedT100) ? storedT100 : null)
-  const verdict = r?.verdict ?? null
-  const refinedSai =
-    verdict && t100 !== null && Number.isFinite(t100)
-      ? sai(
-          withTerrain100(Object.fromEntries(verdict.dimensions.map((d) => [d.id, d.score])), t100),
-          Object.fromEntries(verdict.dimensions.map((d) => [d.id, weights[d.id] ?? 0])),
-        ).sai
-      : null
-  const shown = refinedSai ?? verdict?.sai ?? null
+  const coarse = r?.verdict ?? null
+  const refined = coarse !== null && t100 !== null
+  const verdict = coarse && t100 !== null ? withRefinedTerrain(coarse, t100, weights) : coarse
+  const shown = verdict?.sai ?? null
   const band = shown === null ? 'n/a' : shown >= 75 ? 'strong' : shown >= 40 ? 'partial' : 'weak'
 
   return (
@@ -81,7 +75,7 @@ export function PlaceDetail({ state, target, model, weights, isBox, terrain, sto
                   <span className="text-lg text-slate-400">/100</span>
                 </p>
                 <p className={`mt-1 font-mono text-[11px] ${BAND_STYLE[band].className}`}>
-                  {BAND_STYLE[band].label} analog{refinedSai !== null && <span className="text-slate-400"> · with 100 m terrain</span>}
+                  {BAND_STYLE[band].label} analog{refined && <span className="text-slate-400"> · with 100 m terrain</span>}
                   {verdict.insufficient && <span className="text-negative"> · low data coverage ({Math.round(verdict.coverage * 100)}%)</span>}
                 </p>
               </div>
@@ -91,7 +85,7 @@ export function PlaceDetail({ state, target, model, weights, isBox, terrain, sto
             {terrain.status === 'done' && terrain.result.ok && terrain.result.data.partial && (
               <p className="text-[12px] text-slate-400">NASA terrain arrived only in part; showing what was measured.</p>
             )}
-            <DimensionBars verdict={verdict} model={model} t100={t100} />
+            <DimensionBars verdict={verdict} model={model} refined={refined} />
             <VerdictCard verdict={verdict} />
             <section>
               <h3 className="label-mono mb-1.5">Best targets for this place</h3>
