@@ -24,6 +24,9 @@ evidence = ["typesafe-sdk>=0.7"]
 [dependency-groups]
 dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.7"]
 
+[tool.uv]
+exclude-newer = "7 days"  # supply-chain cooldown: never resolve packages published in the last week
+
 [build-system]
 requires = ["hatchling>=1.25"]
 build-backend = "hatchling.build"

@@ -20,6 +20,7 @@ dev = ["pytest>=8.0", "httpx>=0.27", "ruff>=0.7"]
 
 [tool.uv]
 package = false
+exclude-newer = "7 days"  # supply-chain cooldown: never resolve packages published in the last week
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
