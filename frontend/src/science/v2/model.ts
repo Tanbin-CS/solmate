@@ -52,6 +52,10 @@ export const ModelSchema = z.object({
   earth_stats: z.record(z.string(), EarthStatsSchema),
   processes: ProcessConfigSchema,
   tiles: TileLayoutSchema,
+  known_analogs: z.object({
+    novelty_km: Num,
+    sites: z.array(z.object({ id: z.string(), lat: Num, lon: Num, source: z.string().optional() }).passthrough()),
+  }),
 })
 
 const Value = z.object({ value: z.union([Num, z.null()]).optional() }).passthrough()
