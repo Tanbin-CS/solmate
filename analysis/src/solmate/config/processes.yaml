@@ -1,0 +1,49 @@
+# Process-analog tags. A tag fires when every condition holds for a place; the tag
+# links the Earth process to the planetary process it can teach about. Thresholds are
+# stated in physical units so judges can check them.
+version: 2
+tags:
+  aeolian_dust:
+    name: Aeolian dust
+    when: {dust_aod_mean: {gte: 0.15}, barren_pct: {gte: 80}}
+    analog: Martian dust storms, dust lifting and deposition (Mars)
+    bodies: [mars]
+  evaporite_playa:
+    name: Evaporite flat / playa
+    when: {aridity_index: {lt: 0.05}, albedo_wsa_sw: {gte: 0.30}, slope_median_deg: {lt: 1.0}}
+    analog: Water-driven alteration and salt deposits in ancient lake basins such as Jezero (Mars)
+    bodies: [mars]
+  volcanic_mafic:
+    name: Mafic volcanic surface
+    when: {mafic_index: {gte_earth_quantile: 95}, barren_pct: {gte: 50}}
+    analog: Basaltic plains and lava flows of the lunar maria and Martian volcanic provinces
+    bodies: [moon, mars]
+  periglacial:
+    name: Periglacial ground
+    when: {t2m_mean_c: {lt: 0.0}, snow_months_per_year: {gte: 6}, barren_pct: {gte: 50}}
+    analog: Ground ice, patterned ground and sublimation at mid-latitude Mars (Arcadia) and lunar cold traps
+    bodies: [moon, mars]
+  rugged_highland:
+    name: Rugged highland relief
+    when: {slope_median_deg: {gte: 8.0}, barren_pct: {gte: 50}}
+    analog: Crater rims and massifs of the lunar south pole (Malapert, Cabeus B, de Gerlache)
+    bodies: [moon]
+uses:
+  - id: rover_mobility
+    text: Rover and EVA mobility trials on slopes and loose barren ground.
+    when: {slope_median_deg: {gte: 3.0}, barren_pct: {gte: 60}}
+  - id: landing_construction
+    text: Landing-pad, regolith-handling and construction trials on flat barren ground.
+    when: {slope_median_deg: {lt: 1.0}, barren_pct: {gte: 60}}
+  - id: thermal_cycling
+    text: Instrument and habitat thermal-cycling tests in large day-night temperature swings.
+    when: {lst_diurnal_range_k: {gte_earth_quantile: 90}}
+  - id: ice_isru
+    text: Ice prospecting, drilling and ISRU rehearsals in frozen ground.
+    when: {t2m_mean_c: {lt: 0.0}, frost_days_per_year: {gte: 200}}
+  - id: dust_mitigation
+    text: Dust-mitigation tests for seals, solar panels and suits.
+    when: {dust_aod_mean: {gte: 0.15}}
+  - id: astrobiology_extreme_dry
+    text: Life-detection instrument tests at the dry limit of life (biosignature preservation).
+    when: {aridity_index: {lt: 0.05}, barren_pct: {gte: 80}}
