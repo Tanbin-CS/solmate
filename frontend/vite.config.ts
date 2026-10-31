@@ -4,7 +4,8 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig, type Plugin } from 'vitest/config'
 
-// GitHub Pages has no SPA rewrites: serving index.html as 404.html lets deep links like /solmate/explorer load the app.
+// GitHub Pages (legacy mirror) has no SPA rewrites: index.html is copied to 404.html so deep links load.
+// Firebase Hosting rewrites routes itself, so the fallback only runs for the Pages build.
 function spaFallback(): Plugin {
   return {
     name: 'spa-404-fallback',
@@ -15,10 +16,12 @@ function spaFallback(): Plugin {
   }
 }
 
-// The site is served from https://<user>.github.io/solmate/, so every asset and route lives under /solmate/.
+// Firebase Hosting serves the app at the domain root. The GitHub Pages mirror builds with VITE_BASE=/solmate/.
+const base = process.env.VITE_BASE ?? '/'
+
 export default defineConfig({
-  base: '/solmate/',
-  plugins: [react(), tailwindcss(), spaFallback()],
+  base,
+  plugins: [react(), tailwindcss(), ...(base === '/' ? [] : [spaFallback()])],
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
