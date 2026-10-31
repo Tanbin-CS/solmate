@@ -4,6 +4,7 @@
  */
 import { asset } from '@/lib/asset'
 import { ModelSchema, TargetsSchema, type Model, type Target } from './model'
+import { ScreeningSchema, type Screening } from './screening'
 import { gunzip, Tile } from './tiles'
 
 const ROOT = 'data/v2/'
@@ -29,6 +30,22 @@ export const loadModel = once(async (): Promise<Model> => ModelSchema.parse(awai
 export const loadTargets = once(
   async (): Promise<Target[]> => TargetsSchema.parse(await (await fetchOk('targets.json')).json()).targets,
 )
+
+const screenings = new Map<string, Promise<Screening>>()
+
+/** Screening results for one target (top cells, novel leads, dimension leaders). */
+export function loadScreening(targetId: string): Promise<Screening> {
+  if (!/^[a-z0-9_]{1,40}$/.test(targetId)) return Promise.reject(new Error('invalid target id'))
+  let p = screenings.get(targetId)
+  if (!p) {
+    p = fetchOk(`screening/${targetId}.json`)
+      .then((r) => r.json())
+      .then((x) => ScreeningSchema.parse(x))
+    p.catch(() => screenings.delete(targetId))
+    screenings.set(targetId, p)
+  }
+  return p
+}
 
 const tiles = new Map<string, Promise<Tile | null>>()
 
