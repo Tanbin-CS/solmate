@@ -71,3 +71,19 @@ describe('tile decoding', () => {
     expect(meanValues([{ a: 1, land_frac: null }])).toEqual({})
   })
 })
+
+describe('worker query validation', async () => {
+  const { PlaceQuerySchema } = await import('./place')
+  it('accepts points and ordered boxes', () => {
+    expect(PlaceQuerySchema.safeParse({ kind: 'point', lat: 37, lon: 86, targetId: 'jezero_crater' }).success).toBe(true)
+    expect(PlaceQuerySchema.safeParse({ kind: 'box', south: 1, west: 2, north: 1.3, east: 2.3, targetId: 'haworth', weights: { T: 1.5 } }).success).toBe(true)
+  })
+  it.each([
+    { kind: 'point', lat: Number.NaN, lon: 0, targetId: 'jezero_crater' },
+    { kind: 'point', lat: 95, lon: 0, targetId: 'jezero_crater' },
+    { kind: 'point', lat: 0, lon: 0, targetId: '../model' },
+    { kind: 'point', lat: 0, lon: 0, targetId: 'jezero_crater', extra: 1 },
+    { kind: 'box', south: 2, west: 0, north: 1, east: 1, targetId: 'haworth' },
+    { kind: 'point', lat: 0, lon: 0, targetId: 'haworth', weights: { T: -1 } },
+  ])('rejects %o', (q) => expect(PlaceQuerySchema.safeParse(q).success).toBe(false))
+})
