@@ -1,0 +1,34 @@
+[project]
+name = "solmate-api"
+version = "2.0.0.dev0"
+description = "SolMate terrain API: 100 m NASA ASTER GDEM terrain scoring for any place on Earth"
+license = "Apache-2.0"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "solmate",
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.32",
+  "pydantic>=2.9",
+  "firebase-admin>=6.6",
+]
+
+[tool.uv.sources]
+solmate = { path = "../analysis", editable = true }
+
+[dependency-groups]
+dev = ["pytest>=8.0", "httpx>=0.27", "ruff>=0.7"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S"]
+ignore = ["S101"]
