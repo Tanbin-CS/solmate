@@ -1,0 +1,15 @@
+# Upload only what the terrain API container needs to Cloud Build.
+*
+!Dockerfile
+!analysis/pyproject.toml
+!analysis/uv.lock
+!analysis/README.md
+!analysis/src/**
+!api/pyproject.toml
+!api/uv.lock
+!api/app/**
+!data/screening/stage2.v2.json
+!data/screening/stage2_stats.v2.json
+!data/stack/astgtm_tiles.v3.json
+!data/targets/**
+**/__pycache__/**

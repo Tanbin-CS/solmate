@@ -1,0 +1,21 @@
+# Cloud Build upload for the terrain API. The Dockerfile copies only what it needs;
+# this list keeps everything else (dependencies, caches, raw data, git) off the upload.
+.git/
+.github/
+.gitignore
+node_modules/
+frontend/
+docs/
+**/.venv/
+**/__pycache__/
+**/.pytest_cache/
+**/.ruff_cache/
+analysis/cache/
+analysis/tests/
+analysis/sources/
+api/tests/
+data/validation/
+data/screening/screening.v2.json
+data/manifest.v2.json
+*.log
+.env*
