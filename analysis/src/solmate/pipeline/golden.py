@@ -9,15 +9,60 @@ Run:  uv run python -m solmate.pipeline.golden
 from __future__ import annotations
 
 import json
+from importlib import resources
 from pathlib import Path
 
 import numpy as np
+import yaml
 
-from solmate.compute import aggregate, modes
+from solmate.compute import aggregate, grid, modes, verdict
+from solmate.targets import load_targets
 
 ANALYSIS = Path(__file__).resolve().parents[3]
 EARTH_STATS = ANALYSIS.parent / "data" / "stack" / "earth_stats.v2.json"
 OUT = ANALYSIS.parent / "frontend" / "src" / "science" / "golden" / "scoring.v2.json"
+STACK = ANALYSIS / "cache" / "stack" / "stack_v2.npz"
+VALIDATION = ANALYSIS.parent / "data" / "validation" / "validation.v2.json"
+# Real places that exercise every verdict branch: hyper-arid, high cold plateau, polar desert,
+# humid lowland (vegetation flag), temperate cropland, and screening cells that fire the
+# aeolian, rugged-highland, mafic and periglacial process tags.
+PLACES = {"atacama": (-24.5, -69.25), "changtang": (36.45, 84.45), "dry_valleys": (-77.5, 161.8),
+          "dhaka": (23.8, 90.4), "iowa": (42.0, -93.5), "sistan": (32.05, 61.25), "puna": (-28.05, -69.35),
+          "west_kunlun": (34.95, 83.35), "aksai_chin": (34.45, 79.55)}
+
+
+def _cfg(name: str) -> dict:
+    with resources.files("solmate.config").joinpath(name).open(encoding="utf-8") as f:
+        return yaml.safe_load(f)
+
+
+def _explain_cases(stats_doc: dict) -> list[dict]:
+    """Full VerdictCard output for real stack cells x every target, plus weight presets."""
+    dims_doc = _cfg("dimensions.yaml")
+    dims, presets = dims_doc["dimensions"], dict(dims_doc["presets"])
+    for body, s in json.loads(VALIDATION.read_text(encoding="utf-8"))["summary"].items():
+        presets[f"learned_{body}"] = s["learned_preset"]
+    process_cfg = _cfg("processes.yaml")
+    stats = {k: modes.EarthStats(tuple(v["quantiles"]), v["median"], v["sigma"]) for k, v in stats_doc.items()}
+    lat_c, lon_c = grid.cell_centres()
+    with np.load(STACK) as z:
+        layers = {k: z[k] for k in z.files}
+    places = {}
+    for pid, (lat, lon) in PLACES.items():
+        r, c = int(np.argmin(np.abs(lat_c - lat))), int(np.argmin(np.abs(lon_c - lon)))
+        places[pid] = {k: float(v[r, c]) for k, v in layers.items() if v.ndim == 2}
+    cases = []
+    for t in load_targets():
+        runs = [None] + ([("expert", presets["expert"]), ("mission_ops", presets["mission_ops"]),
+                          (f"learned_{t['body']}", presets[f"learned_{t['body']}"])]
+                         if t["id"] in ("jezero_crater", "mons_mouton_plateau") else [])
+        for pid, values in places.items():
+            for run in runs:
+                w = None if run is None else run[1]
+                cases.append({"place": pid, "values": {k: _num(v) for k, v in values.items()},
+                              "target": t["id"], "preset": None if run is None else run[0],
+                              "expected": verdict.explain(values, t, dims, stats, process_cfg, w)})
+    return cases
 
 
 def _num(x: float) -> float | None:
@@ -62,8 +107,11 @@ def main() -> None:
         })
     doc = {"version": 2, "earth_stats": {k: stats_doc[k] for k in probes}, "similarity": cases, "sai": sai_cases}
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps(doc, indent=1) + "\n", encoding="utf-8")
-    print(f"wrote {len(cases)} similarity and {len(sai_cases)} SAI golden cases to {OUT}")
+    OUT.write_text(json.dumps(doc, indent=1) + "\n", encoding="utf-8", newline="\n")
+    explain = _explain_cases(stats_doc)
+    OUT.with_name("explain.v2.json").write_text(json.dumps({"version": 2, "cases": explain}, separators=(",", ":"))
+                                                + "\n", encoding="utf-8", newline="\n")
+    print(f"wrote {len(cases)} similarity, {len(sai_cases)} SAI and {len(explain)} explain golden cases")
 
 
 if __name__ == "__main__":
