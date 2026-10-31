@@ -1,6 +1,6 @@
 import numpy as np
 
-from solmate.pipeline.export_web import dequantise, quantise, tile_layers
+from solmate.pipeline.export_web import choose_transform, decode, dequantise, encode, quantise, tile_layers
 
 
 def test_quantise_roundtrip_is_precise_and_keeps_nan():
@@ -20,3 +20,16 @@ def test_tile_layers_scored_first_then_context():
     dims = {"T": {"indicators": {"b": {}, "a": {}}}, "C": {"indicators": {"a": {}, "c": {}}}}
     layers = tile_layers(dims)
     assert layers[:3] == ["a", "b", "c"] and "surface_pressure_hpa" in layers and len(layers) == len(set(layers))
+
+
+def test_heavy_tailed_layers_use_log_and_keep_small_values_precise():
+    aridity = np.concatenate([np.full(1000, 0.3), [0.0, 0.004, 4843.0]])
+    assert choose_transform(aridity) == "log"
+    assert choose_transform(np.array([0.0, 20.0, 45.0])) == "linear"
+    assert choose_transform(np.array([-3.0, 40.0, 4000.0])) == "linear"
+    assert choose_transform(np.array([0.0, 0.0, 0.0, 100.0])) == "linear"  # zero median: percentages
+    x = np.array([0.0, 0.004, 0.03, 4843.0])
+    enc = encode(x, "log")
+    lo, hi = float(enc.min()), float(enc.max())
+    back = decode(dequantise(quantise(enc, lo, hi), lo, hi), "log")
+    assert np.allclose(back, x, rtol=2e-4, atol=2e-8)

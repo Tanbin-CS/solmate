@@ -10,6 +10,9 @@ Not committed (binary, ~60 MB, gitignored; mirrored to gs://solmate-13571-data/w
 
 Tile format: for each layer in model.json["tiles"]["layers"] order, 100 x 100 uint16 values,
 row-major from the tile's north-west cell; value v -> lo + v * (hi - lo) / 65534, 65535 = no data.
+Heavy-tailed layers (listed in tiles.transforms, e.g. aridity 0-4843 with deserts below 0.05)
+are stored as log(x + LOG_OFFSET) and decoded with exp(v) - LOG_OFFSET, so the error stays
+relative (~1.4e-4 of the value) and small values keep their precision.
 
 Run:  uv run python -m solmate.pipeline.export_web [--tiles]
 """
@@ -67,14 +70,38 @@ def dequantise(q: np.ndarray, lo: float, hi: float) -> np.ndarray:
     return np.where(q == 65535, np.nan, out)
 
 
+LOG_OFFSET = 1e-4
+
+
+def choose_transform(v: np.ndarray) -> str:
+    """"log" for non-negative layers whose maximum is 100x their (positive) median; linear otherwise."""
+    if v.size and v.min() >= 0:
+        med = float(np.median(v))
+        if med > 0 and v.max() > 100 * med:
+            return "log"
+    return "linear"
+
+
+def encode(a: np.ndarray, transform: str) -> np.ndarray:
+    return np.log(a + LOG_OFFSET) if transform == "log" else a
+
+
+def decode(x: np.ndarray, transform: str) -> np.ndarray:
+    return np.exp(x) - LOG_OFFSET if transform == "log" else x
+
+
 def export_tiles(layers: list[str]) -> dict:
     TILE_OUT.mkdir(parents=True, exist_ok=True)
-    ranges, written = {}, []
+    ranges, transforms, written = {}, {}, []
     with np.load(STACK) as z:
         land = z["land_frac"] > 0.5
-        data = {k: z[k] for k in layers}
+        data = {k: z[k].astype(np.float64) for k in layers}
     for k, a in data.items():
-        v = a[land & np.isfinite(a)]
+        t = choose_transform(a[land & np.isfinite(a)])
+        if t != "linear":
+            transforms[k] = {"kind": t, "offset": LOG_OFFSET}
+            data[k] = encode(a, t)
+        v = data[k][land & np.isfinite(data[k])]
         ranges[k] = [float(v.min()), float(v.max())] if v.size else [0.0, 1.0]
     for r0 in range(0, grid.NROWS, TILE):
         for c0 in range(0, grid.NCOLS, TILE):
@@ -85,8 +112,9 @@ def export_tiles(layers: list[str]) -> dict:
             name = f"{r0 // TILE:02d}_{c0 // TILE:02d}.bin.gz"
             (TILE_OUT / name).write_bytes(gzip.compress(buf, compresslevel=9, mtime=0))
             written.append(name[:-7])
-    return {"cells_per_side": TILE, "res_deg": grid.RES, "layers": layers, "ranges": ranges,
-            "encoding": "uint16 little-endian, layer-major; v -> lo + v*(hi-lo)/65534; 65535 = no data",
+    return {"cells_per_side": TILE, "res_deg": grid.RES, "layers": layers, "ranges": ranges, "transforms": transforms,
+            "encoding": "uint16 little-endian, layer-major; v -> lo + v*(hi-lo)/65534, then exp(v) - offset for log layers;"
+                        " 65535 = no data",
             "available": sorted(written), "path": "/data/v2/tiles/{row}_{col}.bin.gz"}
 
 
