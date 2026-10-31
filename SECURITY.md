@@ -6,7 +6,7 @@ on https://github.com/Tanbin-CS/solmate. Do not open a public issue. We aim to
 acknowledge reports within 72 hours.
 
 ## Scope
-- Web app: https://solmate-13571.web.app
+- Web app: https://solmate-analog.web.app (the old https://solmate-13571.web.app redirects there)
 - Terrain API (`/api/v1/*`, Cloud Run)
 - Firestore rules (nominations, review queue)
 - This repository and its CI/CD workflows
