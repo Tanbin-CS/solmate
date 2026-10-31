@@ -2,6 +2,7 @@
  * Score any place on Earth against the SolMate targets from the 0.1 degree NASA stack.
  * Runs in the scoring worker; pure apart from tile loading.
  */
+import { z } from 'zod'
 import { loadModel, loadTargets, loadTile } from './data'
 import type { Model, Target } from './model'
 import { cellAt, cellsInBox, isLand, meanValues, tileName, type Cell } from './tiles'
@@ -14,10 +15,22 @@ export interface Box {
   east: number
 }
 
-export type PlaceQuery = ({ kind: 'point'; lat: number; lon: number } | ({ kind: 'box' } & Box)) & {
-  targetId: string
-  weights?: Readonly<Record<string, number>>
+const Coord = z.number().finite()
+const Common = {
+  targetId: z.string().regex(/^[a-z0-9_]{1,40}$/),
+  weights: z.record(z.string().max(4), z.number().finite().nonnegative()).optional(),
 }
+
+/** Validates every query that crosses the worker boundary. */
+export const PlaceQuerySchema = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('point'), lat: Coord.min(-90).max(90), lon: Coord, ...Common }).strict(),
+  z
+    .object({ kind: z.literal('box'), south: Coord.min(-90), west: Coord, north: Coord.max(90), east: Coord, ...Common })
+    .strict()
+    .refine((b) => b.south <= b.north && b.west <= b.east, 'box corners are out of order'),
+])
+
+export type PlaceQuery = z.infer<typeof PlaceQuerySchema>
 
 export interface PlaceResult {
   model_version: string
