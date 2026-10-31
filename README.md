@@ -7,7 +7,7 @@ Challenge: *Identify Earth Locations that Analog the Permanent Moon Base Locatio
 
 - **Submission repository:** https://github.com/Tanbin-CS/solmate (this repo)
 - **Web app (prototype, v0.2.0):** https://tanbin-cs.github.io/solmate/
-- **v2 (in progress):** moves to Firebase at https://solmate-13571.web.app
+- **v2 (in progress):** moves to Firebase at https://solmate-analog.web.app
 
 The prototype started from a team member's repository
 ([hellorifat/solmate](https://github.com/hellorifat/solmate)); its history and
