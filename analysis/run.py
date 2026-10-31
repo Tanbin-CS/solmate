@@ -153,7 +153,7 @@ def main() -> None:
             z, m = fetch.earth_window(s["lat"], s["lon"], c["window_m"], c["cell_m"])
             results[c["id"]][s["id"]] = terrain.compute_indicators(z, c["cell_m"]).as_dict()
             if c["id"] == "primary":
-                img = fetch.s2_thumbnail(s["lat"], s["lon"], c["window_m"])
+                img = fetch.earth_thumbnail(s["lat"], s["lon"], c["window_m"])
                 meta[s["id"]] = {"dem": m, "quicklooks": save_quicklooks(s["id"], z, c["cell_m"], img),
                                  "elev_min": float(np.nanmin(z)), "elev_max": float(np.nanmax(z))}
 
@@ -394,15 +394,15 @@ DATASETS = [
         "quality": "Surface model: includes vegetation and buildings; water bodies flattened.",
     },
     {
-        "id": "s2-cloudless",
-        "name": "Sentinel-2 cloudless mosaic",
-        "provider": "EOX IT Services GmbH",
+        "id": "landsat-weld-1990",
+        "name": "Landsat WELD global annual true-colour composite, 1990 (ASTER GDEM shaded relief where WELD has no data)",
+        "provider": "NASA/USGS Web-Enabled Landsat Data, served by NASA GIBS",
         "body": "Earth",
         "role": "Context imagery only (not scored)",
-        "resolution": "~10 m source; shown as 400 px thumbnails",
-        "url": "https://s2maps.eu",
-        "licence": "CC BY-NC-SA 4.0",
-        "attribution": "Sentinel-2 cloudless - https://s2maps.eu by EOX IT Services GmbH (Contains modified Copernicus Sentinel data)",
+        "resolution": "30 m source; shown as 400 px thumbnails",
+        "url": "https://nasa-gibs.github.io/gibs-api-docs/available-visualizations/",
+        "licence": "NASA open data (no restrictions)",
+        "attribution": "Landsat WELD (NASA/USGS) and ASTER GDEM (NASA/METI) imagery courtesy of NASA GIBS",
     },
     {
         "id": "nasa-analog-explorer",

@@ -123,7 +123,7 @@ def main() -> None:
             if "quicklooks" in w:
                 continue
             z, _ = fetch.earth_window(w["lat"], w["lon"], WINDOW_M, CELL_M)
-            w["quicklooks"] = run.save_quicklooks(f"screen-{w['id']}", z, CELL_M, fetch.s2_thumbnail(w["lat"], w["lon"], WINDOW_M))
+            w["quicklooks"] = run.save_quicklooks(f"screen-{w['id']}", z, CELL_M, fetch.earth_thumbnail(w["lat"], w["lon"], WINDOW_M))
 
     doc = {
         "version": 1,

@@ -20,8 +20,8 @@ Every input SolMate uses: what it is, who publishes it, how we use it and its te
 | ASTER GED | NASA LP DAAC `AG5KMMOH.041` | 5 km monthly, 2013–15 | TIR emissivity, Ninomiya quartz/carbonate/mafic indices (M) | NASA open data |
 | MERRA-2 aerosol | NASA GMAO / GES DISC `M2TMNXAER.5.12.4` | monthly, 2023–24 | Dust optical depth (D) | NASA open data |
 | NASA POWER | NASA LaRC POWER (MERRA-2 climatology, Zarr on AWS) | climatology | Temperature, precipitation, humidity, wind, pressure, frost days; Hargreaves PET and P/PET (C, Th, I, D) | NASA open data |
-| HLS v2 | NASA LP DAAC `HLSL30/HLSS30.020` | 30 m | Site imagery (display) | NASA open data |
-| GIBS | NASA EOSDIS GIBS | Blue Marble, ASTER GDEM shaded relief | Basemap (display) | NASA open data |
+| Landsat WELD | NASA/USGS Web-Enabled Landsat Data, via NASA GIBS | 1990 global annual true colour (Landsat 5 TM) | Map imagery and site thumbnails (display only) | NASA open data |
+| GIBS | NASA EOSDIS GIBS | Blue Marble, ASTER GDEM greyscale shaded relief | Basemap, relief view, thumbnails where Landsat has no data (display only) | NASA open data |
 
 ## Moon (targets)
 

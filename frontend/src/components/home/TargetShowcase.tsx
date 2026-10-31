@@ -59,7 +59,7 @@ export function TargetShowcase({ target, bundle }: { target: TargetSummary; bund
           ))}
         </div>
         {view === 'imagery' && target.body === 'moon' && (
-          <p className="text-xs text-slate-400">The lunar side shows average Sun visibility (PGDA, LOLA-derived): bright means sunlit more often. The Earth side is Sentinel-2 cloudless.</p>
+          <p className="text-xs text-slate-400">The lunar side shows average Sun visibility (PGDA, LOLA-derived): bright means sunlit more often. The Earth side is NASA Landsat WELD 1990 true colour.</p>
         )}
       </div>
 

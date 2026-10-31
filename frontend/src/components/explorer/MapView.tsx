@@ -14,7 +14,7 @@ const HALF_WINDOW_M = 10_000
 
 // Public, keyless tile services (CORS-enabled):
 //  - NASA GIBS Blue Marble shaded relief + bathymetry (public domain) for the globe view
-//  - Sentinel-2 cloudless by EOX (CC BY-NC-SA 4.0) for regional imagery
+//  - Landsat WELD 1990 true colour (NASA/USGS, via GIBS) for regional imagery
 //  - AWS Terrain Tiles (terrarium encoding) for hillshade and 3D terrain
 const STYLE: StyleSpecification = {
   version: 8,
@@ -35,10 +35,11 @@ const STYLE: StyleSpecification = {
     },
     s2: {
       type: 'raster',
-      tiles: ['https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg'],
+      tiles: ['https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/Landsat_WELD_CorrectedReflectance_TrueColor_Global_Annual/default/1990-12-01/GoogleMapsCompatible_Level12/{z}/{y}/{x}.jpg'],
       tileSize: 256,
-      maxzoom: 14,
-      attribution: '<a href="https://s2maps.eu" target="_blank" rel="noreferrer">Sentinel-2 cloudless</a> by EOX IT Services GmbH (contains modified Copernicus Sentinel data)',
+      maxzoom: 12,
+      bounds: [-180, -60, 180, 85], // WELD has no Antarctica; Blue Marble shows there
+      attribution: 'Landsat WELD (NASA/USGS) via NASA GIBS',
     },
     terrain: {
       type: 'raster-dem',

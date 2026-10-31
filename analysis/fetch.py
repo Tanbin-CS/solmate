@@ -156,53 +156,20 @@ def mars_ortho_window(lat: float, lon: float, size_m: float, cell: float) -> np.
     return out
 
 
-S2_TILES = "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg"
+def earth_thumbnail(lat: float, lon: float, size_m: float, px: int = 640):
+    """NASA Landsat WELD 1990 true colour (ASTER GDEM relief where WELD has no data) via NASA GIBS.
 
-
-def s2_thumbnail(lat: float, lon: float, size_m: float, px: int = 640):
-    """Sentinel-2 cloudless (EOX) true-colour image of the window, for context only. Returns a PIL image or None."""
-    import io
-
+    Context only, never scored. Replaces Sentinel-2 cloudless (EOX, CC BY-NC-SA), whose
+    non-commercial terms break the Space Apps open-licence rule. Returns a PIL image or None.
+    """
     from PIL import Image
 
-    key = CACHE / f"s2_{lat:.4f}_{lon:.4f}_{int(size_m)}.jpg"
-    if key.exists():
-        return Image.open(key)
-    half = size_m / 2
-    dlat = half / 111_320
-    dlon = dlat / math.cos(math.radians(lat))
-    z = 13 if abs(lat) < 60 else 12
+    from solmate.pipeline.quicklooks_landsat import thumbnail
 
-    def tile_xy(la, lo):
-        n = 2 ** z
-        x = (lo + 180) / 360 * n
-        y = (1 - math.asinh(math.tan(math.radians(la))) / math.pi) / 2 * n
-        return x, y
-
-    x0, y0 = tile_xy(lat + dlat, lon - dlon)
-    x1, y1 = tile_xy(lat - dlat, lon + dlon)
-    tx0, ty0, tx1, ty1 = int(x0), int(y0), int(x1), int(y1)
-    mosaic = Image.new("RGB", ((tx1 - tx0 + 1) * 256, (ty1 - ty0 + 1) * 256))
-    ok = 0
-    for ty in range(ty0, ty1 + 1):
-        for tx in range(tx0, tx1 + 1):
-            req = urllib.request.Request(S2_TILES.format(z=z, x=tx, y=ty), headers={"User-Agent": "solmate-analysis/1.0"})
-            for attempt in range(4):
-                try:
-                    with urllib.request.urlopen(req, timeout=60) as r:
-                        mosaic.paste(Image.open(io.BytesIO(r.read())).convert("RGB"), ((tx - tx0) * 256, (ty - ty0) * 256))
-                        ok += 1
-                        break
-                except Exception:
-                    import time
-                    time.sleep(2 * (attempt + 1))
-    expected = (tx1 - tx0 + 1) * (ty1 - ty0 + 1)
-    if ok < expected:
-        return None  # incomplete mosaic: show no imagery rather than a patched one
-    box = (int((x0 - tx0) * 256), int((y0 - ty0) * 256), int((x1 - tx0) * 256), int((y1 - ty0) * 256))
-    img = mosaic.crop(box).resize((px, px), Image.LANCZOS)
-    img.save(key, quality=92)
-    return img
+    try:
+        return thumbnail(lat, lon, size_m)[0].resize((px, px), Image.LANCZOS)
+    except RuntimeError:
+        return None
 
 
 # ---------------------------------------------------------------- Moon (south pole)
