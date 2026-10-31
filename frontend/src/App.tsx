@@ -11,7 +11,7 @@ const MethodPage = lazy(() => import('@/pages/MethodPage'))
 const DataPage = lazy(() => import('@/pages/DataPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 
-// GitHub Pages serves the app from /solmate/; BASE_URL carries that prefix (with a trailing slash).
+// BASE_URL is '/' on Firebase Hosting and '/solmate/' on the GitHub Pages mirror (always with a trailing slash).
 const basename = import.meta.env.BASE_URL.replace(/\/$/, '')
 
 export default function App() {
