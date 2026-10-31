@@ -85,3 +85,20 @@ Falling short is reported, not hidden.
 
 The equal preset stays the default. The learned weights are shipped as the
 "Learned" preset, labelled exploratory.
+
+### Re-run with Diviner-measured lunar temperatures (31 Oct 2026)
+The plan, labels and metrics are unchanged. Only the lunar target values changed: the
+shared literature proxies were replaced by per-region LRO Diviner samples.
+
+| Target | AUC (95% CI) | Positives' median land percentile |
+|---|---|---|
+| Artemis regions (9) | 0.710–0.780, median **0.750** (was 0.760) | 53.3–70.8, median 55.8 (was 51.6) |
+| Jezero, Arcadia | unchanged | unchanged |
+
+**What changed:**
+- Lunar temperatures lie beyond every place on Earth, so they score by rank (toward
+  mode), not by magnitude. The new values barely move the ranking.
+- What did change is the ice dimension, now computed from cold traps: only Mons
+  Mouton Plateau has one within 2 km.
+- That moved some regions' best matches, e.g. Mons Mouton and Nobile Rim 2 now point
+  to the Pamirs (about 1,550 km from any known analog).
