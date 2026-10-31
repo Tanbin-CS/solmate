@@ -290,6 +290,54 @@
    "sha256": "5f82a083f2e8992194cd5845e03d0b5489fec1e5070b5b3abb172656813c234c"
   },
   {
+   "product": "DIVINER",
+   "file": "cache/raw/DIVINER/polar_south_80_summer_avg-float.tif",
+   "url": "https://luna1.diviner.ucla.edu/~jpierre/diviner/level4_polar/additional_maps/polar_south_80_summer_avg-float.tif",
+   "time_start": "",
+   "bytes": 25686193,
+   "sha256": "0be252e5fbaec7a12adf2e7ea04f2ade0ceefb3a6995f6ac68157e3a87d0b6b0"
+  },
+  {
+   "product": "DIVINER",
+   "file": "cache/raw/DIVINER/polar_south_80_summer_max-float.tif",
+   "url": "https://luna1.diviner.ucla.edu/~jpierre/diviner/level4_polar/additional_maps/polar_south_80_summer_max-float.tif",
+   "time_start": "",
+   "bytes": 25686193,
+   "sha256": "ba4a1b6275402d6b0c1000ceb0208ad63d37665afaeb902ab6f108c67c0a0c67"
+  },
+  {
+   "product": "DIVINER",
+   "file": "cache/raw/DIVINER/polar_south_80_summer_min-float.tif",
+   "url": "https://luna1.diviner.ucla.edu/~jpierre/diviner/level4_polar/additional_maps/polar_south_80_summer_min-float.tif",
+   "time_start": "",
+   "bytes": 25686193,
+   "sha256": "793d4a83c111b8a603f7b726ce5f7efae02e21e19f2589595922b348286d7721"
+  },
+  {
+   "product": "DIVINER",
+   "file": "cache/raw/DIVINER/polar_south_80_winter_avg-float.tif",
+   "url": "https://luna1.diviner.ucla.edu/~jpierre/diviner/level4_polar/additional_maps/polar_south_80_winter_avg-float.tif",
+   "time_start": "",
+   "bytes": 25686193,
+   "sha256": "5f1fb5149a426d5749938111b57f5710b0522e874c8cad6ba36fca23682e6f85"
+  },
+  {
+   "product": "DIVINER",
+   "file": "cache/raw/DIVINER/polar_south_80_winter_max-float.tif",
+   "url": "https://luna1.diviner.ucla.edu/~jpierre/diviner/level4_polar/additional_maps/polar_south_80_winter_max-float.tif",
+   "time_start": "",
+   "bytes": 25686193,
+   "sha256": "d61e264e1179fdcf8df7d471798b5f47bb80f59c13ec2088cd3913e72c001282"
+  },
+  {
+   "product": "DIVINER",
+   "file": "cache/raw/DIVINER/polar_south_80_winter_min-float.tif",
+   "url": "https://luna1.diviner.ucla.edu/~jpierre/diviner/level4_polar/additional_maps/polar_south_80_winter_min-float.tif",
+   "time_start": "",
+   "bytes": 25686193,
+   "sha256": "d12fd9becb91bc7d65a49729049381718fecff55784473c3d6664a60b4d96607"
+  },
+  {
    "product": "M2TMNXAER",
    "file": "cache/raw/M2TMNXAER/MERRA2_400.tavgM_2d_aer_Nx.202301.nc4",
    "url": "https://data.gesdisc.earthdata.nasa.gov/data/MERRA2_MONTHLY/M2TMNXAER.5.12.4/2023/MERRA2_400.tavgM_2d_aer_Nx.202301.nc4",
@@ -872,6 +920,38 @@
    "time_start": "2024-12-01T00:00:00.000Z",
    "bytes": 1414260,
    "sha256": "a47caac0d1c9ca30d83a0c4ae2c8c590cd915615d1752c775fca9a189544db34"
+  },
+  {
+   "product": "MOLA",
+   "file": "cache/raw/MOLA/megt90n000gb.img",
+   "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg064/megt90n000gb.img",
+   "time_start": "",
+   "bytes": 132710400,
+   "sha256": "95b492b0670e0f572736820c13c3907a5294a04aa21cbbddd30e038bbd46f1b6"
+  },
+  {
+   "product": "MOLA",
+   "file": "cache/raw/MOLA/megt90n000gb.lbl",
+   "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg064/megt90n000gb.lbl",
+   "time_start": "",
+   "bytes": 4824,
+   "sha256": "d10e48825bd4c93310b838a0d6493815f78656637013a1e0e8dea81e83cd376c"
+  },
+  {
+   "product": "MOLA",
+   "file": "cache/raw/MOLA/megt90n180gb.img",
+   "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg064/megt90n180gb.img",
+   "time_start": "",
+   "bytes": 132710400,
+   "sha256": "72c9ea46b2e2485718cddfc0041fec76d9024020d93d6ddf985ac727988d7e9a"
+  },
+  {
+   "product": "MOLA",
+   "file": "cache/raw/MOLA/megt90n180gb.lbl",
+   "url": "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/meg064/megt90n180gb.lbl",
+   "time_start": "",
+   "bytes": 4820,
+   "sha256": "b4af8151deccc61bcd08c211df3bccdc174fe7271126a0bab72da0ff6e1525f5"
   },
   {
    "product": "MYD11C3",
