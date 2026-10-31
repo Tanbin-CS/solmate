@@ -106,7 +106,7 @@ export function SiteDetail({ result, reference, referenceValues, indicators, wei
           </div>
           <p className="mt-2 font-mono text-[10.5px] leading-relaxed text-slate-400">
             {view === 'imagery'
-              ? `Context imagery only: ${reference.body === 'mars' ? 'Mars CTX orthomosaic (USGS)' : 'average Sun visibility at the lunar south pole (PGDA; dark = more shadow)'} and Sentinel-2 cloudless (EOX). Not used in scoring.`
+              ? `Context imagery only: ${reference.body === 'mars' ? 'Mars CTX orthomosaic (USGS)' : 'average Sun visibility at the lunar south pole (PGDA; dark = more shadow)'} and NASA Landsat WELD 1990 (ASTER GDEM relief where Landsat has no data). Not used in scoring.`
               : view === 'hillshade'
                 ? 'Shaded relief of the elevation grid actually scored (100 m cells).'
                 : 'Slope from the scored grid, 0° (dark) to 30°+ (light).'}
