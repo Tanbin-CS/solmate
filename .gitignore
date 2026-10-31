@@ -39,3 +39,6 @@ data/raw/
 # Web tiles (binary, ~60 MB): rebuilt by solmate.pipeline.export_web --tiles,
 # mirrored to gs://solmate-13571-data/web/tiles and restored before deploy
 frontend/public/data/v2/tiles/
+
+# Local Claude Code settings (dev-server launch config)
+.claude/
