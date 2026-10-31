@@ -18,9 +18,12 @@ from solmate.compute import modes as m
 
 
 def explain(values: dict[str, float], target: dict, dims_config: dict, stats: dict[str, m.EarthStats],
-            process_config: dict) -> dict:
+            process_config: dict, weights: dict[str, float] | None = None) -> dict:
+    """weights: dimension weights (a preset); default equal over the target's dimensions, operations off."""
     body = target["body"]
-    applicable = [k for k, d in dims_config.items() if body in d["applies_to"] and k != "O"]
+    if weights is None:
+        weights = {k: 1.0 for k in dims_config if k != "O"}
+    applicable = [k for k, d in dims_config.items() if body in d["applies_to"] and weights.get(k, 0.0) > 0]
     dim_scores: dict[str, float] = {}
     all_plans = []
     for k in applicable:
@@ -32,7 +35,7 @@ def explain(values: dict[str, float], target: dict, dims_config: dict, stats: di
         layer = {p.name: np.array([values.get(p.name, math.nan)], dtype=float) for p in plans}
         d, _ = score.dimension_scores(layer, plans, stats)
         dim_scores[k] = float(d[0])
-    result = aggregate.sai(dim_scores, {k: 1.0 for k in applicable})
+    result = aggregate.sai(dim_scores, {k: float(weights[k]) for k in applicable})
     strong = sorted((d for d in result.dimensions if d.band == "strong"), key=lambda d: -d.score)
     limits = (breakdown.environment_limits(target.get("breaks_down", {}), values.get("surface_pressure_hpa", math.nan))
               + breakdown.toward_gaps(values, all_plans, stats)
