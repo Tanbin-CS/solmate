@@ -143,6 +143,9 @@ def main() -> None:
             "target": tid, "stage": screen["stage"], "novelty_km": screen["novelty_km"],
             "top": t["top"][:25], "novel_leads": t["novel_leads"], "dimension_leaders": t["dimension_leaders"],
             "documented_sites": t["documented_sites"], "plans": t["plans"]})
+    regional = REPO / "data" / "validation" / "validation_regions.v1.json"
+    if regional.exists():  # addendum 1: regional validation and Lunar ops (docs/VALIDATION.md)
+        validation["addendum_1"] = json.loads(regional.read_text(encoding="utf-8"))
     _dump(OUT / "validation.json", validation)
     _dump(OUT / "provenance.json", provenance.build(
         (REPO / "docs" / "DATA_SOURCES.md").read_text(encoding="utf-8"),

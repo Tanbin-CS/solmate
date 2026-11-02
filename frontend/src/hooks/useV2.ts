@@ -41,6 +41,7 @@ export function useScreening(targetId: string) {
 
 /** Dimension weights for a preset; "learned" resolves to the target body's cross-validated weights. */
 export function presetWeights(model: Model, preset: string, body: Target['body']): Record<string, number> {
+  if (preset === 'lunar_ops' && body !== 'moon') return model.presets.equal!
   const key = preset === 'learned' ? `learned_${body}` : preset
   return model.presets[key] ?? model.presets.equal!
 }

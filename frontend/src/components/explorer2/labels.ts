@@ -13,6 +13,11 @@ export const PRESET_INFO: Record<string, { label: string; description: string }>
   equal: { label: 'Equal', description: 'Every dimension that applies to the target counts the same. The default and the screening ranking.' },
   expert: { label: 'Expert', description: 'Terrain counts 1.5x and dust half: the team’s prior before validation.' },
   mission_ops: { label: 'Ops', description: 'Adds mission operations (gentle slopes, low wind) at 2x for landing, roving and building.' },
+  lunar_ops: {
+    label: 'Lunar ops',
+    description:
+      'Moon only: terrain 2x and operations, with climate, temperature and ice as support. Tested after mentor review; it helps the rugged massifs and hurts the plateaus, so it is not the default (see Method).',
+  },
   learned: {
     label: 'Learned',
     description: 'Weights fitted by cross-validated non-negative logistic regression on documented analogs vs controls (see Method).',
