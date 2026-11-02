@@ -1,71 +1,140 @@
-name: Deploy SolMate Frontend to GitHub Pages
+name: Deploy
+
+# Every merge to main ships SolMate: the terrain API to Cloud Run (only when its code or
+# data changed; tested on a tagged revision before it takes traffic), then the web app,
+# Firestore rules and the redirect site to Firebase Hosting, then a smoke test of production.
+# Authentication is keyless: GitHub OIDC -> Workload Identity Federation -> solmate-deployer,
+# which only runs from Tanbin-CS/solmate.
 
 on:
   push:
     branches: ["main"]
   workflow_dispatch:
+    inputs:
+      deploy_api:
+        description: "Also redeploy the Cloud Run API"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
 
 concurrency:
-  group: "pages"
+  group: deploy-production
   cancel-in-progress: false
 
-jobs:
-  analysis-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Setup Python
-        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
-        with:
-          python-version: "3.11"
-      - name: Install test dependencies
-        run: pip install numpy scipy pytest
-      - name: Terrain indicator tests
-        run: python -m pytest -q analysis/tests
+env:
+  PROJECT_ID: solmate-13571
+  REGION: us-west1
+  SERVICE: solmate-terrain
+  WIF_PROVIDER: projects/314008475333/locations/global/workloadIdentityPools/github/providers/github-oidc
+  DEPLOYER: solmate-deployer@solmate-13571.iam.gserviceaccount.com
+  SITE: https://solmate-analog.web.app
+  OLD_SITE: https://solmate-13571.web.app
+  FIREBASE_TOOLS: firebase-tools@14.26.0
 
-  build:
+jobs:
+  changes:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./frontend
+    outputs:
+      api: ${{ steps.diff.outputs.api }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Setup Node
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 2
+      - id: diff
+        env:
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.deploy_api }}
+        run: |
+          if [ "$FORCE" = "true" ] || git diff --name-only HEAD^ HEAD | grep -qE '^(api/|analysis/src/|analysis/pyproject.toml|analysis/uv.lock|Dockerfile|\.gcloudignore|data/screening/stage2|data/stack/astgtm|data/targets/)'; then
+            echo "api=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "api=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  api:
+    needs: changes
+    if: needs.changes.outputs.api == 'true'
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
+        with:
+          workload_identity_provider: ${{ env.WIF_PROVIDER }}
+          service_account: ${{ env.DEPLOYER }}
+      - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
+      - name: Build and deploy a tagged revision (no traffic yet)
+        run: |
+          gcloud run deploy "$SERVICE" --source . --project "$PROJECT_ID" --region "$REGION" \
+            --no-traffic --tag rc --update-env-vars "GIT_SHA=${GITHUB_SHA::7}" --quiet
+      - name: Smoke test the tagged revision
+        run: |
+          set -euo pipefail
+          url=$(gcloud run services describe "$SERVICE" --project "$PROJECT_ID" --region "$REGION" --format=json \
+            | jq -r '.status.traffic[] | select(.tag == "rc") | .url')
+          test -n "$url"
+          curl -fsS "$url/api/v1/health" | grep -q '"ok"'
+          curl -fsS "$url/api/v1/version" | grep -q "${GITHUB_SHA::7}"
+          # App Check is enforced: a request without a token must be refused
+          code=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json' \
+            -d '{"target_id":"jezero_crater","lat":37.05,"lon":86.75}' "$url/api/v1/terrain")
+          test "$code" = "401"
+      - name: Send all traffic to the new revision
+        run: gcloud run services update-traffic "$SERVICE" --project "$PROJECT_ID" --region "$REGION" --to-latest --quiet
+
+  web:
+    needs: [changes, api]
+    if: ${{ always() && needs.changes.result == 'success' && (needs.api.result == 'success' || needs.api.result == 'skipped') }}
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ env.SITE }}
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "22"
           cache: npm
           cache-dependency-path: frontend/package-lock.json
-      - name: Install dependencies
-        run: npm ci
-      - name: Lint
-        run: npm run lint
-      - name: Unit tests
-        run: npm test -- --passWithNoTests
-      - name: Type-check and build (Vite)
-        run: npm run build
-        env:
-          VITE_BASE: /solmate/
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+      - uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
         with:
-          path: ./frontend/dist
-
-  deploy:
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: [analysis-tests, build]
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+          workload_identity_provider: ${{ env.WIF_PROVIDER }}
+          service_account: ${{ env.DEPLOYER }}
+      - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
+      - name: Restore the web tiles from their GCS mirror
+        run: |
+          mkdir -p frontend/public/data/v2/tiles
+          gcloud storage rsync --recursive "gs://${PROJECT_ID}-data/web/tiles" frontend/public/data/v2/tiles
+          n=$(ls frontend/public/data/v2/tiles | wc -l)
+          echo "tiles: $n"
+          test "$n" -ge 400
+      - name: Build
+        working-directory: frontend
+        env:
+          # public Firebase web key (referrer- and API-restricted); App Check needs it
+          VITE_FIREBASE_API_KEY: ${{ vars.VITE_FIREBASE_API_KEY }}
+        run: |
+          test -n "$VITE_FIREBASE_API_KEY"
+          npm ci
+          npm run build
+      - name: Deploy Hosting (both sites) and Firestore rules
+        run: npx --yes "$FIREBASE_TOOLS" deploy --only hosting,firestore:rules --project "$PROJECT_ID" --non-interactive --message "ci ${GITHUB_SHA::7}"
+      - name: Smoke test production
+        run: |
+          set -euo pipefail
+          sleep 20
+          for p in / /explorer /findings /method /provenance /data/v2/model.json /data/v2/tiles/05_26.bin.gz /api/v1/health; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "$SITE$p"); echo "$p $code"; test "$code" = "200"
+          done
+          h=$(curl -sI "$SITE/explorer")
+          echo "$h" | grep -qi '^content-security-policy:'
+          echo "$h" | grep -qi '^strict-transport-security:'
+          echo "$h" | grep -qi '^cache-control: no-cache'
+          test "$(curl -s -o /dev/null -w '%{http_code}' "$OLD_SITE/method")" = "301"
