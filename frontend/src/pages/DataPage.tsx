@@ -240,8 +240,8 @@ uv run python -m solmate.pipeline.export_web --tiles`}
         </div>
         <div className="space-y-3 text-sm text-slate-300 md:pt-14">
           <p>
-            Model version <span className="font-mono text-slate-100">{model.model_version}</span>: a fingerprint of the configuration, Earth statistics and weights. The Explorer shows it on
-            every result.
+            Results version <span className="font-mono text-slate-100">{model.model_version}</span>: a short code computed from the settings behind every score (weights,
+            Earth statistics and rules). It changes whenever any setting changes, so two results with the same code came from exactly the same settings.
           </p>
           {p.generated_at && <p className="font-mono text-xs text-slate-400">Earth stack built {new Date(p.generated_at).toUTCString()}</p>}
           <a href={`${REPO}/blob/main/docs/DATA_SOURCES.md`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 font-mono text-xs text-data hover:underline">
