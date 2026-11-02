@@ -8,6 +8,7 @@ import { spring } from '@/design/motion'
 
 const LINKS = [
   { to: '/explorer', label: 'Explorer' },
+  { to: '/findings', label: 'Findings' },
   { to: '/method', label: 'Method' },
   { to: '/provenance', label: 'Data' },
 ]
