@@ -1,17 +1,40 @@
+import { useEffect, useState } from 'react'
 import { ExternalLink } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { ErrorState, PanelSkeleton } from '@/components/common/States'
-import { useAllTargets, type AllTargets } from '@/hooks/useAllTargets'
-import { ROLE } from '@/components/explorer/roles'
-import { fmtCoord } from '@/lib/format'
+import { BODY } from '@/components/explorer/roles'
+import { siteName } from '@/components/explorer2/labels'
+import { loadModel, loadProvenance, loadTargets } from '@/science/v2/data'
+import type { Model, Target } from '@/science/v2/model'
+import { safeUrl, type Provenance } from '@/science/v2/provenance'
+import { INDICATOR_LABELS } from '@/science/v2/verdict'
+import { cn } from '@/lib/utils'
+
+const REPO = 'https://github.com/Tanbin-CS/solmate'
+
+interface DataDoc {
+  provenance: Provenance
+  targets: Target[]
+  model: Model
+}
 
 export default function DataPage() {
-  const state = useAllTargets()
+  const [state, setState] = useState<{ status: 'loading' } | { status: 'error'; error: Error } | { status: 'ready'; data: DataDoc }>({ status: 'loading' })
+  useEffect(() => {
+    let alive = true
+    Promise.all([loadProvenance(), loadTargets(), loadModel()]).then(
+      ([provenance, targets, model]) => alive && setState({ status: 'ready', data: { provenance, targets, model } }),
+      (error: unknown) => alive && setState({ status: 'error', error: error instanceof Error ? error : new Error(String(error)) }),
+    )
+    return () => {
+      alive = false
+    }
+  }, [])
   return (
     <>
       <PageHeader
         title="Where every number comes from."
-        lead="Each dataset, licence and processing step behind the explorer. Scored inputs are marked separately from imagery shown only for context."
+        lead="Every dataset, file and target value behind the SolMate Analog Index. Scored inputs are NASA data; anything else is a labelled extra that never feeds a score."
       />
       {state.status === 'loading' && (
         <div className="mx-auto w-full max-w-5xl px-6">
@@ -24,116 +47,100 @@ export default function DataPage() {
   )
 }
 
-function Field({ label, value }: { label: string; value?: string }) {
-  if (!value) return null
+const TH = 'px-4 py-3 font-mono text-[11px] font-normal uppercase tracking-wider text-slate-400'
+const gb = (b: number) => (b >= 1e9 ? `${(b / 1e9).toFixed(1)} GB` : `${Math.max(1, Math.round(b / 1e6))} MB`)
+const num = (v: number | null) => (v === null ? '–' : Math.abs(v) >= 100 ? v.toFixed(0) : Math.abs(v) >= 1 ? v.toFixed(1) : v.toPrecision(2))
+
+function H2({ id, children }: { id: string; children: React.ReactNode }) {
   return (
-    <div className="grid grid-cols-[7.5rem_1fr] gap-3 border-t border-border py-2.5 text-sm first:border-t-0">
-      <dt className="font-mono text-[11px] uppercase tracking-wider text-slate-400">{label}</dt>
-      <dd className="text-slate-200">{value}</dd>
-    </div>
+    <h2 id={id} className="mb-5 text-balance text-2xl font-semibold tracking-tight">
+      {children}
+    </h2>
   )
 }
 
-function DataBody({ data }: { data: AllTargets }) {
-  const { provenance: p, screening } = data.common
-  const bundles = data.common.targets.targets.map((t) => ({ t, doc: data.byId[t.id]!.indicators }))
-  const doc = bundles[0]!.doc
+function DataBody({ data }: { data: DataDoc }) {
+  const { provenance: p, targets, model } = data
+  const sections = [...new Set(p.datasets.map((d) => d.section))]
+  const [targetId, setTargetId] = useState('jezero_crater')
+  const target = targets.find((t) => t.id === targetId) ?? targets[0]!
+
   return (
     <div className="mx-auto w-full max-w-5xl space-y-16 px-6 pb-24">
       <section aria-labelledby="datasets">
-        <h2 id="datasets" className="label-mono mb-5">
-          Datasets
-        </h2>
-        <div className="grid gap-4 md:grid-cols-2">
-          {p.datasets.map((d) => {
-            const scored = d.role.toLowerCase().includes('scored') && !d.role.toLowerCase().includes('not scored')
+        <H2 id="datasets">Datasets</H2>
+        <div className="space-y-10">
+          {sections.map((sec) => {
+            const extra = sec.toLowerCase().includes('non-nasa')
             return (
-              <article key={d.id} className="rounded-xl border border-border bg-card p-5">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="label-mono" style={{ color: scored ? 'var(--positive)' : undefined }}>
-                      {d.body} · {d.role}
-                    </p>
-                    <h3 className="mt-2 font-semibold leading-snug text-slate-100">{d.name}</h3>
-                    <p className="mt-1 text-xs text-slate-400">{d.provider}</p>
-                  </div>
-                  <a href={d.url} target="_blank" rel="noreferrer" className="rounded-md p-1.5 text-slate-400 hover:bg-ink-700 hover:text-slate-100" aria-label={`Open ${d.name}`}>
-                    <ExternalLink className="size-4" />
-                  </a>
+              <div key={sec}>
+                <h3 className={cn('mb-3 text-sm font-medium', extra ? 'text-slate-400' : 'text-slate-200')}>{sec}</h3>
+                <div className="grid gap-3 md:grid-cols-2">
+                  {p.datasets
+                    .filter((d) => d.section === sec)
+                    .map((d) => (
+                      <article key={`${sec}-${d.name}`} className="rounded-xl border border-border bg-card p-5">
+                        <h4 className="font-semibold leading-snug text-slate-100">{d.name}</h4>
+                        {d.agency && <p className="mt-1 text-xs text-slate-400">{d.agency}</p>}
+                        <dl className="mt-3 space-y-1.5 text-sm">
+                          {d.detail && (
+                            <div className="flex gap-2">
+                              <dt className="w-16 shrink-0 text-slate-400">Detail</dt>
+                              <dd className="text-slate-300">{d.detail}</dd>
+                            </div>
+                          )}
+                          {d.use && (
+                            <div className="flex gap-2">
+                              <dt className="w-16 shrink-0 text-slate-400">Used for</dt>
+                              <dd className="text-slate-200">{d.use}</dd>
+                            </div>
+                          )}
+                          {d.terms && (
+                            <div className="flex gap-2">
+                              <dt className="w-16 shrink-0 text-slate-400">Terms</dt>
+                              <dd className="text-slate-300">{d.terms}</dd>
+                            </div>
+                          )}
+                        </dl>
+                      </article>
+                    ))}
                 </div>
-                <dl className="mt-4">
-                  <Field label="Resolution" value={d.resolution} />
-                  <Field label="Coverage" value={d.coverage} />
-                  <Field label="Licence" value={d.licence} />
-                  <Field label="Quality" value={d.quality} />
-                  <Field label="Attribution" value={d.attribution} />
-                  <Field label="Citation" value={d.citation} />
-                  <Field label="DOI" value={d.doi} />
-                </dl>
-              </article>
+              </div>
             )
           })}
         </div>
       </section>
 
-      <section aria-labelledby="processing">
-        <h2 id="processing" className="label-mono mb-5">
-          Processing
-        </h2>
-        <ol className="space-y-3">
-          {p.processing.map((step, i) => (
-            <li key={step} className="grid grid-cols-[2rem_1fr] gap-3 text-[15px] leading-relaxed text-slate-300">
-              <span className="font-mono text-xs text-slate-400">{String(i + 1).padStart(2, '0')}</span>
-              {step}
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      <section aria-labelledby="sites">
-        <h2 id="sites" className="label-mono mb-5">
-          Sites and elevation tiles
-        </h2>
+      <section aria-labelledby="layers">
+        <H2 id="layers">The Earth stack: {p.layers.length} NASA layers</H2>
+        <p className="mb-5 max-w-[62ch] text-[15px] leading-relaxed text-slate-300">
+          Every layer is resampled to the same {p.grid?.res_deg ?? 0.1}° grid ({p.grid?.rows ?? 1800} × {p.grid?.cols ?? 3600} cells). Coverage is the share of land cells with
+          data; the percentiles describe Earth’s land and set the scale for every score.
+        </p>
         <div className="overflow-x-auto rounded-xl border border-border">
-          <table className="w-full min-w-[640px] text-left text-sm">
+          <table className="w-full min-w-[720px] text-left text-sm">
             <thead className="bg-ink-850">
-              <tr className="font-mono text-[11px] uppercase tracking-wider text-slate-400">
-                <th className="px-4 py-3 font-normal">Site</th>
-                <th className="px-4 py-3 font-normal">Role</th>
-                <th className="px-4 py-3 font-normal">Centre</th>
-                <th className="px-4 py-3 text-right font-normal">Valid cells</th>
-                <th className="px-4 py-3 font-normal">GLO-30 tiles</th>
+              <tr>
+                <th className={TH}>Layer</th>
+                <th className={TH}>NASA source</th>
+                <th className={cn(TH, 'text-right')}>Land coverage</th>
+                <th className={cn(TH, 'text-right')}>p1 · p50 · p99</th>
               </tr>
             </thead>
             <tbody>
-              {bundles.map(({ t, doc: d }) => (
-                <tr key={t.id} className="border-t border-border">
-                  <td className="px-4 py-3 text-slate-100">{d.reference.name}</td>
-                  <td className="px-4 py-3 text-reference">Reference · {t.pair}</td>
-                  <td className="px-4 py-3 font-mono text-xs text-slate-300">{fmtCoord(d.reference.lat, d.reference.lon)}</td>
-                  <td className="px-4 py-3 text-right font-mono text-xs tabular">{Math.round(d.reference.valid_fraction * 100)}%</td>
-                  <td className="px-4 py-3 font-mono text-[11px] text-slate-400">{t.body === 'mars' ? 'CTX DTM mosaic' : 'LOLA LDEM 80°S 20 m'}</td>
-                </tr>
-              ))}
-              {doc.sites.map((s) => (
-                <tr key={s.id} className="border-t border-border">
-                  <td className="px-4 py-3 text-slate-100">
-                    {s.source ? (
-                      <a href={s.source} target="_blank" rel="noreferrer" className="hover:text-data hover:underline">
-                        {s.name}
-                      </a>
-                    ) : (
-                      s.name
-                    )}
-                    <span className="block text-xs text-slate-400">{s.country}</span>
+              {p.layers.map((l) => (
+                <tr key={l.id} className="border-t border-border align-top">
+                  <td className="px-4 py-2.5 text-slate-100">
+                    {INDICATOR_LABELS[l.id] ?? l.id.replace(/_/g, ' ')}
+                    <span className="block font-mono text-xs text-slate-400">
+                      {l.id}
+                      {l.units && ` · ${l.units}`}
+                    </span>
                   </td>
-                  <td className="px-4 py-3 text-xs" style={{ color: ROLE[s.role].color }}>
-                    {ROLE[s.role].short}
-                  </td>
-                  <td className="px-4 py-3 font-mono text-xs text-slate-300">{fmtCoord(s.lat, s.lon)}</td>
-                  <td className="px-4 py-3 text-right font-mono text-xs tabular">{Math.round(s.valid_fraction * 100)}%</td>
-                  <td className="px-4 py-3 font-mono text-xs text-slate-400">
-                    {(p.sites[s.id]?.tiles ?? []).map((t) => t.replace('Copernicus_DSM_COG_10_', '').replace('_DEM', '')).join(', ')}
+                  <td className="px-4 py-2.5 text-slate-300">{l.source}</td>
+                  <td className="px-4 py-2.5 text-right font-mono tabular text-slate-300">{l.land_coverage === null ? '–' : `${Math.round(l.land_coverage * 100)}%`}</td>
+                  <td className="whitespace-nowrap px-4 py-2.5 text-right font-mono text-xs tabular text-slate-400">
+                    {num(l.p1)} · {num(l.p50)} · {num(l.p99)}
                   </td>
                 </tr>
               ))}
@@ -142,48 +149,180 @@ function DataBody({ data }: { data: AllTargets }) {
         </div>
       </section>
 
-      {screening && (
-        <section aria-labelledby="screening">
-          <h2 id="screening" className="label-mono mb-5">
-            Regional screening
-          </h2>
-          <p className="mb-5 max-w-[70ch] text-[15px] leading-relaxed text-slate-300">
-            {screening.windows.length} windows of {screening.window_m / 1000} km on a {screening.cell_m} m grid, sampled across {screening.regions.length} regions
-            from the same GLO-30 tiles. Windows with less than 90% valid cells or more than 5% water were dropped. Results are unreviewed leads, not analogs.
-          </p>
-          <ul className="flex flex-wrap gap-2">
-            {screening.regions.map((r) => (
-              <li key={r.id} className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-slate-300">
-                {r.name} <span className="text-slate-400">· {r.country}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      <section aria-labelledby="software" className="grid gap-6 md:grid-cols-2">
-        <div>
-          <h2 id="software" className="label-mono mb-4">
-            Software
-          </h2>
-          <dl className="rounded-xl border border-border bg-card px-5 py-2">
-            {Object.entries(p.software).map(([k, v]) => (
-              <Field key={k} label={k} value={v} />
-            ))}
-          </dl>
-        </div>
-        <div>
-          <h2 className="label-mono mb-4">Reproduce</h2>
-          <pre className="overflow-x-auto rounded-xl border border-border bg-ink-950 p-5 font-mono text-xs leading-relaxed text-slate-300">
-            {`cd analysis
-python -m venv .venv
-.venv/Scripts/pip install -r requirements.txt
-.venv/Scripts/python -m pytest -q tests
-.venv/Scripts/python run.py`}
-          </pre>
-          <p className="mt-3 font-mono text-xs text-slate-400">Artifacts generated {new Date(p.generated_at).toUTCString()}</p>
+      <section aria-labelledby="raw">
+        <H2 id="raw">Downloaded NASA files</H2>
+        <p className="mb-5 max-w-[62ch] text-[15px] leading-relaxed text-slate-300">
+          {p.raw.files} files, {gb(p.raw.bytes)} in total. Each file’s URL, size and SHA-256 checksum is recorded in{' '}
+          <a href={`${REPO}/blob/main/data/manifest.v2.json`} target="_blank" rel="noreferrer" className="text-data hover:underline">
+            data/manifest.v2.json
+          </a>
+          , so anyone can fetch the same bytes and rebuild every number.
+        </p>
+        <div className="overflow-x-auto rounded-xl border border-border">
+          <table className="w-full min-w-[600px] text-left text-sm">
+            <thead className="bg-ink-850">
+              <tr>
+                <th className={TH}>Product</th>
+                <th className={cn(TH, 'text-right')}>Files</th>
+                <th className={cn(TH, 'text-right')}>Size</th>
+                <th className={TH}>Period</th>
+                <th className={TH}>Served from</th>
+              </tr>
+            </thead>
+            <tbody>
+              {p.raw.products.map((r) => (
+                <tr key={r.product} className="border-t border-border">
+                  <td className="px-4 py-2.5 font-mono text-slate-100">{r.product}</td>
+                  <td className="px-4 py-2.5 text-right font-mono tabular text-slate-300">{r.files}</td>
+                  <td className="px-4 py-2.5 text-right font-mono tabular text-slate-300">{gb(r.bytes)}</td>
+                  <td className="px-4 py-2.5 font-mono text-xs text-slate-400">{r.first ? (r.first === r.last ? r.first : `${r.first} to ${r.last}`) : 'climatology'}</td>
+                  <td className="px-4 py-2.5 font-mono text-xs text-slate-400">{r.host}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
+
+      <section aria-labelledby="targets">
+        <H2 id="targets">Target values</H2>
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+          <p className="max-w-[62ch] text-[15px] leading-relaxed text-slate-300">
+            Each value is computed from NASA data or cited from the literature, with its source. The constants under “breaks down” are shown, never scored.
+          </p>
+          <label className="flex items-center gap-2 text-sm text-slate-400">
+            Target
+            <select value={target.id} onChange={(e) => setTargetId(e.target.value)} className="rounded-md border border-border bg-ink-850 px-2 py-1.5 text-sm text-slate-100">
+              {targets.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <TargetValues target={target} model={model} />
+      </section>
+
+      <section aria-labelledby="sites">
+        <H2 id="sites">Validation sites</H2>
+        <p className="mb-5 max-w-[62ch] text-[15px] leading-relaxed text-slate-300">
+          Analog sites are places NASA and partner missions have used for field tests; controls are places with no planetary use. {model.known_analogs.sites.length} known sites also
+          define what counts as a novel lead.
+        </p>
+        <div className="grid gap-4 md:grid-cols-3">
+          {Object.entries(p.validation_sites.positives).map(([body, sites]) => (
+            <SiteList key={body} title={`${body === 'mars' ? 'Mars' : 'Moon'} analog sites (${sites.length})`} color={BODY[body as 'mars' | 'moon']?.color} items={sites.map((s) => ({ id: s.id, note: s.source }))} />
+          ))}
+          <SiteList title={`Controls (${p.validation_sites.controls.length})`} items={p.validation_sites.controls.map((c) => ({ id: c.id, note: c.biome }))} />
+        </div>
+      </section>
+
+      <section aria-labelledby="reproduce" className="grid gap-6 md:grid-cols-2">
+        <div>
+          <H2 id="reproduce">Reproduce</H2>
+          <pre className="overflow-x-auto rounded-xl border border-border bg-ink-950 p-5 font-mono text-xs leading-relaxed text-slate-300">
+            {`git clone ${REPO}
+cd solmate/analysis
+uv sync
+uv run python download_nasa.py   # Earthdata login
+uv run pytest
+uv run python -m solmate.pipeline.build_stack
+uv run python -m solmate.pipeline.earth_stats
+uv run python -m solmate.pipeline.target_terrain
+uv run python -m solmate.pipeline.target_thermal
+uv run python -m solmate.pipeline.screen_v2
+uv run python -m solmate.pipeline.refine --top 60
+uv run python -m solmate.pipeline.rescore
+uv run python -m solmate.pipeline.validate_v2
+uv run python -m solmate.pipeline.export_web --tiles`}
+          </pre>
+        </div>
+        <div className="space-y-3 text-sm text-slate-300 md:pt-14">
+          <p>
+            Model version <span className="font-mono text-slate-100">{model.model_version}</span>: a fingerprint of the configuration, Earth statistics and weights. The Explorer shows it on
+            every result.
+          </p>
+          {p.generated_at && <p className="font-mono text-xs text-slate-400">Earth stack built {new Date(p.generated_at).toUTCString()}</p>}
+          <a href={`${REPO}/blob/main/docs/DATA_SOURCES.md`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 font-mono text-xs text-data hover:underline">
+            docs/DATA_SOURCES.md <ExternalLink className="size-3" />
+          </a>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function TargetValues({ target, model }: { target: Target; model: Model }) {
+  const scored = new Set(Object.values(model.dimensions).flatMap((d) => Object.keys(d.indicators)))
+  const rows = [
+    ...Object.entries(target.indicators).map(([k, v]) => ({ k, v, kind: k === 'mineral_class' ? 'class' : scored.has(k) ? 'scored' : 'context' })),
+    ...Object.entries(target.breaks_down ?? {}).map(([k, v]) => ({ k, v: v as unknown, kind: 'breaks down' })),
+  ]
+  return (
+    <div className="overflow-x-auto rounded-xl border border-border">
+      <table className="w-full min-w-[640px] text-left text-sm">
+        <thead className="bg-ink-850">
+          <tr>
+            <th className={TH}>Value</th>
+            <th className={cn(TH, 'text-right')}>Target</th>
+            <th className={TH}>Method</th>
+            <th className={TH}>Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map(({ k, v, kind }) => {
+            const e = (v ?? {}) as { value?: unknown; unit?: string; method?: string; source?: string; doi?: string; url?: string }
+            const value =
+              k === 'mineral_class' && v && typeof v === 'object'
+                ? Object.entries(v as Record<string, unknown>)
+                    .filter(([key]) => !['source', 'doi', 'url', 'method', 'excerpt'].includes(key))
+                    .map(([key, on]) => `${key.replace(/_/g, ' ')}: ${on ? 'yes' : 'no'}`)
+                    .join(', ')
+                : typeof e.value === 'number'
+                  ? `${e.value}${e.unit ? ` ${e.unit}` : ''}`
+                  : '–'
+            const link = e.doi ? `https://doi.org/${e.doi}` : safeUrl(e.url)
+            return (
+              <tr key={k} className="border-t border-border align-top">
+                <td className="px-4 py-2.5 text-slate-100">
+                  {INDICATOR_LABELS[k] ?? k.replace(/_/g, ' ')}
+                  <span className="block font-mono text-xs text-slate-400">{kind}</span>
+                </td>
+                <td className="whitespace-nowrap px-4 py-2.5 text-right font-mono tabular text-slate-200">{value}</td>
+                <td className="px-4 py-2.5 text-xs text-slate-300">{e.method ?? '–'}</td>
+                <td className="px-4 py-2.5 text-xs text-slate-400">
+                  {link ? (
+                    <a href={link} target="_blank" rel="noreferrer" className="hover:text-data hover:underline">
+                      {e.source ?? link}
+                    </a>
+                  ) : (
+                    (e.source ?? '–')
+                  )}
+                </td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function SiteList({ title, items, color }: { title: string; items: { id: string; note?: string }[]; color?: string }) {
+  return (
+    <div className="rounded-xl border border-border bg-card p-5">
+      <h3 className="text-sm font-medium" style={{ color: color ?? 'var(--slate-300)' }}>
+        {title}
+      </h3>
+      <ul className="mt-3 space-y-1.5 text-sm">
+        {items.map((s) => (
+          <li key={s.id} className="text-slate-200">
+            {siteName(s.id)}
+            {s.note && <span className="block text-xs text-slate-400">{s.note}</span>}
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
