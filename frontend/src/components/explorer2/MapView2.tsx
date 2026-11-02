@@ -221,7 +221,14 @@ export function MapView2({ candidates, selected, box, drawing, layer, onPick, on
   }, [layer, loaded, reducedMotion])
 
   return (
-    <div className="absolute inset-0" role="region" aria-label="Globe: click a place to score it" aria-busy={!loaded}>
+    <div
+      className="solmate-map2 absolute inset-0"
+      role="region"
+      aria-label="Globe: click a place to score it"
+      aria-busy={!loaded}
+      // keep the scale bar, zoom buttons and attribution beside the floating panels, not under them
+      style={{ '--ctrl-left': `${padding.left}px`, '--ctrl-right': `${padding.right}px` } as React.CSSProperties}
+    >
       <div ref={container} className={`h-full w-full transition-opacity duration-1000 ${loaded ? 'opacity-100' : 'opacity-0'}`} />
       {!loaded && (
         <div className="pointer-events-none absolute inset-0 grid place-items-center">

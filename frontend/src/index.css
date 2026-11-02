@@ -185,6 +185,15 @@
   color: var(--slate-400) !important;
   font-size: 11px;
 }
+/* Explorer map: controls sit beside the floating side panels (offsets set inline from the panel layout) */
+.solmate-map2 .maplibregl-ctrl-bottom-left {
+  left: var(--ctrl-left, 0px);
+  transition: left 300ms ease;
+}
+.solmate-map2 .maplibregl-ctrl-bottom-right {
+  right: var(--ctrl-right, 0px);
+  transition: right 300ms ease;
+}
 .maplibregl-ctrl.maplibregl-ctrl-scale {
   font-size: 11px;
 }
