@@ -19,3 +19,6 @@ data/screening/screening.v2.json
 data/manifest.v2.json
 *.log
 .env*
+
+# Short-lived credentials written by google-github-actions/auth in CI; never upload them
+gha-creds-*.json

@@ -70,12 +70,12 @@ jobs:
       - name: Build and deploy a tagged revision (no traffic yet)
         run: |
           gcloud run deploy "$SERVICE" --source . --project "$PROJECT_ID" --region "$REGION" \
-            --no-traffic --tag rc --update-env-vars "GIT_SHA=${GITHUB_SHA::7}" --quiet
+            --no-traffic --tag candidate --update-env-vars "GIT_SHA=${GITHUB_SHA::7}" --quiet
       - name: Smoke test the tagged revision
         run: |
           set -euo pipefail
           url=$(gcloud run services describe "$SERVICE" --project "$PROJECT_ID" --region "$REGION" --format=json \
-            | jq -r '.status.traffic[] | select(.tag == "rc") | .url')
+            | jq -r '.status.traffic[] | select(.tag == "candidate") | .url')
           test -n "$url"
           curl -fsS "$url/api/v1/health" | grep -q '"ok"'
           curl -fsS "$url/api/v1/version" | grep -q "${GITHUB_SHA::7}"
