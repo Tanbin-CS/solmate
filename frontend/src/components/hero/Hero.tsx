@@ -196,7 +196,7 @@ export function Hero({ data }: { data: AllTargets | null }) {
           </motion.p>
           <motion.div variants={fadeUp(reduced)} className="pointer-events-auto mt-8 flex flex-wrap gap-3">
             <Magnetic>
-              <Button asChild size="lg" className="rounded-full px-6 shadow-[0_0_40px_rgb(127_216_230/0.25)]">
+              <Button asChild size="lg" className="rounded-full px-6 shadow-[0_12px_32px_-12px_rgb(0_0_0/0.7)]">
                 <Link to={`/explorer${target.id !== 'jezero' ? `?target=${target.id}` : ''}`}>
                   Explore the matches <ArrowRight />
                 </Link>
@@ -228,7 +228,7 @@ export function Hero({ data }: { data: AllTargets | null }) {
               reduced={reduced}
             />
             {gl && (
-              <span className="hidden shrink-0 items-center gap-1.5 font-mono text-[10px] text-slate-500 lg:inline-flex">
+              <span className="hidden shrink-0 items-center gap-1.5 font-mono text-[11px] text-slate-400 lg:inline-flex">
                 <Hand className="size-3.5" /> drag Earth · click a planet
               </span>
             )}
@@ -252,7 +252,7 @@ export function Hero({ data }: { data: AllTargets | null }) {
                   {on && <motion.span layoutId="hero-target-pill" transition={spring} className="absolute inset-0 rounded-lg bg-white/10" />}
                   <img src={asset(t.body === 'mars' ? 'media/mars-2k.webp' : 'media/moon-2k.webp')} alt="" className="relative size-7 rounded-full object-cover object-[60%_50%]" />
                   <span className="relative min-w-0">
-                    <span className="block font-mono text-[9px] uppercase tracking-[0.16em]" style={{ color: BODY[t.body].color }}>
+                    <span className="block font-mono text-[11px] uppercase tracking-[0.16em]" style={{ color: BODY[t.body].color }}>
                       {BODY[t.body].label}
                     </span>
                     <span className="block truncate text-[12px] font-medium">{t.short}</span>
@@ -301,7 +301,7 @@ export function Hero({ data }: { data: AllTargets | null }) {
                         hovered === s.id ? 'bg-white/10' : 'hover:bg-white/5 md:landscape:bg-white/[0.03]',
                       )}
                     >
-                      <span className="font-mono text-[10px] text-slate-500 md:landscape:flex md:landscape:items-baseline md:landscape:justify-between">
+                      <span className="font-mono text-[11px] text-slate-400 md:landscape:flex md:landscape:items-baseline md:landscape:justify-between">
                         <span>
                           <span className="hidden md:landscape:inline">#</span>
                           {s.rank}
@@ -328,7 +328,7 @@ export function Hero({ data }: { data: AllTargets | null }) {
                 ))}
               </AnimatePresence>
             </ol>
-            <p className="mt-2 border-t border-white/10 px-1.5 pt-2 font-mono text-[10px] leading-relaxed text-slate-400 md:landscape:hidden">
+            <p className="mt-2 border-t border-white/10 px-1.5 pt-2 font-mono text-[11px] leading-relaxed text-slate-400 md:landscape:hidden">
               Terrain similarity /100 from real DEMs
               {auc !== undefined && (
                 <>

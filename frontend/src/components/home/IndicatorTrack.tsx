@@ -16,7 +16,7 @@ function Card({ m, i, targets }: { m: Meta[number]; i: number; targets: TargetSu
   return (
     <article className="flex h-[440px] w-[78vw] max-w-[360px] shrink-0 snap-center flex-col rounded-2xl border border-border bg-card p-6 lg:w-[360px]">
       <div className="flex items-start justify-between">
-        <span className="font-mono text-5xl font-medium text-white/10">0{i + 1}</span>
+        <span aria-hidden="true" className="font-mono text-5xl font-medium text-white/10">0{i + 1}</span>
         <span className="label-mono">{m.unit || 'ratio'}</span>
       </div>
       <svg viewBox="0 0 76 36" className="mt-6 h-16 w-full" aria-hidden="true">
@@ -66,7 +66,7 @@ function Intro() {
       <p className="mt-4 text-pretty text-sm leading-relaxed text-muted-foreground md:text-base">
         Absolute elevation is never compared, only the shape of the ground. Bars compare the two targets.
       </p>
-      <p className="mt-6 hidden font-mono text-[11px] text-slate-500 lg:block">Keep scrolling →</p>
+      <p className="mt-6 hidden font-mono text-[11px] text-slate-400 lg:block">Keep scrolling →</p>
     </div>
   )
 }

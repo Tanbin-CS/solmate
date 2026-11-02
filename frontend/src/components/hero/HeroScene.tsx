@@ -514,7 +514,7 @@ function Scene(props: Props) {
                     ref={(el) => {
                       labelRefs.current.set(s.id, el)
                     }}
-                    className="pointer-events-auto -translate-y-1/2 translate-x-3 cursor-pointer select-none whitespace-nowrap rounded-md border border-white/10 bg-ink-950/75 px-2 py-1 font-mono text-[10px] text-slate-200 opacity-0 backdrop-blur-sm transition-[background-color,border-color]"
+                    className="pointer-events-auto -translate-y-1/2 translate-x-3 cursor-pointer select-none whitespace-nowrap rounded-md border border-white/10 bg-ink-950/75 px-2 py-1 font-mono text-[11px] text-slate-200 opacity-0 backdrop-blur-sm transition-[background-color,border-color]"
                     style={{ borderColor: isHover ? 'rgb(127 216 230 / 0.7)' : undefined }}
                     onPointerEnter={() => onHoverSite(s.id)}
                     onPointerLeave={() => onHoverSite(null)}
@@ -566,7 +566,7 @@ function Scene(props: Props) {
                 }}
                 className="select-none whitespace-nowrap text-center opacity-0"
               >
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em]" style={{ color: body === 'mars' ? '#d9785a' : '#c9d3de' }}>
+                <p className="font-mono text-[11px] uppercase tracking-[0.18em]" style={{ color: body === 'mars' ? '#d9785a' : '#c9d3de' }}>
                   {body === 'mars' ? 'Mars' : 'Moon'}
                 </p>
                 <p className={`text-[11px] transition-colors ${isSel ? 'text-slate-100' : 'text-slate-400'}`}>{t.short}</p>

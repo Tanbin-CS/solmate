@@ -104,7 +104,7 @@ export function PlaceDetail({ state, target, model, weights, isBox, terrain, sto
                 ))}
               </ol>
             </section>
-            <p className="font-mono text-[10.5px] leading-relaxed text-slate-400">model {r.model_version} · scored in your browser from NASA data</p>
+            <p className="font-mono text-[11px] leading-relaxed text-slate-400">model {r.model_version} · scored in your browser from NASA data</p>
           </>
         )}
       </div>

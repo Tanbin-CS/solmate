@@ -40,7 +40,7 @@ export function CandidateList({ label, items, noveltyKm, selected, onPick }: Pro
               </span>
               <span className="text-right">
                 <span className="block font-mono text-sm tabular text-slate-100">{Number.isFinite(sai) ? sai.toFixed(1) : '–'}</span>
-                <span className="block font-mono text-[10px] text-slate-400">{refined ? '100 m terrain' : '1 km terrain'}</span>
+                <span className="block font-mono text-[11px] text-slate-400">{refined ? '100 m terrain' : '1 km terrain'}</span>
               </span>
             </button>
           </li>

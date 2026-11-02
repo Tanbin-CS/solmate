@@ -64,7 +64,7 @@ export function RankList({ results, selectedId, hoveredId, compare, rankRange, o
                       transition={{ duration: reduced ? 0 : 0.5, ease: [0.16, 1, 0.3, 1] }}
                     />
                   </span>
-                  <span className="w-20 shrink-0 truncate font-mono text-[10px] text-slate-400" title={range ? 'Rank range across 1,000 random weightings (5th–95th percentile)' : undefined}>
+                  <span className="w-20 shrink-0 truncate font-mono text-[11px] text-slate-400" title={range ? 'Rank range across 1,000 random weightings (5th–95th percentile)' : undefined}>
                     {range ? `rank ${range.p5}–${range.p95}` : r.site.country ?? ''}
                   </span>
                 </span>

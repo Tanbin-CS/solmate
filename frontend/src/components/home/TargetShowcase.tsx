@@ -82,7 +82,7 @@ export function TargetShowcase({ target, bundle }: { target: TargetSummary; bund
                   <span className="truncate text-[13px] font-medium text-slate-100">{r.site.name}</span>
                   <span className="font-mono text-sm tabular text-slate-100">{pct(r.score)}</span>
                 </span>
-                <span className="block truncate font-mono text-[10px]" style={{ color: ROLE[r.site.role].color }}>
+                <span className="block truncate font-mono text-[11px]" style={{ color: ROLE[r.site.role].color }}>
                   #{r.rank} · {ROLE[r.site.role].short}
                 </span>
               </button>
@@ -123,7 +123,7 @@ export function TargetShowcase({ target, bundle }: { target: TargetSummary; bund
               })}
             </motion.ul>
           </AnimatePresence>
-          <p className="mt-4 text-[11px] leading-relaxed text-slate-400">Bar = how close each indicator is (full bar = identical). Overall score is their equal-weight mean.</p>
+          <p className="mt-4 text-xs leading-relaxed text-slate-400">Bar = how close each indicator is (full bar = identical). Overall score is their equal-weight mean.</p>
         </div>
 
         <Link to={explorerLink} className="inline-flex items-center gap-1.5 self-start font-mono text-sm text-data hover:underline">

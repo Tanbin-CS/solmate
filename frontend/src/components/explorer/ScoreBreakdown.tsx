@@ -52,7 +52,7 @@ export function ScoreBreakdown({ result, reference, referenceLabel, indicators, 
                 <span className="text-slate-200">{Math.round(sim * 100)}</span> sim · {Math.round(w * 100)}% wt
               </span>
             </div>
-            <p className="mt-1.5 font-mono text-[10.5px] text-slate-400">
+            <p className="mt-1.5 font-mono text-[11px] text-slate-400">
               {Math.abs(gap) < 0.25 ? 'Close match' : `${gap > 0 ? 'Higher' : 'Lower'} than ${referenceLabel} by ${Math.abs(gap).toFixed(1)} σ`}
               {mismatch && <span className="text-negative"> · mismatch</span>}
             </p>

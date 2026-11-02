@@ -160,7 +160,7 @@ export function WorldMap({
                 }}
               >
                 <p
-                  className="font-mono text-[10px] uppercase tracking-wider"
+                  className="font-mono text-[11px] uppercase tracking-wider"
                   style={{ color: ROLE[hover.site.role].color }}
                 >
                   {ROLE[hover.site.role].short} · rank {hover.rank}

@@ -31,7 +31,7 @@ function Thumb({ src, label, accent }: { src?: string; label: string; accent: st
       ) : (
         <div className="grid aspect-square w-full place-items-center font-mono text-[11px] text-slate-400">No imagery</div>
       )}
-      <figcaption className="absolute left-2 top-2 rounded bg-ink-950/80 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider" style={{ color: accent }}>
+      <figcaption className="absolute left-2 top-2 rounded bg-ink-950/80 px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-wider" style={{ color: accent }}>
         {label}
       </figcaption>
     </figure>
@@ -104,7 +104,7 @@ export function SiteDetail({ result, reference, referenceValues, indicators, wei
             <Thumb src={reference.quicklooks[view]} label={`${reference.short} · ${BODY[reference.body].label}`} accent="var(--reference)" />
             <Thumb src={site.quicklooks?.[view]} label="Earth site" accent={role.color} />
           </div>
-          <p className="mt-2 font-mono text-[10.5px] leading-relaxed text-slate-400">
+          <p className="mt-2 font-mono text-[11px] leading-relaxed text-slate-400">
             {view === 'imagery'
               ? `Context imagery only: ${reference.body === 'mars' ? 'Mars CTX orthomosaic (USGS)' : 'average Sun visibility at the lunar south pole (PGDA; dark = more shadow)'} and NASA Landsat WELD 1990 (ASTER GDEM relief where Landsat has no data). Not used in scoring.`
               : view === 'hillshade'
