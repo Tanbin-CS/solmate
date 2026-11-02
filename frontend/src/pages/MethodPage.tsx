@@ -184,8 +184,17 @@ function MethodBody({ data }: { data: HomeData }) {
       <Block title="Where the analogy breaks down, and what a place is good for.">
         <ul className="list-disc space-y-2 pl-5 marker:text-slate-400">
           <li>Gravity, surface pressure and radiation dose are always shown as ratios to Earth.</li>
+          <li>
+            For Moon targets, sunlight is always compared: near the south pole the Sun never rises more than a few degrees, while the place on Earth gets its own midsummer
+            noon Sun (from its latitude).
+          </li>
+          <li>Every result states that caves, lava tubes and other underground environments are not assessed: satellite data see only the surface.</li>
           <li>Any characteristic below 0.4 is listed as different; where the target lies beyond anything on Earth, the result says how far of the way the place gets.</li>
           <li>More than 30% vegetation is flagged: biology has no lunar or Martian counterpart, and canopy inflates terrain roughness.</li>
+          <li>
+            Biology and habitability are described for every place, never scored: how dry it is, how bare, how thin the air and how long the ground stays frozen, and what
+            that means for testing life-detection instruments.
+          </li>
           <li>
             Fixed, published rules add the Earth processes a place can teach (dust, salt flats, volcanic rock, frozen ground, rugged highlands) and what it could be used for:
             rover trials, landing-pad tests, thermal cycling, ice drilling, dust mitigation, life-detection instruments.
@@ -306,6 +315,13 @@ function MethodBody({ data }: { data: HomeData }) {
       <Block id="limitations" title="What SolMate cannot tell you.">
         <ul className="list-disc space-y-2 pl-5 marker:text-slate-400">
           <li>Gravity, atmosphere, radiation and surface chemistry differ from Earth everywhere; they are stated, never scored.</li>
+          <li>
+            Caves and lava tubes cannot be seen from orbit. Documented underground analogs (Lava Beds, La Corona, Sa Grutta, Boulby Mine) are listed on the{' '}
+            <Link to="/findings" className="text-data hover:underline">
+              Findings page
+            </Link>
+            .
+          </li>
           <li>Similar conditions do not mean a similar origin: landscapes on Earth, Mars and the Moon formed under different processes.</li>
           <li>A 0.1° cell averages about 11 km of ground. Terrain is refined at 100 m, but climate, temperature and minerals stay at the coarse scale.</li>
           <li>Novel leads are unreviewed. They need expert review and field data before anyone plans a test there.</li>

@@ -1,4 +1,4 @@
-import { AlertTriangle, CheckCircle2, CircleSlash, Compass, Wrench } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, CircleSlash, Compass, Sprout, Wrench } from 'lucide-react'
 import type { Verdict } from '@/science/v2/verdict'
 
 function Section({ icon, title, tone, children }: { icon: React.ReactNode; title: string; tone: string; children: React.ReactNode }) {
@@ -48,6 +48,22 @@ export function VerdictCard({ verdict }: { verdict: Verdict }) {
                   .map(([k, v]) => `${k} ${v}`)
                   .join(' · ')}
               </span>
+            </li>
+          ))}
+        </Section>
+      )}
+      {verdict.habitability.length > 0 && (
+        <Section icon={<Sprout className="size-3.5" />} title="Biology and habitability (not scored)" tone="text-positive">
+          {verdict.habitability.map((h) => (
+            <li key={h.id}>
+              {h.text}{' '}
+              {h.evidence && (
+                <span className="font-mono text-[11px] text-slate-400">
+                  {Object.entries(h.evidence)
+                    .map(([k, v]) => `${k} ${v}`)
+                    .join(' · ')}
+                </span>
+              )}
             </li>
           ))}
         </Section>

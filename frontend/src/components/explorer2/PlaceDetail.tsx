@@ -9,6 +9,7 @@ import { withRefinedTerrain } from '@/science/v2/verdict'
 import { fmtCoord } from '@/lib/format'
 import { BAND_STYLE } from './labels'
 import { DimensionBars } from './DimensionBars'
+import { PlaceImages } from './PlaceImages'
 import { VerdictCard } from './VerdictCard'
 
 interface Props {
@@ -86,6 +87,7 @@ export function PlaceDetail({ state, target, model, weights, isBox, terrain, sto
               <p className="text-[12px] text-slate-400">NASA terrain arrived only in part; showing what was measured.</p>
             )}
             <DimensionBars verdict={verdict} model={model} refined={refined} />
+            <PlaceImages lat={r.centre.lat} lon={r.centre.lon} targetId={target.id} />
             <VerdictCard verdict={verdict} />
             <section>
               <h3 className="label-mono mb-1.5">Best targets for this place</h3>
