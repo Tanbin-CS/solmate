@@ -1,3 +1,7 @@
+import pytest
+from conftest import RESULTS_VERSION, write_release
+
+
 def body(**kw):
     return {"target_id": "jezero_crater", "lat": 36.5, "lon": 84.5, "size_km": 10.0} | kw
 
@@ -5,7 +9,17 @@ def body(**kw):
 def test_health_and_version(api):
     assert api.get("/api/v1/health").json() == {"status": "ok"}
     v = api.get("/api/v1/version").json()
-    assert v["offline"] is True and len(v["model_version"]) == 12
+    assert v["offline"] is True and v["model_version"] == RESULTS_VERSION  # the web app's results version
+    assert api.post("/api/v1/terrain", json=body()).json()["model_version"] == RESULTS_VERSION
+
+
+def test_start_up_refuses_a_release_file_from_other_terrain_data(api, tmp_path):
+    from app import main
+
+    write_release(tmp_path / "data", terrain_version="ffffffffffff")
+    main.get_model.cache_clear()
+    with pytest.raises(RuntimeError, match="does not match"):
+        main.get_model()
 
 
 def test_terrain_scores_a_box_then_serves_it_from_cache(api):

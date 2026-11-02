@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends libexpat1     &
 WORKDIR /srv
 COPY --from=build /srv /srv
 # Only the model data the API reads (no raw NASA files, no secrets).
-COPY data/screening/stage2.v2.json data/screening/stage2_stats.v2.json ./data/screening/
+COPY data/screening/stage2.v2.json data/screening/stage2_stats.v2.json data/screening/release.v2.json ./data/screening/
 COPY data/stack/astgtm_tiles.v3.json ./data/stack/
 COPY data/targets ./data/targets
 USER solmate

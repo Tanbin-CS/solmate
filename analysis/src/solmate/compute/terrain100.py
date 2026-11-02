@@ -8,6 +8,8 @@ come from the pool of refined 100 m windows (stage2_stats), not from the 0.1 deg
 
 from __future__ import annotations
 
+import hashlib
+import json
 import math
 
 import numpy as np
@@ -37,3 +39,15 @@ def terrain_score(indicators: dict[str, float], target_values: dict[str, float],
             continue
         per[p.name] = float(modes.similarity(np.array([x]), p.target, stats[p.name], p.mode)[0])
     return (float(np.mean(list(per.values()))) if per else float("nan")), per
+
+
+def data_version(targets: dict, stats: dict) -> str:
+    """Short hash of the 100 m target values and Earth statistics (stage2.v2.json, stage2_stats.v2.json).
+
+    It changes whenever a terrain answer could change. The terrain API keys its cache on it, and the
+    web export folds it into the results version so one version covers the browser and the API.
+    """
+    digest = hashlib.sha256()
+    for doc in (targets, stats):
+        digest.update(json.dumps(doc, sort_keys=True).encode())
+    return digest.hexdigest()[:12]
