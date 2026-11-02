@@ -5,6 +5,7 @@ Committed (small JSON):
   targets.json      11 targets with cited + computed indicator values and breaks-down constants
   screening/<id>.json  per target: top cells and novel leads with verdicts, dimension leaders
   validation.json   pre-registered validation results
+  provenance.json   datasets (from docs/DATA_SOURCES.md), the 41 stack layers, raw-file summary, validation sites
 Not committed (binary, ~60 MB, gitignored; mirrored to gs://solmate-13571-data/web/tiles, restored before build):
   tiles/<row>_<col>.bin.gz   10 x 10 degree tiles of the 0.1 degree stack, uint16-quantised per layer
 
@@ -30,6 +31,7 @@ import numpy as np
 import yaml
 
 from solmate.compute import grid
+from solmate.pipeline import provenance
 from solmate.targets import load_targets
 
 ANALYSIS = Path(__file__).resolve().parents[3]
@@ -49,7 +51,7 @@ def _cfg(name: str) -> dict:
 
 def _dump(path: Path, obj: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(obj, separators=(",", ":"), ensure_ascii=False) + "\n", encoding="utf-8")
+    path.write_text(json.dumps(obj, separators=(",", ":"), ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
 
 
 def tile_layers(dims: dict) -> list[str]:
@@ -142,6 +144,11 @@ def main() -> None:
             "top": t["top"][:25], "novel_leads": t["novel_leads"], "dimension_leaders": t["dimension_leaders"],
             "documented_sites": t["documented_sites"], "plans": t["plans"]})
     _dump(OUT / "validation.json", validation)
+    _dump(OUT / "provenance.json", provenance.build(
+        (REPO / "docs" / "DATA_SOURCES.md").read_text(encoding="utf-8"),
+        json.loads((REPO / "data" / "stack" / "layers.v2.json").read_text(encoding="utf-8")),
+        json.loads((REPO / "data" / "manifest.v2.json").read_text(encoding="utf-8")),
+        _cfg("validation_sites.yaml")))
     sizes = {p.name: p.stat().st_size for p in OUT.rglob("*.json")}
     print(f"model_version {model['model_version']}; {len(sizes)} JSON files, {sum(sizes.values()) / 1e6:.2f} MB;"
           f" tiles: {len(tiles['available'])}")
