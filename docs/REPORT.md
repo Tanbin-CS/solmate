@@ -1,6 +1,6 @@
 # SolMate findings: where Earth comes closest to NASA's Moon base regions and Mars sites
 
-SolMate scored every land cell on Earth, about 1.9 million of them at 0.1°, against 11 NASA targets: the nine Artemis III candidate base regions near the lunar south pole, Jezero Crater and Arcadia Planitia. Each place gets a SolMate Analog Index (SAI, 0–100) built from seven characteristics measured with 41 NASA data layers, a statement of where the analogy breaks down, and what the place could be used for.
+SolMate scored every land cell on Earth, about 1.9 million of them at 0.1°, against 11 NASA targets: the nine Artemis III candidate base regions near the lunar south pole, Jezero Crater and Arcadia Planitia. Each place gets a SolMate Analog Index (SAI, 0–100) built from seven characteristics measured with 42 NASA data layers, a statement of where the analogy breaks down, and what the place could be used for.
 
 The method was checked against sites NASA has already used as analogs, with a test written down before the results: for Jezero, documented Mars analog sites outscore controls with an AUC of 0.84 (95% CI 0.69–0.96); the Moon regions reach a median of 0.75, and Arcadia Planitia 0.58, which is reported as a weak result.
 
@@ -235,4 +235,4 @@ AUC is the chance that a site NASA has used as an analog outscores a control (fa
 
 ## Data and reproducibility
 
-All scored inputs are NASA data: MODIS (MYD11C3, MOD10CM, MCD43C3, MCD12C1), ASTER GED and GDEM v3, MERRA-2, NASA POWER and SRTMGL30 on Earth; LRO LOLA and Diviner on the Moon; MOLA, CTX and Mars 2020 results on Mars. Sources, licences and checksums: https://solmate-analog.web.app/provenance. Code: https://github.com/Tanbin-CS/solmate (results version 63ae7423435b).
+All scored inputs are NASA data: MODIS (MYD11C3, MOD10CM, MCD43C3, MCD12C1), ASTER GED and GDEM v3, MERRA-2, NASA POWER and SRTMGL30 on Earth; LRO LOLA and Diviner on the Moon; MOLA, CTX and Mars 2020 results on Mars. Sources, licences and checksums: https://solmate-analog.web.app/provenance. Code: https://github.com/Tanbin-CS/solmate (results version 3d8a04c364c4).

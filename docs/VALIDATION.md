@@ -213,3 +213,7 @@ Written before any event-day dataset is seen. The Space Apps Resources tab opens
    comparison to `data/validation/event_check.v1.json`.
 4. **Reporting.** Results are reported unedited, whichever way they go, with the
    before and after values.
+
+Rehearsal (3 Nov 2026): NASA GLDAS topsoil moisture added as a context layer; the
+procedure from download to files ready to deploy took about 7 minutes (download 3 min 44 s,
+release 3 min 11 s). No score changed.

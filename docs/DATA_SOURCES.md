@@ -23,6 +23,15 @@ Every input SolMate uses: what it is, who publishes it, how we use it and its te
 | Landsat WELD | NASA/USGS Web-Enabled Landsat Data, via NASA GIBS | 1990 global annual true colour (Landsat 5 TM) | Map imagery and site thumbnails (display only) | NASA open data |
 | GIBS | NASA EOSDIS GIBS | Blue Marble, ASTER GDEM greyscale shaded relief | Basemap, relief view, thumbnails where Landsat has no data (display only) | NASA open data |
 
+## Earth (context, shown but not scored)
+
+Added through `config/event_layers.yaml` (see `docs/EVENT_DAY.md`) and shown in the
+Explorer's place panel with their source.
+
+| Dataset | Agency / product | Version, period | Used for | Terms |
+|---|---|---|---|---|
+| GLDAS Noah land surface model | NASA GSFC Hydrological Sciences / GES DISC `GLDAS_NOAH025_M.2.1` | monthly 0.25°, 2023–24 mean | Topsoil moisture 0–10 cm (context). Model output driven by satellite and ground data, not a direct measurement; no data south of 60° S | NASA open data |
+
 ## Moon (targets)
 
 | Dataset | Agency / product | Used for | Terms |

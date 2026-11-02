@@ -20,7 +20,7 @@ const STEPS = [
   {
     icon: Layers,
     title: `Read Earth with ${facts.nasa_layers} NASA data layers.`,
-    body: 'MODIS temperature, snow, albedo and land cover; ASTER minerals; MERRA-2 dust; NASA POWER climate; SRTM terrain. Every land cell on a 0.1° grid, about 1.9 million of them.',
+    body: 'MODIS temperature, snow, albedo and land cover; ASTER minerals; MERRA-2 dust; NASA POWER climate; GLDAS soil moisture; SRTM terrain. Every land cell on a 0.1° grid, about 1.9 million of them.',
     tone: 'var(--data)',
   },
   {
