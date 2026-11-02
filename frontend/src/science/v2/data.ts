@@ -4,6 +4,7 @@
  */
 import { asset } from '@/lib/asset'
 import { ModelSchema, TargetsSchema, type Model, type Target } from './model'
+import { ProvenanceSchema, type Provenance } from './provenance'
 import { ScreeningSchema, type Screening } from './screening'
 import { gunzip, Tile } from './tiles'
 import { ValidationSchema, type Validation } from './validation'
@@ -34,6 +35,10 @@ export const loadTargets = once(
 
 export const loadValidation = once(
   async (): Promise<Validation> => ValidationSchema.parse(await (await fetchOk('validation.json')).json()),
+)
+
+export const loadProvenance = once(
+  async (): Promise<Provenance> => ProvenanceSchema.parse(await (await fetchOk('provenance.json')).json()),
 )
 
 const screenings = new Map<string, Promise<Screening>>()
