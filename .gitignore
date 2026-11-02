@@ -42,3 +42,6 @@ frontend/public/data/v2/tiles/
 
 # Local Claude Code settings (dev-server launch config)
 .claude/
+
+# Short-lived CI credentials (google-github-actions/auth)
+gha-creds-*.json
