@@ -47,10 +47,11 @@ def _explain_cases(stats_doc: dict) -> list[dict]:
     lat_c, lon_c = grid.cell_centres()
     with np.load(STACK) as z:
         layers = {k: z[k] for k in z.files}
-    places = {}
+    places, place_lat = {}, {}
     for pid, (lat, lon) in PLACES.items():
         r, c = int(np.argmin(np.abs(lat_c - lat))), int(np.argmin(np.abs(lon_c - lon)))
         places[pid] = {k: float(v[r, c]) for k, v in layers.items() if v.ndim == 2}
+        place_lat[pid] = float(lat_c[r])
     cases = []
     for t in load_targets():
         runs = [None] + ([("expert", presets["expert"]), ("mission_ops", presets["mission_ops"]),
@@ -59,9 +60,9 @@ def _explain_cases(stats_doc: dict) -> list[dict]:
         for pid, values in places.items():
             for run in runs:
                 w = None if run is None else run[1]
-                cases.append({"place": pid, "values": {k: _num(v) for k, v in values.items()},
+                cases.append({"place": pid, "lat": place_lat[pid], "values": {k: _num(v) for k, v in values.items()},
                               "target": t["id"], "preset": None if run is None else run[0],
-                              "expected": verdict.explain(values, t, dims, stats, process_cfg, w)})
+                              "expected": verdict.explain(values, t, dims, stats, process_cfg, w, lat=place_lat[pid])})
     return cases
 
 

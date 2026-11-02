@@ -9,6 +9,8 @@ import { towardGap, type EarthStats } from './modes'
 import { dimensionScore, num, planDimension, type IndicatorPlan } from './score'
 
 export const EARTH_GRAVITY = 9.81 // m/s^2
+export const MOON_OBLIQUITY = 1.54 // degrees: the Moon's spin axis is nearly upright, so polar Sun stays low
+export const EARTH_OBLIQUITY = 23.44 // degrees
 export const EARTH_DOSE_MSV_DAY = 2.4 / 365.25 // UNSCEAR 2008 natural background, 2.4 mSv/yr
 export const WEAK_DIMENSION = 0.4
 export const GAP_LIMIT = 0.5
@@ -118,6 +120,37 @@ export function environmentLimits(target: Target, earthPressureHpa: number): Lim
   return out
 }
 
+/** Highest noon Sun elevation over a year at a latitude (degrees), capped at 90. */
+export const maxSunElevation = (lat: number, obliquity: number): number => Math.min(90, 90 - Math.abs(lat) + obliquity)
+
+/** Moon only: polar sunlight stays near the horizon; compare with the place's midsummer noon Sun. */
+export function illuminationLimit(body: Target['body'], targetLat: number | null | undefined, placeLat: number | null | undefined): Limit[] {
+  if (body !== 'moon' || targetLat === null || targetLat === undefined || placeLat === null || placeLat === undefined) return []
+  const t = maxSunElevation(targetLat, MOON_OBLIQUITY)
+  const e = maxSunElevation(placeLat, EARTH_OBLIQUITY)
+  return [
+    {
+      kind: 'always', id: 'illumination', earth: pyRound(e, 1), target: pyRound(t, 1), unit: 'deg',
+      text:
+        `Sunlight: in this region the Sun never rises more than ${t.toFixed(0)}° above the horizon, so long ` +
+        `shadows and low light shape every operation. At this place on Earth the midsummer noon Sun ` +
+        `reaches ${e.toFixed(0)}°.`,
+    },
+  ]
+}
+
+/** Always stated: remote data see only the surface. */
+export function subsurfaceLimit(): Limit[] {
+  return [
+    {
+      kind: 'always', id: 'subsurface',
+      text:
+        'Caves, lava tubes and other underground environments are not assessed: satellite data see ' +
+        'only the surface. Documented cave and mine analogs are listed in the findings.',
+    },
+  ]
+}
+
 export function dimensionLimits(dimScores: Readonly<Record<string, number>>, applicable: readonly string[]): Limit[] {
   const out: Limit[] = []
   for (const k of applicable) {
@@ -195,6 +228,24 @@ export function tagsFor(values: PlaceValues, body: Target['body'], config: Proce
     }))
 }
 
+export interface HabitabilityNote {
+  id: string
+  text: string
+  evidence?: Record<string, number>
+}
+
+/** Habitability and biology notes (never scored): the body's context, then every rule that holds. */
+export function habitabilityFor(values: PlaceValues, body: Target['body'], config: ProcessConfig, stats: Readonly<Record<string, EarthStats>>): HabitabilityNote[] {
+  const h = config.habitability
+  if (!h) return []
+  return [
+    { id: 'context', text: h.context[body] },
+    ...h.rules
+      .filter((r) => r.bodies.includes(body) && ruleFires(r.when, values, stats))
+      .map((r) => ({ id: r.id, text: r.text, evidence: Object.fromEntries(Object.keys(r.when).map((k) => [k, pyRound(num(values, k), 3)])) })),
+  ]
+}
+
 export function usesFor(values: PlaceValues, config: ProcessConfig, stats: Readonly<Record<string, EarthStats>>): { id: string; text: string }[] {
   return config.uses.filter((u) => ruleFires(u.when, values, stats)).map((u) => ({ id: u.id, text: u.text }))
 }
@@ -212,6 +263,7 @@ export interface Verdict {
   breaks_down: Limit[]
   process_tags: ProcessTag[]
   use_it_for: { id: string; text: string }[]
+  habitability: HabitabilityNote[]
 }
 
 /** Default weights: equal over the target's dimensions, mission operations off. */
@@ -224,6 +276,7 @@ export function explain(
   target: Target,
   model: Pick<Model, 'dimensions' | 'earth_stats' | 'processes'>,
   weights: Readonly<Record<string, number>> = defaultWeights(model),
+  lat?: number | null,
 ): Verdict {
   const stats = model.earth_stats
   const applicable = Object.entries(model.dimensions)
@@ -254,11 +307,14 @@ export function explain(
     differs: dimensionLimits(dimScores, applicable),
     breaks_down: [
       ...environmentLimits(target, num(values, 'surface_pressure_hpa')),
+      ...illuminationLimit(target.body, (target as { centroid?: { lat?: number } }).centroid?.lat, lat),
+      ...subsurfaceLimit(),
       ...towardGaps(values, allPlans, stats),
       ...vegetationFlag(values),
     ],
     process_tags: tagsFor(values, target.body, model.processes, stats),
     use_it_for: usesFor(values, model.processes, stats),
+    habitability: habitabilityFor(values, target.body, model.processes, stats),
   }
 }
 

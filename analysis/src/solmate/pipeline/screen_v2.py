@@ -128,7 +128,7 @@ def main() -> None:
         def with_verdict(i: int, t=t, entry=entry) -> dict:
             e = entry(i)
             values = {k: float(v[i]) for k, v in layers.items()}
-            e["verdict"] = verdict.explain(values, t, dims, stats, process_cfg)
+            e["verdict"] = verdict.explain(values, t, dims, stats, process_cfg, lat=float(lat[i]))
             return e
 
         result[t["id"]] = {

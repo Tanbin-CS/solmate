@@ -36,3 +36,15 @@ def tags_for(values: dict[str, float], body: str, config: dict, stats: dict[str,
 
 def uses_for(values: dict[str, float], config: dict, stats: dict[str, modes.EarthStats]) -> list[dict]:
     return [{"id": u["id"], "text": u["text"]} for u in config["uses"] if rule_fires(u["when"], values, stats)]
+
+
+def habitability_for(values: dict[str, float], body: str, config: dict, stats: dict[str, modes.EarthStats]) -> list[dict]:
+    """Habitability and biology notes (never scored): the body's context, then every rule that holds."""
+    h = config.get("habitability")
+    if not h:
+        return []
+    out = [{"id": "context", "text": h["context"][body]}]
+    for r in h["rules"]:
+        if body in r["bodies"] and rule_fires(r["when"], values, stats):
+            out.append({"id": r["id"], "text": r["text"], "evidence": {k: round(values[k], 3) for k in r["when"]}})
+    return out

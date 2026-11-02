@@ -67,9 +67,9 @@ export async function scorePlace(q: PlaceQuery): Promise<PlaceResult> {
   const values = meanValues(perCell)
   const land = isLand(values)
   // Presets carry every dimension; explain() keeps only those that apply to each target's body.
-  const verdict = land ? explain(values, target, model, q.weights) : null
+  const verdict = land ? explain(values, target, model, q.weights, centre.lat) : null
   const ranking = targets
-    .map((t) => ({ id: t.id, name: t.name, body: t.body, sai: land ? explain(values, t, model, q.weights).sai : null }))
+    .map((t) => ({ id: t.id, name: t.name, body: t.body, sai: land ? explain(values, t, model, q.weights, centre.lat).sai : null }))
     .sort((a, b) => (b.sai ?? -1) - (a.sai ?? -1))
   return {
     model_version: model.model_version,
