@@ -10,6 +10,7 @@
 !api/app/**
 !data/screening/stage2.v2.json
 !data/screening/stage2_stats.v2.json
+!data/screening/release.v2.json
 !data/stack/astgtm_tiles.v3.json
 !data/targets/**
 **/__pycache__/**
