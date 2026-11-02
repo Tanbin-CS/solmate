@@ -193,7 +193,19 @@ function MethodBody({ data }: { data: HomeData }) {
           <li>More than 30% vegetation is flagged: biology has no lunar or Martian counterpart, and canopy inflates terrain roughness.</li>
           <li>
             Biology and habitability are described for every place, never scored: how dry it is, how bare, how thin the air and how long the ground stays frozen, and what
-            that means for testing life-detection instruments.
+            that means for testing life-detection instruments. They stay out of the score for four reasons:
+            <ul className="mt-2 list-[circle] space-y-1.5 pl-5">
+              <li>The notes come from data already in the score (dryness, bare ground, temperature, frost days). Scoring them again would count the same data twice.</li>
+              <li>
+                A score measures how close a place is to a known value at the target. The Moon has no life. Mars&rsquo;s ancient lakes show it was once habitable, but whether
+                life ever existed there is the open question, so there is no value to match.
+              </li>
+              <li>
+                NASA&rsquo;s global land cover maps plants, and the score already uses it. Microbial life and biosignatures are known only from field studies of a few sites;
+                scoring them would favour famous analogs over new ones.
+              </li>
+              <li>The validation test was fixed before the results were seen. A new scored part added now would change the method after the outcome is known.</li>
+            </ul>
           </li>
           <li>
             Fixed, published rules add the Earth processes a place can teach (dust, salt flats, volcanic rock, frozen ground, rugged highlands) and what it could be used for:
