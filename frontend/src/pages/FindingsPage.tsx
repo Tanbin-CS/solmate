@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { ErrorState, PanelSkeleton } from '@/components/common/States'
 import { Button } from '@/components/ui/button'
 import { asset } from '@/lib/asset'
+import { ownSitePath } from '@/lib/links'
 
 /**
  * The findings report. Content comes from data/v2/report.json, written by
@@ -22,7 +23,6 @@ const ReportSchema = z.object({ version: z.literal(1), generated: z.string(), bl
 type Block = z.infer<typeof Block>
 
 const URL_RE = /(https:\/\/[^\s)]+)/g
-const SITE = 'https://solmate-analog.web.app'
 
 /** Plain text with https URLs as links; links to this site stay in the app. */
 function Linked({ text }: { text: string }) {
@@ -30,8 +30,8 @@ function Linked({ text }: { text: string }) {
     <>
       {text.split(URL_RE).map((part, i) => {
         if (i % 2 === 0) return part
-        if (part.startsWith(SITE)) {
-          const path = part.slice(SITE.length) || '/'
+        const path = ownSitePath(part)
+        if (path) {
           return (
             <Link key={i} to={path} className="text-data hover:underline">
               {path === '/' ? 'SolMate' : path.split('?')[0]}
