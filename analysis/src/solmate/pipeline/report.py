@@ -10,7 +10,6 @@ Run:  uv run python -m solmate.pipeline.report
 
 from __future__ import annotations
 
-import datetime as dt
 import json
 from pathlib import Path
 from urllib.parse import urlencode
@@ -248,7 +247,7 @@ def build(d: dict) -> list[dict]:
             "All scored inputs are NASA data: MODIS (MYD11C3, MOD10CM, MCD43C3, MCD12C1), ASTER GED and GDEM v3, "
             "MERRA-2, NASA POWER and SRTMGL30 on Earth; LRO LOLA and Diviner on the Moon; MOLA, CTX and Mars 2020 results "
             f"on Mars. Sources, licences and checksums: {SITE}/provenance. Code: https://github.com/Tanbin-CS/solmate "
-            f"(model version {model['model_version']}).")},
+            f"(results version {model['model_version']}).")},
     ]
     return b
 
@@ -274,10 +273,9 @@ def to_markdown(blocks: list[dict]) -> str:
 
 def main() -> None:
     blocks = build(load())
-    stamp = dt.date.today().isoformat()
-    md = to_markdown(blocks) + f"\n---\n*Generated {stamp} by `solmate.pipeline.report` from the published v2 results.*\n"
+    md = to_markdown(blocks)
     (REPO / "docs" / "REPORT.md").write_text(md, encoding="utf-8", newline="\n")
-    (WEB / "report.json").write_text(json.dumps({"version": 1, "generated": stamp, "blocks": blocks},
+    (WEB / "report.json").write_text(json.dumps({"version": 1, "blocks": blocks},
                                                 ensure_ascii=False, separators=(",", ":")) + "\n",
                                      encoding="utf-8", newline="\n")
     print(f"REPORT.md: {len(md.splitlines())} lines; report.json: {len(blocks)} blocks")

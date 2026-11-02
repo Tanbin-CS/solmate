@@ -19,7 +19,7 @@ const Block = z.discriminatedUnion('type', [
   z.object({ type: z.literal('table'), head: z.array(z.string()), rows: z.array(z.array(z.string())) }),
   z.object({ type: z.literal('figure'), images: z.array(z.object({ src: z.string().url(), alt: z.string(), caption: z.string() })) }),
 ])
-const ReportSchema = z.object({ version: z.literal(1), generated: z.string(), blocks: z.array(Block) })
+const ReportSchema = z.object({ version: z.literal(1), blocks: z.array(Block) })
 type Block = z.infer<typeof Block>
 
 const URL_RE = /(https:\/\/[^\s)]+)/g
@@ -114,7 +114,7 @@ function Render({ b }: { b: Block }) {
 }
 
 export default function FindingsPage() {
-  const [state, setState] = useState<{ status: 'loading' } | { status: 'error'; error: Error } | { status: 'ready'; blocks: Block[]; generated: string }>({
+  const [state, setState] = useState<{ status: 'loading' } | { status: 'error'; error: Error } | { status: 'ready'; blocks: Block[] }>({
     status: 'loading',
   })
   useEffect(() => {
@@ -126,7 +126,7 @@ export default function FindingsPage() {
       })
       .then((x) => ReportSchema.parse(x))
       .then(
-        (doc) => alive && setState({ status: 'ready', blocks: doc.blocks, generated: doc.generated }),
+        (doc) => alive && setState({ status: 'ready', blocks: doc.blocks }),
         (error: unknown) => alive && setState({ status: 'error', error: error instanceof Error ? error : new Error(String(error)) }),
       )
     return () => {
@@ -155,7 +155,6 @@ export default function FindingsPage() {
               </a>
             </Button>
           </div>
-          <p className="font-mono text-[11px] text-slate-400">Generated {state.generated} from the published v2 results.</p>
         </>
       )}
     </article>
