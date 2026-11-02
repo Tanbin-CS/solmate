@@ -12,6 +12,8 @@ import math
 from solmate.compute import modes
 
 EARTH_GRAVITY = 9.81  # m/s^2
+MOON_OBLIQUITY = 1.54  # degrees: the Moon's spin axis is nearly upright, so polar Sun stays low
+EARTH_OBLIQUITY = 23.44  # degrees
 EARTH_DOSE_MSV_DAY = 2.4 / 365.25  # UNSCEAR 2008 world-average natural background, 2.4 mSv/yr
 WEAK_DIMENSION = 0.40
 GAP_LIMIT = 0.5
@@ -59,6 +61,30 @@ def environment_limits(target_breaks_down: dict, earth_pressure_hpa: float) -> l
                     "text": f"Surface radiation dose is {_ratio_text(d, EARTH_DOSE_MSV_DAY)}: Earth's atmosphere and "
                             "magnetic field shield every analog site."})
     return out
+
+
+def max_sun_elevation(lat: float, obliquity: float) -> float:
+    """Highest noon Sun elevation over a year at a latitude (degrees), capped at 90."""
+    return min(90.0, 90.0 - abs(lat) + obliquity)
+
+
+def illumination_limit(body: str, target_lat: float | None, place_lat: float | None) -> list[dict]:
+    """Moon only: polar sunlight stays near the horizon; compare with the place's midsummer noon Sun."""
+    if body != "moon" or target_lat is None or place_lat is None:
+        return []
+    t = max_sun_elevation(target_lat, MOON_OBLIQUITY)
+    e = max_sun_elevation(place_lat, EARTH_OBLIQUITY)
+    return [{"kind": "always", "id": "illumination", "earth": round(e, 1), "target": round(t, 1), "unit": "deg",
+             "text": f"Sunlight: in this region the Sun never rises more than {t:.0f}° above the horizon, so long "
+                     f"shadows and low light shape every operation. At this place on Earth the midsummer noon Sun "
+                     f"reaches {e:.0f}°."}]
+
+
+def subsurface_limit() -> list[dict]:
+    """Always stated: remote data see only the surface."""
+    return [{"kind": "always", "id": "subsurface",
+             "text": "Caves, lava tubes and other underground environments are not assessed: satellite data see "
+                     "only the surface. Documented cave and mine analogs are listed in the findings."}]
 
 
 def dimension_limits(dim_scores: dict[str, float], applicable: list[str]) -> list[dict]:

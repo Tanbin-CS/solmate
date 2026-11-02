@@ -33,6 +33,12 @@ export const ProcessConfigSchema = z.object({
     z.object({ name: z.string(), when: Rule, analog: z.string(), bodies: z.array(z.enum(['moon', 'mars'])) }),
   ),
   uses: z.array(z.object({ id: z.string(), text: z.string(), when: Rule })),
+  habitability: z
+    .object({
+      context: z.object({ moon: z.string(), mars: z.string() }),
+      rules: z.array(z.object({ id: z.string(), bodies: z.array(z.enum(['moon', 'mars'])), when: Rule, text: z.string() })),
+    })
+    .optional(),
 })
 
 export const TileLayoutSchema = z.object({

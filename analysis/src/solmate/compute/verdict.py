@@ -5,6 +5,7 @@ differs        weak dimensions and dimensions without data
 breaks_down    always-on environment limits, Earth-can-only-approach gaps, vegetation
 process_tags   Earth processes that teach about the target body
 use_it_for     exploration uses the place supports
+habitability   biology and habitability notes (shown, never scored)
 """
 
 from __future__ import annotations
@@ -18,8 +19,9 @@ from solmate.compute import modes as m
 
 
 def explain(values: dict[str, float], target: dict, dims_config: dict, stats: dict[str, m.EarthStats],
-            process_config: dict, weights: dict[str, float] | None = None) -> dict:
-    """weights: dimension weights (a preset); default equal over the target's dimensions, operations off."""
+            process_config: dict, weights: dict[str, float] | None = None, lat: float | None = None) -> dict:
+    """weights: dimension weights (a preset); default equal over the target's dimensions, operations off.
+    lat: the place's latitude, for the lunar sunlight comparison."""
     body = target["body"]
     if weights is None:
         weights = {k: 1.0 for k in dims_config if k != "O"}
@@ -38,6 +40,8 @@ def explain(values: dict[str, float], target: dict, dims_config: dict, stats: di
     result = aggregate.sai(dim_scores, {k: float(weights[k]) for k in applicable})
     strong = sorted((d for d in result.dimensions if d.band == "strong"), key=lambda d: -d.score)
     limits = (breakdown.environment_limits(target.get("breaks_down", {}), values.get("surface_pressure_hpa", math.nan))
+              + breakdown.illumination_limit(body, (target.get("centroid") or {}).get("lat"), lat)
+              + breakdown.subsurface_limit()
               + breakdown.toward_gaps(values, all_plans, stats)
               + breakdown.vegetation_flag(values))
     return {
@@ -54,4 +58,5 @@ def explain(values: dict[str, float], target: dict, dims_config: dict, stats: di
         "breaks_down": limits,
         "process_tags": processes.tags_for(values, body, process_config, stats),
         "use_it_for": processes.uses_for(values, process_config, stats),
+        "habitability": processes.habitability_for(values, body, process_config, stats),
     }

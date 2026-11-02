@@ -20,7 +20,7 @@ describe('v2 verdict matches Python explain() on real places', () => {
   for (const c of golden.cases) {
     it(`${c.place} vs ${c.target} (${c.preset ?? 'default'})`, () => {
       const weights = c.preset ? model.presets[c.preset] : undefined
-      const got = explain(c.values, targets.get(c.target)!, model, weights)
+      const got = explain(c.values, targets.get(c.target)!, model, weights, c.lat)
       expect(JSON.parse(JSON.stringify(got))).toEqual(c.expected)
     })
   }

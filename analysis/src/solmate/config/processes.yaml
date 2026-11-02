@@ -47,3 +47,44 @@ uses:
   - id: astrobiology_extreme_dry
     text: Life-detection instrument tests at the dry limit of life (biosignature preservation).
     when: {aridity_index: {lt: 0.05}, barren_pct: {gte: 80}}
+# Habitability and biology (shown, never scored). The context line is always shown for the
+# body; a rule's line is shown when every condition holds for the place.
+habitability:
+  context:
+    moon: >-
+      The Moon has no air, no liquid water and no known life. On an Earth analog, biology
+      matters as something to keep away from instruments, not as something to study.
+    mars: >-
+      Mars once had lakes and still holds ground ice, so it may have been habitable. Earth
+      analogs help test how to recognise signs of past or present life in rock and soil.
+  rules:
+    - id: hyper_arid
+      bodies: [mars]
+      when: {aridity_index: {lt: 0.05}}
+      text: >-
+        Hyper-arid: soils this dry hold very little life, so life-detection instruments can be
+        tested against a nearly lifeless background, as in the Atacama.
+    - id: arid
+      bodies: [mars]
+      when: {aridity_index: {gte: 0.05, lt: 0.2}}
+      text: >-
+        Arid: soil life is sparse but present, a test of telling weak biological signals apart
+        from mineral ones.
+    - id: thin_air_uv
+      bodies: [mars]
+      when: {surface_pressure_hpa: {lt: 650}}
+      text: >-
+        High altitude: thinner air lets more ultraviolet light reach the ground, one of the
+        stresses life would face at the Martian surface.
+    - id: frozen_ground
+      bodies: [mars]
+      when: {t2m_mean_c: {lt: 0.0}, frost_days_per_year: {gte: 200}}
+      text: >-
+        Frozen most of the year: a place to study how life persists in cold ground, relevant
+        to ice-rich Mars sites such as Arcadia Planitia.
+    - id: bare_surface
+      bodies: [moon, mars]
+      when: {barren_pct: {gte: 90}}
+      text: >-
+        Over 90% bare ground: plants do not hide the surface, so sensors see rock and soil much
+        as they would on the Moon or Mars.
