@@ -1,12 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { animate, useInView, useReducedMotion } from 'motion/react'
 
-/** Counts up to `value` the first time it scrolls into view (instant under reduced motion). */
+/**
+ * Counts up to `value` the first time it scrolls into view (instant under reduced motion).
+ * The real value is the resting state: if animation frames never run (background tab, link
+ * preview, screenshot), the number is still correct rather than stuck at zero.
+ */
 export function CountUp({ value, decimals = 0, duration = 1.2 }: { value: number; decimals?: number; duration?: number }) {
   const ref = useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true, margin: '-10% 0px' })
   const reduced = useReducedMotion()
-  const [shown, setShown] = useState(0)
+  const [shown, setShown] = useState(value)
 
   useEffect(() => {
     if (!inView || reduced) return
