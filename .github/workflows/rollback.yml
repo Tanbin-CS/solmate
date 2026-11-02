@@ -1,0 +1,65 @@
+name: Rollback
+
+# One-click rollback from the Actions tab. "api" sends all Cloud Run traffic back to the
+# previous ready revision; "web" re-releases the previous Firebase Hosting version of the
+# app site (the same thing the console's Rollback button does). Nothing is deleted.
+
+on:
+  workflow_dispatch:
+    inputs:
+      what:
+        description: "What to roll back"
+        type: choice
+        options: [web, api, both]
+        default: web
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+env:
+  PROJECT_ID: solmate-13571
+  REGION: us-west1
+  SERVICE: solmate-terrain
+  HOSTING_SITE: solmate-analog
+  WIF_PROVIDER: projects/314008475333/locations/global/workloadIdentityPools/github/providers/github-oidc
+  DEPLOYER: solmate-deployer@solmate-13571.iam.gserviceaccount.com
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
+        with:
+          workload_identity_provider: ${{ env.WIF_PROVIDER }}
+          service_account: ${{ env.DEPLOYER }}
+      - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
+      - name: API to the previous revision
+        if: inputs.what == 'api' || inputs.what == 'both'
+        run: |
+          set -euo pipefail
+          current=$(gcloud run services describe "$SERVICE" --project "$PROJECT_ID" --region "$REGION" --format=json \
+            | jq -r '[.status.traffic[] | select(.percent == 100)][0].revisionName')
+          previous=$(gcloud run revisions list --service "$SERVICE" --project "$PROJECT_ID" --region "$REGION" \
+            --sort-by=~metadata.creationTimestamp --format='value(metadata.name)' | grep -vx "$current" | head -1)
+          test -n "$previous"
+          echo "API: $current -> $previous"
+          gcloud run services update-traffic "$SERVICE" --project "$PROJECT_ID" --region "$REGION" --to-revisions "$previous=100" --quiet
+      - name: Web to the previous Hosting release
+        if: inputs.what == 'web' || inputs.what == 'both'
+        run: |
+          set -euo pipefail
+          api="https://firebasehosting.googleapis.com/v1beta1/sites/$HOSTING_SITE"
+          auth="Authorization: Bearer $(gcloud auth print-access-token)"
+          version=$(curl -fsS -H "$auth" "$api/releases?pageSize=10" \
+            | jq -r '[.releases[] | select(.type == "DEPLOY")][1].version.name')
+          test -n "$version" && test "$version" != "null"
+          echo "Hosting: re-releasing $version"
+          curl -fsS -X POST -H "$auth" "$api/releases?versionName=$version" -o /dev/null
