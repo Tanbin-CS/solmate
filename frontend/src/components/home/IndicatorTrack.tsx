@@ -1,58 +1,48 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
-import type { IndicatorsDoc, TargetSummary } from '@/data/schema'
-import { fmtValue } from '@/lib/format'
+import type { Flagship } from '@/hooks/useHomeData'
+import type { Model } from '@/science/v2/model'
+import { withTerrain100 } from '@/science/v2/screening'
+import { DIMENSION_NAMES } from '@/science/v2/verdict'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { BODY } from '@/components/explorer/roles'
-import { PLAIN } from './indicatorGlyphs'
+import { DIMENSION_CARDS } from './dimensions'
 
-type Meta = IndicatorsDoc['profile']['indicators']
+type Card = (typeof DIMENSION_CARDS)[number]
 
-function Card({ m, i, targets }: { m: Meta[number]; i: number; targets: TargetSummary[] }) {
-  const reduced = useReducedMotion()
-  const p = PLAIN[m.id]
-  const vals = targets.map((t) => t.indicators[m.id] ?? 0)
-  const max = Math.max(...vals, 1e-9)
+function Card({ d, model, flagships }: { d: Card; model: Model; flagships: Flagship[] }) {
+  const dim = model.dimensions[d.id]
   return (
     <article className="flex h-[440px] w-[78vw] max-w-[360px] shrink-0 snap-center flex-col rounded-2xl border border-border bg-card p-6 lg:w-[360px]">
-      <div className="flex items-start justify-between">
-        <span aria-hidden="true" className="font-mono text-5xl font-medium text-white/10">0{i + 1}</span>
-        <span className="label-mono">{m.unit || 'ratio'}</span>
-      </div>
-      <svg viewBox="0 0 76 36" className="mt-6 h-16 w-full" aria-hidden="true">
-        <motion.path
-          d={p?.path ?? 'M2 30 L74 30'}
-          fill="none"
-          stroke="var(--data)"
-          strokeWidth={1.4}
-          strokeLinejoin="round"
-          initial={{ pathLength: reduced ? 1 : 0 }}
-          whileInView={{ pathLength: 1 }}
-          viewport={{ once: true, amount: 0.6 }}
-          transition={{ duration: 1.2, ease: 'easeInOut' }}
-        />
-      </svg>
-      <h3 className="mt-6 text-xl font-semibold leading-snug tracking-tight">{m.label}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p?.hint ?? m.description}</p>
+      <d.icon aria-hidden="true" className="size-7 text-data" />
+      <h3 className="mt-6 text-xl font-semibold leading-snug tracking-tight">{DIMENSION_NAMES[d.id]}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{dim?.description}</p>
+      <p className="mt-3 text-xs leading-relaxed text-slate-400">NASA data: {d.sources}</p>
       <dl className="mt-auto space-y-3 border-t border-border pt-4">
-        {targets.map((t, k) => (
-          <div key={t.id}>
-            <div className="flex items-baseline justify-between text-xs">
-              <dt style={{ color: BODY[t.body].color }}>{t.short}</dt>
-              <dd className="tabular text-base text-slate-100">{fmtValue(vals[k]!, m.unit)}</dd>
+        {flagships.map((f, k) => {
+          const best = f.top[0]
+          const dims = best ? withTerrain100(best.candidate.dims, best.candidate.terrain_100m?.score) : {}
+          const v = dims[d.id]
+          const scored = v !== undefined && Number.isFinite(v)
+          return (
+            <div key={f.target.id}>
+              <div className="flex items-baseline justify-between text-xs">
+                <dt style={{ color: BODY[f.target.body].color }}>Best Earth place vs {f.short}</dt>
+                <dd className="tabular text-base text-slate-100">{scored ? Math.round(v * 100) : <span className="text-xs text-slate-400">not scored</span>}</dd>
+              </div>
+              <div className="mt-1 h-1 overflow-hidden rounded-full bg-white/10">
+                <motion.div
+                  className="h-full rounded-full"
+                  style={{ background: BODY[f.target.body].color }}
+                  initial={{ width: 0 }}
+                  whileInView={{ width: `${scored ? v * 100 : 0}%` }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.9, delay: 0.2 + k * 0.1 }}
+                />
+              </div>
             </div>
-            <div className="mt-1 h-1 overflow-hidden rounded-full bg-white/10">
-              <motion.div
-                className="h-full rounded-full"
-                style={{ background: BODY[t.body].color }}
-                initial={{ width: 0 }}
-                whileInView={{ width: `${(vals[k]! / max) * 100}%` }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.9, delay: 0.2 + k * 0.1 }}
-              />
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </dl>
     </article>
   )
@@ -61,10 +51,9 @@ function Card({ m, i, targets }: { m: Meta[number]; i: number; targets: TargetSu
 function Intro() {
   return (
     <div className="flex w-[78vw] max-w-[420px] shrink-0 snap-start flex-col justify-center lg:w-[420px]">
-      <p className="label-mono">What gets measured</p>
-      <h2 className="mt-4 text-balance text-3xl font-semibold tracking-tight md:text-4xl">Five terrain numbers, computed the same way on every world.</h2>
+      <h2 className="text-balance text-3xl font-semibold tracking-tight md:text-4xl">Seven characteristics, each from NASA data.</h2>
       <p className="mt-4 text-pretty text-sm leading-relaxed text-muted-foreground md:text-base">
-        Absolute elevation is never compared, only the shape of the ground. Bars compare the two targets.
+        No single place on Earth matches a planet in everything, so each one is scored separately. Bars show how the best Earth place for each target scores on it.
       </p>
       <p className="mt-6 hidden font-mono text-[11px] text-slate-400 lg:block">Keep scrolling →</p>
     </div>
@@ -75,7 +64,7 @@ function Intro() {
  * Horizontal scroll section. On large screens it pins and turns vertical scrolling into a sideways track;
  * on phones it is a native swipe carousel with snap points.
  */
-export function IndicatorTrack({ meta, targets }: { meta: Meta; targets: TargetSummary[] }) {
+export function IndicatorTrack({ model, flagships }: { model: Model; flagships: Flagship[] }) {
   const desktop = useMediaQuery('(min-width: 1024px)')
   const reduced = useReducedMotion()
   const outer = useRef<HTMLDivElement>(null)
@@ -102,8 +91,8 @@ export function IndicatorTrack({ meta, targets }: { meta: Meta; targets: TargetS
   const items = (
     <>
       <Intro />
-      {meta.map((m, i) => (
-        <Card key={m.id} m={m} i={i} targets={targets} />
+      {DIMENSION_CARDS.map((d) => (
+        <Card key={d.id} d={d} model={model} flagships={flagships} />
       ))}
       <div className="w-6 shrink-0 lg:w-[10vw]" aria-hidden="true" />
     </>
@@ -111,14 +100,14 @@ export function IndicatorTrack({ meta, targets }: { meta: Meta; targets: TargetS
 
   if (!desktop || reduced) {
     return (
-      <section className="py-20" aria-label="Terrain indicators">
+      <section className="py-20" aria-label="Analog dimensions">
         <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-4 [scrollbar-width:none] md:px-10">{items}</div>
       </section>
     )
   }
 
   return (
-    <section ref={outer} className="relative" style={{ height: `calc(100svh + ${dist}px)` }} aria-label="Terrain indicators">
+    <section ref={outer} className="relative" style={{ height: `calc(100svh + ${dist}px)` }} aria-label="Analog dimensions">
       <div className="sticky top-0 flex h-svh flex-col justify-center overflow-hidden">
         <motion.div ref={track} style={{ x }} className="flex w-max items-center gap-6 pl-[max(2.5rem,calc((100vw-72rem)/2+2.5rem))]">
           {items}

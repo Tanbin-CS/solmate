@@ -4,22 +4,20 @@ import { AnimatePresence, motion } from 'motion/react'
 interface Props {
   body: 'mars' | 'moon'
   place: string
-  best?: { name: string; score: number }
-  curated: number
-  screened: number
+  best?: { region: string | null; coords: string; score: number }
   reduced: boolean
 }
 
 const WHY: Record<Props['body'], string> = {
   mars: 'where NASA’s Perseverance rover landed',
-  moon: 'a candidate Artemis III landing region',
+  moon: 'one of NASA’s nine Artemis III candidate base regions',
 }
 
 /**
  * One-line story that explains the 3D scene as it plays: the target, the comparison, the result.
  * Restarts whenever the target changes.
  */
-export function Narrative({ body, place, best, curated, screened, reduced }: Props) {
+export function Narrative({ body, place, best, reduced }: Props) {
   const [phase, setPhase] = useState(reduced ? 2 : 0)
   useEffect(() => {
     if (reduced) return
@@ -40,13 +38,12 @@ export function Narrative({ body, place, best, curated, screened, reduced }: Pro
     <>
       <b className="font-medium text-slate-100">{place}</b> on {world}, {WHY[body]}.
     </>,
-    <>
-      Comparing its terrain with {curated} Earth sites{screened ? ` and ${screened} unexplored places` : ''}…
-    </>,
+    <>Scoring 1.9 million places on Earth on terrain, climate, temperature, surface, minerals, ice and dust…</>,
     best ? (
       <>
-        Best Earth match: <b className="font-medium text-slate-100">{best.name}</b>, <span className="tabular text-data">{Math.round(best.score * 100)}/100</span>. Arcs
-        link the top 5.
+        Best Earth match: <b className="font-medium text-slate-100">{best.region ?? best.coords}</b>
+        {best.region && <span className="text-slate-400"> ({best.coords})</span>}, <span className="tabular text-data">{Math.round(best.score * 100)}/100</span>. Arcs link
+        the top 5.
       </>
     ) : (
       <>Loading the matches…</>

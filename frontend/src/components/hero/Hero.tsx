@@ -5,10 +5,11 @@ import { ArrowRight, ChevronDown, Hand } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { fadeUp, spring, stagger } from '@/design/motion'
 import { asset } from '@/lib/asset'
-import { pct } from '@/lib/format'
+import { fmtCoord, pct } from '@/lib/format'
+import { regionOf } from '@/lib/places'
 import { cn } from '@/lib/utils'
-import type { AllTargets } from '@/hooks/useAllTargets'
-import { BODY, ROLE } from '@/components/explorer/roles'
+import { explorerLink, type HomeData } from '@/hooks/useHomeData'
+import { BODY } from '@/components/explorer/roles'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import type { HeroSite, HeroTarget } from './HeroScene'
 import { Magnetic } from './Magnetic'
@@ -32,9 +33,9 @@ const WORD: Record<'mars' | 'moon', { text: string; className: string }> = {
 
 /**
  * Landing hero: a live 3D view of Earth, Mars and the Moon. Arcs link the selected planetary target to
- * its best-matching Earth terrain, computed from real elevation data. Drag to spin Earth; click a world to switch.
+ * its best Earth places from the global v2 screen. Drag to spin Earth; click a world to switch.
  */
-export function Hero({ data }: { data: AllTargets | null }) {
+export function Hero({ data }: { data: HomeData | null }) {
   const reduced = useReducedMotion() ?? false
   const navigate = useNavigate()
   const ref = useRef<HTMLElement>(null)
@@ -57,30 +58,44 @@ export function Hero({ data }: { data: AllTargets | null }) {
   const heroTargets: HeroTarget[] = useMemo(
     () =>
       data
-        ? data.common.targets.targets.map((t) => ({
-            id: t.id,
-            body: t.body,
-            short: t.short,
-            lat: t.lat,
-            lon: t.lon,
-            top: (data.byId[t.id]?.analysis.results ?? []).slice(0, 5).map(
-              (r): HeroSite => ({ id: r.site.id, name: r.site.name, lat: r.site.lat, lon: r.site.lon, score: r.score, rank: r.rank, role: r.site.role as HeroSite['role'] }),
+        ? data.flagships.map((f) => ({
+            id: f.target.id,
+            body: f.target.body,
+            short: f.short,
+            lat: (f.target.centroid as { lat: number }).lat,
+            lon: (f.target.centroid as { lon: number }).lon,
+            top: f.top.slice(0, 5).map(
+              (r, i): HeroSite => ({
+                id: `${r.candidate.lat},${r.candidate.lon}`,
+                name: fmtCoord(r.candidate.lat, r.candidate.lon),
+                lat: r.candidate.lat,
+                lon: r.candidate.lon,
+                score: r.sai / 100,
+                rank: i + 1,
+                role: 'lead',
+              }),
             ),
           }))
         : [
-            // worlds render before the analysis arrives; arcs appear once it does
-            { id: 'jezero', body: 'mars', short: 'Jezero Crater', lat: 18.4447, lon: 77.4508, top: [] },
-            { id: 'mons-mouton-plateau', body: 'moon', short: 'Mons Mouton Plateau', lat: -84.5338, lon: 30.6556, top: [] },
+            // worlds render before the data arrives; arcs appear once it does
+            { id: 'jezero_crater', body: 'mars', short: 'Jezero Crater', lat: 18.4447, lon: 77.4508, top: [] },
+            { id: 'mons_mouton_plateau', body: 'moon', short: 'Mons Mouton Plateau', lat: -84.5338, lon: 30.6556, top: [] },
           ],
     [data],
   )
-  const allSites = useMemo(() => {
-    const first = data ? Object.values(data.byId)[0] : undefined
-    return (first?.analysis.results ?? []).map((r) => ({ id: r.site.id, lat: r.site.lat, lon: r.site.lon, role: r.site.role as HeroSite['role'] }))
+  // known analog sites (field-tested by NASA and others) as faint reference dots
+  const allSites = useMemo(
+    () => (data?.model.known_analogs.sites ?? []).map((k) => ({ id: k.id, lat: k.lat, lon: k.lon, role: 'documented' as const })),
+    [data],
+  )
+  // every flagship's top cells and novel leads: the places the screen surfaced
+  const screened = useMemo(() => {
+    const seen = new Map<string, { lat: number; lon: number }>()
+    for (const f of data?.flagships ?? []) for (const c of [...f.screening.top, ...f.screening.novel_leads]) seen.set(`${c.lat},${c.lon}`, { lat: c.lat, lon: c.lon })
+    return [...seen.values()]
   }, [data])
-  const screened = useMemo(() => (data?.common.screening?.windows ?? []).map((w) => ({ lat: w.lat, lon: w.lon })), [data])
 
-  const [selected, setSelected] = useState('jezero')
+  const [selected, setSelected] = useState('jezero_crater')
   const target = heroTargets.find((t) => t.id === selected) ?? heroTargets[0]!
 
   // gently alternate targets until the visitor takes over
@@ -113,9 +128,12 @@ export function Hero({ data }: { data: AllTargets | null }) {
     setInteracted(true)
     setSelected(id)
   }
-  const openSite = (targetId: string, siteId: string) =>
-    navigate(`/explorer?${new URLSearchParams({ ...(targetId !== 'jezero' && { target: targetId }), site: siteId })}`)
-  const auc = data?.common.targets.targets.find((t) => t.id === target.id)?.auc_documented
+  const openSite = (targetId: string, siteId: string) => {
+    const [lat, lon] = siteId.split(',').map(Number)
+    navigate(explorerLink(targetId, lat, lon))
+  }
+  const auc = data?.flagships.find((f) => f.target.id === target.id)?.validation.auc_equal
+  const best = target.top[0]
 
   return (
     <section ref={ref} className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-ink-950">
@@ -171,10 +189,7 @@ export function Hero({ data }: { data: AllTargets | null }) {
         className="pointer-events-none relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end gap-8 px-6 pb-14 pt-[52svh] md:px-10 md:pb-20 md:landscape:justify-center md:landscape:pt-28"
       >
         <motion.div variants={stagger(0.11, 0.35)} initial="hidden" animate="show" className="max-w-xl">
-          <motion.p variants={fadeUp(reduced)} className="label-mono text-slate-400">
-            NASA Space Apps 2026 · Team Northern Lights
-          </motion.p>
-          <motion.h1 variants={fadeUp(reduced)} className="mt-4 text-balance text-4xl font-semibold leading-[1.04] tracking-tight text-slate-100 sm:text-5xl lg:text-6xl">
+          <motion.h1 variants={fadeUp(reduced)} className="text-balance text-4xl font-semibold leading-[1.04] tracking-tight text-slate-100 sm:text-5xl lg:text-6xl">
             Where on Earth looks like{' '}
             <span className="relative inline-block">
               <AnimatePresence mode="wait" initial={false}>
@@ -192,12 +207,13 @@ export function Hero({ data }: { data: AllTargets | null }) {
             </span>
           </motion.h1>
           <motion.p variants={fadeUp(reduced)} className="mt-5 max-w-md text-pretty text-base leading-relaxed text-slate-300 md:text-lg">
-            We match real terrain data to find the best places on Earth to rehearse Mars and Moon missions.
+            We score every place on Earth against NASA’s Moon base regions and Mars sites, using 41 NASA data layers, to find where
+            crews and rovers can rehearse.
           </motion.p>
           <motion.div variants={fadeUp(reduced)} className="pointer-events-auto mt-8 flex flex-wrap gap-3">
             <Magnetic>
               <Button asChild size="lg" className="rounded-full px-6 shadow-[0_12px_32px_-12px_rgb(0_0_0/0.7)]">
-                <Link to={`/explorer${target.id !== 'jezero' ? `?target=${target.id}` : ''}`}>
+                <Link to={explorerLink(target.id)}>
                   Explore the matches <ArrowRight />
                 </Link>
               </Button>
@@ -222,9 +238,7 @@ export function Hero({ data }: { data: AllTargets | null }) {
             <Narrative
               body={target.body}
               place={target.short}
-              best={target.top[0] && { name: target.top[0].name.split(',')[0]!, score: target.top[0].score }}
-              curated={allSites.length || 19}
-              screened={screened.length}
+              best={best && { region: regionOf(best.lat, best.lon), coords: best.name, score: best.score }}
               reduced={reduced}
             />
             {gl && (
@@ -264,7 +278,7 @@ export function Hero({ data }: { data: AllTargets | null }) {
 
           <div className="hidden min-w-0 sm:block md:landscape:flex md:landscape:flex-1 md:landscape:flex-col">
             <p className="label-mono mt-3 flex justify-between gap-2 px-1.5 md:landscape:mt-0.5">
-              <span>Closest Earth terrain · terrain match /100</span>
+              <span>Closest places on Earth · Analog Index /100</span>
               {auc !== undefined && (
                 <span className="hidden normal-case tracking-normal md:landscape:inline">
                   validation AUC <span className="text-positive">{auc.toFixed(2)}</span>
@@ -291,7 +305,7 @@ export function Hero({ data }: { data: AllTargets | null }) {
                   >
                     <button
                       type="button"
-                      title={`${s.name} · ${pct(s.score)}/100`}
+                      title={`${regionOf(s.lat, s.lon) ?? 'Earth'} · ${s.name} · ${pct(s.score)}/100`}
                       onMouseEnter={() => setHovered(s.id)}
                       onFocus={() => setHovered(s.id)}
                       onBlur={() => setHovered(null)}
@@ -315,7 +329,7 @@ export function Hero({ data }: { data: AllTargets | null }) {
                         <span className="block h-1 overflow-hidden rounded-full bg-white/10">
                           <motion.span
                             className="block h-full rounded-full"
-                            style={{ background: ROLE[s.role].color }}
+                            style={{ background: 'var(--screen)' }}
                             initial={{ width: 0 }}
                             animate={{ width: `${s.score * 100}%` }}
                             transition={{ duration: 0.8, delay: 0.2 + i * 0.06, ease: [0.16, 1, 0.3, 1] }}
@@ -329,7 +343,7 @@ export function Hero({ data }: { data: AllTargets | null }) {
               </AnimatePresence>
             </ol>
             <p className="mt-2 border-t border-white/10 px-1.5 pt-2 font-mono text-[11px] leading-relaxed text-slate-400 md:landscape:hidden">
-              Terrain similarity /100 from real DEMs
+              SolMate Analog Index /100 from 41 NASA layers
               {auc !== undefined && (
                 <>
                   {' '}

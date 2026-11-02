@@ -23,7 +23,7 @@ export interface HeroSite {
   lon: number
   score: number
   rank: number
-  role: 'documented' | 'candidate' | 'control'
+  role: 'documented' | 'candidate' | 'control' | 'lead'
 }
 
 export interface HeroTarget {
@@ -60,7 +60,7 @@ const COLORS = {
   screen: new Color('#e7a1c9'),
 }
 const MARS_HAZE = new Color('#f0a882')
-const ROLE_COLOR = { documented: COLORS.data, candidate: COLORS.derived, control: COLORS.control }
+const ROLE_COLOR = { documented: COLORS.data, candidate: COLORS.derived, control: COLORS.control, lead: COLORS.screen }
 const easeOut = (t: number) => 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 3)
 
 /* ----------------------------------------------------------------------------------------------- layout */
