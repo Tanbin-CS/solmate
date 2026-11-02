@@ -1,204 +1,146 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import type { SiteResult } from "@/science/analysis";
-import { asset } from "@/lib/asset";
-import { pct } from "@/lib/format";
-import { ROLE } from "@/components/explorer/roles";
+import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { explorerLink, type Flagship } from '@/hooks/useHomeData'
+import { asset } from '@/lib/asset'
+import { placeLabel } from '@/lib/places'
+import { siteName } from '@/components/explorer2/labels'
+import { rank } from '@/science/v2/screening'
 
-const x = (lon: number) => `${((lon + 180) / 360) * 100}%`;
-const y = (lat: number) => `${((90 - lat) / 180) * 100}%`;
+const x = (lon: number) => `${((lon + 180) / 360) * 100}%`
+const y = (lat: number) => `${((90 - lat) / 180) * 100}%`
+
+interface Point {
+  key: string
+  lat: number
+  lon: number
+  kind: 'top' | 'novel' | 'known'
+  sai?: number
+  rank?: number
+  label: string
+}
+
+const KIND = {
+  top: { color: 'var(--data)', label: 'Top analog' },
+  novel: { color: 'var(--screen)', label: 'Novel lead' },
+  known: { color: 'var(--slate-300)', label: 'Known analog site' },
+} as const
 
 /**
- * Lightweight world overview (no WebGL): curated sites sized by similarity, screened windows as a heat layer.
- * Click any point to open it in the explorer.
+ * Lightweight world overview (no WebGL): the target's best cells from the global screen, its novel
+ * leads and the field sites already used as analogs. Click a cell to score it in the Explorer.
  */
-export function WorldMap({
-  targetId,
-  results,
-  screened,
-}: {
-  targetId: string;
-  results: SiteResult[];
-  screened: SiteResult[];
-}) {
-  const navigate = useNavigate();
-  const reduced = useReducedMotion();
-  const [hover, setHover] = useState<SiteResult | null>(null);
-  const maxScreened = useMemo(
-    () => Math.max(...screened.map((s) => s.score), 0.01),
-    [screened],
-  );
-  const open = (id: string, tab?: string) =>
-    navigate(
-      `/explorer?${new URLSearchParams({ ...(targetId !== "jezero" && { target: targetId }), site: id, ...(tab && { tab }) })}`,
-    );
+export function WorldMap({ flagship, known, weights }: { flagship: Flagship; known: { id: string; lat: number; lon: number }[]; weights: Record<string, number> }) {
+  const navigate = useNavigate()
+  const reduced = useReducedMotion()
+  const [hover, setHover] = useState<Point | null>(null)
+  const id = flagship.target.id
+
+  const points = useMemo<Point[]>(() => {
+    const out: Point[] = known.map((k) => ({ key: `k-${k.id}`, lat: k.lat, lon: k.lon, kind: 'known', label: siteName(k.id) }))
+    const seen = new Set<string>()
+    const add = (list: ReturnType<typeof rank>, kind: 'top' | 'novel') =>
+      list.forEach((r, i) => {
+        const key = `${r.candidate.lat},${r.candidate.lon}`
+        if (seen.has(key)) return
+        seen.add(key)
+        out.push({ key, lat: r.candidate.lat, lon: r.candidate.lon, kind, sai: r.sai, rank: i + 1, label: placeLabel(r.candidate.lat, r.candidate.lon).name })
+      })
+    add(flagship.top, 'top')
+    add(rank(flagship.screening.novel_leads, weights), 'novel')
+    return out
+  }, [flagship, known, weights])
+
+  const scored = points.filter((p) => p.kind !== 'known')
+  const lo = Math.min(...scored.map((p) => p.sai ?? 0))
+  const hi = Math.max(...scored.map((p) => p.sai ?? 0), lo + 1)
+  const size = (p: Point) => (p.kind === 'known' ? 9 : 7 + 12 * (((p.sai ?? lo) - lo) / (hi - lo)))
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-border bg-ink-950">
       <div className="overflow-x-auto overscroll-x-contain [scrollbar-width:thin]">
         <div className="relative aspect-[2/1] w-full min-w-[720px]">
           <img
-            src={asset("media/earth-2k.webp")}
-            srcSet={`${asset("media/earth-1k.webp")} 1024w, ${asset("media/earth-2k.webp")} 2048w`}
+            src={asset('media/earth-2k.webp')}
+            srcSet={`${asset('media/earth-1k.webp')} 1024w, ${asset('media/earth-2k.webp')} 2048w`}
             sizes="(min-width: 1024px) 1100px, 100vw"
             alt=""
             className="absolute inset-0 h-full w-full object-cover opacity-70 saturate-[0.8]"
           />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgb(5_8_13/0.7))]" />
-          {/* graticule */}
-          <svg
-            className="absolute inset-0 h-full w-full"
-            viewBox="0 0 360 180"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            {[-120, -60, 0, 60, 120].map((l) => (
-              <line
-                key={`m${l}`}
-                x1={l + 180}
-                x2={l + 180}
-                y1={0}
-                y2={180}
-                stroke="rgb(127 216 230 / 0.08)"
-                strokeWidth={0.3}
-              />
-            ))}
-            {[-60, -30, 0, 30, 60].map((l) => (
-              <line
-                key={`p${l}`}
-                y1={90 - l}
-                y2={90 - l}
-                x1={0}
-                x2={360}
-                stroke="rgb(127 216 230 / 0.08)"
-                strokeWidth={0.3}
-              />
-            ))}
-          </svg>
 
-          {screened.map((s) => (
-            <button
-              key={s.site.id}
-              type="button"
-              tabIndex={-1}
-              aria-hidden="true"
-              onMouseEnter={() => setHover(s)}
-              onMouseLeave={() => setHover(null)}
-              onClick={() => open(s.site.id, "screened")}
-              className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full transition-transform hover:scale-150"
-              style={{
-                left: x(s.site.lon),
-                top: y(s.site.lat),
-                width: 4 + 6 * (s.score / maxScreened),
-                height: 4 + 6 * (s.score / maxScreened),
-                background: `color-mix(in oklab, var(--screen) ${Math.round(30 + 70 * (s.score / maxScreened))}%, var(--ink-600))`,
-                opacity: 0.35 + 0.65 * (s.score / maxScreened),
-              }}
-            />
-          ))}
-
-          {results.map((r, i) => (
+          {points.map((p, i) => (
             <motion.button
-              key={r.site.id}
+              key={p.key}
               type="button"
               initial={{ scale: 0, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
               viewport={{ once: true }}
-              transition={{
-                delay: reduced ? 0 : 0.2 + i * 0.03,
-                type: "spring",
-                stiffness: 400,
-                damping: 22,
-              }}
-              onMouseEnter={() => setHover(r)}
+              transition={{ delay: reduced ? 0 : 0.15 + (i % 40) * 0.02, type: 'spring', stiffness: 400, damping: 22 }}
+              onMouseEnter={() => setHover(p)}
               onMouseLeave={() => setHover(null)}
-              onFocus={() => setHover(r)}
+              onFocus={() => setHover(p)}
               onBlur={() => setHover(null)}
-              onClick={() => open(r.site.id)}
-              aria-label={`${r.site.name}: rank ${r.rank}, similarity ${pct(r.score)}`}
-              className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full"
-              style={{ left: x(r.site.lon), top: y(r.site.lat) }}
+              onClick={() => navigate(explorerLink(id, p.lat, p.lon))}
+              aria-label={`${KIND[p.kind].label}: ${p.label}${p.sai !== undefined ? `, Analog Index ${Math.round(p.sai)}` : ''}`}
+              className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full p-1"
+              style={{ left: x(p.lon), top: y(p.lat) }}
             >
               <span
-                className="block rounded-full border-2 bg-ink-950/70"
+                className="block rounded-full border-2"
                 style={{
-                  width: 8 + 16 * r.score,
-                  height: 8 + 16 * r.score,
-                  borderColor: ROLE[r.site.role].color,
-                  borderStyle: r.site.role === "control" ? "dashed" : "solid",
-                  boxShadow:
-                    r.rank <= 3
-                      ? `0 0 0 4px color-mix(in oklab, ${ROLE[r.site.role].color} 25%, transparent)`
-                      : undefined,
+                  width: size(p),
+                  height: size(p),
+                  borderColor: KIND[p.kind].color,
+                  background: p.kind === 'known' ? 'rgb(5 8 13 / 0.7)' : `color-mix(in oklab, ${KIND[p.kind].color} 55%, transparent)`,
                 }}
               />
-              {r.rank <= 3 && !reduced && (
-                <span
-                  className="absolute inset-0 animate-ping rounded-full border"
-                  style={{ borderColor: ROLE[r.site.role].color }}
-                />
-              )}
             </motion.button>
           ))}
 
           <AnimatePresence>
             {hover && (
               <motion.div
-                key={hover.site.id}
+                key={hover.key}
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.15 }}
                 className="pointer-events-none absolute z-10 w-56 -translate-x-1/2 rounded-lg border border-border bg-ink-900/95 p-3 shadow-xl"
                 style={{
-                  left: `clamp(7rem, ${x(hover.site.lon)}, calc(100% - 7rem))`,
+                  left: `clamp(7rem, ${x(hover.lon)}, calc(100% - 7rem))`,
                   // flip above the point in the southern half so the card never leaves the map
-                  ...(hover.site.lat < 0
-                    ? { bottom: `calc(${y(-hover.site.lat)} + 18px)` }
-                    : { top: `calc(${y(hover.site.lat)} + 18px)` }),
+                  ...(hover.lat < 0 ? { bottom: `calc(${y(-hover.lat)} + 18px)` } : { top: `calc(${y(hover.lat)} + 18px)` }),
                 }}
               >
-                <p
-                  className="font-mono text-[11px] uppercase tracking-wider"
-                  style={{ color: ROLE[hover.site.role].color }}
-                >
-                  {ROLE[hover.site.role].short} · rank {hover.rank}
+                <p className="font-mono text-[11px] uppercase tracking-wider" style={{ color: KIND[hover.kind].color }}>
+                  {KIND[hover.kind].label}
+                  {hover.rank !== undefined && ` · #${hover.rank}`}
                 </p>
-                <p className="mt-1 truncate text-sm font-medium text-slate-100">
-                  {hover.site.name}
-                </p>
-                <p className="mt-1 text-xl tabular text-slate-100">
-                  {pct(hover.score)}
-                  <span className="text-xs text-slate-400">
-                    {" "}
-                    /100 similarity
-                  </span>
-                </p>
+                <p className="mt-1 truncate text-sm font-medium text-slate-100">{hover.label}</p>
+                {hover.sai !== undefined ? (
+                  <p className="mt-1 text-xl tabular text-slate-100">
+                    {Math.round(hover.sai)}
+                    <span className="text-xs text-slate-400"> /100 Analog Index</span>
+                  </p>
+                ) : (
+                  <p className="mt-1 text-xs text-slate-400">Already used for field tests</p>
+                )}
               </motion.div>
             )}
           </AnimatePresence>
         </div>
       </div>
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-border px-4 py-2.5 text-[11px] text-slate-400">
-        {(["documented", "candidate", "control", "screened"] as const).map(
-          (r) => (
-            <span key={r} className="inline-flex items-center gap-1.5">
-              <span
-                className="size-2.5 rounded-full border-2"
-                style={{
-                  borderColor: ROLE[r].color,
-                  background: r === "screened" ? ROLE[r].color : undefined,
-                  borderStyle: r === "control" ? "dashed" : "solid",
-                }}
-              />
-              {ROLE[r].short}
-            </span>
-          ),
-        )}
-        <span>· size = similarity · click a point to open it</span>
+        {(['top', 'novel', 'known'] as const).map((k) => (
+          <span key={k} className="inline-flex items-center gap-1.5">
+            <span className="size-2.5 rounded-full border-2" style={{ borderColor: KIND[k].color, background: k === 'known' ? undefined : KIND[k].color }} />
+            {KIND[k].label}
+          </span>
+        ))}
+        <span>· size = Analog Index · click a place to score it</span>
         <span className="md:hidden">· swipe to pan</span>
       </div>
     </div>
-  );
+  )
 }

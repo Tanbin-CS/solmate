@@ -6,6 +6,7 @@ import { asset } from '@/lib/asset'
 import { ModelSchema, TargetsSchema, type Model, type Target } from './model'
 import { ScreeningSchema, type Screening } from './screening'
 import { gunzip, Tile } from './tiles'
+import { ValidationSchema, type Validation } from './validation'
 
 const ROOT = 'data/v2/'
 const MAX_TILES = 16 // ~10 MB of decoded tiles
@@ -29,6 +30,10 @@ export const loadModel = once(async (): Promise<Model> => ModelSchema.parse(awai
 
 export const loadTargets = once(
   async (): Promise<Target[]> => TargetsSchema.parse(await (await fetchOk('targets.json')).json()).targets,
+)
+
+export const loadValidation = once(
+  async (): Promise<Validation> => ValidationSchema.parse(await (await fetchOk('validation.json')).json()),
 )
 
 const screenings = new Map<string, Promise<Screening>>()

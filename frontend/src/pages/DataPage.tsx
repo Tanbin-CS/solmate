@@ -10,7 +10,6 @@ export default function DataPage() {
   return (
     <>
       <PageHeader
-        kicker="Data provenance"
         title="Where every number comes from."
         lead="Each dataset, licence and processing step behind the explorer. Scored inputs are marked separately from imagery shown only for context."
       />

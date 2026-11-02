@@ -1,52 +1,39 @@
-import { useEffect, useMemo, useState } from 'react'
-import { TargetSwitcher } from '@/components/explorer/TargetSwitcher'
+import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router'
 import { motion, useReducedMotion } from 'motion/react'
 import { ArrowRight } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { ErrorState, PanelSkeleton } from '@/components/common/States'
 import { Button } from '@/components/ui/button'
-import { useAnalysisData } from '@/hooks/useAnalysisData'
-import { analyse, equalWeights } from '@/science/analysis'
-import { fmtValue, ordinal } from '@/lib/format'
 import { fadeUp } from '@/design/motion'
-import { ROLE } from '@/components/explorer/roles'
-import type { AnalysisData } from '@/data/load'
+import { useHomeData, type HomeData } from '@/hooks/useHomeData'
+import { DIMENSION_CARDS } from '@/components/home/dimensions'
+import { BODY } from '@/components/explorer/roles'
+import { siteName } from '@/components/explorer2/labels'
+import { DIMENSION_NAMES, INDICATOR_LABELS } from '@/science/v2/verdict'
+import type { TargetValidation } from '@/science/v2/validation'
+import { cn } from '@/lib/utils'
 
 export default function MethodPage() {
-  const [target, setTarget] = useState('jezero')
-  const state = useAnalysisData(target)
+  const state = useHomeData()
   return (
     <>
       <PageHeader
-        kicker="Method"
-        title="How SolMate compares terrain."
-        lead="Two planetary targets, Earth elevation data on the same grid, five terrain indicators and a weighted score you can inspect. Then a test of whether the method finds sites NASA already uses."
+        title="How SolMate finds Earth analogs."
+        lead="Eleven NASA targets, 41 NASA data layers over every land cell on Earth, seven characteristics combined into one index you can take apart, and a validation test written down before the results were seen."
       />
       {state.status === 'loading' && (
         <div className="mx-auto w-full max-w-4xl px-6">
           <PanelSkeleton />
         </div>
       )}
-      {state.status === 'error' && <ErrorState title="Results could not be loaded." detail={state.error.message} onRetry={state.retry} />}
-      {state.status === 'ready' && (
-        <>
-          <div className="sticky top-16 z-20 border-y border-border bg-background/95 py-3">
-            <div className="mx-auto flex w-full max-w-4xl flex-wrap items-center justify-between gap-3 px-6">
-              <span className="label-mono">Results shown for</span>
-              <div className="w-full max-w-sm">
-                <TargetSwitcher targets={state.data.targets.targets} value={state.data.indicators.reference.id} onChange={setTarget} />
-              </div>
-            </div>
-          </div>
-          <MethodBody data={state.data} />
-        </>
-      )}
+      {state.status === 'error' && <ErrorState title="Results could not be loaded." detail={state.error.message} />}
+      {state.status === 'ready' && <MethodBody data={state.data} />}
     </>
   )
 }
 
-function Block({ id, kicker, title, children }: { id?: string; kicker: string; title: string; children: React.ReactNode }) {
+function Block({ id, title, children }: { id?: string; title: string; children: React.ReactNode }) {
   const reduced = useReducedMotion()
   return (
     <motion.section
@@ -57,9 +44,8 @@ function Block({ id, kicker, title, children }: { id?: string; kicker: string; t
       viewport={{ once: true, margin: '-10% 0px' }}
       className="scroll-mt-24 border-t border-border py-14"
     >
-      <p className="label-mono">{kicker}</p>
-      <h2 className="mt-3 text-2xl font-semibold tracking-tight md:text-3xl">{title}</h2>
-      <div className="mt-6 space-y-5 text-[15px] leading-relaxed text-slate-300 [&>p]:max-w-[70ch]">{children}</div>
+      <h2 className="text-balance text-2xl font-semibold tracking-tight md:text-3xl">{title}</h2>
+      <div className="mt-6 space-y-5 text-[15px] leading-relaxed text-slate-300 [&>ol]:max-w-[62ch] [&>p]:max-w-[62ch] [&>ul]:max-w-[62ch] [&_li]:text-pretty [&>p]:text-pretty">{children}</div>
     </motion.section>
   )
 }
@@ -67,188 +53,235 @@ function Block({ id, kicker, title, children }: { id?: string; kicker: string; t
 function Stat({ label, value, note, tone = 'text-slate-100' }: { label: string; value: string; note?: string; tone?: string }) {
   return (
     <div className="rounded-xl border border-border bg-card p-5">
-      <p className="label-mono">{label}</p>
+      <p className="text-sm text-slate-300">{label}</p>
       <p className={`mt-2 font-mono text-3xl tabular ${tone}`}>{value}</p>
       {note && <p className="mt-1.5 text-xs text-slate-400">{note}</p>}
     </div>
   )
 }
 
-function MethodBody({ data }: { data: AnalysisData }) {
-  const { indicators: doc, validation: v } = data
+const TH = 'px-4 py-3 font-mono text-[11px] font-normal uppercase tracking-wider text-slate-400'
+
+function MethodBody({ data }: { data: HomeData }) {
   const { hash } = useLocation()
   useEffect(() => {
     // content renders after data loads, so honour #anchors once it exists
     if (hash) document.getElementById(hash.slice(1))?.scrollIntoView({ block: 'start' })
   }, [hash])
-  const res = useMemo(() => analyse(doc, equalWeights(doc.profile.scored)), [doc])
-  const meta = doc.profile.indicators
-  const r = v.retrieval
-  const p = v.weight_perturbation.auc_documented
-  const groups = (['documented', 'candidate', 'control'] as const).map((role) => ({ role, items: res.results.filter((x) => x.site.role === role) }))
-  const corr = v.correlation
+  const v = data.validation
+  const moon = data.targets.filter((t) => t.body === 'moon')
+  const mars = data.targets.filter((t) => t.body === 'mars')
+  const jez = v.targets.jezero_crater!
+  const arc = v.targets.arcadia_planitia!
+  const [shown, setShown] = useState('jezero_crater')
+  const sel = v.targets[shown]!
+  const known = data.model.known_analogs
 
   return (
     <div className="mx-auto w-full max-w-4xl px-6 pb-24">
-      <Block kicker="01 · Scope" title="A terrain profile, not a claim of sameness.">
+      <Block title="Seven characteristics, not a claim of sameness.">
         <p>
-          The reference is the <strong className="text-slate-100">{doc.reference.name}</strong> on the {doc.reference.pair}. {doc.reference.note} The comparison asks one narrow question: which Earth sites have ground that is shaped like this at rover-traverse scale? That is useful for
-          mobility, navigation and field-geology rehearsal. It says nothing about chemistry, climate, radiation or gravity.
+          The question is narrow: which places on Earth come closest to a Moon base region or a Mars site in the conditions a crew, a rover or an instrument would meet there?
+          No place on Earth matches another world in everything, so each characteristic is scored on its own, and the index says how many of them line up at once.
         </p>
         <p>
-          Mineralogy and other documented properties appear in the explorer as cited context and are <strong className="text-slate-100">never scored</strong>.
+          What Earth cannot reproduce (gravity, near-vacuum, radiation without a magnetic field) is never scored. It is stated with every result under{' '}
+          <em>where the analogy breaks down</em>.
         </p>
       </Block>
 
-      <Block kicker="02 · Data and scale" title="Same physical grid on both worlds.">
+      <Block title="Targets from NASA, Earth from NASA data.">
         <ul className="list-disc space-y-2 pl-5 marker:text-slate-400">
           <li>
-            <strong className="text-slate-100">Mars:</strong> USGS Mars 2020 Terrain Relative Navigation CTX digital terrain model of Jezero, 20 m per pixel.
+            <strong className="text-slate-100">Moon:</strong> all {moon.length} Artemis III candidate regions NASA named on 28 October 2024, located at the centroid of the
+            published candidate landing sites (Wueller et al. 2026). Terrain from LRO LOLA, temperatures from LRO Diviner.
           </li>
           <li>
-            <strong className="text-slate-100">Moon:</strong> LOLA south-pole elevation mosaic from NASA Goddard (PGDA), 20 m per pixel, polar stereographic.
+            <strong className="text-slate-100">Mars:</strong> {mars.map((t) => t.name).join(' and ')}. Jezero is where Perseverance landed; Arcadia is NASA’s leading
+            ice target for a human base (SWIM). Terrain from MOLA and CTX; climate from Mars 2020 MEDA and cited studies.
           </li>
           <li>
-            <strong className="text-slate-100">Earth:</strong> Copernicus DEM GLO-30 (about 30 m), read directly from the AWS Open Data registry.
-          </li>
-          <li>
-            Both are averaged down to <strong className="text-slate-100">100 m cells</strong> in a <strong className="text-slate-100">20 × 20 km window</strong> centred on each
-            site. Downsampling only: no detail finer than the source is invented. Absolute elevation is never compared.
+            <strong className="text-slate-100">Earth:</strong> 41 NASA layers resampled to a 0.1° grid (about 11 km), every land cell from 83° N to 83° S, about 1.9 million cells.
+            Each target value is either computed from NASA data or cited from the literature with its DOI.
           </li>
         </ul>
+        <div className="overflow-hidden rounded-xl border border-border">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-ink-850">
+              <tr>
+                <th className={TH}>Characteristic</th>
+                <th className={TH}>Earth indicators</th>
+                <th className={cn(TH, 'hidden md:table-cell')}>NASA data</th>
+              </tr>
+            </thead>
+            <tbody>
+              {DIMENSION_CARDS.map((d) => {
+                const dim = data.model.dimensions[d.id]
+                return (
+                  <tr key={d.id} className="border-t border-border align-top">
+                    <td className="px-4 py-3 text-slate-100">
+                      {DIMENSION_NAMES[d.id]}
+                      {dim && dim.applies_to.length < 2 && <span className="block text-xs text-slate-400">{dim.applies_to.includes('mars') ? 'Mars only' : 'Moon only'}</span>}
+                    </td>
+                    <td className="px-4 py-3 text-slate-300">
+                      {Object.keys(dim?.indicators ?? {})
+                        .map((k) => INDICATOR_LABELS[k] ?? k)
+                        .join(', ')}
+                    </td>
+                    <td className="hidden px-4 py-3 text-xs text-slate-400 md:table-cell">{d.sources}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
         <Link to="/provenance" className="inline-flex items-center gap-1.5 font-mono text-xs text-data hover:underline">
-          Full provenance and licences <ArrowRight className="size-3" />
+          Data sources and licences <ArrowRight className="size-3" />
         </Link>
       </Block>
 
-      <Block kicker="03 · Indicators" title="Five terrain indicators, computed with the same code.">
-        <div className="overflow-hidden rounded-xl border border-border">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-ink-850">
-              <tr>
-                <th className="px-4 py-3 font-mono text-[11px] font-normal uppercase tracking-wider text-slate-400">Indicator</th>
-                <th className="px-4 py-3 text-right font-mono text-[11px] font-normal uppercase tracking-wider text-reference">Jezero</th>
-                <th className="hidden px-4 py-3 font-mono text-[11px] font-normal uppercase tracking-wider text-slate-400 md:table-cell">What it measures</th>
-              </tr>
-            </thead>
-            <tbody>
-              {meta.map((m) => (
-                <tr key={m.id} className="border-t border-border align-top">
-                  <td className="px-4 py-3 text-slate-100">{m.label}</td>
-                  <td className="px-4 py-3 text-right font-mono tabular text-slate-200">{fmtValue(doc.reference.indicators[m.id]!, m.unit)}</td>
-                  <td className="hidden px-4 py-3 text-slate-400 md:table-cell">{m.description}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Block>
-
-      <Block kicker="04 · Similarity" title="A score you can take apart.">
+      <Block title="A score you can take apart.">
         <ol className="list-decimal space-y-2 pl-5 marker:font-mono marker:text-slate-400">
-          <li>For each indicator, find the median and the spread (1.4826 × median absolute deviation) across all Earth sites.</li>
-          <li>Measure how far a site is from Jezero in those robust units, then convert that gap to a similarity between 0 and 1.</li>
-          <li>Average the five similarities with your weights. Equal weights by default.</li>
+          <li>
+            <strong className="text-slate-100">Match</strong> when the target’s value lies inside Earth’s range (between the 1st and 99th percentile of land cells): similarity falls
+            off with the distance from the target, in units of Earth’s spread σ.
+          </li>
+          <li>
+            <strong className="text-slate-100">Toward</strong> when no place on Earth gets there, such as the cold of the lunar south pole or the dryness of Mars: similarity is
+            the share of Earth’s land the place beats in the target’s direction.
+          </li>
+          <li>Each characteristic is the weighted mean of its indicators; the SolMate Analog Index (0–100) is the weighted mean of the characteristics.</li>
         </ol>
         <div className="rounded-xl border border-border bg-ink-850 p-5 font-mono text-sm text-slate-200">
           <p>
-            s<sub>i</sub> = exp( −½ · ((x<sub>i</sub> − x<sub>i,Jezero</sub>) / σ<sub>i</sub>)² )
+            match: s = exp( −½ · ((x − t) / σ)² ) · toward: s = ECDF<sub>Earth</sub>(x) in the target’s direction
           </p>
-          <p className="mt-2">S = Σ w<sub>i</sub> s<sub>i</sub> / Σ w<sub>i</sub></p>
+          <p className="mt-2">
+            SAI = 100 · Σ W<sub>k</sub> D<sub>k</sub> / Σ W<sub>k</sub> over the characteristics with data
+          </p>
         </div>
         <p>
-          The browser and the Python pipeline implement the same formula. Automated tests check that they agree to nine decimal places for every
-          site.
+          Earth statistics come from all land cells, weighted by area, so a score means the same anywhere. The browser and the Python pipeline run the same rules; automated tests
+          check 153 real places against all eleven targets and require identical results, wording included.
         </p>
       </Block>
 
-      <Block id="validation" kicker="05 · Validation" title="Does it find the sites NASA already uses?">
-        <p>
-          If terrain similarity is meaningful, Earth sites that NASA pairs with the {r.pair} in its{' '}
-          <a className="text-data hover:underline" href="https://science.nasa.gov/solar-system/analog-explorer/" target="_blank" rel="noreferrer">
-            Planetary Analog Explorer
-          </a>{' '}
-          should score above farmland, rainforest and alpine glaciers. They do, at equal weights:
-        </p>
-        <div className="grid gap-3 sm:grid-cols-3">
-          <Stat label="Retrieval AUC" value={r.auc_documented.toFixed(2)} note={`${r.n_positive} ${r.pair}-paired sites vs ${r.n_negative} controls. 0.5 = chance, 1 = perfect.`} tone="text-positive" />
-          <Stat label="Under random weights" value={`${p.p5.toFixed(2)}–${p.p95.toFixed(2)}`} note={`5th–95th percentile over ${v.weight_perturbation.n.toLocaleString()} Dirichlet weightings`} />
-          <Stat label="Top five" value={`${r.documented_in_top5}/5`} note={`are NASA-documented analog sites; ${r.controls_in_top5 === 0 ? 'no control' : `${r.controls_in_top5} control`} in the top five`} />
-        </div>
-
-        <ScoreStrip groups={groups} />
-
-        <p className="font-medium text-slate-100">Where it is weak</p>
-        <div className="overflow-hidden rounded-xl border border-border">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-ink-850">
-              <tr>
-                <th className="px-4 py-3 font-mono text-[11px] font-normal uppercase tracking-wider text-slate-400">Analysis setting</th>
-                <th className="px-4 py-3 text-right font-mono text-[11px] font-normal uppercase tracking-wider text-slate-400">Retrieval AUC</th>
-                <th className="px-4 py-3 text-right font-mono text-[11px] font-normal uppercase tracking-wider text-slate-400">Rank agreement</th>
-              </tr>
-            </thead>
-            <tbody>
-              {v.sensitivity.map((c) => (
-                <tr key={c.id} className="border-t border-border">
-                  <td className="px-4 py-3 text-slate-200">
-                    {c.label}
-                    {c.id === 'primary' && <span className="ml-2 font-mono text-[11px] text-slate-400">(primary)</span>}
-                  </td>
-                  <td className={`px-4 py-3 text-right font-mono tabular ${c.auc_documented < 0.7 ? 'text-negative' : 'text-slate-100'}`}>{c.auc_documented.toFixed(2)}</td>
-                  <td className="px-4 py-3 text-right font-mono tabular text-slate-100">ρ = {c.spearman_vs_primary.toFixed(2)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <Block title="Screen everything, then look closer.">
         <ul className="list-disc space-y-2 pl-5 marker:text-slate-400">
+          <li>Every land cell is scored for every target. The best are kept at least 50 km apart, so one plateau cannot fill the list.</li>
           <li>
-            <strong className="text-slate-100">Scale matters.</strong> In a 12 km window the retrieval AUC is{' '}
-            {v.sensitivity.find((c) => c.id === 'smaller-window')?.auc_documented.toFixed(2)} (rank agreement ρ ={' '}
-            {v.sensitivity.find((c) => c.id === 'smaller-window')?.spearman_vs_primary.toFixed(2)}). Results describe a 20 km traverse-scale landscape, not a
-            landing-site patch.
+            Cells more than {known.novelty_km} km from all {known.sites.length} known analog sites (NASA field sites, the Atacama, Antarctica, Iceland, Hawaii, Devon Island and
+            others) are listed as <strong className="text-slate-100">novel leads</strong>.
           </li>
           <li>
-            <strong className="text-slate-100">Forest canopy looks like rough ground.</strong> GLO-30 is a surface model, so the Amazon control ranks{' '}
-            {ordinal(res.byId.get('amazon-forest')?.rank ?? 0)}: tree crowns add apparent roughness.
+            The top cells and leads are then measured again at <strong className="text-slate-100">100 m from NASA ASTER GDEM v3</strong>: median slope, steep-slope tail and
+            hypsometry in a 20 km window. That score replaces the 1 km terrain proxy. Any other place can be measured the same way on request in the Explorer.
           </li>
-          {doc.reference.body === 'mars' ? (
-            <li>
-              <strong className="text-slate-100">Lake Salda ranks {ordinal(res.byId.get('lake-salda')?.rank ?? 0)}.</strong> NASA pairs it with Jezero for its lake-edge
-              sediments, not its landforms. A terrain-only profile cannot see mineralogy, which is why mineralogy stays a separate, unscored layer.
-            </li>
-          ) : (
-            <li>
-              <strong className="text-slate-100">Light and cold are not scored.</strong> The south pole&apos;s defining conditions (long shadows, permanently shadowed
-              regions, extreme cold) have no Earth equivalent and are shown only as context. NASA&apos;s Moon-paired sites are chosen for basaltic geology, so they
-              are a loose test for a polar massif.
-            </li>
-          )}
         </ul>
       </Block>
 
-      <Block kicker="06 · Redundancy" title="Three indicators move together.">
-        <p>
-          Across the Earth sites, median slope, local relief and ruggedness are almost perfectly correlated, so equal weights count terrain
-          roughness about three times. The explorer offers a <em>balanced</em> preset that gives this group the same total weight as each
-          independent indicator.
-        </p>
-        <CorrelationGrid order={corr.order} matrix={corr.matrix} labels={Object.fromEntries(meta.map((m) => [m.id, m.label]))} />
+      <Block title="Where the analogy breaks down, and what a place is good for.">
+        <ul className="list-disc space-y-2 pl-5 marker:text-slate-400">
+          <li>Gravity, surface pressure and radiation dose are always shown as ratios to Earth.</li>
+          <li>Any characteristic below 0.4 is listed as different; where the target lies beyond anything on Earth, the result says how far of the way the place gets.</li>
+          <li>More than 30% vegetation is flagged: biology has no lunar or Martian counterpart, and canopy inflates terrain roughness.</li>
+          <li>
+            Fixed, published rules add the Earth processes a place can teach (dust, salt flats, volcanic rock, frozen ground, rugged highlands) and what it could be used for:
+            rover trials, landing-pad tests, thermal cycling, ice drilling, dust mitigation, life-detection instruments.
+          </li>
+        </ul>
       </Block>
 
-      <Block kicker="07 · Limitations" title="What this prototype cannot tell you.">
+      <Block id="validation" title="Does it find the sites NASA already uses?">
+        <p>
+          The test was written down before the results were seen (<span className="font-mono text-sm">docs/VALIDATION.md</span>): sites NASA and its partners have already used as
+          analogs should score above controls, farmland, rainforest, cities and glaciers. AUC is the chance that a random analog site outscores a random control; 0.5 is chance.
+          Every target is reported, with its 95% bootstrap confidence interval.
+        </p>
+        <div className="grid gap-3 sm:grid-cols-3">
+          <Stat label="Jezero Crater" value={jez.auc_equal.toFixed(2)} note={`95% CI ${jez.auc_ci95[0].toFixed(2)}–${jez.auc_ci95[1].toFixed(2)} · ${jez.n_positives} analogs vs ${jez.n_controls} controls`} tone="text-positive" />
+          <Stat label="Artemis III regions, median" value={v.summary.moon!.auc_median.toFixed(2)} note={`${moon.length} regions · ${v.targets[moon[0]!.id]!.n_positives} analogs each, so intervals are wide`} />
+          <Stat label="Arcadia Planitia" value={arc.auc_equal.toFixed(2)} note={`95% CI ${arc.auc_ci95[0].toFixed(2)}–${arc.auc_ci95[1].toFixed(2)} · not better than chance`} tone="text-negative" />
+        </div>
+
+        <div className="overflow-x-auto rounded-xl border border-border">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-ink-850">
+              <tr>
+                <th className={TH}>Target</th>
+                <th className={cn(TH, 'text-right')}>AUC</th>
+                <th className={cn(TH, 'text-right')}>95% CI</th>
+                <th className={cn(TH, 'hidden text-right sm:table-cell')}>Analogs’ median land percentile</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.targets.map((t) => {
+                const r = v.targets[t.id]!
+                return (
+                  <tr key={t.id} className="border-t border-border">
+                    <td className="px-4 py-2.5 text-slate-200">
+                      <span className="mr-2 inline-block size-1.5 rounded-full align-middle" style={{ background: BODY[t.body].color }} aria-hidden="true" />
+                      {t.name}
+                    </td>
+                    <td className={cn('px-4 py-2.5 text-right font-mono tabular', r.auc_equal < 0.65 ? 'text-negative' : 'text-slate-100')}>{r.auc_equal.toFixed(2)}</td>
+                    <td className="px-4 py-2.5 text-right font-mono tabular text-slate-400">
+                      {r.auc_ci95[0].toFixed(2)}–{r.auc_ci95[1].toFixed(2)}
+                    </td>
+                    <td className="hidden px-4 py-2.5 text-right font-mono tabular text-slate-300 sm:table-cell">{Math.round(r.positives_median_land_percentile)}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        <ScoreStrip validation={sel} targets={data.targets} shown={shown} onShow={setShown} />
+
+        <p className="font-medium text-slate-100">What the results do and do not show</p>
         <ul className="list-disc space-y-2 pl-5 marker:text-slate-400">
-          <li>Gravity, atmosphere, radiation, dust and surface chemistry differ between Earth and Mars and are not represented.</li>
-          <li>Earth and Mars landscapes form under different erosion regimes; similar shape does not imply similar origin.</li>
-          <li>The candidate list is curated (19 sites), not a global search. New analog discovery needs a tiled global scan.</li>
-          <li>Validation labels come from one NASA outreach catalogue and cover purposes other than terrain; they are a sanity check, not ground truth.</li>
-          <li>No field measurements were made. Any test recommendation would need expert review and on-site data.</li>
+          <li>
+            <strong className="text-slate-100">Jezero works.</strong> Its {jez.n_positives} analog sites sit at the {Math.round(jez.positives_median_land_percentile)}th percentile of
+            all land, and the AUC stays between {jez.random_weights_auc_p5_p50_p95[0].toFixed(2)} and {jez.random_weights_auc_p5_p50_p95[2].toFixed(2)} under 90% of random
+            weightings.
+          </li>
+          <li>
+            <strong className="text-slate-100">The Moon is a looser test.</strong> Each region has only {v.targets[moon[0]!.id]!.n_positives} analog sites, so the intervals reach
+            down to about 0.5. Those sites were chosen mainly for terrain and operations, while the score also weighs climate, temperature and ice.
+          </li>
+          <li>
+            <strong className="text-slate-100">Arcadia is weak, and stays in.</strong> Buried ice plains have few documented Earth analogs, and Earth’s ice signals (frost days,
+            snow months) are coarse. It is NASA’s leading human-base target, so it is reported rather than hidden.
+          </li>
+          <li>
+            <strong className="text-slate-100">Nearby sites may flatter the AUC.</strong> Several analog sites cluster in the same regions (Atacama, Utah, Iceland). A
+            region-by-region check is the next validation step.
+          </li>
+        </ul>
+      </Block>
+
+      <Block title="Weights you can change, including learned ones.">
+        <p>
+          Equal weights are the default and drive every ranking. The Explorer also offers Expert, Ops (adds gentle slopes and low wind) and Learned weights. Learned weights come from
+          a non-negative logistic regression of analogs against controls, cross-validated; it is the only machine learning in SolMate, and no deep learning is used.
+        </p>
+        <p>
+          The learned model gives mineralogy a weight of zero for every target: with this few sites, the ASTER mineral indices do not separate analogs from controls. Mineralogy
+          still appears in every result, so a reader can judge it.
+        </p>
+      </Block>
+
+      <Block id="limitations" title="What SolMate cannot tell you.">
+        <ul className="list-disc space-y-2 pl-5 marker:text-slate-400">
+          <li>Gravity, atmosphere, radiation and surface chemistry differ from Earth everywhere; they are stated, never scored.</li>
+          <li>Similar conditions do not mean a similar origin: landscapes on Earth, Mars and the Moon formed under different processes.</li>
+          <li>A 0.1° cell averages about 11 km of ground. Terrain is refined at 100 m, but climate, temperature and minerals stay at the coarse scale.</li>
+          <li>Novel leads are unreviewed. They need expert review and field data before anyone plans a test there.</li>
+          <li>Validation labels come from documented field use, which reflects logistics as well as science; they are a check, not ground truth.</li>
         </ul>
         <div className="flex flex-wrap gap-3 pt-2">
           <Button asChild>
             <Link to="/explorer">
-              Explore the ranking <ArrowRight />
+              Open the Explorer <ArrowRight />
             </Link>
           </Button>
           <Button asChild variant="outline">
@@ -260,35 +293,46 @@ function MethodBody({ data }: { data: AnalysisData }) {
   )
 }
 
-function ScoreStrip({ groups }: { groups: { role: 'documented' | 'candidate' | 'control'; items: ReturnType<typeof analyse>['results'] }[] }) {
+function ScoreStrip({ validation, targets, shown, onShow }: { validation: TargetValidation; targets: HomeData['targets']; shown: string; onShow: (id: string) => void }) {
+  const groups = [
+    { label: 'Analog sites', color: 'var(--data)', dashed: false, items: Object.entries(validation.positives) },
+    { label: 'Controls', color: 'var(--slate-400)', dashed: true, items: Object.entries(validation.controls) },
+  ]
   return (
     <figure className="rounded-xl border border-border bg-card p-5">
-      <figcaption className="label-mono mb-4">Equal-weight similarity by site group</figcaption>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <figcaption className="text-sm text-slate-300">Analog Index of every validation site</figcaption>
+        <label className="flex items-center gap-2 text-xs text-slate-400">
+          Target
+          <select value={shown} onChange={(e) => onShow(e.target.value)} className="rounded-md border border-border bg-ink-850 px-2 py-1 text-sm text-slate-100">
+            {targets.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
       <div className="space-y-4">
         {groups.map((g) => (
-          <div key={g.role} className="grid grid-cols-[7rem_1fr] items-center gap-4">
-            <span className="text-xs text-slate-300">{ROLE[g.role].short}</span>
+          <div key={g.label} className="grid grid-cols-[6rem_1fr] items-center gap-4">
+            <span className="text-xs text-slate-300">{g.label}</span>
             <div className="relative h-8 rounded-md bg-ink-850">
-              {[0.25, 0.5, 0.75].map((t) => (
-                <span key={t} className="absolute inset-y-0 w-px bg-ink-600" style={{ left: `${t * 100}%` }} aria-hidden="true" />
+              {[25, 50, 75].map((t) => (
+                <span key={t} className="absolute inset-y-0 w-px bg-ink-600" style={{ left: `${t}%` }} aria-hidden="true" />
               ))}
-              {g.items.map((it) => (
+              {g.items.map(([id, s]) => (
                 <span
-                  key={it.site.id}
-                  title={`${it.site.name}: ${Math.round(it.score * 100)}`}
+                  key={id}
+                  title={`${siteName(id)}: ${s.sai === null ? '–' : Math.round(s.sai)}`}
                   className="absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2"
-                  style={{
-                    left: `${it.score * 100}%`,
-                    borderColor: ROLE[g.role].color,
-                    borderStyle: g.role === 'control' ? 'dashed' : 'solid',
-                    background: 'var(--ink-900)',
-                  }}
+                  style={{ left: `${s.sai ?? 0}%`, borderColor: g.color, borderStyle: g.dashed ? 'dashed' : 'solid', background: 'var(--ink-900)' }}
                 />
               ))}
             </div>
           </div>
         ))}
-        <div className="grid grid-cols-[7rem_1fr] gap-4 font-mono text-[11px] text-slate-400">
+        <div className="grid grid-cols-[6rem_1fr] gap-4 font-mono text-[11px] text-slate-400">
           <span />
           <div className="flex justify-between">
             <span>0</span>
@@ -297,38 +341,6 @@ function ScoreStrip({ groups }: { groups: { role: 'documented' | 'candidate' | '
           </div>
         </div>
       </div>
-    </figure>
-  )
-}
-
-function CorrelationGrid({ order, matrix, labels }: { order: string[]; matrix: number[][]; labels: Record<string, string> }) {
-  return (
-    <figure className="overflow-x-auto rounded-xl border border-border bg-card p-5">
-      <figcaption className="label-mono mb-4">Pearson correlation across Earth sites</figcaption>
-      <table className="text-xs">
-        <tbody>
-          {order.map((row, i) => (
-            <tr key={row}>
-              <th className="whitespace-nowrap pr-3 text-left font-normal text-slate-300">{labels[row]}</th>
-              {order.map((col, j) => {
-                const c = matrix[i]![j]!
-                return (
-                  <td key={col} className="p-0.5">
-                    <span
-                      className="grid size-12 place-items-center rounded font-mono tabular"
-                      // light text on every shade: the mix stops at 45% so the darkest-to-brightest cells all keep 4.5:1
-                      style={{ background: `color-mix(in oklab, var(--data) ${Math.round(Math.abs(c) * 45)}%, var(--ink-850))`, color: 'var(--slate-100)', fontWeight: Math.abs(c) > 0.6 ? 600 : 400 }}
-                      title={`${labels[row]} × ${labels[col]}: ${c.toFixed(2)}`}
-                    >
-                      {c.toFixed(2)}
-                    </span>
-                  </td>
-                )
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </figure>
   )
 }

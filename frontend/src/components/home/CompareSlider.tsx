@@ -94,7 +94,7 @@ export function CompareSlider({ left, right, view }: Props) {
         </div>
       ))}
       <p className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded bg-ink-950/75 px-2 py-1 font-mono text-[11px] text-slate-300">
-        both windows 20 × 20 km · 100 m cells
+        both windows 20 × 20 km
       </p>
     </motion.div>
   )
