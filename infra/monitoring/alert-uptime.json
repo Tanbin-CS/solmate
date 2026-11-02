@@ -1,0 +1,17 @@
+{
+  "displayName": "SolMate is down (uptime check failing)",
+  "documentation": { "content": "solmate-analog.web.app or its API failed an uptime check from 2 or more regions. See docs/RUNBOOK.md (Site down). Rollback: Actions -> Rollback.", "mimeType": "text/markdown" },
+  "combiner": "OR",
+  "conditions": [{
+    "displayName": "Uptime check failed",
+    "conditionThreshold": {
+      "filter": "metric.type=\"monitoring.googleapis.com/uptime_check/check_passed\" AND resource.type=\"uptime_url\"",
+      "aggregations": [{ "alignmentPeriod": "600s", "perSeriesAligner": "ALIGN_NEXT_OLDER", "crossSeriesReducer": "REDUCE_COUNT_FALSE", "groupByFields": ["metric.label.check_id"] }],
+      "comparison": "COMPARISON_GT",
+      "thresholdValue": 1,
+      "duration": "600s",
+      "trigger": { "count": 1 }
+    }
+  }],
+  "alertStrategy": { "autoClose": "3600s" }
+}

@@ -1,0 +1,8 @@
+{
+  "displayName": "SolMate site (solmate-analog.web.app)",
+  "monitoredResource": { "type": "uptime_url", "labels": { "project_id": "solmate-13571", "host": "solmate-analog.web.app" } },
+  "httpCheck": { "path": "/", "port": 443, "useSsl": true, "validateSsl": true, "requestMethod": "GET", "acceptedResponseStatusCodes": [{ "statusClass": "STATUS_CLASS_2XX" }] },
+  "contentMatchers": [{ "content": "SolMate", "matcher": "CONTAINS_STRING" }],
+  "period": "300s",
+  "timeout": "10s"
+}
