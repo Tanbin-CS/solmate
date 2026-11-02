@@ -37,7 +37,7 @@ export function ComparePanel({ a, b, reference, referenceValues, indicators, onC
         <div className="grid grid-cols-3 gap-2">
           <figure className="space-y-1.5">
             <img src={asset(reference.quicklooks.hillshade)} alt={`${reference.short} relief`} className="aspect-square w-full rounded-lg border border-reference/40 object-cover" />
-            <figcaption className="truncate font-mono text-[10px] uppercase tracking-wider text-reference">{reference.short}</figcaption>
+            <figcaption className="truncate font-mono text-[11px] uppercase tracking-wider text-reference">{reference.short}</figcaption>
           </figure>
           {pair.map((r, i) => (
             <figure key={r.site.id} className="space-y-1.5">
@@ -45,7 +45,7 @@ export function ComparePanel({ a, b, reference, referenceValues, indicators, onC
                 {r.site.quicklooks ? (
                   <img src={asset(r.site.quicklooks.hillshade)} alt={`${r.site.name} relief`} className="aspect-square w-full rounded-lg border object-cover" style={{ borderColor: COLORS[i] }} />
                 ) : (
-                  <div className="grid aspect-square w-full place-items-center rounded-lg border border-border font-mono text-[10px] text-slate-400">no preview</div>
+                  <div className="grid aspect-square w-full place-items-center rounded-lg border border-border font-mono text-[11px] text-slate-400">no preview</div>
                 )}
                 <button type="button" onClick={() => onRemove(r.site.id)} className="absolute right-1 top-1 rounded bg-ink-950/80 p-0.5 text-slate-300 hover:text-slate-100" aria-label={`Remove ${r.site.name} from comparison`}>
                   <X className="size-3" />
@@ -61,7 +61,7 @@ export function ComparePanel({ a, b, reference, referenceValues, indicators, onC
         <div className="grid grid-cols-2 gap-3">
           {pair.map((r, i) => (
             <div key={r.site.id} className="rounded-lg border border-border bg-ink-850 p-3">
-              <p className="font-mono text-[10px] uppercase tracking-wider" style={{ color: ROLE[r.site.role].color }}>
+              <p className="font-mono text-[11px] uppercase tracking-wider" style={{ color: ROLE[r.site.role].color }}>
                 {ROLE[r.site.role].short} · rank {r.rank}
               </p>
               <p className="mt-1 text-3xl tabular" style={{ color: COLORS[i] }}>

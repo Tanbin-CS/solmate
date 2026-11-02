@@ -123,7 +123,7 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
             ))}
           </div>
         )}
-        <p className="mt-2 text-[11px] leading-relaxed text-slate-400">
+        <p className="mt-2 text-xs leading-relaxed text-slate-400">
           {ui.tab === 'novel'
             ? `Best places more than ${scr?.novelty_km ?? 300} km from every known analog site: candidates nobody has tested yet.`
             : ui.tab === 'leaders'

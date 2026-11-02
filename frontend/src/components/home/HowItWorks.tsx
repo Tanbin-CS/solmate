@@ -60,7 +60,7 @@ function TargetsVisual({ data }: { data: AllTargets }) {
         >
           <img src={asset(t.quicklooks.hillshade)} alt={`${t.short} shaded relief`} className="h-full w-full object-cover" />
           <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink-950/95 to-transparent p-3 pt-10">
-            <p className="font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: BODY[t.body].color }}>
+            <p className="font-mono text-[11px] uppercase tracking-[0.16em]" style={{ color: BODY[t.body].color }}>
               {BODY[t.body].label}
             </p>
             <p className="text-sm font-medium text-slate-100">{t.short}</p>
@@ -93,7 +93,7 @@ function GridVisual({ data }: { data: AllTargets }) {
         ))}
       </svg>
       <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 1.1 }} className="absolute bottom-4 left-4 rounded-lg border border-white/10 bg-ink-950/85 px-3 py-2 backdrop-blur">
-        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-data">20 × 20 km · lines every 1 km</p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-data">20 × 20 km · lines every 1 km</p>
         <p className="text-sm text-slate-100">
           <span className="tabular text-xl">40,000</span> cells per site
         </p>
@@ -135,7 +135,7 @@ function MeasureVisual({ data }: { data: AllTargets }) {
       })}
       <p className="text-sm text-slate-300">
         Overall match <span className="tabular text-2xl text-slate-100">{pct(best.score)}</span>
-        <span className="text-slate-500"> /100</span>
+        <span className="text-slate-400"> /100</span>
       </p>
     </div>
   )
@@ -152,7 +152,7 @@ function ValidateVisual({ data }: { data: AllTargets }) {
       <div className="flex items-end justify-between">
         <p className="font-mono text-[11px] text-slate-400">Similarity to {t.short}, every curated site</p>
         <p className="text-right">
-          <span className="block font-mono text-[10px] uppercase tracking-[0.16em] text-slate-400">AUC</span>
+          <span className="block font-mono text-[11px] uppercase tracking-[0.16em] text-slate-400">AUC</span>
           <span className="tabular text-3xl text-positive">{b.validation.retrieval.auc_documented.toFixed(2)}</span>
         </p>
       </div>
@@ -176,7 +176,7 @@ function ValidateVisual({ data }: { data: AllTargets }) {
           </div>
         </div>
       ))}
-      <div className="flex justify-between font-mono text-[10px] text-slate-500">
+      <div className="flex justify-between font-mono text-[11px] text-slate-400">
         <span>less similar</span>
         <span>more similar →</span>
       </div>
@@ -205,7 +205,7 @@ function ScreenVisual({ data }: { data: AllTargets }) {
         ))}
       </div>
       <div className="absolute bottom-4 left-4 rounded-lg border border-white/10 bg-ink-950/85 px-3 py-2 backdrop-blur">
-        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-screen">Unreviewed leads</p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-screen">Unreviewed leads</p>
         <p className="text-sm text-slate-100">
           <span className="tabular text-xl">{wins.length}</span> windows · {data.common.screening?.regions.length ?? 0} regions
         </p>
@@ -228,11 +228,12 @@ function Step({ i, active, onActive }: { i: number; active: boolean; onActive: (
   const s = STEPS[i]!
   return (
     <div className="flex min-h-[62svh] items-center py-10 lg:min-h-[78svh]">
-      <motion.div ref={ref} animate={{ opacity: active ? 1 : 0.28, x: active ? 0 : -6 }} transition={{ duration: 0.4 }} className="max-w-md">
-        <p className="label-mono flex items-center gap-2" style={{ color: s.tone }}>
+      {/* the active step is carried by colour, not opacity, so steps ahead stay readable */}
+      <motion.div ref={ref} animate={{ x: active ? 0 : -6 }} transition={{ duration: 0.4 }} className="max-w-md">
+        <p className="label-mono flex items-center gap-2 transition-colors duration-300" style={{ color: active ? s.tone : 'var(--slate-400)' }}>
           <s.icon className="size-4" /> {s.kicker}
         </p>
-        <h3 className="mt-3 text-balance text-2xl font-semibold tracking-tight text-slate-100 md:text-3xl">{s.title}</h3>
+        <h3 className={cn('mt-3 text-balance text-2xl font-semibold tracking-tight transition-colors duration-300 md:text-3xl', active ? 'text-slate-100' : 'text-slate-400')}>{s.title}</h3>
         <p className="mt-3 text-pretty text-[15px] leading-relaxed text-slate-300">{s.body}</p>
       </motion.div>
     </div>

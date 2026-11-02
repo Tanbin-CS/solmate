@@ -14,7 +14,7 @@ export function ReferenceCard({ reference }: { reference: Reference }) {
       <div className="min-w-0">
         <p className="label-mono text-reference">Reference · {BODY[reference.body].label}</p>
         <p className="mt-0.5 truncate text-sm font-semibold">{reference.name}</p>
-        <p className="mt-0.5 font-mono text-[10.5px] text-slate-400">{fmtCoord(reference.lat, reference.lon)} · {reference.body === 'mars' ? 'CTX DTM 20 m' : 'LOLA DEM 20 m'}</p>
+        <p className="mt-0.5 font-mono text-[11px] text-slate-400">{fmtCoord(reference.lat, reference.lon)} · {reference.body === 'mars' ? 'CTX DTM 20 m' : 'LOLA DEM 20 m'}</p>
       </div>
     </div>
   )

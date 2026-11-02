@@ -133,7 +133,7 @@ function DataBody({ data }: { data: AllTargets }) {
                   </td>
                   <td className="px-4 py-3 font-mono text-xs text-slate-300">{fmtCoord(s.lat, s.lon)}</td>
                   <td className="px-4 py-3 text-right font-mono text-xs tabular">{Math.round(s.valid_fraction * 100)}%</td>
-                  <td className="px-4 py-3 font-mono text-[11px] text-slate-400">
+                  <td className="px-4 py-3 font-mono text-xs text-slate-400">
                     {(p.sites[s.id]?.tiles ?? []).map((t) => t.replace('Copernicus_DSM_COG_10_', '').replace('_DEM', '')).join(', ')}
                   </td>
                 </tr>
@@ -148,14 +148,14 @@ function DataBody({ data }: { data: AllTargets }) {
           <h2 id="screening" className="label-mono mb-5">
             Regional screening
           </h2>
-          <p className="mb-5 max-w-3xl text-[15px] leading-relaxed text-slate-300">
+          <p className="mb-5 max-w-[70ch] text-[15px] leading-relaxed text-slate-300">
             {screening.windows.length} windows of {screening.window_m / 1000} km on a {screening.cell_m} m grid, sampled across {screening.regions.length} regions
             from the same GLO-30 tiles. Windows with less than 90% valid cells or more than 5% water were dropped. Results are unreviewed leads, not analogs.
           </p>
           <ul className="flex flex-wrap gap-2">
             {screening.regions.map((r) => (
               <li key={r.id} className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-slate-300">
-                {r.name} <span className="text-slate-500">· {r.country}</span>
+                {r.name} <span className="text-slate-400">· {r.country}</span>
               </li>
             ))}
           </ul>
@@ -182,7 +182,7 @@ python -m venv .venv
 .venv/Scripts/python -m pytest -q tests
 .venv/Scripts/python run.py`}
           </pre>
-          <p className="mt-3 font-mono text-[11px] text-slate-400">Artifacts generated {new Date(p.generated_at).toUTCString()}</p>
+          <p className="mt-3 font-mono text-xs text-slate-400">Artifacts generated {new Date(p.generated_at).toUTCString()}</p>
         </div>
       </section>
     </div>

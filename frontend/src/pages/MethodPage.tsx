@@ -59,7 +59,7 @@ function Block({ id, kicker, title, children }: { id?: string; kicker: string; t
     >
       <p className="label-mono">{kicker}</p>
       <h2 className="mt-3 text-2xl font-semibold tracking-tight md:text-3xl">{title}</h2>
-      <div className="mt-6 space-y-5 text-[15px] leading-relaxed text-slate-300">{children}</div>
+      <div className="mt-6 space-y-5 text-[15px] leading-relaxed text-slate-300 [&>p]:max-w-[70ch]">{children}</div>
     </motion.section>
   )
 }
@@ -101,7 +101,7 @@ function MethodBody({ data }: { data: AnalysisData }) {
       </Block>
 
       <Block kicker="02 · Data and scale" title="Same physical grid on both worlds.">
-        <ul className="list-disc space-y-2 pl-5 marker:text-slate-500">
+        <ul className="list-disc space-y-2 pl-5 marker:text-slate-400">
           <li>
             <strong className="text-slate-100">Mars:</strong> USGS Mars 2020 Terrain Relative Navigation CTX digital terrain model of Jezero, 20 m per pixel.
           </li>
@@ -145,7 +145,7 @@ function MethodBody({ data }: { data: AnalysisData }) {
       </Block>
 
       <Block kicker="04 · Similarity" title="A score you can take apart.">
-        <ol className="list-decimal space-y-2 pl-5 marker:font-mono marker:text-slate-500">
+        <ol className="list-decimal space-y-2 pl-5 marker:font-mono marker:text-slate-400">
           <li>For each indicator, find the median and the spread (1.4826 × median absolute deviation) across all Earth sites.</li>
           <li>Measure how far a site is from Jezero in those robust units, then convert that gap to a similarity between 0 and 1.</li>
           <li>Average the five similarities with your weights. Equal weights by default.</li>
@@ -202,7 +202,7 @@ function MethodBody({ data }: { data: AnalysisData }) {
             </tbody>
           </table>
         </div>
-        <ul className="list-disc space-y-2 pl-5 marker:text-slate-500">
+        <ul className="list-disc space-y-2 pl-5 marker:text-slate-400">
           <li>
             <strong className="text-slate-100">Scale matters.</strong> In a 12 km window the retrieval AUC is{' '}
             {v.sensitivity.find((c) => c.id === 'smaller-window')?.auc_documented.toFixed(2)} (rank agreement ρ ={' '}
@@ -238,7 +238,7 @@ function MethodBody({ data }: { data: AnalysisData }) {
       </Block>
 
       <Block kicker="07 · Limitations" title="What this prototype cannot tell you.">
-        <ul className="list-disc space-y-2 pl-5 marker:text-slate-500">
+        <ul className="list-disc space-y-2 pl-5 marker:text-slate-400">
           <li>Gravity, atmosphere, radiation, dust and surface chemistry differ between Earth and Mars and are not represented.</li>
           <li>Earth and Mars landscapes form under different erosion regimes; similar shape does not imply similar origin.</li>
           <li>The candidate list is curated (19 sites), not a global search. New analog discovery needs a tiled global scan.</li>
@@ -288,7 +288,7 @@ function ScoreStrip({ groups }: { groups: { role: 'documented' | 'candidate' | '
             </div>
           </div>
         ))}
-        <div className="grid grid-cols-[7rem_1fr] gap-4 font-mono text-[10px] text-slate-400">
+        <div className="grid grid-cols-[7rem_1fr] gap-4 font-mono text-[11px] text-slate-400">
           <span />
           <div className="flex justify-between">
             <span>0</span>
@@ -316,7 +316,8 @@ function CorrelationGrid({ order, matrix, labels }: { order: string[]; matrix: n
                   <td key={col} className="p-0.5">
                     <span
                       className="grid size-12 place-items-center rounded font-mono tabular"
-                      style={{ background: `color-mix(in oklab, var(--data) ${Math.round(Math.abs(c) * 55)}%, var(--ink-850))`, color: Math.abs(c) > 0.6 ? 'var(--ink-950)' : 'var(--slate-300)' }}
+                      // light text on every shade: the mix stops at 45% so the darkest-to-brightest cells all keep 4.5:1
+                      style={{ background: `color-mix(in oklab, var(--data) ${Math.round(Math.abs(c) * 45)}%, var(--ink-850))`, color: 'var(--slate-100)', fontWeight: Math.abs(c) > 0.6 ? 600 : 400 }}
                       title={`${labels[row]} × ${labels[col]}: ${c.toFixed(2)}`}
                     >
                       {c.toFixed(2)}

@@ -87,13 +87,13 @@ export function CompareSlider({ left, right, view }: Props) {
 
       {[left, right].map((side, i) => (
         <div key={side.label} className={cn('pointer-events-none absolute top-3 max-w-[45%] rounded-md bg-ink-950/80 px-2.5 py-1.5', i === 0 ? 'left-3' : 'right-3 text-right')}>
-          <p className="font-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: side.accent }}>
+          <p className="font-mono text-[11px] uppercase tracking-[0.14em]" style={{ color: side.accent }}>
             {side.sub}
           </p>
           <p className="truncate text-xs font-medium text-slate-100">{side.label}</p>
         </div>
       ))}
-      <p className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded bg-ink-950/75 px-2 py-1 font-mono text-[10px] text-slate-300">
+      <p className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded bg-ink-950/75 px-2 py-1 font-mono text-[11px] text-slate-300">
         both windows 20 × 20 km · 100 m cells
       </p>
     </motion.div>

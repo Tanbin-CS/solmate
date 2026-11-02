@@ -43,7 +43,7 @@ export function VerdictCard({ verdict }: { verdict: Verdict }) {
           {verdict.process_tags.map((t) => (
             <li key={t.id}>
               <span className="text-slate-100">{t.name}:</span> {t.analog}.{' '}
-              <span className="font-mono text-[10.5px] text-slate-400">
+              <span className="font-mono text-[11px] text-slate-400">
                 {Object.entries(t.evidence)
                   .map(([k, v]) => `${k} ${v}`)
                   .join(' · ')}

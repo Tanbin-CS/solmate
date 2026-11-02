@@ -183,7 +183,10 @@
 .maplibregl-ctrl-attrib {
   background: rgb(7 11 18 / 0.75) !important;
   color: var(--slate-400) !important;
-  font-size: 10px;
+  font-size: 11px;
+}
+.maplibregl-ctrl.maplibregl-ctrl-scale {
+  font-size: 11px;
 }
 .maplibregl-ctrl-attrib a {
   color: var(--slate-300) !important;

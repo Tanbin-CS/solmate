@@ -37,7 +37,7 @@ export function LiveResults({ target, bundle }: { target: TargetSummary; bundle:
               </span>
               <span className="flex items-center gap-2 text-lg tabular text-slate-100">
                 {pct(t.score)}
-                <ArrowRight className="size-4 text-slate-500 transition-transform group-hover:translate-x-0.5 group-hover:text-slate-200" />
+                <ArrowRight className="size-4 text-slate-400 transition-transform group-hover:translate-x-0.5 group-hover:text-slate-200" />
               </span>
             </Link>
           </motion.li>

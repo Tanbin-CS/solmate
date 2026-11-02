@@ -85,12 +85,12 @@ export function OrbitZoom({ data }: { data: AllTargets }) {
             <motion.figure style={{ opacity: winOpacity, scale: winScale, x: winX }} className="absolute inset-[18%] overflow-hidden rounded-lg">
               <img src={asset(t.quicklooks.imagery ?? t.quicklooks.hillshade)} alt="Jezero Crater, 20 km window" className="h-full w-full object-cover" />
               <motion.div style={{ opacity: frame }} className="pointer-events-none absolute inset-0 rounded-lg border-2 border-dashed border-reference" />
-              <figcaption className="absolute left-2 top-2 rounded bg-ink-950/80 px-2 py-1 font-mono text-[10px] text-reference">MARS · {t.short}</figcaption>
+              <figcaption className="absolute left-2 top-2 rounded bg-ink-950/80 px-2 py-1 font-mono text-[11px] text-reference">MARS · {t.short}</figcaption>
             </motion.figure>
             {/* Earth match */}
             <motion.figure style={{ opacity: matchOpacity, x: matchX, scale: matchScale }} className="absolute inset-[18%] overflow-hidden rounded-lg border-2 border-data/70">
               <img src={asset(best.site.quicklooks?.imagery ?? best.site.quicklooks?.hillshade ?? '')} alt={`${best.site.name}, 20 km window`} className="h-full w-full object-cover" />
-              <figcaption className="absolute left-2 top-2 rounded bg-ink-950/80 px-2 py-1 font-mono text-[10px] text-data">EARTH · {best.site.name.split(',')[0]}</figcaption>
+              <figcaption className="absolute left-2 top-2 rounded bg-ink-950/80 px-2 py-1 font-mono text-[11px] text-data">EARTH · {best.site.name.split(',')[0]}</figcaption>
             </motion.figure>
             {/* score + bars */}
             <motion.div style={{ opacity: scoreOpacity, y: scoreY }} className="absolute inset-x-[4%] -bottom-[6%] rounded-xl border border-white/10 bg-ink-950/85 p-3 backdrop-blur-md lg:-bottom-[14%]">
@@ -98,7 +98,7 @@ export function OrbitZoom({ data }: { data: AllTargets }) {
                 <span className="label-mono">Terrain match</span>
                 <span className="tabular text-2xl text-slate-100">
                   {pct(best.score)}
-                  <span className="text-sm text-slate-500">/100</span>
+                  <span className="text-sm text-slate-400">/100</span>
                 </span>
               </div>
               <div className="mt-2 grid grid-cols-5 gap-2">
@@ -109,7 +109,7 @@ export function OrbitZoom({ data }: { data: AllTargets }) {
                       <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
                         <div className="h-full rounded-full bg-gradient-to-r from-derived to-data" style={{ width: `${best.sims[i]! * 100}%` }} />
                       </div>
-                      <p className="mt-1 truncate text-[10px] text-slate-400">{m?.label.split(' (')[0]}</p>
+                      <p className="mt-1 truncate text-[11px] text-slate-400">{m?.label.split(' (')[0]}</p>
                     </div>
                   )
                 })}

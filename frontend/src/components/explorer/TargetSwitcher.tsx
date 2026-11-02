@@ -23,7 +23,7 @@ export function TargetSwitcher({ targets, value, onChange, pillId = 'target-pill
             {active && <motion.span layoutId={pillId} transition={spring} className="absolute inset-0 rounded-lg border border-border bg-ink-700" />}
             <img src={asset(t.quicklooks.imagery ?? t.quicklooks.hillshade)} alt="" className="relative size-9 shrink-0 rounded-md object-cover" />
             <span className="relative min-w-0">
-              <span className="block font-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: BODY[t.body].color }}>
+              <span className="block font-mono text-[11px] uppercase tracking-[0.14em]" style={{ color: BODY[t.body].color }}>
                 {BODY[t.body].label}
               </span>
               <span className="block truncate text-[13px] font-medium">{t.short}</span>

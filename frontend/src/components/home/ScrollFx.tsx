@@ -48,6 +48,8 @@ export function ScrollRevealText({ text, className }: { text: string; className?
   const words = text.split(' ')
   return (
     <p ref={ref} className={cn('flex flex-wrap gap-x-[0.28em]', className)}>
+      {/* one readable sentence for screen readers; the per-word spans are visual only */}
+      <span className="sr-only">{text}</span>
       {words.map((w, i) => (
         <Word key={i} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]} reduced={!!reduced}>
           {w}
@@ -58,8 +60,12 @@ export function ScrollRevealText({ text, className }: { text: string; className?
 }
 
 function Word({ children, progress, range, reduced }: { children: string; progress: MotionValue<number>; range: [number, number]; reduced: boolean }) {
-  const opacity = useTransform(progress, range, [reduced ? 1 : 0.14, 1])
-  return <motion.span style={{ opacity }}>{children}</motion.span>
+  const opacity = useTransform(progress, range, [reduced ? 1 : 0.25, 1])
+  return (
+    <motion.span aria-hidden="true" style={{ opacity }}>
+      {children}
+    </motion.span>
+  )
 }
 
 /** Stacking cards: each card pins under the previous one and the earlier cards recede as you scroll. */
