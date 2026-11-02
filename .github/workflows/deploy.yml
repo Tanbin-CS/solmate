@@ -46,7 +46,7 @@ jobs:
         env:
           FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.deploy_api }}
         run: |
-          if [ "$FORCE" = "true" ] || git diff --name-only HEAD^ HEAD | grep -qE '^(api/|analysis/src/|analysis/pyproject.toml|analysis/uv.lock|Dockerfile|\.gcloudignore|data/screening/stage2|data/stack/astgtm|data/targets/)'; then
+          if [ "$FORCE" = "true" ] || git diff --name-only HEAD^ HEAD | grep -qE '^(api/|analysis/src/|analysis/pyproject.toml|analysis/uv.lock|Dockerfile|\.gcloudignore|data/screening/(stage2|release)|data/stack/astgtm|data/targets/)'; then
             echo "api=true" >> "$GITHUB_OUTPUT"
           else
             echo "api=false" >> "$GITHUB_OUTPUT"
@@ -138,3 +138,7 @@ jobs:
           echo "$h" | grep -qi '^strict-transport-security:'
           echo "$h" | grep -qi '^cache-control: no-cache'
           test "$(curl -s -o /dev/null -w '%{http_code}' "$OLD_SITE/method")" = "301"
+          # The browser and the terrain API must report the same results version.
+          web=$(curl -fsS "$SITE/data/v2/model.json" | jq -r .model_version)
+          api=$(curl -fsS "$SITE/api/v1/version" | jq -r .model_version)
+          echo "results version: web $web, api $api"; test "$web" = "$api"
