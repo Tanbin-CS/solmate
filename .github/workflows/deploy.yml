@@ -117,11 +117,16 @@ jobs:
       - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
       - name: Restore the web tiles from their GCS mirror
         run: |
+          # model.json names the tile set it was exported with; tiles of other sets never mix in
+          model=frontend/public/data/v2/model.json
+          tileset=$(jq -r '.tiles.tileset // empty' "$model")
+          printf '%s' "$tileset" | grep -qE '^[0-9a-f]{12}$'
           mkdir -p frontend/public/data/v2/tiles
-          gcloud storage rsync --recursive "gs://${PROJECT_ID}-data/web/tiles" frontend/public/data/v2/tiles
+          gcloud storage rsync --recursive "gs://${PROJECT_ID}-data/web/tilesets/$tileset" frontend/public/data/v2/tiles
           n=$(ls frontend/public/data/v2/tiles | wc -l)
-          echo "tiles: $n"
-          test "$n" -ge 400
+          want=$(jq '.tiles.available | length' "$model")
+          echo "tileset $tileset: $n of $want tiles"
+          test "$n" -eq "$want"
       - name: Build
         working-directory: frontend
         env:

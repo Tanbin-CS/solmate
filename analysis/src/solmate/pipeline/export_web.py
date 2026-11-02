@@ -7,7 +7,8 @@ Also writes data/screening/release.v2.json: the results version the terrain API 
   screening/<id>.json  per target: top cells and novel leads with verdicts, dimension leaders
   validation.json   pre-registered validation results
   provenance.json   datasets (from docs/DATA_SOURCES.md), the 41 stack layers, raw-file summary, validation sites
-Not committed (binary, ~60 MB, gitignored; mirrored to gs://solmate-13571-data/web/tiles, restored before build):
+Not committed (binary, ~60 MB, gitignored; mirrored to gs://solmate-13571-data/web/tilesets/<tileset>, restored
+before build by scripts/web_tiles.sh and the deploy):
   tiles/<row>_<col>.bin.gz   10 x 10 degree tiles of the 0.1 degree stack, uint16-quantised per layer
 
 Tile format: for each layer in model.json["tiles"]["layers"] order, 100 x 100 uint16 values,
@@ -39,7 +40,7 @@ from solmate.targets import load_targets
 ANALYSIS = Path(__file__).resolve().parents[3]
 REPO = ANALYSIS.parent
 OUT = REPO / "frontend" / "public" / "data" / "v2"
-TILE_OUT = OUT / "tiles"  # gitignored; deploy restores it from gs://solmate-13571-data/web/tiles
+TILE_OUT = OUT / "tiles"  # gitignored; deploy restores it from gs://solmate-13571-data/web/tilesets/<tileset>
 STACK = ANALYSIS / "cache" / "stack" / "stack_v2.npz"
 RELEASE = REPO / "data" / "screening" / "release.v2.json"  # read by the terrain API (api/app/main.py)
 TILE = 100  # cells per tile side (10 degrees)
@@ -100,6 +101,7 @@ def decode(x: np.ndarray, transform: str) -> np.ndarray:
 def export_tiles(layers: list[str]) -> dict:
     TILE_OUT.mkdir(parents=True, exist_ok=True)
     ranges, transforms, written = {}, {}, []
+    digest = hashlib.sha256()
     with np.load(STACK) as z:
         land = z["land_frac"] > 0.5
         data = {k: z[k].astype(np.float64) for k in layers}
@@ -119,10 +121,13 @@ def export_tiles(layers: list[str]) -> dict:
             name = f"{r0 // TILE:02d}_{c0 // TILE:02d}.bin.gz"
             (TILE_OUT / name).write_bytes(gzip.compress(buf, compresslevel=9, mtime=0))
             written.append(name[:-7])
+            digest.update(name.encode() + buf)
     return {"cells_per_side": TILE, "res_deg": grid.RES, "layers": layers, "ranges": ranges, "transforms": transforms,
             "encoding": "uint16 little-endian, layer-major; v -> lo + v*(hi-lo)/65534, then exp(v) - offset for log layers;"
                         " 65535 = no data",
-            "available": sorted(written), "path": "/data/v2/tiles/{row}_{col}.bin.gz"}
+            "available": sorted(written), "path": "/data/v2/tiles/{row}_{col}.bin.gz",
+            # content hash of this tile set; its GCS mirror lives under web/tilesets/<tileset>/
+            "tileset": digest.hexdigest()[:12]}
 
 
 def terrain_100m_version() -> str:
