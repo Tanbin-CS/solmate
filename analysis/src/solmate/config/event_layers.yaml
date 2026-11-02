@@ -31,4 +31,17 @@
 #     files: GLDAS_NOAH025_M/*.nc4
 #     variable: SoilMoi0_10cm_inst
 version: 1
-layers: []
+layers:
+  # Rehearsal of the event-day procedure (3 Nov 2026); kept as a context layer.
+  - id: soil_moisture_kg_m2
+    name: Topsoil moisture (0-10 cm, model)
+    units: kg/m2
+    digits: 1
+    source: NASA GLDAS Noah 2.1 land surface model, monthly 0.25 degree (GLDAS_NOAH025_M), 2023-24 mean
+    url: https://disc.gsfc.nasa.gov/datasets/GLDAS_NOAH025_M_2.1/summary
+    licence: NASA open data
+    role: context
+    download: {short_name: GLDAS_NOAH025_M, version: "2.1", temporal: [2023-01-01, 2024-12-31]}
+    earth:
+      files: GLDAS_NOAH025_M/*.nc4
+      variable: SoilMoi0_10cm_inst

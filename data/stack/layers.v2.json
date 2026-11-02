@@ -1,6 +1,6 @@
 {
  "version": 2,
- "generated_at": "2026-10-30T20:34:10+00:00",
+ "generated_at": "2026-11-02T21:54:42+00:00",
  "grid": {
   "res_deg": 0.1,
   "rows": 1800,
@@ -8,7 +8,7 @@
   "origin": "row 0 = 89.95N, col 0 = 179.95W (MODIS CMG orientation)"
  },
  "file": "cache/stack/stack_v2.npz",
- "sha256": "a04a9664a1d18051316a14d45792502463c42a764091ed1f09c0da1b7e3e7fa1",
+ "sha256": "42aa08e7b0d99a41c125aed01d225981cdd61531c966571c4d5715a664b57bd4",
  "layers": {
   "albedo_wsa_sw": {
    "units": "fraction",
@@ -338,6 +338,17 @@
     0.0,
     5.0,
     12.0
+   ]
+  },
+  "soil_moisture_kg_m2": {
+   "name": "Topsoil moisture (0-10 cm, model)",
+   "units": "kg/m2",
+   "source": "NASA GLDAS Noah 2.1 land surface model, monthly 0.25 degree (GLDAS_NOAH025_M), 2023-24 mean",
+   "land_coverage": 0.660661969544346,
+   "land_p1_p50_p99": [
+    4.606917057037354,
+    24.456037521362305,
+    100.0
    ]
   },
   "surface_pressure_hpa": {

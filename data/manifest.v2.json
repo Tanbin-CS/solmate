@@ -338,6 +338,198 @@
    "sha256": "d12fd9becb91bc7d65a49729049381718fecff55784473c3d6664a60b4d96607"
   },
   {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202301.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2023/GLDAS_NOAH025_M.A202301.021.nc4",
+   "time_start": "2023-01-01T00:00:00.000Z",
+   "bytes": 24874757,
+   "sha256": "a542b49fbcd1d4503333e60e08d241c4b0441b42b7a50f1052e7b5bd3f63a71e"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202302.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2023/GLDAS_NOAH025_M.A202302.021.nc4",
+   "time_start": "2023-02-01T00:00:00.000Z",
+   "bytes": 24717867,
+   "sha256": "4d6955c7ed8490db2c4f21ba63520fa8f4f1e2f354649d4c3924870145df4556"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202303.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2023/GLDAS_NOAH025_M.A202303.021.nc4",
+   "time_start": "2023-03-01T00:00:00.000Z",
+   "bytes": 25094891,
+   "sha256": "8aef046758cb5132e329a6b2bf4f44f82a62bb0078342b1dc8ed9bef810e963b"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202304.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2023/GLDAS_NOAH025_M.A202304.021.nc4",
+   "time_start": "2023-04-01T00:00:00.000Z",
+   "bytes": 25226760,
+   "sha256": "1c6d44fb8cd2cbfcde115d3e390a8b3884b25d43539af4fb415d89d968c9aeb4"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202305.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2023/GLDAS_NOAH025_M.A202305.021.nc4",
+   "time_start": "2023-05-01T00:00:00.000Z",
+   "bytes": 25243798,
+   "sha256": "f6d4716cb83012332e0d4ede09e2bd808f6e7072bde165ec447a34e70905d08e"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202306.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2023/GLDAS_NOAH025_M.A202306.021.nc4",
+   "time_start": "2023-06-01T00:00:00.000Z",
+   "bytes": 24840626,
+   "sha256": "500f57a68ea5af183bef32cb4f9066bc1aba8b2d5d6af14a2cf6e1ac92fe6ed6"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202307.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2023/GLDAS_NOAH025_M.A202307.021.nc4",
+   "time_start": "2023-07-01T00:00:00.000Z",
+   "bytes": 24425914,
+   "sha256": "2166319101477dfadb9fb480da820bfa135a92dfcd38efede481ba366d256bf3"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202308.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2023/GLDAS_NOAH025_M.A202308.021.nc4",
+   "time_start": "2023-08-01T00:00:00.000Z",
+   "bytes": 24579439,
+   "sha256": "23cd2a31e63ef4c09abc71a10f0c6413f5fb8f679ca0f1d7aea6a0ed78b1a409"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202309.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2023/GLDAS_NOAH025_M.A202309.021.nc4",
+   "time_start": "2023-09-01T00:00:00.000Z",
+   "bytes": 25025549,
+   "sha256": "60cb57429cccd231544422346eca4b3a63b313704e807e586a7e4bdf98201e21"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202310.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2023/GLDAS_NOAH025_M.A202310.021.nc4",
+   "time_start": "2023-10-01T00:00:00.000Z",
+   "bytes": 25482895,
+   "sha256": "e3dc53f729fc2144ceab27c93aa47a24e2fc8e331eee13a86f40b832abd08fa5"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202311.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2023/GLDAS_NOAH025_M.A202311.021.nc4",
+   "time_start": "2023-11-01T00:00:00.000Z",
+   "bytes": 25146026,
+   "sha256": "1abe98ca7ef7200ad71311c6f84b29d401ebe2ff7cf068bf8ef1dc618a867fff"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202312.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2023/GLDAS_NOAH025_M.A202312.021.nc4",
+   "time_start": "2023-12-01T00:00:00.000Z",
+   "bytes": 24934326,
+   "sha256": "7176f19bb3e2d392a454138504b5158a73467c2ae42cb84f11855aa73124eebe"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202401.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2024/GLDAS_NOAH025_M.A202401.021.nc4",
+   "time_start": "2024-01-01T00:00:00.000Z",
+   "bytes": 24855000,
+   "sha256": "25965e734ec5f01f08aad0ad8d4e120b7ce5b2470feac4e40dca61157a65ddee"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202402.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2024/GLDAS_NOAH025_M.A202402.021.nc4",
+   "time_start": "2024-02-01T00:00:00.000Z",
+   "bytes": 24975033,
+   "sha256": "310a9a8ececca7afe5a53723fb5f2a8f0a879f4f1780fdb05d1ff577f3a79d7f"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202403.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2024/GLDAS_NOAH025_M.A202403.021.nc4",
+   "time_start": "2024-03-01T00:00:00.000Z",
+   "bytes": 25137620,
+   "sha256": "9c103b414300ae29ba56408cd8b72a87e10759ce6f22b66bc859b3885c2e8cc7"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202404.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2024/GLDAS_NOAH025_M.A202404.021.nc4",
+   "time_start": "2024-04-01T00:00:00.000Z",
+   "bytes": 25155995,
+   "sha256": "967393298983d1c880a9dc14437b4be6c38b0263883defea96a385d70ceceff9"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202405.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2024/GLDAS_NOAH025_M.A202405.021.nc4",
+   "time_start": "2024-05-01T00:00:00.000Z",
+   "bytes": 25268888,
+   "sha256": "c8f1d11c9603c15a8d1dabb71e7180c0d4e8b3654d188b3281d014ab16492beb"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202406.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2024/GLDAS_NOAH025_M.A202406.021.nc4",
+   "time_start": "2024-06-01T00:00:00.000Z",
+   "bytes": 25043970,
+   "sha256": "ea599a2f5e5bc4e026b49e702a040128a7a26899971bf72a1ef347391e15f2fe"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202407.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2024/GLDAS_NOAH025_M.A202407.021.nc4",
+   "time_start": "2024-07-01T00:00:00.000Z",
+   "bytes": 24532713,
+   "sha256": "730acb6d078d51004a221dd3c70313d1be468c8cb50228ccf74605eedd2c6c46"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202408.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2024/GLDAS_NOAH025_M.A202408.021.nc4",
+   "time_start": "2024-08-01T00:00:00.000Z",
+   "bytes": 24646618,
+   "sha256": "07772848ecfaee819c256994cf628ee41f6c9345a743aebedbdd05c28f5095b6"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202409.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2024/GLDAS_NOAH025_M.A202409.021.nc4",
+   "time_start": "2024-09-01T00:00:00.000Z",
+   "bytes": 25255475,
+   "sha256": "e6f5198aa44e04643e33d74bab3166533b703a128ffbfc60bda40d78491412fc"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202410.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2024/GLDAS_NOAH025_M.A202410.021.nc4",
+   "time_start": "2024-10-01T00:00:00.000Z",
+   "bytes": 25616226,
+   "sha256": "52709889ce97f6537ae675d0510f82c99ee7eab68367ddc27a7446b7fea2c8a3"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202411.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2024/GLDAS_NOAH025_M.A202411.021.nc4",
+   "time_start": "2024-11-01T00:00:00.000Z",
+   "bytes": 25522883,
+   "sha256": "c4b09a096d6559a212e60e19d3334c6f85d2716cd9b989dfe33506b07f62425f"
+  },
+  {
+   "product": "GLDAS_NOAH025_M",
+   "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202412.021.nc4",
+   "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2024/GLDAS_NOAH025_M.A202412.021.nc4",
+   "time_start": "2024-12-01T00:00:00.000Z",
+   "bytes": 25390050,
+   "sha256": "cf3511e9eabd873cb0bb22bc9b49032115c8945df37fe60556b4da1a43e6db67"
+  },
+  {
    "product": "M2TMNXAER",
    "file": "cache/raw/M2TMNXAER/MERRA2_400.tavgM_2d_aer_Nx.202301.nc4",
    "url": "https://data.gesdisc.earthdata.nasa.gov/data/MERRA2_MONTHLY/M2TMNXAER.5.12.4/2023/MERRA2_400.tavgM_2d_aer_Nx.202301.nc4",
