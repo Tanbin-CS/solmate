@@ -9,7 +9,7 @@ export const ProvenanceSchema = z.object({
   grid: z.object({ res_deg: Num, rows: z.number().int(), cols: z.number().int(), origin: z.string() }).partial().nullable().optional(),
   datasets: z.array(z.object({ section: z.string(), name: z.string(), agency: z.string(), detail: z.string(), use: z.string(), terms: z.string() })),
   layers: z.array(
-    z.object({ id: z.string(), units: z.string().nullable(), source: z.string().nullable(), land_coverage: Num.nullable(), p1: Num.nullable(), p50: Num.nullable(), p99: Num.nullable() }),
+    z.object({ id: z.string(), name: z.string().optional(), units: z.string().nullable(), source: z.string().nullable(), land_coverage: Num.nullable(), p1: Num.nullable(), p50: Num.nullable(), p99: Num.nullable() }),
   ),
   raw: z.object({
     files: z.number().int(),

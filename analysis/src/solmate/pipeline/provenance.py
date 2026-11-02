@@ -2,7 +2,7 @@
 
 Built from the files that already record it, so the page cannot drift from them:
   docs/DATA_SOURCES.md         dataset tables (agency, product, use, terms), one table per section
-  data/stack/layers.v2.json    the 41 Earth layers: units, NASA source, land coverage, percentiles
+  data/stack/layers.v2.json    the Earth layers: units, NASA source, land coverage, percentiles
   data/manifest.v2.json        every downloaded NASA file with URL, size and sha256
   config/validation_sites.yaml analog sites and controls used by the validation
 """
@@ -75,7 +75,8 @@ def layers(doc: dict) -> list[dict]:
     out = []
     for name, m in doc["layers"].items():
         p = m.get("land_p1_p50_p99") or [None, None, None]
-        out.append({"id": name, "units": m.get("units"), "source": m.get("source"),
+        out.append({"id": name, **({"name": m["name"]} if m.get("name") else {}), "units": m.get("units"),
+                    "source": m.get("source"),
                     "land_coverage": round(float(m["land_coverage"]), 4) if m.get("land_coverage") is not None else None,
                     "p1": p[0], "p50": p[1], "p99": p[2]})
     return out

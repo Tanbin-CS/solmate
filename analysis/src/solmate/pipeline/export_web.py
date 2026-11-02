@@ -6,7 +6,7 @@ Also writes data/screening/release.v2.json: the results version the terrain API 
   targets.json      11 targets with cited + computed indicator values and breaks-down constants
   screening/<id>.json  per target: top cells and novel leads with verdicts, dimension leaders
   validation.json   pre-registered validation results
-  provenance.json   datasets (from docs/DATA_SOURCES.md), the 41 stack layers, raw-file summary, validation sites
+  provenance.json   datasets (from docs/DATA_SOURCES.md), the stack layers, raw-file summary, validation sites
 Not committed (binary, ~60 MB, gitignored; mirrored to gs://solmate-13571-data/web/tilesets/<tileset>, restored
 before build by scripts/web_tiles.sh and the deploy):
   tiles/<row>_<col>.bin.gz   10 x 10 degree tiles of the 0.1 degree stack, uint16-quantised per layer
@@ -43,6 +43,7 @@ OUT = REPO / "frontend" / "public" / "data" / "v2"
 TILE_OUT = OUT / "tiles"  # gitignored; deploy restores it from gs://solmate-13571-data/web/tilesets/<tileset>
 STACK = ANALYSIS / "cache" / "stack" / "stack_v2.npz"
 RELEASE = REPO / "data" / "screening" / "release.v2.json"  # read by the terrain API (api/app/main.py)
+SITE_FACTS = REPO / "frontend" / "src" / "data" / "site_facts.json"  # counts quoted in the site's copy
 TILE = 100  # cells per tile side (10 degrees)
 CONTEXT = ("surface_pressure_hpa", "shrub_pct", "grass_savanna_pct", "cropland_pct", "wetland_pct", "water_pct",
            "urban_pct", "land_frac")
@@ -169,9 +170,11 @@ def main() -> None:
     if regional.exists():  # addendum 1: regional validation and Lunar ops (docs/VALIDATION.md)
         validation["addendum_1"] = json.loads(regional.read_text(encoding="utf-8"))
     _dump(OUT / "validation.json", validation)
+    layers_doc = json.loads((REPO / "data" / "stack" / "layers.v2.json").read_text(encoding="utf-8"))
+    _dump(SITE_FACTS, {"nasa_layers": len(layers_doc["layers"])})
     _dump(OUT / "provenance.json", provenance.build(
         (REPO / "docs" / "DATA_SOURCES.md").read_text(encoding="utf-8"),
-        json.loads((REPO / "data" / "stack" / "layers.v2.json").read_text(encoding="utf-8")),
+        layers_doc,
         json.loads((REPO / "data" / "manifest.v2.json").read_text(encoding="utf-8")),
         _cfg("validation_sites.yaml")))
     sizes = {p.name: p.stat().st_size for p in OUT.rglob("*.json")}

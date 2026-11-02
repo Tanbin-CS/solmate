@@ -87,6 +87,7 @@ def load() -> dict:
         "validation": j(WEB / "validation.json"),
         "model": j(WEB / "model.json"),
         "stage2": j(REPO / "data" / "screening" / "stage2.v2.json")["targets"],
+        "n_layers": len(j(REPO / "data" / "stack" / "layers.v2.json")["layers"]),
         "subsurface": yaml.safe_load(resources.files("solmate.config").joinpath("subsurface_sites.yaml")
                                      .read_text(encoding="utf-8")),
     }
@@ -109,14 +110,16 @@ def build(d: dict) -> list[dict]:
     moon_auc = v["summary"]["moon"]["auc_median"]
     arc_auc = v["targets"]["arcadia_planitia"]["auc_equal"]
     n_known = len(model["known_analogs"]["sites"])
+    n_layers = d["n_layers"]
 
     b: list[dict] = [
         {"type": "h1", "text": "SolMate findings: where Earth comes closest to NASA's Moon base regions and Mars sites"},
         {"type": "p", "text": (
             f"SolMate scored every land cell on Earth, about 1.9 million of them at 0.1°, against {len(targets)} NASA targets: "
             "the nine Artemis III candidate base regions near the lunar south pole, Jezero Crater and Arcadia Planitia. "
-            "Each place gets a SolMate Analog Index (SAI, 0–100) built from seven characteristics measured with 41 NASA data "
-            "layers, a statement of where the analogy breaks down, and what the place could be used for.")},
+            "Each place gets a SolMate Analog Index (SAI, 0–100) built from seven characteristics measured with "
+            f"{n_layers} NASA data layers, a statement of where the analogy breaks down, and what the place could be "
+            "used for.")},
         {"type": "p", "text": (
             f"The method was checked against sites NASA has already used as analogs, with a test written down before the "
             f"results: for Jezero, documented Mars analog sites outscore controls with an AUC of {jez['auc_equal']:.2f} "

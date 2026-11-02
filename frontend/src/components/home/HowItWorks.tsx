@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import { BODY } from '@/components/explorer/roles'
 import { withTerrain100 } from '@/science/v2/screening'
 import { DIMENSION_CARDS } from './dimensions'
+import facts from '@/data/site_facts.json'
 
 const STEPS = [
   {
@@ -18,7 +19,7 @@ const STEPS = [
   },
   {
     icon: Layers,
-    title: 'Read Earth with 41 NASA data layers.',
+    title: `Read Earth with ${facts.nasa_layers} NASA data layers.`,
     body: 'MODIS temperature, snow, albedo and land cover; ASTER minerals; MERRA-2 dust; NASA POWER climate; SRTM terrain. Every land cell on a 0.1° grid, about 1.9 million of them.',
     tone: 'var(--data)',
   },
@@ -91,7 +92,7 @@ function LayersVisual(_props: { data: HomeData }) {
       </svg>
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="absolute inset-x-4 bottom-4 rounded-lg border border-white/10 bg-ink-950/85 p-3 backdrop-blur">
         <p className="text-sm text-slate-100">
-          <span className="tabular text-xl">41</span> NASA layers · <span className="tabular text-xl">1.9 M</span> land cells at 0.1°
+          <span className="tabular text-xl">{facts.nasa_layers}</span> NASA layers · <span className="tabular text-xl">1.9 M</span> land cells at 0.1°
         </p>
         <ul className="mt-2 flex flex-wrap gap-1">
           {DATASETS.map((d) => (

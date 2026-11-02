@@ -14,6 +14,7 @@ import { useMediaQuery } from '@/hooks/useMediaQuery'
 import type { HeroSite, HeroTarget } from './HeroScene'
 import { Magnetic } from './Magnetic'
 import { Narrative } from './Narrative'
+import facts from '@/data/site_facts.json'
 
 const HeroScene = lazy(() => import('./HeroScene'))
 
@@ -207,7 +208,7 @@ export function Hero({ data }: { data: HomeData | null }) {
             </span>
           </motion.h1>
           <motion.p variants={fadeUp(reduced)} className="mt-5 max-w-md text-pretty text-base leading-relaxed text-slate-300 md:text-lg">
-            We score every place on Earth against NASA’s Moon base regions and Mars sites, using 41 NASA data layers, to find where
+            We score every place on Earth against NASA’s Moon base regions and Mars sites, using {facts.nasa_layers} NASA data layers, to find where
             crews and rovers can rehearse.
           </motion.p>
           <motion.div variants={fadeUp(reduced)} className="pointer-events-auto mt-8 flex flex-wrap gap-3">
@@ -343,7 +344,7 @@ export function Hero({ data }: { data: HomeData | null }) {
               </AnimatePresence>
             </ol>
             <p className="mt-2 border-t border-white/10 px-1.5 pt-2 font-mono text-[11px] leading-relaxed text-slate-400 md:landscape:hidden">
-              SolMate Analog Index /100 from 41 NASA layers
+              SolMate Analog Index /100 from {facts.nasa_layers} NASA layers
               {auc !== undefined && (
                 <>
                   {' '}
