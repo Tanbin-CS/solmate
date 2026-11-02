@@ -15,3 +15,16 @@ describe('validation.json', () => {
     }
   })
 })
+
+describe('regional validation addendum', () => {
+  it('is exported, reproduces the original AUCs and states the pre-registered decision', () => {
+    const v = ValidationSchema.parse(validationJson)
+    const a = v.addendum_1!
+    expect(a.region_km).toBe(500)
+    for (const [id, t] of Object.entries(a.targets)) {
+      expect(t.equal.auc).toBeCloseTo(v.targets[id]!.auc_equal, 3)
+      expect(t.lunar_ops !== undefined).toBe(t.body === 'moon')
+    }
+    expect(a.summary.moon.decision).toMatch(/keep equal|adopt Lunar ops/)
+  })
+})

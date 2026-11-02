@@ -3,15 +3,17 @@ import type { Preset } from '@/hooks/useExplorer2State'
 import { cn } from '@/lib/utils'
 import { PRESET_INFO } from './labels'
 
-const ORDER: Preset[] = ['equal', 'expert', 'mission_ops', 'learned']
+const ORDER: Preset[] = ['equal', 'expert', 'mission_ops', 'learned', 'lunar_ops']
 
 /** Dimension-weight presets. Rankings and the selected place re-score instantly. */
-export function PresetPicker({ value, onChange }: { value: Preset; onChange: (p: Preset) => void }) {
+export function PresetPicker({ value, onChange, body }: { value: Preset; onChange: (p: Preset) => void; body: 'moon' | 'mars' }) {
+  // Lunar ops is a Moon weighting; Mars targets do not offer it
+  const order = ORDER.filter((p) => p !== 'lunar_ops' || body === 'moon')
   return (
     <div>
       <p className="label-mono mb-1">Dimension weights</p>
-      <div role="radiogroup" aria-label="Dimension weights" className="grid grid-cols-4 gap-1 rounded-lg border border-border bg-ink-950/60 p-1">
-        {ORDER.map((p) => (
+      <div role="radiogroup" aria-label="Dimension weights" className={cn('grid gap-1 rounded-lg border border-border bg-ink-950/60 p-1', order.length > 4 ? 'grid-cols-5' : 'grid-cols-4')}>
+        {order.map((p) => (
           <Tooltip key={p}>
             <TooltipTrigger asChild>
               <button

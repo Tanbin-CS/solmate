@@ -75,6 +75,7 @@ function MethodBody({ data }: { data: HomeData }) {
   const arc = v.targets.arcadia_planitia!
   const [shown, setShown] = useState('jezero_crater')
   const sel = v.targets[shown]!
+  const reg = v.addendum_1
   const known = data.model.known_analogs
 
   return (
@@ -205,13 +206,15 @@ function MethodBody({ data }: { data: HomeData }) {
         </div>
 
         <div className="overflow-x-auto rounded-xl border border-border">
-          <table className="w-full text-left text-sm">
+          <table className="w-full min-w-[640px] text-left text-sm">
             <thead className="bg-ink-850">
               <tr>
                 <th className={TH}>Target</th>
                 <th className={cn(TH, 'text-right')}>AUC</th>
                 <th className={cn(TH, 'text-right')}>95% CI</th>
-                <th className={cn(TH, 'hidden text-right sm:table-cell')}>Analogs’ median land percentile</th>
+                {reg && <th className={cn(TH, 'text-right')}>Each region once</th>}
+                {reg && <th className={cn(TH, 'text-right')}>95% CI by region</th>}
+                <th className={cn(TH, 'hidden text-right md:table-cell')}>Analogs’ land percentile</th>
               </tr>
             </thead>
             <tbody>
@@ -227,7 +230,17 @@ function MethodBody({ data }: { data: HomeData }) {
                     <td className="px-4 py-2.5 text-right font-mono tabular text-slate-400">
                       {r.auc_ci95[0].toFixed(2)}–{r.auc_ci95[1].toFixed(2)}
                     </td>
-                    <td className="hidden px-4 py-2.5 text-right font-mono tabular text-slate-300 sm:table-cell">{Math.round(r.positives_median_land_percentile)}</td>
+                    {reg && (
+                      <td className={cn('px-4 py-2.5 text-right font-mono tabular', reg.targets[t.id]!.equal.auc_region_weighted < 0.65 ? 'text-negative' : 'text-slate-100')}>
+                        {reg.targets[t.id]!.equal.auc_region_weighted.toFixed(2)}
+                      </td>
+                    )}
+                    {reg && (
+                      <td className="px-4 py-2.5 text-right font-mono tabular text-slate-400">
+                        {reg.targets[t.id]!.equal.auc_ci95_regions[0].toFixed(2)}–{reg.targets[t.id]!.equal.auc_ci95_regions[1].toFixed(2)}
+                      </td>
+                    )}
+                    <td className="hidden px-4 py-2.5 text-right font-mono tabular text-slate-300 md:table-cell">{Math.round(r.positives_median_land_percentile)}</td>
                   </tr>
                 )
               })}
@@ -245,23 +258,43 @@ function MethodBody({ data }: { data: HomeData }) {
             weightings.
           </li>
           <li>
-            <strong className="text-slate-100">The Moon is a looser test.</strong> Each region has only {v.targets[moon[0]!.id]!.n_positives} analog sites, so the intervals reach
+            <strong className="text-slate-100">The Moon is a looser test.</strong> Each Moon target is checked against only {v.targets[moon[0]!.id]!.n_positives} analog sites, so the intervals reach
             down to about 0.5. Those sites were chosen mainly for terrain and operations, while the score also weighs climate, temperature and ice.
           </li>
           <li>
             <strong className="text-slate-100">Arcadia is weak, and stays in.</strong> Buried ice plains have few documented Earth analogs, and Earth’s ice signals (frost days,
             snow months) are coarse. It is NASA’s leading human-base target, so it is reported rather than hidden.
           </li>
-          <li>
-            <strong className="text-slate-100">Nearby sites may flatter the AUC.</strong> Several analog sites cluster in the same regions (Atacama, Utah, Iceland). A
-            region-by-region check is the next validation step.
-          </li>
+          {reg ? (
+            <>
+              <li>
+                <strong className="text-slate-100">Nearby sites flatter the AUC a little, not much.</strong> After mentor review, sites within {reg.region_km} km of each other were
+                grouped into regions, a rule written down before the check was run. Counting each region once, Jezero scores{' '}
+                {reg.targets.jezero_crater!.equal.auc_region_weighted.toFixed(2)} ({reg.targets.jezero_crater!.equal.auc_ci95_regions[0].toFixed(2)}–
+                {reg.targets.jezero_crater!.equal.auc_ci95_regions[1].toFixed(2)} when whole regions are resampled), the Moon regions a median of{' '}
+                {reg.summary.moon.equal.auc_region_weighted_median.toFixed(2)}, and Arcadia {reg.targets.arcadia_planitia!.equal.auc_region_weighted.toFixed(2)}. Learned weights
+                tested on regions they never saw reach {reg.targets.jezero_crater!.learned_loro_auc.toFixed(2)} for Jezero.
+              </li>
+              <li>
+                <strong className="text-slate-100">Terrain-first Moon weights were tested, and not adopted.</strong> The mentor suggested weighting terrain and operations
+                more for the Moon. These Lunar ops weights help the rugged massifs (Malapert Massif {reg.targets.malapert_massif!.lunar_ops!.auc.toFixed(2)}, Peak near Cabeus B{' '}
+                {reg.targets.peak_near_cabeus_b!.lunar_ops!.auc.toFixed(2)}) but hurt the plateaus and plains (Mons Mouton Plateau{' '}
+                {reg.targets.mons_mouton_plateau!.lunar_ops!.auc.toFixed(2)}, Haworth {reg.targets.haworth!.lunar_ops!.auc.toFixed(2)}): a median of{' '}
+                {reg.summary.moon.lunar_ops.auc_median.toFixed(2)} against {reg.summary.moon.equal.auc_median.toFixed(2)}. By the rule fixed in advance, equal weights stay the
+                default and Lunar ops is an option in the Explorer.
+              </li>
+            </>
+          ) : (
+            <li>
+              <strong className="text-slate-100">Nearby sites may flatter the AUC.</strong> Several analog sites cluster in the same regions (Atacama, Utah, Iceland).
+            </li>
+          )}
         </ul>
       </Block>
 
       <Block title="Weights you can change, including learned ones.">
         <p>
-          Equal weights are the default and drive every ranking. The Explorer also offers Expert, Ops (adds gentle slopes and low wind) and Learned weights. Learned weights come from
+          Equal weights are the default and drive every ranking. The Explorer also offers Expert, Ops (adds gentle slopes and low wind), Learned and, for the Moon, Lunar ops weights. Learned weights come from
           a non-negative logistic regression of analogs against controls, cross-validated; it is the only machine learning in SolMate, and no deep learning is used.
         </p>
         <p>

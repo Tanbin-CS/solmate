@@ -88,7 +88,7 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
     <div className={cn('flex h-full flex-col transition-opacity', screening.status === 'loading' && 'opacity-60')}>
       <div className="space-y-4 border-b border-border p-4">
         <TargetPicker targets={targets} value={target.id} onChange={ui.setTarget} />
-        <PresetPicker value={ui.preset} onChange={ui.setPreset} />
+        <PresetPicker value={ui.preset === 'lunar_ops' && target.body !== 'moon' ? 'equal' : ui.preset} onChange={ui.setPreset} body={target.body} />
         <Link to="/method#validation" className="block rounded-lg border border-border bg-ink-850 px-3 py-2 text-[12px] text-slate-300 transition-colors hover:border-slate-300/30">
           Pre-registered validation against NASA-documented analog sites →
         </Link>

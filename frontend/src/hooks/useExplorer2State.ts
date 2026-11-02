@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useSearchParams } from 'react-router'
 
-export type Preset = 'equal' | 'expert' | 'mission_ops' | 'learned'
+export type Preset = 'equal' | 'expert' | 'mission_ops' | 'learned' | 'lunar_ops'
 export type ListTab = 'top' | 'novel' | 'leaders'
 export type Layer2 = 'imagery' | 'terrain'
 export interface LatLon {
@@ -16,7 +16,7 @@ export interface BoxSel {
 }
 
 export const DEFAULT_TARGET = 'jezero_crater'
-const PRESETS: readonly Preset[] = ['equal', 'expert', 'mission_ops', 'learned']
+const PRESETS: readonly Preset[] = ['equal', 'expert', 'mission_ops', 'learned', 'lunar_ops']
 const DIMS = ['T', 'C', 'Th', 'S', 'M', 'I', 'D', 'O']
 
 const finite = (xs: number[]) => xs.every(Number.isFinite)
