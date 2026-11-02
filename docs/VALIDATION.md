@@ -152,3 +152,45 @@ stays the default. Adopting it would also mean re-running the screen for Moon ta
 ### Expectation (stated so it can be checked)
 Region-level intervals will be wider than site-level ones, and the region-weighted AUC
 may fall, most for the Moon, where three positives share northern Arizona.
+
+### Results of addendum 1 (computed 2 Nov 2026, unedited; `data/validation/validation_regions.v1.json`)
+
+Regions at 500 km: Mars positives form 14 regions, Moon positives 7, controls 16.
+Memberships are listed in the JSON. Site-level AUCs reproduce the original results exactly (same code, same cells).
+
+| Target | AUC (sites) | Each region once | 95% CI by region | Learned, leave-one-region-out | Lunar ops AUC | Lunar ops, each region once |
+|---|---|---|---|---|---|---|
+| Jezero Crater | 0.844 | 0.802 | 0.67–0.96 | 0.824 | – | – |
+| Arcadia Planitia | 0.582 | 0.515 | 0.37–0.75 | 0.847 | – | – |
+| Peak near Cabeus B | 0.775 | 0.723 | 0.55–0.94 | 0.710 | 0.790 | 0.788 |
+| Haworth | 0.715 | 0.653 | 0.41–0.94 | 0.685 | 0.495 | 0.388 |
+| Malapert Massif | 0.780 | 0.725 | 0.55–0.94 | 0.735 | 0.805 | 0.793 |
+| Mons Mouton Plateau | 0.765 | 0.740 | 0.51–0.97 | 0.660 | 0.575 | 0.520 |
+| Mons Mouton | 0.720 | 0.669 | 0.43–0.94 | 0.685 | 0.515 | 0.428 |
+| Nobile Rim 1 | 0.750 | 0.696 | 0.47–0.94 | 0.700 | 0.690 | 0.663 |
+| Nobile Rim 2 | 0.710 | 0.662 | 0.41–0.94 | 0.685 | 0.490 | 0.399 |
+| de Gerlache Rim 2 | 0.760 | 0.701 | 0.49–0.95 | 0.700 | 0.720 | 0.672 |
+| Slater Plain | 0.735 | 0.681 | 0.47–0.94 | 0.665 | 0.590 | 0.506 |
+
+Moon medians: equal 0.750 (each region once 0.696); Lunar ops 0.590 (0.520).
+
+**Decision (by the pre-registered rule):** keep equal as the Moon default; offer Lunar ops as a preset.
+
+**What we learn**
+1. **Clustering inflates the AUC a little, not much.** Counting each region once lowers
+   Jezero from 0.844 to 0.802 and the Moon median from 0.750 to 0.696. The interval for
+   Jezero when whole regions are resampled (0.67–0.96) still sits above chance.
+2. **Learned weights generalise across regions for Jezero** (0.824 on regions never
+   seen in fitting), less so for the Moon (0.66–0.74).
+3. **Lunar ops splits the Moon targets.** It helps the rugged massifs (Malapert Massif
+   0.805, Peak near Cabeus B 0.790) and hurts the plateaus and plains (Haworth 0.495,
+   Nobile Rim 2 0.490, Mons Mouton Plateau 0.575). Why the regions split is not
+   established here; target terrain values and the small number of Moon analog sites
+   (10, in 7 regions) are the first things to examine. Equal weights stay the Moon
+   default; Lunar ops ships as an option.
+4. **Arcadia stays weak with equal weights** (0.515 with each region once). Learned
+   weights tested on unseen regions reach 0.847, as in the original cross-validation
+   (0.843): they learn what separates Mars analog sites from controls in general, so
+   the weak point is the equal weighting against an ice-plain target, not the data.
+5. The expectation stated above held: region intervals are wider and the
+   region-weighted AUC is lower, most for the Moon.

@@ -72,4 +72,7 @@ presets:
   equal:      {T: 1, C: 1, Th: 1, S: 1, M: 1, I: 1, D: 1, O: 0}
   expert:     {T: 1.5, C: 1, Th: 1, S: 1, M: 1, I: 1, D: 0.5, O: 0}
   mission_ops: {T: 1, C: 0.5, Th: 1, S: 1, M: 0.5, I: 0.5, D: 0.5, O: 2}
+  # Moon-focused (docs/VALIDATION.md addendum 1): terrain and operations first, environment as support.
+  # Pre-registered test result: not adopted as the Moon default; offered as an option.
+  lunar_ops:  {T: 2, C: 0.5, Th: 0.5, S: 1, M: 0.5, I: 0.5, D: 0, O: 1}
   # learned: filled by validation (cross-validated logistic regression), see docs/VALIDATION.md
