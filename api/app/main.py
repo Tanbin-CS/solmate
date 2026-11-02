@@ -12,7 +12,6 @@ service exists only because 100 m terrain for an arbitrary box needs a server re
 from __future__ import annotations
 
 import concurrent.futures as cf
-import hashlib
 import json
 import logging
 import math
@@ -46,10 +45,13 @@ class Model:
         self.known = {t["id"] for t in load_targets()}  # all 11 targets
         self.stats = {k: modes.EarthStats(tuple(v["quantiles"]), v["median"], v["sigma"])
                       for k, v in stats_doc["indicators"].items()}
-        digest = hashlib.sha256()
-        for doc in (stage2["targets"], stats_doc["indicators"]):
-            digest.update(json.dumps(doc, sort_keys=True).encode())
-        self.version = digest.hexdigest()[:12]
+        # Cache key: changes only when a terrain answer could change.
+        self.terrain_version = terrain100.data_version(stage2["targets"], stats_doc["indicators"])
+        # Reported version: the web app's results version, written by the export with these data.
+        release = json.loads((settings.data_dir / "screening" / "release.v2.json").read_text(encoding="utf-8"))
+        if release["terrain_100m_version"] != self.terrain_version:
+            raise RuntimeError("release.v2.json does not match the terrain data; re-run the web export")
+        self.version: str = release["model_version"]
 
 
 @lru_cache(maxsize=1)
@@ -125,7 +127,7 @@ def terrain_endpoint(req: TerrainRequest, request: Request, settings: Settings =
     target = model.targets.get(req.target_id)
     if req.target_id not in model.known:
         raise HTTPException(status_code=404, detail="unknown target")
-    key = cache_key(req.lat, req.lon, req.size_km, model.version)
+    key = cache_key(req.lat, req.lon, req.size_km, model.terrain_version)
     indicators, cached, partial = cache.get(key), True, False
     t_cache = time.perf_counter()
     if indicators is None:

@@ -6,6 +6,19 @@ import rasterio
 from rasterio.transform import from_origin
 
 QUANT = list(np.linspace(0.0, 40.0, 101))
+RESULTS_VERSION = "0123456789ab"
+
+
+def write_release(data, terrain_version=None):
+    """The release file the web export writes beside the terrain data."""
+    from solmate.compute import terrain100
+
+    scr = data / "screening"
+    if terrain_version is None:
+        terrain_version = terrain100.data_version(json.loads((scr / "stage2.v2.json").read_text())["targets"],
+                                                  json.loads((scr / "stage2_stats.v2.json").read_text())["indicators"])
+    (scr / "release.v2.json").write_text(json.dumps({"model_version": RESULTS_VERSION,
+                                                     "terrain_100m_version": terrain_version}))
 
 
 @pytest.fixture()
@@ -17,6 +30,7 @@ def api(tmp_path, monkeypatch):
     stats = {"median": 5.0, "sigma": 3.0, "quantiles": QUANT}
     (tmp_path / "data" / "screening" / "stage2_stats.v2.json").write_text(json.dumps({"indicators": {
         k: stats for k in ("slope_median", "slope_p90", "hypsometric_integral")}}))
+    write_release(tmp_path / "data")
     tiles = tmp_path / "tiles"
     tiles.mkdir()
     yy, xx = np.mgrid[0:3601, 0:3601]

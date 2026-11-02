@@ -2,6 +2,7 @@
 
 Committed (small JSON):
   model.json        dimensions, presets (incl. learned), Earth stats, process rules, tile layout, model_version
+Also writes data/screening/release.v2.json: the results version the terrain API reports.
   targets.json      11 targets with cited + computed indicator values and breaks-down constants
   screening/<id>.json  per target: top cells and novel leads with verdicts, dimension leaders
   validation.json   pre-registered validation results
@@ -30,7 +31,7 @@ from pathlib import Path
 import numpy as np
 import yaml
 
-from solmate.compute import grid
+from solmate.compute import grid, terrain100
 from solmate.pipeline import provenance
 from solmate.targets import load_targets
 
@@ -39,6 +40,7 @@ REPO = ANALYSIS.parent
 OUT = REPO / "frontend" / "public" / "data" / "v2"
 TILE_OUT = OUT / "tiles"  # gitignored; deploy restores it from gs://solmate-13571-data/web/tiles
 STACK = ANALYSIS / "cache" / "stack" / "stack_v2.npz"
+RELEASE = REPO / "data" / "screening" / "release.v2.json"  # read by the terrain API (api/app/main.py)
 TILE = 100  # cells per tile side (10 degrees)
 CONTEXT = ("surface_pressure_hpa", "shrub_pct", "grass_savanna_pct", "cropland_pct", "wetland_pct", "water_pct",
            "urban_pct", "land_frac")
@@ -120,6 +122,12 @@ def export_tiles(layers: list[str]) -> dict:
             "available": sorted(written), "path": "/data/v2/tiles/{row}_{col}.bin.gz"}
 
 
+def terrain_100m_version() -> str:
+    stage2 = json.loads((REPO / "data" / "screening" / "stage2.v2.json").read_text(encoding="utf-8"))
+    stats = json.loads((REPO / "data" / "screening" / "stage2_stats.v2.json").read_text(encoding="utf-8"))
+    return terrain100.data_version(stage2["targets"], stats["indicators"])
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--tiles", action="store_true", help="also write the binary tiles (slow)")
@@ -133,9 +141,12 @@ def main() -> None:
     layers = tile_layers(dims)
     tiles = export_tiles(layers) if args.tiles else json.loads((OUT / "model.json").read_text(encoding="utf-8"))["tiles"]
     model = {"version": 2, "dimensions": dims, "presets": presets, "earth_stats": earth["indicators"],
-             "processes": _cfg("processes.yaml"), "known_analogs": _cfg("known_analogs.yaml"), "tiles": tiles}
+             "processes": _cfg("processes.yaml"), "known_analogs": _cfg("known_analogs.yaml"), "tiles": tiles,
+             "terrain_100m_version": terrain_100m_version()}
     model["model_version"] = hashlib.sha256(json.dumps(model, sort_keys=True).encode()).hexdigest()[:12]
     _dump(OUT / "model.json", model)
+    # The terrain API reports the same results version as the web app; it checks this file against its data.
+    _dump(RELEASE, {"model_version": model["model_version"], "terrain_100m_version": model["terrain_100m_version"]})
     _dump(OUT / "targets.json", {"targets": load_targets()})
     screen = json.loads((REPO / "data" / "screening" / "screening.v2.json").read_text(encoding="utf-8"))
     for tid, t in screen["targets"].items():
