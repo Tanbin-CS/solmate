@@ -109,6 +109,31 @@ def regrid_bilinear(values: np.ndarray, src_lat: np.ndarray, src_lon: np.ndarray
     return f(np.stack([la.ravel(), lo.ravel()], axis=-1)).reshape(NROWS, NCOLS).astype(np.float32)
 
 
+def scatter_mean(values: np.ndarray, lat: np.ndarray, lon: np.ndarray) -> np.ndarray:
+    """Mean of every finite source value that falls inside each 0.1 degree cell.
+
+    For sources finer than the grid, or on any projection, given each value's lat/lon
+    (same shape as values, or 1-D axes of a regular grid). Longitude may be 0..360 or
+    -180..180. Cells no source value falls in stay NaN.
+    """
+    v = np.asarray(values, dtype=np.float64)
+    la, lo = np.asarray(lat, dtype=np.float64), np.asarray(lon, dtype=np.float64)
+    if la.ndim == 1 and lo.ndim == 1 and v.shape == (la.size, lo.size):
+        la, lo = np.meshgrid(la, lo, indexing="ij")
+    if not (v.shape == la.shape == lo.shape):
+        raise ValueError(f"values {v.shape} and lat/lon {la.shape}/{lo.shape} do not match")
+    lo = (lo + 180.0) % 360.0 - 180.0
+    ok = np.isfinite(v) & np.isfinite(la) & (np.abs(la) <= 90.0) & np.isfinite(lo)
+    row = np.clip(((90.0 - la[ok]) / RES).astype(np.int64), 0, NROWS - 1)
+    col = np.clip(((lo[ok] + 180.0) / RES).astype(np.int64), 0, NCOLS - 1)
+    idx = row * NCOLS + col
+    total = np.bincount(idx, weights=v[ok], minlength=NROWS * NCOLS)
+    count = np.bincount(idx, minlength=NROWS * NCOLS)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        out = total / count
+    return out.reshape(NROWS, NCOLS).astype(np.float32)
+
+
 def extraterrestrial_radiation_mm(lat_deg: np.ndarray, doy: np.ndarray | int) -> np.ndarray:
     """Daily extraterrestrial radiation Ra as evaporation equivalent (mm/day), FAO-56 eqs. 21-25."""
     gsc = 0.0820  # MJ m-2 min-1
