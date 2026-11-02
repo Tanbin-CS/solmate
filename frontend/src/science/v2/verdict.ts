@@ -162,7 +162,18 @@ export function dimensionLimits(dimScores: Readonly<Record<string, number>>, app
   return out
 }
 
-export function towardGaps(values: PlaceValues, plans: readonly IndicatorPlan[], stats: Readonly<Record<string, EarthStats>>): Limit[] {
+/** Built-in labels, plus any `label` given in dimensions.yaml (event-day indicators). Python: indicator_labels. */
+export function indicatorLabels(dims: Model['dimensions']): Readonly<Record<string, string>> {
+  const extra = Object.values(dims).flatMap((d) => Object.entries(d.indicators).flatMap(([k, s]) => (s.label ? [[k, s.label] as const] : [])))
+  return { ...INDICATOR_LABELS, ...Object.fromEntries(extra) }
+}
+
+export function towardGaps(
+  values: PlaceValues,
+  plans: readonly IndicatorPlan[],
+  stats: Readonly<Record<string, EarthStats>>,
+  labels: Readonly<Record<string, string>> = INDICATOR_LABELS,
+): Limit[] {
   const out: Limit[] = []
   for (const p of plans) {
     if (p.mode.kind !== 'toward' || p.target === null) continue
@@ -173,7 +184,7 @@ export function towardGaps(values: PlaceValues, plans: readonly IndicatorPlan[],
       out.push({
         kind: 'earth_can_only_approach', id: p.name, earth: pyRound(x, 3), target: p.target, gap: pyRound(gap, 3),
         text:
-          `${INDICATOR_LABELS[p.name] ?? p.name}: the target value (${pyG(p.target)}) lies beyond ` +
+          `${labels[p.name] ?? p.name}: the target value (${pyG(p.target)}) lies beyond ` +
           `every place on Earth; this place gets ${((1 - gap) * 100).toFixed(0)}% of the way from ` +
           "Earth's typical value.",
       })
@@ -309,7 +320,7 @@ export function explain(
       ...environmentLimits(target, num(values, 'surface_pressure_hpa')),
       ...illuminationLimit(target.body, (target as { centroid?: { lat?: number } }).centroid?.lat, lat),
       ...subsurfaceLimit(),
-      ...towardGaps(values, allPlans, stats),
+      ...towardGaps(values, allPlans, stats, indicatorLabels(model.dimensions)),
       ...vegetationFlag(values),
     ],
     process_tags: tagsFor(values, target.body, model.processes, stats),

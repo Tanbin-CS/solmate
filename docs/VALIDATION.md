@@ -194,3 +194,22 @@ Moon medians: equal 0.750 (each region once 0.696); Lunar ops 0.590 (0.520).
    the weak point is the equal weighting against an ice-plain target, not the data.
 5. The expectation stated above held: region intervals are wider and the
    region-weighted AUC is lower, most for the Moon.
+
+## Addendum 2: datasets added on event day (pre-registered 3 Nov 2026)
+
+Written before any event-day dataset is seen. The Space Apps Resources tab opens on
+13 Nov 2026; datasets from it, or any later addition, follow this rule.
+
+1. **Context first.** A new dataset enters as a context layer (`role: context` in
+   `config/event_layers.yaml`): shown in the place panel with its source, never scored.
+   The published scores, rankings and validation do not change.
+2. **Scoring is the exception, tested the same way as everything else.** A dataset may
+   join the score only if it is NASA data, has a cited or computed value at every target
+   its dimension applies to, and the full validation is re-run with it
+   (`solmate.pipeline.release --scored`).
+3. **Decision rule.** For each body the layer is scored on, the median AUC with equal
+   weights may fall by at most 0.02 against the run before the change. If it falls more,
+   the layer goes back to context. The release command applies the rule and writes the
+   comparison to `data/validation/event_check.v1.json`.
+4. **Reporting.** Results are reported unedited, whichever way they go, with the
+   before and after values.

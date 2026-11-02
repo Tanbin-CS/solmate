@@ -1,0 +1,34 @@
+# Datasets added on event day (Fri 13 Nov 2026) from the Space Apps Resources tab.
+# Procedure and rules: docs/EVENT_DAY.md. Pre-registered rule: docs/VALIDATION.md, addendum 2.
+#
+# Each entry becomes one layer of the 0.1 degree Earth stack, shown in the Explorer's place panel.
+#   role: context  shown with its source, never scored (the default for every new dataset)
+#   role: scored   also scored; list the id under one dimension in dimensions.yaml and give a
+#                  value for every target of the bodies that dimension applies to
+#
+# Fields
+#   id, name, units, source, url (https), licence      required
+#   digits                                             decimals shown in the panel (default 2)
+#   earth: files (glob under analysis/cache/raw), variable, lat, lon, grid {north, west, res},
+#          scale, offset, fill, valid_range [lo, hi], reduce (mean | min | max)
+#   download: {short_name, version, temporal: [start, end], one_per_month}   NASA CMR granules for
+#            download_nasa.py --only <short_name>
+#   targets:
+#     values: {<target id>: {value, method: literature, source, url or doi}}
+#     sample: {file, body: moon | mars, band, window_km, scale, offset, fill, valid_range}
+#             computed at each target centroid of that body by solmate.pipeline.event_targets
+#
+# Example (NASA GLDAS soil moisture, monthly NetCDF-4):
+# - id: soil_moisture_kg_m2
+#   name: Topsoil moisture (0-10 cm)
+#   units: kg/m2
+#   digits: 1
+#   source: NASA GLDAS Noah 2.1 monthly 0.25 degree (GLDAS_NOAH025_M), 2023-24 mean
+#   url: https://disc.gsfc.nasa.gov/datasets/GLDAS_NOAH025_M_2.1/summary
+#   licence: NASA open data
+#   role: context
+#   earth:
+#     files: GLDAS_NOAH025_M/*.nc4
+#     variable: SoilMoi0_10cm_inst
+version: 1
+layers: []
