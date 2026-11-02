@@ -16,7 +16,8 @@ judging ends (January 2027).
 
 ## Deploy (automatic)
 Every merge to `main` runs **Deploy** (`.github/workflows/deploy.yml`):
-1. If API code or its data changed: Cloud Run builds a new revision **without traffic**
+1. If API code or its data changed since the commit the live API runs (`/api/v1/version`):
+   Cloud Run builds a new revision **without traffic**
    (tag `candidate`), smoke-tests it (health, version = commit, App Check refuses a request with
    no token), then moves all traffic to it.
 2. Web: restores the tiles from GCS, builds with the public Firebase key (repository
