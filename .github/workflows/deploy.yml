@@ -50,7 +50,7 @@ jobs:
         run: |
           live=$(curl -fsS --max-time 30 "$SITE/api/v1/version" | jq -r '.git_sha // empty' || true)
           echo "live API commit: ${live:-unknown}"
-          api_paths='^(api/|analysis/src/|analysis/pyproject.toml|analysis/uv.lock|Dockerfile|\.gcloudignore|data/screening/(stage2|release)|data/stack/astgtm|data/targets/)'
+          api_paths='^(api/|analysis/src/|analysis/pyproject.toml|analysis/uv.lock|Dockerfile|\.dockerignore|\.gcloudignore|data/screening/(stage2|release)|data/stack/astgtm|data/targets/)'
           known() { printf '%s' "$live" | grep -qE '^[0-9a-f]{7,40}$' && git cat-file -e "${live}^{commit}" 2>/dev/null; }
           changed() { git diff --name-only "$live" HEAD > "$RUNNER_TEMP/changed.txt" && grep -qE "$api_paths" "$RUNNER_TEMP/changed.txt"; }
           if [ "$FORCE" = "true" ] || ! known || changed; then
