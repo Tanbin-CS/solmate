@@ -350,7 +350,12 @@ function Scene(props: Props) {
   const camTarget = useMemo(() => new Vector3(), [])
 
   // surface positions (unit sphere, scaled by the parent group)
-  const sitePos = useMemo(() => new Map(allSites.map((s) => [s.id, latLonToVec3(s.lat, s.lon, 1.006)])), [allSites])
+  // every point an arc or marker can land on: reference sites and each target's best matches,
+  // which need not be in allSites (screened cells are keyed by their coordinates)
+  const sitePos = useMemo(
+    () => new Map([...allSites, ...targets.flatMap((t) => t.top)].map((s) => [s.id, latLonToVec3(s.lat, s.lon, 1.006)])),
+    [allSites, targets],
+  )
   const screenedPos = useMemo(() => {
     const arr = new Float32Array(screened.length * 3)
     screened.forEach((s, i) => latLonToVec3(s.lat, s.lon, 1.004).toArray(arr, i * 3))
