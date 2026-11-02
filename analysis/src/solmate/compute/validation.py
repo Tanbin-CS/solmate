@@ -81,3 +81,75 @@ def cv_learned_auc(x: np.ndarray, y: np.ndarray, folds: int = 5, repeats: int = 
             oof[test] = weighted_scores(x[test], w if w.sum() > 0 else np.ones_like(w))
         aucs.append(auc(oof[y == 1], oof[y == 0]))
     return float(np.median(aucs)), float(np.quantile(aucs, 0.05)), float(np.quantile(aucs, 0.95))
+
+
+# --- Regional validation (docs/VALIDATION.md, addendum 1) ---------------------------------
+
+
+def single_linkage_regions(lat: np.ndarray, lon: np.ndarray, km: float = 500.0) -> np.ndarray:
+    """Region label per site: sites joined by a chain of great-circle gaps below `km` share one."""
+    from solmate.compute.novelty import haversine_km
+
+    lat, lon = np.asarray(lat, float), np.asarray(lon, float)
+    n = lat.size
+    parent = np.arange(n)
+
+    def find(i: int) -> int:
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+
+    for i in range(n):
+        d = haversine_km(lat, lon, lat[i], lon[i])
+        for j in np.flatnonzero(d < km):
+            ri, rj = find(i), find(int(j))
+            if ri != rj:
+                parent[max(ri, rj)] = min(ri, rj)
+    roots = np.array([find(i) for i in range(n)])
+    _, labels = np.unique(roots, return_inverse=True)
+    return labels
+
+
+def region_weights(labels: np.ndarray) -> np.ndarray:
+    """1 / (sites in the region), so each region carries a total weight of one."""
+    counts = np.bincount(labels)
+    return 1.0 / counts[labels]
+
+
+def weighted_auc(pos: np.ndarray, neg: np.ndarray, w_pos: np.ndarray, w_neg: np.ndarray) -> float:
+    """AUC with a weight on every positive-negative pair (ties count half)."""
+    p = np.asarray(pos, float)[:, None]
+    n = np.asarray(neg, float)[None, :]
+    w = np.asarray(w_pos, float)[:, None] * np.asarray(w_neg, float)[None, :]
+    return float(((p > n) * w + 0.5 * (p == n) * w).sum() / w.sum())
+
+
+def block_bootstrap_auc_ci(pos: np.ndarray, neg: np.ndarray, g_pos: np.ndarray, g_neg: np.ndarray,
+                           n_boot: int = 1000, seed: int = 2026, level: float = 0.95) -> tuple[float, float]:
+    """Percentile CI of the AUC when whole regions, not sites, are resampled."""
+    rng = np.random.default_rng(seed)
+    pos, neg = np.asarray(pos, float), np.asarray(neg, float)
+    rp = [np.flatnonzero(g_pos == r) for r in np.unique(g_pos)]
+    rn = [np.flatnonzero(g_neg == r) for r in np.unique(g_neg)]
+    stats = []
+    for _ in range(n_boot):
+        ip = np.concatenate([rp[k] for k in rng.integers(0, len(rp), len(rp))])
+        ineg = np.concatenate([rn[k] for k in rng.integers(0, len(rn), len(rn))])
+        stats.append(auc(pos[ip], neg[ineg]))
+    a = (1 - level) / 2
+    return float(np.quantile(stats, a)), float(np.quantile(stats, 1 - a))
+
+
+def loro_learned_auc(x: np.ndarray, y: np.ndarray, groups: np.ndarray, l2: float = 1.0) -> float:
+    """Leave-one-region-out AUC of learned weights: each region is scored by a fit without it."""
+    oof = np.full(y.size, np.nan)
+    for g in np.unique(groups):
+        test = groups == g
+        train = ~test
+        if len(np.unique(y[train])) < 2:
+            continue
+        w, _ = fit_nonneg_logistic(x[train], y[train], l2)
+        oof[test] = weighted_scores(x[test], w if w.sum() > 0 else np.ones_like(w))
+    ok = np.isfinite(oof)
+    return auc(oof[ok & (y == 1)], oof[ok & (y == 0)])

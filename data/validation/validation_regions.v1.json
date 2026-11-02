@@ -1,0 +1,466 @@
+{
+ "version": 1,
+ "generated_at": "2026-11-02T13:57:28+00:00",
+ "plan": "docs/VALIDATION.md#addendum-1-regional-validation-and-lunar-ops-weights-pre-registered-2-nov-2026",
+ "seed": 2026,
+ "region_km": 500.0,
+ "lunar_ops_weights": {
+  "T": 2.0,
+  "C": 0.5,
+  "Th": 0.5,
+  "S": 1.0,
+  "M": 0.5,
+  "I": 0.5,
+  "O": 1.0
+ },
+ "regions": {
+  "controls": [
+   [
+    "amazon-forest"
+   ],
+   [
+    "congo-forest"
+   ],
+   [
+    "borneo-forest"
+   ],
+   [
+    "black-forest",
+    "flevoland",
+    "aletsch",
+    "ruhr"
+   ],
+   [
+    "appalachian-forest"
+   ],
+   [
+    "siberian-taiga"
+   ],
+   [
+    "canadian-boreal"
+   ],
+   [
+    "iowa"
+   ],
+   [
+    "ganges-plain"
+   ],
+   [
+    "punjab"
+   ],
+   [
+    "kazakh-steppe"
+   ],
+   [
+    "pampas"
+   ],
+   [
+    "serengeti"
+   ],
+   [
+    "cerrado"
+   ],
+   [
+    "pantanal"
+   ],
+   [
+    "sundarbans",
+    "dhaka"
+   ]
+  ],
+  "mars": [
+   [
+    "lake-salda"
+   ],
+   [
+    "death-valley"
+   ],
+   [
+    "atacama-yungay",
+    "licancabur-high-lakes"
+   ],
+   [
+    "pilot-valley",
+    "verde-valley",
+    "mdrs-utah"
+   ],
+   [
+    "vikursundar"
+   ],
+   [
+    "haughton-devon-island"
+   ],
+   [
+    "rio-tinto"
+   ],
+   [
+    "svalbard-bockfjorden"
+   ],
+   [
+    "pavilion-lake"
+   ],
+   [
+    "teide-tenerife"
+   ],
+   [
+    "arkaroola"
+   ],
+   [
+    "qaidam-dalangtan"
+   ],
+   [
+    "antarctica-dry-valleys"
+   ],
+   [
+    "lonar"
+   ]
+  ],
+  "moon": [
+   [
+    "askja"
+   ],
+   [
+    "kilauea",
+    "mauna-kea-hi-seas"
+   ],
+   [
+    "lava-beds"
+   ],
+   [
+    "sf-volcanic-field",
+    "meteor-crater",
+    "black-point-lava-flow"
+   ],
+   [
+    "sudbury"
+   ],
+   [
+    "ries-crater"
+   ],
+   [
+    "lanzarote"
+   ]
+  ]
+ },
+ "summary": {
+  "moon": {
+   "equal": {
+    "auc_median": 0.75,
+    "auc_region_weighted_median": 0.696
+   },
+   "lunar_ops": {
+    "auc_median": 0.59,
+    "auc_region_weighted_median": 0.52
+   },
+   "decision": "keep equal as the Moon default; offer Lunar ops as a preset"
+  }
+ },
+ "targets": {
+  "peak_near_cabeus_b": {
+   "body": "moon",
+   "n_positive_regions": 7,
+   "n_control_regions": 16,
+   "equal": {
+    "auc": 0.775,
+    "auc_ci95_sites": [
+     0.54,
+     0.95
+    ],
+    "auc_region_weighted": 0.723,
+    "auc_ci95_regions": [
+     0.547,
+     0.942
+    ]
+   },
+   "learned_loro_auc": 0.71,
+   "lunar_ops": {
+    "auc": 0.79,
+    "auc_ci95_sites": [
+     0.585,
+     0.95
+    ],
+    "auc_region_weighted": 0.788,
+    "auc_ci95_regions": [
+     0.594,
+     0.947
+    ]
+   }
+  },
+  "haworth": {
+   "body": "moon",
+   "n_positive_regions": 7,
+   "n_control_regions": 16,
+   "equal": {
+    "auc": 0.715,
+    "auc_ci95_sites": [
+     0.465,
+     0.92
+    ],
+    "auc_region_weighted": 0.653,
+    "auc_ci95_regions": [
+     0.415,
+     0.94
+    ]
+   },
+   "learned_loro_auc": 0.685,
+   "lunar_ops": {
+    "auc": 0.495,
+    "auc_ci95_sites": [
+     0.265,
+     0.74
+    ],
+    "auc_region_weighted": 0.388,
+    "auc_ci95_regions": [
+     0.155,
+     0.779
+    ]
+   }
+  },
+  "malapert_massif": {
+   "body": "moon",
+   "n_positive_regions": 7,
+   "n_control_regions": 16,
+   "equal": {
+    "auc": 0.78,
+    "auc_ci95_sites": [
+     0.545,
+     0.955
+    ],
+    "auc_region_weighted": 0.725,
+    "auc_ci95_regions": [
+     0.551,
+     0.943
+    ]
+   },
+   "learned_loro_auc": 0.735,
+   "lunar_ops": {
+    "auc": 0.805,
+    "auc_ci95_sites": [
+     0.61,
+     0.955
+    ],
+    "auc_region_weighted": 0.793,
+    "auc_ci95_regions": [
+     0.61,
+     0.957
+    ]
+   }
+  },
+  "mons_mouton_plateau": {
+   "body": "moon",
+   "n_positive_regions": 7,
+   "n_control_regions": 16,
+   "equal": {
+    "auc": 0.765,
+    "auc_ci95_sites": [
+     0.55,
+     0.945
+    ],
+    "auc_region_weighted": 0.74,
+    "auc_ci95_regions": [
+     0.505,
+     0.971
+    ]
+   },
+   "learned_loro_auc": 0.66,
+   "lunar_ops": {
+    "auc": 0.575,
+    "auc_ci95_sites": [
+     0.34,
+     0.8
+    ],
+    "auc_region_weighted": 0.52,
+    "auc_ci95_regions": [
+     0.304,
+     0.811
+    ]
+   }
+  },
+  "mons_mouton": {
+   "body": "moon",
+   "n_positive_regions": 7,
+   "n_control_regions": 16,
+   "equal": {
+    "auc": 0.72,
+    "auc_ci95_sites": [
+     0.48,
+     0.92
+    ],
+    "auc_region_weighted": 0.669,
+    "auc_ci95_regions": [
+     0.428,
+     0.942
+    ]
+   },
+   "learned_loro_auc": 0.685,
+   "lunar_ops": {
+    "auc": 0.515,
+    "auc_ci95_sites": [
+     0.275,
+     0.76
+    ],
+    "auc_region_weighted": 0.428,
+    "auc_ci95_regions": [
+     0.184,
+     0.796
+    ]
+   }
+  },
+  "nobile_rim_1": {
+   "body": "moon",
+   "n_positive_regions": 7,
+   "n_control_regions": 16,
+   "equal": {
+    "auc": 0.75,
+    "auc_ci95_sites": [
+     0.485,
+     0.93
+    ],
+    "auc_region_weighted": 0.696,
+    "auc_ci95_regions": [
+     0.475,
+     0.944
+    ]
+   },
+   "learned_loro_auc": 0.7,
+   "lunar_ops": {
+    "auc": 0.69,
+    "auc_ci95_sites": [
+     0.44,
+     0.895
+    ],
+    "auc_region_weighted": 0.663,
+    "auc_ci95_regions": [
+     0.414,
+     0.927
+    ]
+   }
+  },
+  "nobile_rim_2": {
+   "body": "moon",
+   "n_positive_regions": 7,
+   "n_control_regions": 16,
+   "equal": {
+    "auc": 0.71,
+    "auc_ci95_sites": [
+     0.465,
+     0.92
+    ],
+    "auc_region_weighted": 0.662,
+    "auc_ci95_regions": [
+     0.406,
+     0.94
+    ]
+   },
+   "learned_loro_auc": 0.685,
+   "lunar_ops": {
+    "auc": 0.49,
+    "auc_ci95_sites": [
+     0.265,
+     0.725
+    ],
+    "auc_region_weighted": 0.399,
+    "auc_ci95_regions": [
+     0.167,
+     0.779
+    ]
+   }
+  },
+  "de_gerlache_rim_2": {
+   "body": "moon",
+   "n_positive_regions": 7,
+   "n_control_regions": 16,
+   "equal": {
+    "auc": 0.76,
+    "auc_ci95_sites": [
+     0.535,
+     0.94
+    ],
+    "auc_region_weighted": 0.701,
+    "auc_ci95_regions": [
+     0.494,
+     0.947
+    ]
+   },
+   "learned_loro_auc": 0.7,
+   "lunar_ops": {
+    "auc": 0.72,
+    "auc_ci95_sites": [
+     0.465,
+     0.925
+    ],
+    "auc_region_weighted": 0.672,
+    "auc_ci95_regions": [
+     0.43,
+     0.947
+    ]
+   }
+  },
+  "slater_plain": {
+   "body": "moon",
+   "n_positive_regions": 7,
+   "n_control_regions": 16,
+   "equal": {
+    "auc": 0.735,
+    "auc_ci95_sites": [
+     0.495,
+     0.925
+    ],
+    "auc_region_weighted": 0.681,
+    "auc_ci95_regions": [
+     0.471,
+     0.936
+    ]
+   },
+   "learned_loro_auc": 0.665,
+   "lunar_ops": {
+    "auc": 0.59,
+    "auc_ci95_sites": [
+     0.355,
+     0.82
+    ],
+    "auc_region_weighted": 0.506,
+    "auc_ci95_regions": [
+     0.315,
+     0.831
+    ]
+   }
+  },
+  "jezero_crater": {
+   "body": "mars",
+   "n_positive_regions": 14,
+   "n_control_regions": 16,
+   "equal": {
+    "auc": 0.844,
+    "auc_ci95_sites": [
+     0.694,
+     0.962
+    ],
+    "auc_region_weighted": 0.802,
+    "auc_ci95_regions": [
+     0.671,
+     0.958
+    ]
+   },
+   "learned_loro_auc": 0.824
+  },
+  "arcadia_planitia": {
+   "body": "mars",
+   "n_positive_regions": 14,
+   "n_control_regions": 16,
+   "equal": {
+    "auc": 0.582,
+    "auc_ci95_sites": [
+     0.382,
+     0.768
+    ],
+    "auc_region_weighted": 0.515,
+    "auc_ci95_regions": [
+     0.367,
+     0.746
+    ]
+   },
+   "learned_loro_auc": 0.847
+  }
+ }
+}
