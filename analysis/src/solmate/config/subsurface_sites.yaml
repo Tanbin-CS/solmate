@@ -1,0 +1,53 @@
+# Documented underground analogs (caves, lava tubes, mines). Satellite data cannot assess the
+# subsurface, so these are listed from published sources, not scored. Every entry is a place
+# that a space agency or NASA-funded team has actually used, with its source.
+version: 1
+earth:
+  - id: lava-beds-lava-tubes
+    name: Lava Beds lava tubes
+    country: California, USA
+    kind: Lava tubes
+    use: >-
+      NASA-funded BRAILLE project: robots and instruments for mapping lava tubes and finding
+      life in them, as a rehearsal for Martian caves.
+    source: NASA Astrobiology, Robotic exploration of caves and lava tubes (BRAILLE)
+    url: https://astrobiology.nasa.gov/ask-an-astrobiologist/episodes/47/
+  - id: la-corona-lava-tube
+    name: La Corona lava tube
+    country: Lanzarote, Spain
+    kind: Lava tube
+    use: >-
+      ESA PANGAEA astronaut geology training; its microbes are studied as an analog for the
+      Martian subsurface.
+    source: ESA, Astronaut training in the land of volcanoes; Corona lava tube microbes (PubMed 41572783)
+    url: https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Astronaut_training_in_the_land_of_volcanoes
+  - id: sa-grutta-caves
+    name: Sa Grutta caves
+    country: Supramonte, Sardinia, Italy
+    kind: Caves
+    use: >-
+      ESA CAVES: astronauts live and explore underground for about two weeks to train for
+      long missions and cave exploration.
+    source: ESA, Underground wonderland (CAVES)
+    url: https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/CAVES_and_Pangaea/Underground_wonderland
+  - id: boulby-mine
+    name: Boulby Mine
+    country: United Kingdom
+    kind: Mine, 1 km deep
+    use: >-
+      MINAR (Mine Analogue Research) with NASA Spaceward Bound: instruments, robots and life
+      detection tested in salt deposits deep underground.
+    source: UK Centre for Astrobiology, MINAR; MINAR 5 (International Journal of Astrobiology)
+    url: https://www.astrobiology.ac.uk/research/astrobiology-analog-research/minar
+targets:
+  - body: moon
+    text: >-
+      NASA's Lunar Reconnaissance Orbiter has imaged more than 200 pits on the Moon, and radar
+      data show that the Mare Tranquillitatis pit opens into a cave conduit (Carrer et al. 2024,
+      Nature Astronomy). Such caves are discussed as shelters for future bases.
+    url: https://doi.org/10.1038/s41550-024-02302-y
+  - body: mars
+    text: >-
+      NASA's Mars Odyssey (THEMIS) found seven possible cave skylights on the flanks of Arsia
+      Mons, 100 to 250 m across (Cushing et al. 2007).
+    url: https://www.jpl.nasa.gov/images/pia09929-seven-possible-cave-skylights-on-mars/

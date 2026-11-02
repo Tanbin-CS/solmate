@@ -57,11 +57,20 @@ The best novel lead for Jezero Crater is the cell at 37.05°N 86.75°E, 477 km f
 | Steepest 10% of slopes | 10.0° | 11.4° |
 | Hypsometric integral | 0.26 | 0.27 |
 
+### Biology and habitability
+
+- Mars once had lakes and still holds ground ice, so it may have been habitable. Earth analogs help test how to recognise signs of past or present life in rock and soil.
+- Arid: soil life is sparse but present, a test of telling weak biological signals apart from mineral ones.
+- High altitude: thinner air lets more ultraviolet light reach the ground, one of the stresses life would face at the Martian surface.
+- Frozen most of the year: a place to study how life persists in cold ground, relevant to ice-rich Mars sites such as Arcadia Planitia.
+- Over 90% bare ground: plants do not hide the surface, so sensors see rock and soil much as they would on the Moon or Mars.
+
 ### Where the analogy breaks down
 
 - Gravity is 0.38x Earth: Earth tests overload structures, wheels and people.
 - Surface pressure is 0.01x this place: no Earth site reproduces vacuum or the thin Martian air (heat transfer, dust lofting, boiling).
 - Surface radiation dose is 97.4x Earth: Earth's atmosphere and magnetic field shield every analog site.
+- Caves, lava tubes and other underground environments are not assessed: satellite data see only the surface. Documented cave and mine analogs are listed in the findings.
 - Air humidity: the target value (5) lies beyond every place on Earth; this place gets 41% of the way from Earth's typical value.
 - Day-night surface temperature swing: the target value (90) lies beyond every place on Earth; this place gets 21% of the way from Earth's typical value.
 - Coldest night surface temperature: the target value (190) lies beyond every place on Earth; this place gets 30% of the way from Earth's typical value.
@@ -103,11 +112,18 @@ The best novel lead for Mons Mouton is the cell at 27.85°S 69.15°W, 428 km fro
 
 - Process: Rugged highland relief. Crater rims and massifs of the lunar south pole (Malapert, Cabeus B, de Gerlache).
 
+### Biology and habitability
+
+- The Moon has no air, no liquid water and no known life. On an Earth analog, biology matters as something to keep away from instruments, not as something to study.
+- Over 90% bare ground: plants do not hide the surface, so sensors see rock and soil much as they would on the Moon or Mars.
+
 ### Where the analogy breaks down
 
 - Gravity is 0.17x Earth: Earth tests overload structures, wheels and people.
 - Surface pressure is about 10^-15 of this place: no Earth site reproduces vacuum or the thin Martian air (heat transfer, dust lofting, boiling).
 - Surface radiation dose is 208.3x Earth: Earth's atmosphere and magnetic field shield every analog site.
+- Sunlight: in this region the Sun never rises more than 6° above the horizon, so long shadows and low light shape every operation. At this place on Earth the midsummer noon Sun reaches 86°.
+- Caves, lava tubes and other underground environments are not assessed: satellite data see only the surface. Documented cave and mine analogs are listed in the findings.
 - Day-night surface temperature swing: the target value (177.2) lies beyond every place on Earth; this place gets 11% of the way from Earth's typical value.
 - Coldest night surface temperature: the target value (58.5) lies beyond every place on Earth; this place gets 7% of the way from Earth's typical value.
 - Mean temperature: the target value (-147.3) lies beyond every place on Earth; this place gets 9% of the way from Earth's typical value.
@@ -119,6 +135,22 @@ The best novel lead for Mons Mouton is the cell at 27.85°S 69.15°W, 428 km fro
 - Instrument and habitat thermal-cycling tests in large day-night temperature swings.
 
 Suggested next step: an expert desk review of geology maps and high-resolution imagery, then a short field visit to check surface materials and access before any test is planned. This is an unreviewed lead, not a recommendation. Open it: https://solmate-analog.web.app/explorer?t=mons_mouton&p=-27.85%2C-69.15
+
+## Caves, lava tubes and mines
+
+Satellites see only the surface, so SolMate cannot score caves or lava tubes; every result says so. These underground places have been used by space agencies and NASA-funded teams as analogs:
+
+- Lava Beds lava tubes (California, USA): NASA-funded BRAILLE project: robots and instruments for mapping lava tubes and finding life in them, as a rehearsal for Martian caves. Source: https://astrobiology.nasa.gov/ask-an-astrobiologist/episodes/47/
+- La Corona lava tube (Lanzarote, Spain): ESA PANGAEA astronaut geology training; its microbes are studied as an analog for the Martian subsurface. Source: https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Astronaut_training_in_the_land_of_volcanoes
+- Sa Grutta caves (Supramonte, Sardinia, Italy): ESA CAVES: astronauts live and explore underground for about two weeks to train for long missions and cave exploration. Source: https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/CAVES_and_Pangaea/Underground_wonderland
+- Boulby Mine (United Kingdom): MINAR (Mine Analogue Research) with NASA Spaceward Bound: instruments, robots and life detection tested in salt deposits deep underground. Source: https://www.astrobiology.ac.uk/research/astrobiology-analog-research/minar
+
+On the targets themselves:
+
+- Moon: NASA's Lunar Reconnaissance Orbiter has imaged more than 200 pits on the Moon, and radar data show that the Mare Tranquillitatis pit opens into a cave conduit (Carrer et al. 2024, Nature Astronomy). Such caves are discussed as shelters for future bases. https://doi.org/10.1038/s41550-024-02302-y
+- Mars: NASA's Mars Odyssey (THEMIS) found seven possible cave skylights on the flanks of Arsia Mons, 100 to 250 m across (Cushing et al. 2007). https://www.jpl.nasa.gov/images/pia09929-seven-possible-cave-skylights-on-mars/
+
+Impact craters are covered by the validation instead: Haughton, Meteor Crater, Ries, Lonar and Sudbury are among the analog sites the scores were tested against.
 
 ## Characterizing the famous analog sites
 
@@ -194,10 +226,13 @@ AUC is the chance that a site NASA has used as an analog outscores a control (fa
 ## Limits
 
 - Gravity, atmosphere, radiation and surface chemistry differ from Earth everywhere; they are stated, never scored.
+- Near the lunar south pole the Sun never rises more than a few degrees; no place on Earth reproduces that lighting, and every Moon result compares it with the place's own noon Sun.
+- Caves, lava tubes and other underground environments cannot be assessed from satellite data.
+- Biology and habitability are described for every place but not scored.
 - A 0.1° cell averages about 11 km of ground; only terrain is refined at 100 m.
 - Novel leads are unreviewed: they need expert review and field data before anyone plans a test.
 - Validation labels reflect where agencies have worked, which includes logistics as well as science.
 
 ## Data and reproducibility
 
-All scored inputs are NASA data: MODIS (MYD11C3, MOD10CM, MCD43C3, MCD12C1), ASTER GED and GDEM v3, MERRA-2, NASA POWER and SRTMGL30 on Earth; LRO LOLA and Diviner on the Moon; MOLA, CTX and Mars 2020 results on Mars. Sources, licences and checksums: https://solmate-analog.web.app/provenance. Code: https://github.com/Tanbin-CS/solmate (results version 50a1ccf90b2a).
+All scored inputs are NASA data: MODIS (MYD11C3, MOD10CM, MCD43C3, MCD12C1), ASTER GED and GDEM v3, MERRA-2, NASA POWER and SRTMGL30 on Earth; LRO LOLA and Diviner on the Moon; MOLA, CTX and Mars 2020 results on Mars. Sources, licences and checksums: https://solmate-analog.web.app/provenance. Code: https://github.com/Tanbin-CS/solmate (results version 1a4c62d54297).

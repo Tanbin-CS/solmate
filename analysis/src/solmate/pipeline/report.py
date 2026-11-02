@@ -11,8 +11,11 @@ Run:  uv run python -m solmate.pipeline.report
 from __future__ import annotations
 
 import json
+from importlib import resources
 from pathlib import Path
 from urllib.parse import urlencode
+
+import yaml
 
 ANALYSIS = Path(__file__).resolve().parents[3]
 REPO = ANALYSIS.parent
@@ -84,6 +87,8 @@ def load() -> dict:
         "validation": j(WEB / "validation.json"),
         "model": j(WEB / "model.json"),
         "stage2": j(REPO / "data" / "screening" / "stage2.v2.json")["targets"],
+        "subsurface": yaml.safe_load(resources.files("solmate.config").joinpath("subsurface_sites.yaml")
+                                     .read_text(encoding="utf-8")),
     }
 
 
@@ -183,6 +188,9 @@ def build(d: dict) -> list[dict]:
             ]})
         if ver["process_tags"]:
             b.append({"type": "ul", "items": [f"Process: {p['name']}. {p['analog']}." for p in ver["process_tags"]]})
+        if ver.get("habitability"):
+            b += [{"type": "h3", "text": "Biology and habitability"},
+                  {"type": "ul", "items": [h["text"] for h in ver["habitability"]]}]
         b += [
             {"type": "h3", "text": "Where the analogy breaks down"},
             {"type": "ul", "items": [x["text"] for x in ver["breaks_down"]]},
@@ -193,6 +201,21 @@ def build(d: dict) -> list[dict]:
                 "visit to check surface materials and access before any test is planned. This is an unreviewed lead, not a "
                 f"recommendation. Open it: {explorer(tid, c['lat'], c['lon'])}")},
         ]
+
+    sub = d["subsurface"]
+    b += [
+        {"type": "h2", "text": "Caves, lava tubes and mines"},
+        {"type": "p", "text": (
+            "Satellites see only the surface, so SolMate cannot score caves or lava tubes; every result says so. "
+            "These underground places have been used by space agencies and NASA-funded teams as analogs:")},
+        {"type": "ul", "items": [f"{x['name']} ({x['country']}): {x['use']} Source: {x['url']}"
+                                 for x in sub["earth"]]},
+        {"type": "p", "text": "On the targets themselves:"},
+        {"type": "ul", "items": [f"{'Moon' if x['body'] == 'moon' else 'Mars'}: {x['text']} {x['url']}" for x in sub["targets"]]},
+        {"type": "p", "text": (
+            "Impact craters are covered by the validation instead: Haughton, Meteor Crater, Ries, Lonar and Sudbury are "
+            "among the analog sites the scores were tested against.")},
+    ]
 
     pos = sorted(jez["positives"].items(), key=lambda kv: -(kv[1]["sai"] or 0))
     b += [
@@ -238,6 +261,10 @@ def build(d: dict) -> list[dict]:
         {"type": "h2", "text": "Limits"},
         {"type": "ul", "items": [
             "Gravity, atmosphere, radiation and surface chemistry differ from Earth everywhere; they are stated, never scored.",
+            ("Near the lunar south pole the Sun never rises more than a few degrees; no place on Earth reproduces that "
+             "lighting, and every Moon result compares it with the place's own noon Sun."),
+            "Caves, lava tubes and other underground environments cannot be assessed from satellite data.",
+            "Biology and habitability are described for every place but not scored.",
             "A 0.1° cell averages about 11 km of ground; only terrain is refined at 100 m.",
             "Novel leads are unreviewed: they need expert review and field data before anyone plans a test.",
             "Validation labels reflect where agencies have worked, which includes logistics as well as science.",
