@@ -24,8 +24,25 @@ export const PRESET_INFO: Record<string, { label: string; description: string }>
   },
 }
 
-/** "qaidam-dalangtan" -> "Qaidam Dalangtan" */
-export const siteName = (id: string): string => id.split(/[-_]/).map((w) => (w ? w[0]!.toUpperCase() + w.slice(1) : w)).join(' ')
+/** Display names whose plain capitalisation reads wrong (mirrors SITE_NAMES in analysis pipeline/report.py). */
+const SITE_NAMES: Readonly<Record<string, string>> = {
+  'mdrs-utah': 'MDRS (Utah)',
+  'atacama-yungay': 'Atacama (Yungay)',
+  'haughton-devon-island': 'Haughton Crater (Devon Island)',
+  'qaidam-dalangtan': 'Qaidam Basin (Dalangtan)',
+  'qaidam-east': 'Qaidam Basin (east)',
+  'licancabur-high-lakes': 'Licancabur (High Lakes)',
+  'antarctica-dry-valleys': 'McMurdo Dry Valleys',
+  'teide-tenerife': 'Teide (Tenerife)',
+  'svalbard-bockfjorden': 'Bockfjorden (Svalbard)',
+  'rio-tinto': 'Río Tinto',
+  'sf-volcanic-field': 'San Francisco Volcanic Field',
+  'mauna-kea-hi-seas': 'Mauna Kea (HI-SEAS)',
+}
+
+/** "lake-salda" -> "Lake Salda"; known exceptions from SITE_NAMES. */
+export const siteName = (id: string): string =>
+  SITE_NAMES[id] ?? id.split(/[-_]/).map((w) => (w ? w[0]!.toUpperCase() + w.slice(1) : w)).join(' ')
 
 /** Target groups for the picker: Artemis III candidate regions, then Mars. */
 export function groupTargets<T extends { body: 'moon' | 'mars' }>(targets: readonly T[]): { label: string; items: T[] }[] {
