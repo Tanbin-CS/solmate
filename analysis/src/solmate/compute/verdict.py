@@ -42,7 +42,7 @@ def explain(values: dict[str, float], target: dict, dims_config: dict, stats: di
     limits = (breakdown.environment_limits(target.get("breaks_down", {}), values.get("surface_pressure_hpa", math.nan))
               + breakdown.illumination_limit(body, (target.get("centroid") or {}).get("lat"), lat)
               + breakdown.subsurface_limit()
-              + breakdown.toward_gaps(values, all_plans, stats)
+              + breakdown.toward_gaps(values, all_plans, stats, breakdown.indicator_labels(dims_config))
               + breakdown.vegetation_flag(values))
     return {
         "target": target["id"],

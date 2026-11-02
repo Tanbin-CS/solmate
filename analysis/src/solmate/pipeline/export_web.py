@@ -31,6 +31,7 @@ from pathlib import Path
 import numpy as np
 import yaml
 
+from solmate import event
 from solmate.compute import grid, terrain100
 from solmate.pipeline import provenance
 from solmate.targets import load_targets
@@ -56,9 +57,11 @@ def _dump(path: Path, obj: object) -> None:
     path.write_text(json.dumps(obj, separators=(",", ":"), ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
 
 
-def tile_layers(dims: dict) -> list[str]:
+def tile_layers(dims: dict, extra: list[str] | tuple[str, ...] = ()) -> list[str]:
+    """Scored indicators, then context layers, then event-day layers (config/event_layers.yaml)."""
     scored = sorted({i for d in dims.values() for i in d["indicators"]})
-    return scored + [c for c in CONTEXT if c not in scored]
+    context = [c for c in CONTEXT if c not in scored]
+    return scored + context + [e for e in extra if e not in scored and e not in context]
 
 
 def quantise(a: np.ndarray, lo: float, hi: float) -> np.ndarray:
@@ -138,11 +141,14 @@ def main() -> None:
     for body, s in validation["summary"].items():
         presets[f"learned_{body}"] = s["learned_preset"]
     earth = json.loads((REPO / "data" / "stack" / "earth_stats.v2.json").read_text(encoding="utf-8"))
-    layers = tile_layers(dims)
+    extra = event.load()
+    layers = tile_layers(dims, [e["id"] for e in extra])
     tiles = export_tiles(layers) if args.tiles else json.loads((OUT / "model.json").read_text(encoding="utf-8"))["tiles"]
+    if tiles["layers"] != layers:
+        raise SystemExit("the tile layers differ from the configured layers: re-run with --tiles")
     model = {"version": 2, "dimensions": dims, "presets": presets, "earth_stats": earth["indicators"],
              "processes": _cfg("processes.yaml"), "known_analogs": _cfg("known_analogs.yaml"), "tiles": tiles,
-             "terrain_100m_version": terrain_100m_version()}
+             "context_layers": event.context_layers(extra), "terrain_100m_version": terrain_100m_version()}
     model["model_version"] = hashlib.sha256(json.dumps(model, sort_keys=True).encode()).hexdigest()[:12]
     _dump(OUT / "model.json", model)
     # The terrain API reports the same results version as the web app; it checks this file against its data.

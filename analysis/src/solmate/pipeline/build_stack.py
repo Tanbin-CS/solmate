@@ -21,8 +21,9 @@ from pathlib import Path
 
 import numpy as np
 
+from solmate import event
 from solmate.compute import grid
-from solmate.io import nasa
+from solmate.io import generic, nasa
 
 ANALYSIS = Path(__file__).resolve().parents[3]
 RAW = ANALYSIS / "cache" / "raw"
@@ -180,6 +181,15 @@ LAYER_INFO = {
 }
 
 
+def event_layers() -> dict[str, np.ndarray]:
+    """Datasets added from config/event_layers.yaml (docs/EVENT_DAY.md), read by the generic reader."""
+    out = {}
+    for e in event.load():
+        _log(f"  event layer {e['id']} from {e['earth']['files']}")
+        out[e["id"]] = generic.read_layer(RAW, generic.Source.from_config(e["earth"]))
+    return out
+
+
 def _save(layers: dict[str, np.ndarray]) -> None:
     OUT_NPZ.parent.mkdir(parents=True, exist_ok=True)
     tmp = OUT_NPZ.with_name(OUT_NPZ.stem + ".tmp.npz")
@@ -189,7 +199,7 @@ def _save(layers: dict[str, np.ndarray]) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--only", nargs="*", help="build only these groups (thermal snow surface mineral dust terrain climate)")
+    ap.add_argument("--only", nargs="*", help="build only these groups (thermal snow surface mineral dust terrain climate event)")
     args = ap.parse_args()
     groups: dict[str, Callable[[], dict[str, np.ndarray]]] = {
         "thermal": lambda: thermal_layers(sorted((RAW / "MYD11C3").glob("*.hdf"))),
@@ -200,6 +210,7 @@ def main() -> None:
         "dust": lambda: dust_layers(sorted((RAW / "M2TMNXAER").glob("*.nc4"))),
         "terrain": lambda: terrain_layers(sorted((RAW / "SRTMGL30").glob("*.zip"))),
         "climate": lambda: climate_layers(nasa.power_climatology(RAW / "POWER")),
+        "event": event_layers,
     }
     layers: dict[str, np.ndarray] = {}
     if OUT_NPZ.exists():
@@ -211,6 +222,14 @@ def main() -> None:
         _log(f"building {name} layers")
         layers.update({k: v.astype(np.float32) for k, v in build().items()})
         _save(layers)  # checkpoint after every group so a later failure keeps finished work
+    configured = event.load()
+    info = {**LAYER_INFO, **event.layer_info(configured)}
+    names = {e["id"]: e["name"] for e in configured}
+    stale = set(layers) - set(info)
+    if stale:  # an event layer removed from the config: drop it so nothing serves an orphan
+        _log(f"dropping layers no longer configured: {', '.join(sorted(stale))}")
+        layers = {k: v for k, v in layers.items() if k not in stale}
+        _save(layers)
     digest = hashlib.sha256(OUT_NPZ.read_bytes()).hexdigest()
     land = layers.get("land_frac")
     mask = (land > 0.5) if land is not None else np.ones((grid.NROWS, grid.NCOLS), bool)
@@ -223,8 +242,9 @@ def main() -> None:
         "sha256": digest,
         "layers": {
             k: {
-                "units": LAYER_INFO.get(k, ("?", "?"))[0],
-                "source": LAYER_INFO.get(k, ("?", "?"))[1],
+                **({"name": names[k]} if k in names else {}),
+                "units": info.get(k, ("?", "?"))[0],
+                "source": info.get(k, ("?", "?"))[1],
                 "land_coverage": float(np.isfinite(v[mask]).mean()),
                 "land_p1_p50_p99": [float(x) for x in np.nanpercentile(v[mask], [1, 50, 99])],
             }

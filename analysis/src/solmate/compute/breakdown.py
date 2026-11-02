@@ -100,8 +100,17 @@ def dimension_limits(dim_scores: dict[str, float], applicable: list[str]) -> lis
     return out
 
 
-def toward_gaps(values: dict[str, float], plans: list, stats: dict[str, modes.EarthStats]) -> list[dict]:
+def indicator_labels(dims_config: dict) -> dict[str, str]:
+    """Built-in labels, plus any `label` given in dimensions.yaml (event-day indicators)."""
+    extra = {i: spec["label"] for d in dims_config.values() for i, spec in d["indicators"].items()
+             if isinstance(spec, dict) and spec.get("label")}
+    return {**INDICATOR_LABELS, **extra}
+
+
+def toward_gaps(values: dict[str, float], plans: list, stats: dict[str, modes.EarthStats],
+                labels: dict[str, str] | None = None) -> list[dict]:
     """Indicators where the target lies beyond anything on Earth and this place is far from it."""
+    labels = INDICATOR_LABELS if labels is None else labels
     out = []
     for p in plans:
         if p.mode.kind != "toward" or p.target is None:
@@ -113,7 +122,7 @@ def toward_gaps(values: dict[str, float], plans: list, stats: dict[str, modes.Ea
         if gap > GAP_LIMIT:
             out.append({"kind": "earth_can_only_approach", "id": p.name, "earth": round(x, 3), "target": p.target,
                         "gap": round(gap, 3),
-                        "text": f"{INDICATOR_LABELS.get(p.name, p.name)}: the target value ({p.target:g}) lies beyond "
+                        "text": f"{labels.get(p.name, p.name)}: the target value ({p.target:g}) lies beyond "
                                 f"every place on Earth; this place gets {(1 - gap) * 100:.0f}% of the way from "
                                 "Earth's typical value."})
     return out

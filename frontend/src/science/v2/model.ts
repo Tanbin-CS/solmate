@@ -16,6 +16,7 @@ export const EarthStatsSchema = z.object({
 const IndicatorSpec = z.object({
   weight: Num.optional(),
   direction: z.literal('lower_is_better').optional(),
+  label: z.string().max(80).optional(), // event-day indicators name themselves (dimensions.yaml)
 })
 
 export const DimensionSchema = z.object({
@@ -48,7 +49,20 @@ export const TileLayoutSchema = z.object({
   ranges: z.record(z.string(), z.tuple([Num, Num])),
   transforms: z.record(z.string(), z.object({ kind: z.literal('log'), offset: Num })),
   available: z.array(z.string().regex(/^\d{2}_\d{2}$/)),
+  tileset: z.string().regex(/^[0-9a-f]{12}$/).optional(),
 })
+
+/** A dataset added on event day (analysis config/event_layers.yaml), shown in the place panel. */
+export const ContextLayerSchema = z.object({
+  id: z.string().regex(/^[a-z][a-z0-9_]{2,40}$/),
+  name: z.string().min(1).max(80),
+  units: z.string().max(20),
+  digits: z.number().int().min(0).max(6),
+  source: z.string().min(1).max(300),
+  url: z.string().url().startsWith('https://'),
+  role: z.enum(['context', 'scored']),
+})
+export type ContextLayer = z.infer<typeof ContextLayerSchema>
 
 export const ModelSchema = z.object({
   version: z.literal(2),
@@ -58,6 +72,7 @@ export const ModelSchema = z.object({
   earth_stats: z.record(z.string(), EarthStatsSchema),
   processes: ProcessConfigSchema,
   tiles: TileLayoutSchema,
+  context_layers: z.array(ContextLayerSchema).default([]),
   known_analogs: z.object({
     novelty_km: Num,
     sites: z.array(z.object({ id: z.string(), lat: Num, lon: Num, source: z.string().optional() }).passthrough()),

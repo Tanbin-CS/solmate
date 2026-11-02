@@ -9,6 +9,8 @@ from pathlib import Path
 
 import yaml
 
+from solmate import event
+
 DATA = Path(__file__).resolve().parents[3] / "data" / "targets"
 TERRAIN = DATA / "terrain.v2.json"
 THERMAL = DATA / "thermal.v2.json"
@@ -26,6 +28,7 @@ def load_targets(terrain_path: Path = TERRAIN, thermal_path: Path = THERMAL) -> 
         targets = copy.deepcopy(yaml.safe_load(f)["targets"])
     computed = json.loads(terrain_path.read_text(encoding="utf-8"))["targets"] if terrain_path.exists() else {}
     thermal = json.loads(thermal_path.read_text(encoding="utf-8"))["targets"] if thermal_path.exists() else {}
+    event_values = event.target_values()
     for t in targets:
         values = computed.get(t["id"], {})
         for key in COMPUTED_KEYS:
@@ -37,4 +40,6 @@ def load_targets(terrain_path: Path = TERRAIN, thermal_path: Path = THERMAL) -> 
             if key in THERMAL_KEYS and key in t["indicators"]:
                 entry = t["indicators"][key]
                 entry.update(value=v, method="computed", source=thermal[t["id"]]["source"])
+    for t in targets:  # event-day datasets: cited values and computed samples (config/event_layers.yaml)
+        t["indicators"].update(event_values.get(t["id"], {}))
     return targets

@@ -62,6 +62,19 @@ PRODUCTS = (
 )
 
 
+def event_products() -> tuple[Product, ...]:
+    """Event-day datasets with a `download` block in config/event_layers.yaml (docs/EVENT_DAY.md)."""
+    from solmate import event
+
+    out = []
+    for e in event.load():
+        d = e.get("download")
+        if d:
+            out.append(Product(d["short_name"], str(d["version"]), f"Event day: {e['name']}",
+                               tuple(d["temporal"]) if d.get("temporal") else None, bool(d.get("one_per_month"))))
+    return tuple(out)
+
+
 @dataclass(frozen=True)
 class Granule:
     product: str
@@ -168,7 +181,7 @@ def main() -> None:
     ap.add_argument("--only", nargs="*", help="restrict to these short names")
     args = ap.parse_args()
 
-    products = [p for p in PRODUCTS if not args.only or p.short_name in args.only]
+    products = [p for p in PRODUCTS + event_products() if not args.only or p.short_name in args.only]
     plan = {p.short_name: search(p) for p in products}
     for p in products:
         print(f"{p.short_name:10s} v{p.version:7s} {len(plan[p.short_name]):4d} granules  {p.purpose}")
