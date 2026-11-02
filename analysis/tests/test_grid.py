@@ -95,3 +95,25 @@ def test_cell_terrain_stats():
     s = np.array([[1.0, 3.0], [np.nan, 5.0]])
     out = grid.cell_terrain_stats(z, s)
     assert out == {"slope_median_deg": 3.0, "slope_p90_proxy_deg": 5.0, "elev_std_m": pytest.approx(np.std([0, 2, 4]))}
+
+
+def test_scatter_mean_bins_points_into_cells_and_wraps_longitude():
+    # four points in the cell centred at 45.05 N, 10.05 E; one given as 370 E; one NaN ignored
+    v = np.array([1.0, 3.0, 5.0, np.nan, 7.0])
+    lat = np.array([45.01, 45.09, 45.05, 45.05, -0.05])
+    lon = np.array([10.01, 10.09, 370.05, 10.05, -179.95])
+    out = grid.scatter_mean(v, lat, lon)
+    lat_c, lon_c = grid.cell_centres()
+    r, c = int(np.argmin(np.abs(lat_c - 45.05))), int(np.argmin(np.abs(lon_c - 10.05)))
+    assert out[r, c] == 3.0
+    assert out[int(np.argmin(np.abs(lat_c + 0.05))), 0] == 7.0
+    assert np.isfinite(out).sum() == 2
+
+
+def test_scatter_mean_accepts_regular_axes():
+    lat = np.array([0.025, -0.025])
+    lon = np.array([0.025, 0.075])
+    out = grid.scatter_mean(np.array([[1.0, 2.0], [3.0, 4.0]]), lat, lon)
+    lat_c, lon_c = grid.cell_centres()
+    assert out[int(np.argmin(np.abs(lat_c - 0.05))), int(np.argmin(np.abs(lon_c - 0.05)))] == 1.5
+    assert out[int(np.argmin(np.abs(lat_c + 0.05))), int(np.argmin(np.abs(lon_c - 0.05)))] == 3.5
