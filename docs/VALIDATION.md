@@ -102,3 +102,53 @@ shared literature proxies were replaced by per-region LRO Diviner samples.
   Mouton Plateau has one within 2 km.
 - That moved some regions' best matches, e.g. Mons Mouton and Nobile Rim 2 now point
   to the Pamirs (about 1,550 km from any known analog).
+
+---
+
+## Addendum 1: regional validation and Lunar ops weights (pre-registered 2 Nov 2026)
+
+Written **before** these results were computed, after mentor review (Space Apps Dhaka,
+1 Nov 2026). The original plan and results above stay unchanged; everything here is
+reported as an addition, whatever it shows.
+
+### Why
+1. **Clustering.** Several validation sites sit close together (Utah and Arizona,
+   Hawaiʻi, Iceland, the Ganges plain). Nearby sites share climate and ground, so they
+   are not independent, and counting each one can make the AUC and its interval look
+   better than the evidence supports.
+2. **Moon emphasis.** NASA's Moon analog sites were chosen mainly for terrain and
+   operations. The mentor advised keeping the approach but weighting terrain and
+   operational suitability more, with climate, temperature and ice as support.
+
+### Regions (fixed rule, no hand grouping)
+- Positives and controls are each grouped by single-linkage clustering of their
+  great-circle distances with a **500 km** threshold: two sites share a region if a
+  chain of sites less than 500 km apart connects them.
+- Regions are computed once per body from `validation_sites.yaml` and reported with
+  their members.
+
+### Metrics (per target, equal preset unless stated)
+1. **Region-weighted AUC:** each site weighted by 1 / (number of sites in its region),
+   so every region counts once.
+2. **Region block-bootstrap 95% CI:** resample positive regions and control regions
+   with replacement (1,000 resamples, seed 2026) and compute the AUC on all sites of
+   the drawn regions.
+3. **Leave-one-region-out learned weights:** each region (positive or control) is
+   held out in turn; non-negative logistic weights are fitted on the rest and score the
+   held-out sites; the AUC of these out-of-region scores is reported.
+4. **Lunar ops preset (Moon targets):** dimension weights
+   Terrain 2, Operations 1, Surface & barrenness 1, Climate 0.5, Thermal 0.5,
+   Ice 0.5, Mineralogy 0.5. Operations is the existing dimension (gentle slopes, low
+   wind). Its site AUC with the original bootstrap CI, and metrics 1 and 2, are
+   reported next to the equal preset. Dimension scores are computed at the site cells
+   from the same stack and code as the screen.
+
+### Decision rule for the Moon default
+Lunar ops becomes the default weighting for Moon targets **only if**, across the nine
+Artemis regions, both its median site AUC and its median region-weighted AUC are at
+least those of the equal preset. Otherwise it ships as an optional preset and equal
+stays the default. Adopting it would also mean re-running the screen for Moon targets.
+
+### Expectation (stated so it can be checked)
+Region-level intervals will be wider than site-level ones, and the region-weighted AUC
+may fall, most for the Moon, where three positives share northern Arizona.
