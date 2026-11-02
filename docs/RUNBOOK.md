@@ -11,7 +11,7 @@ judging ends (January 2027).
 | Prototype URL | GitHub Pages, tanbin-cs.github.io/solmate | Redirect page (`pages.yml`) |
 | Terrain API | Cloud Run `solmate-terrain`, us-west1 | Behind `/api/v1/**` on the same origin; App Check enforced; max 2 instances |
 | Firestore | us-west1 | `aoi_cache` for terrain results; client rules deny everything |
-| Data | `gs://solmate-13571-data` | Raw NASA mirror, DEM tile cache, `web/tiles` for the site |
+| Data | `gs://solmate-13571-data` | Raw NASA mirror, DEM tile cache, `web/tilesets/<hash>/` for the site |
 | Secret | Secret Manager `edl-token` | NASA Earthdata token for 100 m terrain |
 
 ## Deploy (automatic)
@@ -20,10 +20,18 @@ Every merge to `main` runs **Deploy** (`.github/workflows/deploy.yml`):
    Cloud Run builds a new revision **without traffic**
    (tag `candidate`), smoke-tests it (health, version = commit, App Check refuses a request with
    no token), then moves all traffic to it.
-2. Web: restores the tiles from GCS, builds with the public Firebase key (repository
+2. Web: restores the tile set named in `model.json` (`tiles.tileset`) from GCS, builds with the public Firebase key (repository
    variable `VITE_FIREBASE_API_KEY`), deploys both Hosting sites and the Firestore rules.
 3. Smoke test of production: every page, data, tiles and API health return 200; security
-   headers present; the shell is `no-cache`; the old URL redirects.
+   headers present; the shell is `no-cache`; the old URL redirects; the site and the API
+   report the same results version.
+
+Tile sets are stored under their content hash, so tiles published for a pull request
+(`scripts/web_tiles.sh push`) never change what a deploy of `main` restores.
+
+## Adding a dataset (event day, 13 Nov)
+See `docs/EVENT_DAY.md`: one config entry, `download_nasa.py --only <name>`, then
+`uv run python -m solmate.pipeline.release --push`. Rehearsed on 3 Nov in about 7 minutes.
 
 To redeploy the API without a code change: Actions → Deploy → Run workflow → tick
 "Also redeploy the Cloud Run API".
