@@ -13,6 +13,7 @@ import { siteName } from '@/components/explorer2/labels'
 import { DIMENSION_NAMES, INDICATOR_LABELS } from '@/science/v2/verdict'
 import type { TargetValidation } from '@/science/v2/validation'
 import { cn } from '@/lib/utils'
+import facts from '@/data/site_facts.json'
 
 export default function MethodPage() {
   const state = useHomeData()
@@ -20,7 +21,7 @@ export default function MethodPage() {
     <>
       <PageHeader
         title="How SolMate finds Earth analogs."
-        lead="Eleven NASA targets, 41 NASA data layers over every land cell on Earth, seven characteristics combined into one index you can take apart, and a validation test written down before the results were seen."
+        lead={`Eleven NASA targets, ${facts.nasa_layers} NASA data layers over every land cell on Earth, seven characteristics combined into one index you can take apart, and a validation test written down before the results were seen.`}
       />
       {state.status === 'loading' && (
         <div className="mx-auto w-full max-w-4xl px-6">
@@ -102,7 +103,7 @@ function MethodBody({ data }: { data: HomeData }) {
             ice target for a human base (SWIM). Terrain from MOLA and CTX; climate from Mars 2020 MEDA and cited studies.
           </li>
           <li>
-            <strong className="text-slate-100">Earth:</strong> 41 NASA layers resampled to a 0.1° grid (about 11 km), every land cell from 83° N to 83° S, about 1.9 million cells.
+            <strong className="text-slate-100">Earth:</strong> {facts.nasa_layers} NASA layers resampled to a 0.1° grid (about 11 km), every land cell from 83° N to 83° S, about 1.9 million cells.
             Each target value is either computed from NASA data or cited from the literature with its DOI.
           </li>
         </ul>
@@ -126,7 +127,7 @@ function MethodBody({ data }: { data: HomeData }) {
                     </td>
                     <td className="px-4 py-3 text-slate-300">
                       {Object.keys(dim?.indicators ?? {})
-                        .map((k) => INDICATOR_LABELS[k] ?? k)
+                        .map((k) => dim?.indicators[k]?.label ?? INDICATOR_LABELS[k] ?? k)
                         .join(', ')}
                     </td>
                     <td className="hidden px-4 py-3 text-xs text-slate-400 md:table-cell">{d.sources}</td>

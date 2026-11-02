@@ -9,6 +9,7 @@ import { withRefinedTerrain } from '@/science/v2/verdict'
 import { fmtCoord } from '@/lib/format'
 import { BAND_STYLE } from './labels'
 import { DimensionBars } from './DimensionBars'
+import { ExtraData } from './ExtraData'
 import { PlaceImages } from './PlaceImages'
 import { VerdictCard } from './VerdictCard'
 
@@ -89,6 +90,7 @@ export function PlaceDetail({ state, target, model, weights, isBox, terrain, sto
             <DimensionBars verdict={verdict} model={model} refined={refined} />
             <PlaceImages lat={r.centre.lat} lon={r.centre.lon} targetId={target.id} />
             <VerdictCard verdict={verdict} />
+            <ExtraData layers={model.context_layers} values={r.values} />
             <section>
               <h3 className="label-mono mb-1.5">Best targets for this place</h3>
               <ol className="space-y-0.5">

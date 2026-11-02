@@ -131,7 +131,7 @@ function DataBody({ data }: { data: DataDoc }) {
               {p.layers.map((l) => (
                 <tr key={l.id} className="border-t border-border align-top">
                   <td className="px-4 py-2.5 text-slate-100">
-                    {INDICATOR_LABELS[l.id] ?? l.id.replace(/_/g, ' ')}
+                    {l.name ?? INDICATOR_LABELS[l.id] ?? l.id.replace(/_/g, ' ')}
                     <span className="block font-mono text-xs text-slate-400">
                       {l.id}
                       {l.units && ` · ${l.units}`}
