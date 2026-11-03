@@ -13,8 +13,8 @@ import {
   type Texture,
 } from 'three'
 import type { Line2 } from 'three-stdlib'
-import { asset } from '@/lib/asset'
 import { angleDelta, centroid, faceCamera, latLonToVec3 } from './geo'
+import { HERO_TEXTURES } from './textures'
 
 export interface HeroSite {
   id: string
@@ -252,7 +252,7 @@ function Arc({
 /* ------------------------------------------------------------------------------------------ worlds */
 
 function useWorldTextures() {
-  const [earth, mars, moon] = useTexture([asset('media/earth-2k.webp'), asset('media/mars-2k.webp'), asset('media/moon-2k.webp')]) as Texture[]
+  const [earth, mars, moon] = useTexture(HERO_TEXTURES) as Texture[]
   useLayoutEffect(() => {
     for (const t of [earth, mars, moon]) {
       t!.colorSpace = SRGBColorSpace
