@@ -282,7 +282,7 @@ function Stage({ i, p, nums, sites }: { i: number; p: number; nums: Numbers; sit
             Your turn.
           </p>
           <p className="relative text-balance text-sm text-slate-300 sm:text-xl" style={{ opacity: span(p, 0.2, 0.45) }}>
-            Six levels. Eleven targets. Real NASA data.
+            Six levels. Eleven places to match.
           </p>
         </div>
       )
