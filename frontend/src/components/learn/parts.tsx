@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { animate, motion, useMotionValue, useReducedMotion, useTransform } from 'motion/react'
 import { Droplets, Mountain, Search, Snowflake, Sprout, Star, Thermometer, Wind } from 'lucide-react'
+import { GibsImage } from '@/components/common/GibsImage'
+import type { GibsSpot } from '@/lib/gibs'
 import { cn } from '@/lib/utils'
 
 export function Stars({ n, size = 'size-5', label = true, pop = false }: { n: number; size?: string; label?: boolean; pop?: boolean }) {
@@ -73,7 +75,7 @@ export function CountUp({ to, className }: { to: number; className?: string }) {
   return <motion.span className={className}>{text}</motion.span>
 }
 /** A NASA GIBS picture that fades in when it arrives (GIBS can take a few seconds). */
-export function SatImage({ src, alt }: { src: string; alt: string }) {
+export function SatImage({ spot, alt }: { spot: GibsSpot; alt: string }) {
   const [state, setState] = useState<'loading' | 'ready' | 'failed'>('loading')
   return (
     <>
@@ -82,12 +84,11 @@ export function SatImage({ src, alt }: { src: string; alt: string }) {
           {state === 'loading' ? 'Loading picture…' : 'Picture not available'}
         </span>
       )}
-      <img
-        src={src}
+      <GibsImage
+        {...spot}
         alt={alt}
-        onLoad={() => setState('ready')}
-        onError={() => setState('failed')}
-        className={cn('h-full w-full object-cover transition-[opacity,transform] duration-500 group-hover:scale-[1.04]', state === 'ready' ? 'opacity-100' : 'opacity-0')}
+        onState={setState}
+        className={cn('h-full w-full transition-[opacity,transform] duration-500 group-hover:scale-[1.04]', state === 'ready' ? 'opacity-100' : 'opacity-0')}
       />
     </>
   )

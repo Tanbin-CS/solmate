@@ -30,26 +30,3 @@ export function placeLabel(lat: number, lon: number, countries?: Countries | nul
   const name = region && country ? `${region}, ${country}` : (region ?? country ?? coords)
   return { name, coords }
 }
-
-/**
- * NASA GIBS WMS image of a square window around a point (public, keyless, CORS-enabled).
- * imagery: Landsat WELD 1990 true colour (NASA/USGS); relief: ASTER GDEM shaded relief (NASA/METI).
- */
-export function gibsWindow(lat: number, lon: number, km: number, kind: 'imagery' | 'relief', px = 512): string {
-  const dLat = km / 2 / 111.32
-  const dLon = dLat / Math.cos((lat * Math.PI) / 180)
-  const q = new URLSearchParams({
-    SERVICE: 'WMS',
-    REQUEST: 'GetMap',
-    VERSION: '1.3.0',
-    LAYERS: kind === 'imagery' ? 'Landsat_WELD_CorrectedReflectance_TrueColor_Global_Annual' : 'ASTER_GDEM_Greyscale_Shaded_Relief',
-    STYLES: '',
-    CRS: 'EPSG:4326',
-    BBOX: [lat - dLat, lon - dLon, lat + dLat, lon + dLon].map((v) => v.toFixed(5)).join(','),
-    WIDTH: String(px),
-    HEIGHT: String(px),
-    FORMAT: 'image/jpeg',
-    ...(kind === 'imagery' && { TIME: '1990-12-01' }),
-  })
-  return `https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?${q}`
-}

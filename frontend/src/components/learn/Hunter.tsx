@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { gibsWindow } from '@/lib/places'
 import { cn } from '@/lib/utils'
 import type { PlaceResult } from '@/science/v2/place'
 import { alike, DIM_WORDS, type Place, type Round } from './content'
@@ -146,7 +145,7 @@ function PickRound({ round, data, onScored }: { round: Extract<Round, { kind: 'p
               )}
             >
               <div className="relative aspect-[4/3] overflow-hidden bg-ink-950">
-                <SatImage src={gibsWindow(o.lat, o.lon, 40, 'imagery', 256)} alt={`Satellite picture of ${o.name}`} />
+                <SatImage spot={{ lat: o.lat, lon: o.lon, km: 40, kind: 'imagery' }} alt={`Satellite picture of ${o.name}`} />
                 {choice === n && <span className="absolute left-2 top-2 rounded-md bg-ink-950/90 px-2 py-0.5 text-xs font-medium text-data">Your pick</span>}
                 {winner && (
                   <motion.span

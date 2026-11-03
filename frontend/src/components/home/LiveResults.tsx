@@ -3,7 +3,8 @@ import { motion } from 'motion/react'
 import { ArrowRight } from 'lucide-react'
 import { explorerLink, type Flagship } from '@/hooks/useHomeData'
 import { useCountries } from '@/lib/countries'
-import { gibsWindow, placeLabel } from '@/lib/places'
+import { GibsImage } from '@/components/common/GibsImage'
+import { placeLabel } from '@/lib/places'
 import { CountUp } from './CountUp'
 
 /** Top of the equal-weight ranking and the validation headline for one target, read from the v2 files. */
@@ -26,7 +27,7 @@ export function LiveResults({ flagship }: { flagship: Flagship }) {
             <motion.li key={`${id}-${c.lat},${c.lon}`} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05, duration: 0.35 }}>
               <Link to={explorerLink(id, c.lat, c.lon)} className="group grid grid-cols-[2rem_3rem_1fr_auto] items-center gap-3 px-4 py-3 transition-colors hover:bg-ink-800 sm:grid-cols-[2.5rem_3rem_1fr_auto] sm:gap-4">
                 <span className="font-mono text-xs text-slate-400">#{i + 1}</span>
-                <img src={gibsWindow(c.lat, c.lon, 20, 'relief', 96)} alt="" className="size-12 rounded-md bg-ink-700 object-cover" loading="lazy" />
+                <GibsImage lat={c.lat} lon={c.lon} km={20} kind="relief" px={96} alt="" className="size-12 rounded-md bg-ink-700" />
                 <span className="min-w-0">
                   <span className="block truncate font-medium text-slate-100">{pl.name}</span>
                   <span className="block truncate font-mono text-[11px] text-slate-400">
