@@ -1,7 +1,7 @@
 import { useId, useMemo, useRef, useState } from 'react'
 import { Building2, Crosshair, Flag, Loader2, MapPin, Mountain, Search } from 'lucide-react'
 import type { LatLon } from '@/hooks/useExplorer2State'
-import { search, useSearchData, type Hit, type HitKind, type SearchOptions } from '@/lib/search'
+import { hitTitle, search, useSearchData, type Hit, type HitKind, type SearchOptions } from '@/lib/search'
 import { cn } from '@/lib/utils'
 
 const ICON: Record<HitKind, typeof MapPin> = { coords: Crosshair, country: Flag, region: Mountain, site: MapPin, city: Building2 }
@@ -10,7 +10,7 @@ const ICON: Record<HitKind, typeof MapPin> = { coords: Crosshair, country: Flag,
  * Search box over the map: type a city, country, region, known analog site or "lat, lon", pick a
  * suggestion with the mouse or the arrow keys and Enter, and the globe flies there and scores it.
  */
-export function PlaceSearch({ onGo, sites, bestIn }: { onGo: (p: LatLon) => void; sites?: SearchOptions['sites']; bestIn?: SearchOptions['bestIn'] }) {
+export function PlaceSearch({ onGo, sites, bestIn }: { onGo: (p: LatLon, title: string | null) => void; sites?: SearchOptions['sites']; bestIn?: SearchOptions['bestIn'] }) {
   const [text, setText] = useState('')
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState(0)
@@ -32,7 +32,7 @@ export function PlaceSearch({ onGo, sites, bestIn }: { onGo: (p: LatLon) => void
     setText(h.label)
     setOpen(false)
     setBad(false)
-    onGo({ lat: h.lat, lon: h.lon })
+    onGo({ lat: h.lat, lon: h.lon }, hitTitle(h))
     input.current?.blur()
   }
 

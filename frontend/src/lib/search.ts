@@ -104,6 +104,17 @@ export function search(query: string, data: SearchData, opts: SearchOptions = {}
     .map(({ q: _q, pop: _pop, ...h }) => h)
 }
 
+/**
+ * The heading to show for a picked hit, or null to let the place panel name the spot itself.
+ * Sites, regions and cities keep the name that was searched ("Death Valley", "Dhaka, Bangladesh");
+ * a country jumps to its best analog, which the panel names more precisely, and coordinates have no name.
+ */
+export function hitTitle(h: Hit): string | null {
+  if (h.kind === 'site' || h.kind === 'region') return h.label
+  if (h.kind === 'city') return h.detail && h.detail !== 'City' ? `${h.label}, ${h.detail}` : h.label
+  return null
+}
+
 let cities: Promise<City[]> | null = null
 
 export function loadCities(): Promise<City[]> {

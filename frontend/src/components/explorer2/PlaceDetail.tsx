@@ -20,6 +20,8 @@ interface Props {
   model: Model
   weights: Record<string, number>
   isBox: boolean
+  /** Name the user searched for ("Death Valley"); otherwise the region and country under the point. */
+  title?: string
   terrain: { status: 'idle' } | { status: 'loading' } | { status: 'done'; result: TerrainResult }
   /** 100 m terrain score already measured for this screening cell (stage 2), if any */
   storedT100?: number | null
@@ -28,10 +30,11 @@ interface Props {
   onTarget: (id: string) => void
 }
 
-export function PlaceDetail({ state, target, model, weights, isBox, terrain, storedT100, onRefine, onClose, onTarget }: Props) {
+export function PlaceDetail({ state, target, model, weights, isBox, title, terrain, storedT100, onRefine, onClose, onTarget }: Props) {
   const r = state.status === 'ready' ? state.data : null
   const countries = useCountries()
-  const place = r ? placeLabel(r.centre.lat, r.centre.lon, countries) : null
+  const auto = r ? placeLabel(r.centre.lat, r.centre.lon, countries) : null
+  const place = auto && title ? { ...auto, name: title } : auto
   const live = terrain.status === 'done' && terrain.result.ok ? terrain.result.data.terrain_score : null
   const t100 = live ?? (!isBox && storedT100 !== undefined && storedT100 !== null && Number.isFinite(storedT100) ? storedT100 : null)
   const coarse = r?.verdict ?? null
