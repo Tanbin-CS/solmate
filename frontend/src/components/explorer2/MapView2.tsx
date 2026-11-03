@@ -138,7 +138,12 @@ export function MapView2({ candidates, selected, box, drawing, layer, onPick, on
 
   useEffect(() => {
     if (!container.current) return
-    const m = new maplibregl.Map({ container: container.current, style: STYLE, center: [60, 25], zoom: 1.8, attributionControl: { compact: true }, maxPitch: 70 })
+    // Start with the globe centred in the space the side panels leave free, sized to fill most of it.
+    const el = container.current
+    const free = Math.min(el.clientWidth - padding.left - padding.right, el.clientHeight - padding.top - padding.bottom)
+    const zoom = Math.min(2.6, Math.max(1.2, Math.log2((Math.max(free, 200) * 0.82 * Math.PI) / 512)))
+    const m = new maplibregl.Map({ container: el, style: STYLE, center: [60, 25], zoom, attributionControl: { compact: true }, maxPitch: 70 })
+    m.setPadding(padding)
     m.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'bottom-right')
     m.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-left')
     m.on('click', (e) => {
@@ -175,7 +180,17 @@ export function MapView2({ candidates, selected, box, drawing, layer, onPick, on
       m.remove()
       map.current = null
     }
+    // padding is read once here; later changes are eased in by the effect below
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Keep the globe centred in the free space when a side panel opens or closes.
+  useEffect(() => {
+    const m = map.current
+    if (!m) return
+    m.easeTo({ padding, duration: reducedMotion ? 0 : 450 })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [padding.left, padding.right, padding.top, padding.bottom])
 
   useEffect(() => {
     const m = map.current
