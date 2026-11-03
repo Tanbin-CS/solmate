@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react'
 import { loadModel, loadScreening, loadTargets, loadValidation } from '@/science/v2/data'
 import type { Model, Target } from '@/science/v2/model'
+import type { PlaceResult } from '@/science/v2/place'
+import { score } from '@/science/v2/scorer'
 import { rank } from '@/science/v2/screening'
 import type { Validation } from '@/science/v2/validation'
+import type { Verdict } from '@/science/v2/verdict'
 
 export interface LearnData {
   model: Model
@@ -46,3 +49,16 @@ export function breaksDown(t: Target | undefined, key: string): number | null {
 
 export const EARTH_G = 9.81
 export const EARTH_HPA = 1013.25
+
+/** Score one point for a target in the browser, with equal weights (as in the Explorer). */
+export function scorePoint(p: { lat: number; lon: number }, targetId: string, data: LearnData): Promise<PlaceResult> {
+  return score({ kind: 'point', lat: p.lat, lon: p.lon, targetId, weights: data.model.presets.equal! })
+}
+
+/** The ids of the most and least alike dimensions of a verdict. */
+export function strengths(v: Verdict | null): { best?: string; worst?: string } {
+  const dims = (v?.dimensions ?? []).filter((d) => d.score !== null)
+  if (!dims.length) return {}
+  const sorted = [...dims].sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
+  return { best: sorted[0]!.id, worst: sorted[sorted.length - 1]!.id }
+}

@@ -3,7 +3,7 @@ import model from '../../../public/data/v2/model.json'
 import targets from '../../../public/data/v2/targets.json'
 import validation from '../../../public/data/v2/validation.json'
 import { DIMENSION_CARDS } from '@/components/home/dimensions'
-import { alike, cluesFor, distanceKm, huntStars, isInteractive, LEVELS, mapPos, mapToLatLon, passMark } from './content'
+import { alike, cluesFor, DIM_WORDS, distanceKm, heat, huntStars, isInteractive, LEVELS, mapPos, mapToLatLon, passMark, polarPos, TARGET_ABOUT, trend } from './content'
 import { EMPTY, isComplete, isUnlocked, parseProgress, type Progress } from './progress'
 import { CHORDS, FACTS, LENGTH, SCENES, sceneAt, soundCues } from './scenes'
 
@@ -183,5 +183,37 @@ describe('explainer sound and facts', () => {
     expect(FACTS).toHaveLength(SCENES.length)
     expect(FACTS.slice(0, -1).every((f) => f && f.text.length > 40)).toBe(true)
     expect(FACTS.at(-1)).toBeNull()
+  })
+})
+
+describe('analog hunter', () => {
+  it('describes every target and names every dimension for children', () => {
+    for (const id of ids) expect(TARGET_ABOUT[id]?.length ?? 0).toBeGreaterThan(20)
+    for (const k of Object.keys(model.dimensions)) expect(DIM_WORDS[k]).toBeTruthy()
+  })
+
+  it('says hot exactly when the stars say so', () => {
+    for (const r of [0, 0.2, 0.35, 0.5, 0.55, 0.7, 0.75, 0.89, 0.9, 1]) {
+      const h = heat(r * 80, 80)
+      expect(h.level >= 2 ? h.level - 1 : 0).toBe(huntStars(r * 80, 80))
+    }
+    expect(heat(10, 0).word).toBe('Cold')
+  })
+
+  it('compares a try with the one before', () => {
+    expect(trend(50, undefined)).toBeNull()
+    expect(trend(60, 50)).toBe('warmer')
+    expect(trend(40, 50)).toBe('colder')
+    expect(trend(50.5, 50)).toBe('same')
+  })
+
+  it('draws the south pole in the middle and the edge latitude on the rim', () => {
+    const pole = polarPos({ lat: -90, lon: 0 })
+    expect(pole.x).toBeCloseTo(0.5)
+    expect(pole.y).toBeCloseTo(0.5)
+    const top = polarPos({ lat: -81, lon: 0 })
+    expect(top.x).toBeCloseTo(0.5)
+    expect(top.y).toBeCloseTo(0)
+    expect(polarPos({ lat: -81, lon: 90 }).x).toBeCloseTo(1)
   })
 })

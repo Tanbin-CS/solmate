@@ -488,3 +488,58 @@ export function cluesFor(targetId: string): string[] {
   for (const l of LEVELS) if (l.activity?.kind === 'rounds') for (const r of l.activity.rounds) if (r.target === targetId) return r.clues
   return []
 }
+
+/** One line per target, in words a 10-year-old can follow. */
+export const TARGET_ABOUT: Record<string, string> = {
+  jezero_crater: 'An old lake bed on Mars. The Perseverance rover looks for signs of past life here.',
+  arcadia_planitia: 'Wide, flat Mars plains with ice under the ground. A good place for the first human base.',
+  mons_mouton_plateau: 'The biggest and flattest landing spot near the Moon’s south pole.',
+  mons_mouton: 'The flat top of a tall Moon mountain, near the south pole.',
+  malapert_massif: 'A huge Moon mountain whose slopes catch a lot of sunlight.',
+  haworth: 'Next to a crater so deep and dark that sunlight never reaches its floor.',
+  peak_near_cabeus_b: 'A peak with the smallest landing area of the nine Moon regions.',
+  nobile_rim_1: 'On the edge of Nobile, a big crater near the Moon’s south pole.',
+  nobile_rim_2: 'The other edge of Nobile crater, beside a freezing-cold shadow.',
+  de_gerlache_rim_2: 'The landing region closest to the Moon’s south pole.',
+  slater_plain: 'A plain with the most safe, flat ground for a lander.',
+}
+
+/** SolMate's dimensions, renamed for children. */
+export const DIM_WORDS: Record<string, string> = {
+  T: 'Shape of the land',
+  C: 'Dryness',
+  Th: 'Hot and cold',
+  S: 'Bare ground',
+  M: 'Rocks',
+  I: 'Ice and shadows',
+  D: 'Dust and wind',
+  O: 'Safe landing',
+}
+
+export type Heat = { level: 0 | 1 | 2 | 3 | 4; word: string; tone: string }
+
+/**
+ * Hot-and-cold feedback: how close a score is to SolMate's best for the target. The steps line up
+ * with the stars (warm = 1 star, hot = 2, red hot = 3), so the words and the stars always agree.
+ */
+export function heat(yours: number, best: number): Heat {
+  const r = best > 0 ? yours / best : 0
+  if (r >= 0.9) return { level: 4, word: 'Red hot!', tone: 'text-mars' }
+  if (r >= 0.75) return { level: 3, word: 'Hot', tone: 'text-mars' }
+  if (r >= 0.55) return { level: 2, word: 'Warm', tone: 'text-reference' }
+  if (r >= 0.35) return { level: 1, word: 'Cool', tone: 'text-slate-200' }
+  return { level: 0, word: 'Cold', tone: 'text-data' }
+}
+
+/** Compare a try with the one before it. */
+export function trend(now: number, before: number | undefined): 'warmer' | 'colder' | 'same' | null {
+  if (before === undefined) return null
+  return now - before > 1 ? 'warmer' : before - now > 1 ? 'colder' : 'same'
+}
+
+/** Position of a point in a south-polar view that shows latitudes from `edge` to the pole (0..1 across and down; 0° longitude at the top). */
+export function polarPos(p: LatLon, edge = -81): { x: number; y: number } {
+  const r = Math.cos((p.lat * Math.PI) / 180) / Math.cos((edge * Math.PI) / 180)
+  const a = (p.lon * Math.PI) / 180
+  return { x: 0.5 + (r * Math.sin(a)) / 2, y: 0.5 - (r * Math.cos(a)) / 2 }
+}
