@@ -30,3 +30,23 @@ export function PanelSkeleton() {
     </div>
   )
 }
+
+/** Shown while a page's code loads: a title and text lines, or one panel for the full-height Explorer. */
+export function PageSkeleton({ workspace = false }: { workspace?: boolean }) {
+  if (workspace) {
+    return (
+      <div className="flex-1 p-4" aria-busy="true" aria-label="Loading page">
+        <Skeleton className="h-full min-h-80 w-full max-w-[360px] rounded-xl bg-ink-800" />
+      </div>
+    )
+  }
+  return (
+    <div className="mx-auto w-full max-w-4xl space-y-5 px-6 pb-24 pt-16 md:pt-24" aria-busy="true" aria-label="Loading page">
+      <Skeleton className="h-10 w-3/4 bg-ink-700" />
+      <Skeleton className="h-10 w-1/2 bg-ink-700" />
+      {Array.from({ length: 5 }, (_, i) => (
+        <Skeleton key={i} className="h-4 w-full bg-ink-800" />
+      ))}
+    </div>
+  )
+}

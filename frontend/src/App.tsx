@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { lazy } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
 import { MotionConfig } from 'motion/react'
 import { AppShell } from '@/components/layout/AppShell'
@@ -22,21 +22,19 @@ export default function App() {
     <MotionConfig reducedMotion="user">
       <TooltipProvider delayDuration={200}>
         <BrowserRouter basename={basename}>
-          <Suspense fallback={<div className="flex-1" />}>
-            <Routes>
-              <Route element={<AppShell />}>
-                <Route index element={<HomePage />} />
-                <Route path="explorer" element={<ExplorerPage />} />
-                <Route path="prototype" element={<PrototypeExplorerPage />} />
-                <Route path="findings" element={<FindingsPage />} />
-                <Route path="method" element={<MethodPage />} />
-                <Route path="learn" element={<LearnPage />} />
-                <Route path="provenance" element={<DataPage />} />
-                <Route path="data" element={<Navigate to="/provenance" replace />} />
-                <Route path="*" element={<NotFoundPage />} />
-              </Route>
-            </Routes>
-          </Suspense>
+          <Routes>
+            <Route element={<AppShell />}>
+              <Route index element={<HomePage />} />
+              <Route path="explorer" element={<ExplorerPage />} />
+              <Route path="prototype" element={<PrototypeExplorerPage />} />
+              <Route path="findings" element={<FindingsPage />} />
+              <Route path="method" element={<MethodPage />} />
+              <Route path="learn" element={<LearnPage />} />
+              <Route path="provenance" element={<DataPage />} />
+              <Route path="data" element={<Navigate to="/provenance" replace />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Route>
+          </Routes>
         </BrowserRouter>
         <Toaster position="bottom-center" />
       </TooltipProvider>

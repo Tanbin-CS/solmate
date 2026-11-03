@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from 'react-router'
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
+import { PageSkeleton } from '@/components/common/States'
 import { NavBar } from './NavBar'
 import { Footer } from './Footer'
 import { scrollToTarget, useSmoothScroll } from '@/hooks/useSmoothScroll'
@@ -26,7 +27,10 @@ export function AppShell() {
       </a>
       <NavBar overlay={isHome} />
       <main id="main" className="flex flex-1 flex-col">
-        <Outlet />
+        {/* Inside the frame, so the nav stays up while a page's code loads instead of a blank screen. */}
+        <Suspense fallback={<PageSkeleton workspace={isWorkspace} />}>
+          <Outlet />
+        </Suspense>
       </main>
       {!isWorkspace && <Footer />}
     </div>
