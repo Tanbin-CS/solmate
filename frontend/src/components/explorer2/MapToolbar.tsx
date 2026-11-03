@@ -12,12 +12,15 @@ interface Props {
   onDrawing: (on: boolean) => void
   /** Fly to a searched place; title is the searched name when it should head the place panel. */
   onGo: (p: LatLon, title: string | null) => void
+  /** The place the panel shows, and whether it came from the search box (else the search text is cleared). */
+  placeKey: string | null
+  fromSearch: boolean
   sites?: SearchOptions['sites']
   bestIn?: SearchOptions['bestIn']
 }
 
 /** Map controls: imagery vs relief, draw-a-box mode and a search for places or coordinates. */
-export function MapToolbar({ layer, onLayer, drawing, onDrawing, onGo, sites, bestIn }: Props) {
+export function MapToolbar({ layer, onLayer, drawing, onDrawing, onGo, placeKey, fromSearch, sites, bestIn }: Props) {
   return (
     <div className="flex flex-wrap items-center justify-center gap-2">
       <ToggleGroup type="single" value={layer} onValueChange={(v) => v && onLayer(v as Layer2)} className="surface rounded-full p-1" aria-label="Map layer">
@@ -37,7 +40,7 @@ export function MapToolbar({ layer, onLayer, drawing, onDrawing, onGo, sites, be
       >
         <SquareDashed className="size-3.5" /> {drawing ? 'Click two corners' : 'Draw box'}
       </button>
-      <PlaceSearch onGo={onGo} sites={sites} bestIn={bestIn} />
+      <PlaceSearch onGo={onGo} placeKey={placeKey} fromSearch={fromSearch} sites={sites} bestIn={bestIn} />
     </div>
   )
 }
