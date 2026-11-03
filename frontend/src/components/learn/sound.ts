@@ -52,6 +52,22 @@ export class ClipSound {
     return !!this.ctx && this.ctx.state !== 'closed'
   }
 
+  /** True once the browser actually lets the context make sound. */
+  get running() {
+    return this.ctx?.state === 'running'
+  }
+
+  /** Call `cb` whenever the context starts running (for example after the first tap). Returns an unsubscribe. */
+  onRunning(cb: () => void): () => void {
+    const ctx = this.ctx
+    if (!ctx) return () => {}
+    const fn = () => {
+      if (ctx.state === 'running') cb()
+    }
+    ctx.addEventListener('statechange', fn)
+    return () => ctx.removeEventListener('statechange', fn)
+  }
+
   /** Play from clip time `from` (seconds). Replaces anything already playing. */
   play(from: number) {
     this.stop()

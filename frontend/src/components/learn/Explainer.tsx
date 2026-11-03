@@ -32,13 +32,15 @@ export function Explainer({ data, onStart, onFree }: { data: LearnData | null; o
   const [playing, setPlaying] = useState(false)
   const [fact, setFact] = useState<number | null>(null)
   const [split, setSplit] = useState(50)
+  // Sound is on unless the visitor turned it off before.
   const [soundOn, setSoundOn] = useState(() => {
     try {
-      return localStorage.getItem(SOUND_KEY) === '1'
+      return localStorage.getItem(SOUND_KEY) !== '0'
     } catch {
-      return false
+      return true
     }
   })
+  const [audible, setAudible] = useState(false)
   const touched = useRef(false)
   const box = useRef<HTMLElement>(null)
   const tRef = useRef(0)
@@ -83,23 +85,31 @@ export function Explainer({ data, onStart, onFree }: { data: LearnData | null; o
     return () => cancelAnimationFrame(raf)
   }, [playing])
 
-  // The music follows the clock: it starts from the current time and stops with it.
+  // The music follows the clock: it starts from the current time and stops with it. Browsers only
+  // let a page make sound after someone has clicked or tapped it, so when the clip starts on its
+  // own the music waits for that and then joins in at the right moment.
   useEffect(() => {
     const s = sound.current
     if (!s) return
-    if (playing && soundOn && s.ready) s.play(tRef.current)
-    else s.stop()
-  }, [playing, soundOn])
-
-  // A saved "sound on" choice still needs one tap before the browser lets audio play.
-  useEffect(() => {
-    if (!soundOn || sound.current?.ready) return
-    const wake = () => {
-      if (sound.current?.unlock() && playing) sound.current.play(tRef.current)
+    if (!playing || !soundOn) {
+      s.stop()
+      return
     }
-    window.addEventListener('pointerdown', wake, { once: true })
-    return () => window.removeEventListener('pointerdown', wake)
-  }, [soundOn, playing])
+    s.unlock()
+    const start = () => {
+      setAudible(true)
+      s.play(tRef.current)
+    }
+    if (s.running) start()
+    const off = s.onRunning(start)
+    const wake = () => s.unlock()
+    const events = ['pointerdown', 'keydown', 'touchend'] as const
+    for (const e of events) window.addEventListener(e, wake, { passive: true })
+    return () => {
+      off()
+      for (const e of events) window.removeEventListener(e, wake)
+    }
+  }, [playing, soundOn])
 
   // Pause when the tab is hidden, so picture and sound never drift apart.
   useEffect(() => {
@@ -152,8 +162,10 @@ export function Explainer({ data, onStart, onFree }: { data: LearnData | null; o
     setT(next)
     if (playing && soundOn) sound.current?.play(next)
   }
+  // Sound is wanted but the browser is still waiting for a first tap.
+  const blocked = soundOn && playing && !audible
   const toggleSound = () => {
-    const next = !soundOn
+    const next = blocked || !soundOn
     if (next) sound.current?.unlock()
     try {
       localStorage.setItem(SOUND_KEY, next ? '1' : '0')
@@ -232,12 +244,13 @@ export function Explainer({ data, onStart, onFree }: { data: LearnData | null; o
             e.stopPropagation()
             toggleSound()
           }}
-          aria-pressed={soundOn}
-          aria-label={soundOn ? 'Turn sound off' : 'Turn sound on'}
+          aria-pressed={soundOn && !blocked}
+          aria-label={blocked ? 'Start the sound' : soundOn ? 'Turn sound off' : 'Turn sound on'}
           className="absolute right-3 top-3 z-10 flex items-center gap-1.5 rounded-full bg-ink-950/85 px-3 py-1.5 text-xs font-medium text-slate-100 transition-colors hover:bg-ink-950"
         >
-          {soundOn ? <Volume2 className="size-4 text-data" /> : <VolumeX className="size-4" />}
-          {soundOn ? 'Sound on' : 'Tap for sound'}
+          {blocked && !reduced && <span className="absolute inset-0 animate-ping rounded-full bg-data/30 [animation-duration:1.6s]" aria-hidden="true" />}
+          {soundOn ? <Volume2 className="relative size-4 text-data" /> : <VolumeX className="relative size-4" />}
+          <span className="relative">{!soundOn ? 'Sound off' : blocked ? 'Tap for sound' : 'Sound on'}</span>
         </button>
 
         <div className="absolute inset-x-0 bottom-0 h-1 bg-ink-950/60">
