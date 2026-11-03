@@ -14,9 +14,20 @@ import { useMediaQuery } from '@/hooks/useMediaQuery'
 import type { HeroSite, HeroTarget } from './HeroScene'
 import { Magnetic } from './Magnetic'
 import { Narrative } from './Narrative'
+import { HERO_TEXTURES } from './textures'
 import facts from '@/data/site_facts.json'
 
-const HeroScene = lazy(() => import('./HeroScene'))
+const loadScene = () => import('./HeroScene')
+const HeroScene = lazy(loadScene)
+
+// On the landing page, start fetching the 3D code and its textures as soon as this module runs,
+// in parallel with React's first render, instead of waiting for the hero to mount.
+let GL: boolean | null = null
+const hasGL = () => (GL ??= webglAvailable())
+if (typeof window !== 'undefined' && window.location.pathname === import.meta.env.BASE_URL && hasGL()) {
+  void loadScene()
+  for (const src of HERO_TEXTURES) new Image().src = src
+}
 
 function webglAvailable(): boolean {
   try {
@@ -49,9 +60,8 @@ export function Hero({ data }: { data: HomeData | null }) {
   const textFade = useTransform(scrollYProgress, [0, 0.55], [1, wide && !reduced ? 0 : 1])
   const textY = useTransform(scrollYProgress, [0, 1], ['0%', reduced ? '0%' : '-12%'])
 
-  const [gl] = useState(webglAvailable)
+  const [gl] = useState(hasGL)
   const [active, setActive] = useState(true)
-  const [ready, setReady] = useState(false)
   const [sceneReady, setSceneReady] = useState(false)
   const [interacted, setInteracted] = useState(false)
   const [hovered, setHovered] = useState<string | null>(null)
@@ -120,11 +130,6 @@ export function Hero({ data }: { data: HomeData | null }) {
     return () => io.disconnect()
   }, [])
 
-  useEffect(() => {
-    const id = setTimeout(() => setReady(true), 150)
-    return () => clearTimeout(id)
-  }, [])
-
   const choose = (id: string) => {
     setInteracted(true)
     setSelected(id)
@@ -156,9 +161,9 @@ export function Hero({ data }: { data: HomeData | null }) {
 
       <motion.div style={{ y: sceneY, opacity: sceneFade, scale: sceneScale }} className="absolute inset-0 -z-10 origin-[70%_40%]">
         {gl ? (
-          ready && (
+          (
             <Suspense fallback={null}>
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.2 }} className="absolute inset-0">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: sceneReady ? 1 : 0 }} transition={{ duration: 0.5 }} className="absolute inset-0">
                 <HeroScene
                   targets={heroTargets}
                   allSites={allSites}
@@ -265,7 +270,7 @@ export function Hero({ data }: { data: HomeData | null }) {
                   className={cn('relative flex items-center gap-2 rounded-lg px-2 py-1.5 text-left transition-colors', on ? 'text-slate-100' : 'text-slate-400 hover:text-slate-200')}
                 >
                   {on && <motion.span layoutId="hero-target-pill" transition={spring} className="absolute inset-0 rounded-lg bg-white/10" />}
-                  <img src={asset(t.body === 'mars' ? 'media/mars-2k.webp' : 'media/moon-2k.webp')} alt="" className="relative size-7 rounded-full object-cover object-[60%_50%]" />
+                  <img src={asset(t.body === 'mars' ? 'media/mars-1k.webp' : 'media/moon-1k.webp')} alt="" className="relative size-7 rounded-full object-cover object-[60%_50%]" />
                   <span className="relative min-w-0">
                     <span className="block font-mono text-[11px] uppercase tracking-[0.16em]" style={{ color: BODY[t.body].color }}>
                       {BODY[t.body].label}

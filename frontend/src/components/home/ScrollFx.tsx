@@ -29,12 +29,12 @@ export function ParallaxWorlds({ className }: { className?: string }) {
   return (
     <div ref={ref} aria-hidden="true" className={cn('pointer-events-none absolute inset-0 -z-10 overflow-hidden', className)}>
       <motion.div
-        style={{ y: slow, rotate: spin, backgroundImage: `url(${asset('media/mars-2k.webp')})` }}
-        className="absolute -right-24 top-10 size-72 rounded-full bg-cover bg-center opacity-25 shadow-[inset_-40px_-20px_80px_rgb(5_8_13/0.95)] blur-[1px] md:size-96"
+        style={{ y: slow, rotate: spin, backgroundImage: `url(${asset('media/mars-1k.webp')})` }}
+        className="absolute -right-24 top-10 size-72 rounded-full bg-cover bg-center opacity-25 shadow-[inset_-40px_-20px_80px_rgb(5_8_13/0.95)] will-change-transform md:size-96"
       />
       <motion.div
-        style={{ y: fast, backgroundImage: `url(${asset('media/moon-2k.webp')})` }}
-        className="absolute -left-16 bottom-0 size-40 rounded-full bg-cover bg-center opacity-20 shadow-[inset_-24px_-12px_48px_rgb(5_8_13/0.95)] md:size-56"
+        style={{ y: fast, backgroundImage: `url(${asset('media/moon-1k.webp')})` }}
+        className="absolute -left-16 bottom-0 size-40 rounded-full bg-cover bg-center opacity-20 shadow-[inset_-24px_-12px_48px_rgb(5_8_13/0.95)] will-change-transform md:size-56"
       />
     </div>
   )
