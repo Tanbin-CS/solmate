@@ -1,5 +1,6 @@
 import type { Ranked } from '@/science/v2/screening'
-import { fmtCoord } from '@/lib/format'
+import { useCountries } from '@/lib/countries'
+import { placeLabel } from '@/lib/places'
 import { cn } from '@/lib/utils'
 import { siteName } from './labels'
 
@@ -13,11 +14,13 @@ interface Props {
 
 /** Screening candidates ranked by SAI; novel = farther than noveltyKm from every known analog. */
 export function CandidateList({ label, items, noveltyKm, selected, onPick }: Props) {
+  const countries = useCountries()
   return (
     <ol aria-label={label} className="space-y-1">
       {items.map(({ candidate: c, sai, refined }, i) => {
         const active = selected !== null && Math.abs(selected.lat - c.lat) < 0.051 && Math.abs(selected.lon - c.lon) < 0.051
         const novel = (c.nearest_known_km ?? 0) > noveltyKm
+        const place = placeLabel(c.lat, c.lon, countries)
         const where = c.nearest_known ? `${Math.round(c.nearest_known_km ?? 0)} km from ${siteName(c.nearest_known)}` : 'No known analog nearby'
         return (
           <li key={`${c.lat},${c.lon}`}>
@@ -32,8 +35,11 @@ export function CandidateList({ label, items, noveltyKm, selected, onPick }: Pro
             >
               <span className="font-mono text-[11px] tabular text-slate-400">{i + 1}</span>
               <span className="min-w-0">
-                <span className="block truncate font-mono text-[12px] text-slate-100">{fmtCoord(c.lat, c.lon)}</span>
-                <span className="block truncate text-[11px] text-slate-400" title={`${novel ? 'Novel lead: ' : ''}${where}`}>
+                <span className="block truncate text-[13px] text-slate-100" title={place.name}>
+                  {place.name}
+                </span>
+                <span className="block truncate text-[11px] text-slate-400" title={`${place.coords}. ${novel ? 'Novel lead: ' : ''}${where}`}>
+                  {place.name !== place.coords && <span className="font-mono">{place.coords} · </span>}
                   {novel && <span className="text-screen">Novel · </span>}
                   {where}
                 </span>

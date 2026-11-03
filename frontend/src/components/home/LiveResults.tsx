@@ -2,12 +2,14 @@ import { Link } from 'react-router'
 import { motion } from 'motion/react'
 import { ArrowRight } from 'lucide-react'
 import { explorerLink, type Flagship } from '@/hooks/useHomeData'
+import { useCountries } from '@/lib/countries'
 import { gibsWindow, placeLabel } from '@/lib/places'
 import { CountUp } from './CountUp'
 
 /** Top of the equal-weight ranking and the validation headline for one target, read from the v2 files. */
 export function LiveResults({ flagship }: { flagship: Flagship }) {
   const top = flagship.top.slice(0, 5)
+  const countries = useCountries()
   const v = flagship.validation
   const id = flagship.target.id
   const novelKm = flagship.screening.novelty_km
@@ -18,7 +20,7 @@ export function LiveResults({ flagship }: { flagship: Flagship }) {
       <ol className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
         {top.map((r, i) => {
           const c = r.candidate
-          const pl = placeLabel(c.lat, c.lon)
+          const pl = placeLabel(c.lat, c.lon, countries)
           const novel = (c.nearest_known_km ?? 0) > novelKm
           return (
             <motion.li key={`${id}-${c.lat},${c.lon}`} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05, duration: 0.35 }}>

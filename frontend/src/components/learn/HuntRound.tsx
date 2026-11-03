@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { ArrowDown, ArrowUp, Check, Eye, Flame, Lightbulb, Loader2, MapPin, Minus, Snowflake, Thermometer } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useCountries } from '@/lib/countries'
 import { gibsWindow, placeLabel } from '@/lib/places'
 import { cn } from '@/lib/utils'
 import type { Verdict } from '@/science/v2/verdict'
@@ -101,6 +102,7 @@ function WhyBars({ verdict }: { verdict: Verdict }) {
 export function HuntRound({ round, data, onScored }: { round: { target: string }; data: LearnData; onScored: (stars: number) => void }) {
   const reduced = useReducedMotion()
   const [best, setBest] = useState<Best | null>(null)
+  const countries = useCountries()
   const [pin, setPin] = useState<LatLon | null>(null)
   const [tries, setTries] = useState<Try[]>([])
   const [busy, setBusy] = useState(false)
@@ -150,7 +152,7 @@ export function HuntRound({ round, data, onScored }: { round: { target: string }
         p,
         sai: r.verdict.sai,
         verdict: r.verdict,
-        place: placeLabel(p.lat, p.lon).name,
+        place: placeLabel(p.lat, p.lon, countries).name,
       }
       setTries((xs) => [...xs, t].slice(-12))
       if (!revealed) {
@@ -397,10 +399,10 @@ export function HuntRound({ round, data, onScored }: { round: { target: string }
               <p className="text-lg font-semibold text-slate-100">{won ? 'You found it!' : 'Here is SolMate’s best place'}</p>
               <div className="mt-3 flex gap-3">
                 <div className="relative size-20 shrink-0 overflow-hidden rounded-xl bg-ink-950">
-                  <SatImage src={gibsWindow(best.lat, best.lon, 40, 'imagery', 256)} alt={`Satellite picture of ${placeLabel(best.lat, best.lon).name}`} />
+                  <SatImage src={gibsWindow(best.lat, best.lon, 40, 'imagery', 256)} alt={`Satellite picture of ${placeLabel(best.lat, best.lon, countries).name}`} />
                 </div>
                 <p className="text-[14px] leading-relaxed text-slate-300">
-                  <span className="text-slate-100">{placeLabel(best.lat, best.lon).name}</span> scores <span className="tabular text-reference">{Math.round(best.sai)}</span>.
+                  <span className="text-slate-100">{placeLabel(best.lat, best.lon, countries).name}</span> scores <span className="tabular text-reference">{Math.round(best.sai)}</span>.
                   {from && (
                     <>
                       {' '}
