@@ -5,7 +5,7 @@ import validation from '../../../public/data/v2/validation.json'
 import { DIMENSION_CARDS } from '@/components/home/dimensions'
 import { alike, cluesFor, distanceKm, huntStars, isInteractive, LEVELS, mapPos, mapToLatLon, passMark } from './content'
 import { EMPTY, isComplete, isUnlocked, parseProgress, type Progress } from './progress'
-import { LENGTH, SCENES, sceneAt } from './scenes'
+import { CHORDS, FACTS, LENGTH, SCENES, sceneAt, soundCues } from './scenes'
 
 const ids = targets.targets.map((t) => t.id)
 const text = JSON.stringify(LEVELS)
@@ -146,5 +146,42 @@ describe('explainer timeline', () => {
     expect(sceneAt(4.99)).toBe(0)
     expect(sceneAt(5)).toBe(1)
     expect(sceneAt(LENGTH)).toBe(SCENES.length - 1)
+  })
+})
+
+describe('explainer sound and facts', () => {
+  const cues = soundCues(31)
+
+  it('keeps every sound inside the clip, in time order', () => {
+    for (const c of cues) {
+      expect(c.t).toBeGreaterThanOrEqual(0)
+      expect(c.t).toBeLessThanOrEqual(LENGTH)
+    }
+    expect(cues.map((c) => c.t)).toEqual([...cues.map((c) => c.t)].sort((a, b) => a - b))
+  })
+
+  it('opens and closes with the Apollo Quindar tones (2525 Hz in, 2475 Hz out)', () => {
+    const q = cues.filter((c) => c.kind === 'quindar')
+    expect(q.map((c) => (c.kind === 'quindar' ? c.hz : 0))).toEqual([2525, 2475])
+    expect(q[0]!.t).toBeLessThan(1)
+    expect(q[1]!.t).toBeGreaterThan(LENGTH - 1)
+  })
+
+  it('plays one blip as each of the seven characteristics lights up', () => {
+    const blips = cues.filter((c) => c.kind === 'blip')
+    expect(blips).toHaveLength(7)
+    // the same easing the picture uses: lit = floor(out((p - 0.1) / 0.75) * 7)
+    const lit = (t: number) => {
+      const x = Math.min(1, Math.max(0, ((t - 15) / 6 - 0.1) / 0.75))
+      return Math.floor((1 - (1 - x) ** 3) * 7 + 1e-6)
+    }
+    blips.forEach((b, k) => expect(lit(b.t + 1e-3)).toBe(k + 1))
+  })
+
+  it('has a chord for every scene and a fact for every scene but the last', () => {
+    expect(CHORDS).toHaveLength(SCENES.length)
+    expect(FACTS).toHaveLength(SCENES.length)
+    expect(FACTS.slice(0, -1).every((f) => f && f.text.length > 40)).toBe(true)
+    expect(FACTS.at(-1)).toBeNull()
   })
 })

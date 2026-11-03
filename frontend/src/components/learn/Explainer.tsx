@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { useReducedMotion } from 'motion/react'
-import { ArrowRight, Pause, Play, RotateCcw } from 'lucide-react'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { ArrowRight, Pause, Play, Plus, RotateCcw, Volume2, VolumeX } from 'lucide-react'
 import { DIMENSION_CARDS } from '@/components/home/dimensions'
 import { Button } from '@/components/ui/button'
 import facts from '@/data/site_facts.json'
@@ -9,7 +9,10 @@ import { asset } from '@/lib/asset'
 import { gibsWindow } from '@/lib/places'
 import { cn } from '@/lib/utils'
 import type { LearnData } from './data'
-import { LENGTH, SCENES, sceneAt, TIBET, type Numbers } from './scenes'
+import { FACTS, LENGTH, SCENES, sceneAt, TIBET, type Numbers } from './scenes'
+import { ClipSound } from './sound'
+
+const SOUND_KEY = 'solmate-sound'
 
 const clamp = (x: number, a = 0, b = 1) => Math.min(b, Math.max(a, x))
 const out = (x: number) => 1 - (1 - clamp(x)) ** 3 // ease out
@@ -17,17 +20,44 @@ const span = (p: number, a: number, b: number) => out((p - a) / (b - a)) // 0..1
 const fmt = (s: number) => `0:${String(Math.floor(s)).padStart(2, '0')}`
 
 /**
- * A 30-second animated explainer. Every frame is a pure function of the time t, so play, pause,
- * scrubbing and chapter jumps all show exactly the same picture. The numbers are live: the analog
- * count comes from model.json, the layer count from site_facts.json and the Tibet score is
- * computed in the browser, like everywhere else on the site.
+ * A 30-second animated explainer with its own soundtrack. Every frame is a pure function of the time
+ * t, so play, pause, scrubbing and chapter jumps all show exactly the same picture, and the music
+ * restarts from the same t. The numbers are live: the analog count comes from model.json, the layer
+ * count from site_facts.json and the Tibet score is computed in the browser. Each scene has a point
+ * to tap for a fact, and the Tibet scene has a slider to compare Earth with Mars.
  */
 export function Explainer({ data, onStart, onFree }: { data: LearnData | null; onStart: () => void; onFree: () => void }) {
   const reduced = useReducedMotion()
   const [t, setT] = useState(0)
   const [playing, setPlaying] = useState(false)
+  const [fact, setFact] = useState<number | null>(null)
+  const [split, setSplit] = useState(50)
+  const [soundOn, setSoundOn] = useState(() => {
+    try {
+      return localStorage.getItem(SOUND_KEY) === '1'
+    } catch {
+      return false
+    }
+  })
   const touched = useRef(false)
-  const box = useRef<HTMLDivElement>(null)
+  const box = useRef<HTMLElement>(null)
+  const tRef = useRef(0)
+  const analogs = data?.model.known_analogs.sites.length ?? 30
+  const sound = useRef<ClipSound | null>(null)
+  useEffect(() => {
+    tRef.current = t
+  }, [t])
+  useEffect(() => {
+    sound.current ??= new ClipSound(analogs)
+    sound.current.setAnalogs(analogs)
+  }, [analogs])
+  useEffect(
+    () => () => {
+      sound.current?.dispose()
+      sound.current = null
+    },
+    [],
+  )
   const state = usePlaceScore(TIBET, null, 'jezero_crater', data?.model.presets.equal ?? null)
   const nums: Numbers = { analogs: data?.model.known_analogs.sites.length ?? null, sai: state?.status === 'ready' ? (state.data.verdict?.sai ?? null) : null }
 
@@ -37,7 +67,7 @@ export function Explainer({ data, onStart, onFree }: { data: LearnData | null; o
     let raf = 0
     let last = performance.now()
     const tick = (now: number) => {
-      const dt = (now - last) / 1000
+      const dt = Math.min(0.1, (now - last) / 1000)
       last = now
       setT((x) => {
         const next = x + dt
@@ -52,6 +82,33 @@ export function Explainer({ data, onStart, onFree }: { data: LearnData | null; o
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
   }, [playing])
+
+  // The music follows the clock: it starts from the current time and stops with it.
+  useEffect(() => {
+    const s = sound.current
+    if (!s) return
+    if (playing && soundOn && s.ready) s.play(tRef.current)
+    else s.stop()
+  }, [playing, soundOn])
+
+  // A saved "sound on" choice still needs one tap before the browser lets audio play.
+  useEffect(() => {
+    if (!soundOn || sound.current?.ready) return
+    const wake = () => {
+      if (sound.current?.unlock() && playing) sound.current.play(tRef.current)
+    }
+    window.addEventListener('pointerdown', wake, { once: true })
+    return () => window.removeEventListener('pointerdown', wake)
+  }, [soundOn, playing])
+
+  // Pause when the tab is hidden, so picture and sound never drift apart.
+  useEffect(() => {
+    const onHide = () => {
+      if (document.hidden) setPlaying(false)
+    }
+    document.addEventListener('visibilitychange', onHide)
+    return () => document.removeEventListener('visibilitychange', onHide)
+  }, [])
 
   // Fetch every picture up front so no scene starts on an empty frame.
   useEffect(() => {
@@ -83,22 +140,106 @@ export function Explainer({ data, onStart, onFree }: { data: LearnData | null; o
   const ended = t >= LENGTH
   const toggle = () => {
     touched.current = true
+    setFact(null)
+    if (soundOn) sound.current?.unlock()
     if (ended) setT(0)
     setPlaying((x) => (ended ? true : !x))
   }
   const seek = (s: number) => {
     touched.current = true
-    setT(clamp(s, 0, LENGTH))
+    setFact(null)
+    const next = clamp(s, 0, LENGTH)
+    setT(next)
+    if (playing && soundOn) sound.current?.play(next)
   }
+  const toggleSound = () => {
+    const next = !soundOn
+    if (next) sound.current?.unlock()
+    try {
+      localStorage.setItem(SOUND_KEY, next ? '1' : '0')
+    } catch {
+      // storage blocked: the choice lasts for this visit
+    }
+    setSoundOn(next)
+  }
+  const openFact = (n: number) => {
+    touched.current = true
+    setPlaying(false)
+    setFact(n)
+  }
+  const f = fact === null ? null : FACTS[fact]
+  const spot = FACTS[i]
 
   return (
     <figure ref={box} className="overflow-hidden rounded-2xl border border-border bg-ink-850" aria-label="30-second explainer: how SolMate finds Earth analogs">
-      <div
-        className="relative aspect-video w-full overflow-hidden bg-ink-950"
-        onClick={toggle}
-        aria-hidden="true" // the captions below carry the story for screen readers
-      >
-        <Stage i={i} p={p} nums={nums} sites={data?.model.known_analogs.sites ?? []} />
+      <div className="relative aspect-video w-full cursor-pointer overflow-hidden bg-ink-950" onClick={toggle}>
+        <Stage i={i} p={p} nums={nums} sites={data?.model.known_analogs.sites ?? []} split={split} onSplit={setSplit} />
+
+        {/* tap-to-learn point for this scene */}
+        {spot && !f && p > 0.25 && p < 0.92 && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              openFact(i)
+            }}
+            aria-label={`Learn more: ${spot.title}`}
+            className="group absolute z-10 flex size-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center"
+            style={{ left: spot.left, top: spot.top }}
+          >
+            {!reduced && <span className="absolute inset-1 animate-ping rounded-full bg-data/40 [animation-duration:1.8s]" />}
+            <span className="relative flex size-8 items-center justify-center rounded-full border-2 border-white bg-data text-ink-950 shadow-[0_4px_14px_rgb(0_0_0/0.6)] transition-transform group-hover:scale-110">
+              <Plus className="size-4" strokeWidth={3} />
+            </span>
+          </button>
+        )}
+
+        <AnimatePresence>
+          {f && (
+            <motion.div
+              key={fact}
+              initial={reduced ? { opacity: 0 } : { opacity: 0, y: 14, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-label={f.title}
+              className="absolute inset-x-3 bottom-4 z-20 mx-auto max-w-md cursor-auto rounded-2xl border border-data/40 bg-ink-950/95 p-4 sm:bottom-6 sm:p-5"
+            >
+              <p className="text-base font-semibold text-data sm:text-lg">{f.title}</p>
+              <p className="mt-1.5 text-pretty text-[13px] leading-relaxed text-slate-200 sm:text-[15px]">{f.text}</p>
+              <Button size="sm" className="mt-3" onClick={toggle} autoFocus>
+                <Play /> Keep watching
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* big start button before the first play */}
+        {!playing && t === 0 && !f && (
+          <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-ink-950/30">
+            <span className="flex items-center gap-2 rounded-full bg-data px-5 py-3 text-base font-semibold text-ink-950 shadow-[0_10px_30px_-8px_rgb(0_0_0/0.8)]">
+              <Play className="size-5 fill-ink-950" /> Play · 30 s
+            </span>
+          </span>
+        )}
+
+        {/* sound switch on the picture, where people look for it */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation()
+            toggleSound()
+          }}
+          aria-pressed={soundOn}
+          aria-label={soundOn ? 'Turn sound off' : 'Turn sound on'}
+          className="absolute right-3 top-3 z-10 flex items-center gap-1.5 rounded-full bg-ink-950/85 px-3 py-1.5 text-xs font-medium text-slate-100 transition-colors hover:bg-ink-950"
+        >
+          {soundOn ? <Volume2 className="size-4 text-data" /> : <VolumeX className="size-4" />}
+          {soundOn ? 'Sound on' : 'Tap for sound'}
+        </button>
+
         <div className="absolute inset-x-0 bottom-0 h-1 bg-ink-950/60">
           <div className="h-full bg-data" style={{ width: `${(t / LENGTH) * 100}%` }} />
         </div>
@@ -126,6 +267,9 @@ export function Explainer({ data, onStart, onFree }: { data: LearnData | null; o
           <span className="tabular w-20 shrink-0 text-right text-sm text-slate-400">
             {fmt(t)} / {fmt(LENGTH)}
           </span>
+          <Button size="icon" variant="ghost" onClick={toggleSound} aria-pressed={soundOn} aria-label={soundOn ? 'Turn sound off' : 'Turn sound on'}>
+            {soundOn ? <Volume2 /> : <VolumeX />}
+          </Button>
         </div>
         <ol className="mt-3 flex flex-wrap gap-1.5" aria-label="Chapters">
           {SCENES.map((s, n) => (
@@ -141,6 +285,7 @@ export function Explainer({ data, onStart, onFree }: { data: LearnData | null; o
             </li>
           ))}
         </ol>
+        <p className="mt-3 text-xs text-slate-400">Tap the glowing + on the picture to learn more. The music is made live in your browser; the beeps are NASA’s Apollo-era “Quindar” radio tones.</p>
         {i === SCENES.length - 1 && (
           <div className="mt-4 flex flex-wrap gap-2">
             <Button onClick={onStart}>
@@ -165,7 +310,7 @@ function Label({ children, className, style }: { children: React.ReactNode; clas
 }
 
 /** The picture for scene i at progress p (0..1). */
-function Stage({ i, p, nums, sites }: { i: number; p: number; nums: Numbers; sites: { id: string; lat: number; lon: number }[] }) {
+function Stage({ i, p, nums, sites, split, onSplit }: { i: number; p: number; nums: Numbers; sites: { id: string; lat: number; lon: number }[]; split: number; onSplit: (v: number) => void }) {
   const fadeIn = span(p, 0, 0.12)
   const fadeOut = 1 - span(p, 0.9, 1)
   const o = i === SCENES.length - 1 ? fadeIn : Math.min(fadeIn, fadeOut)
@@ -257,20 +402,26 @@ function Stage({ i, p, nums, sites }: { i: number; p: number; nums: Numbers; sit
     }
     case 4: {
       const count = nums.sai === null ? null : Math.round(nums.sai * span(p, 0.2, 0.7))
+      const zoom = `scale(${1.1 - 0.1 * span(p, 0, 1)})`
       return (
-        <div className="absolute inset-0 grid grid-cols-2 gap-px bg-ink-950" style={{ opacity: o }}>
-          <div className="relative overflow-hidden">
-            <img src={gibsWindow(TIBET.lat, TIBET.lon, 40, 'imagery', 512)} alt="" className="absolute inset-0 h-full w-full object-cover" style={{ transform: `scale(${1.1 - 0.1 * span(p, 0, 1)})` }} />
-            <Label className="left-3 top-3 text-data">Earth: Tibetan Plateau</Label>
+        <div className="absolute inset-0 bg-ink-950" style={{ opacity: o }}>
+          {/* Mars underneath, Earth on top, clipped by the slider: drag to compare */}
+          <img src={asset('data/quicklooks/jezero-hillshade.webp')} alt="" className="absolute inset-0 h-full w-full object-cover" style={{ transform: zoom }} />
+          <div className="absolute inset-0" style={{ clipPath: `inset(0 ${100 - split}% 0 0)` }}>
+            <img src={gibsWindow(TIBET.lat, TIBET.lon, 40, 'imagery', 512)} alt="" className="absolute inset-0 h-full w-full object-cover" style={{ transform: zoom }} />
           </div>
-          <div className="relative overflow-hidden">
-            <img src={asset('data/quicklooks/jezero-hillshade.webp')} alt="" className="absolute inset-0 h-full w-full object-cover" style={{ transform: `scale(${1.1 - 0.1 * span(p, 0, 1)})` }} />
-            <Label className="left-3 top-3 text-mars">Mars: Jezero Crater</Label>
-          </div>
+          <div className="pointer-events-none absolute inset-y-0 w-0.5 bg-white/90" style={{ left: `${split}%` }} />
+          <Label className="left-3 top-3 text-data">Earth: Tibetan Plateau</Label>
+          <Label className="right-3 top-12 text-mars sm:top-14">Mars: Jezero Crater</Label>
           <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center rounded-2xl border border-data/40 bg-ink-950/90 px-5 py-3 sm:px-8 sm:py-5" style={{ opacity: span(p, 0.15, 0.3) }}>
             <span className="tabular text-4xl font-semibold text-slate-100 sm:text-6xl">{count ?? '…'}</span>
             <span className="text-[11px] text-slate-400 sm:text-sm">out of 100</span>
           </div>
+          <label className="absolute inset-x-[12%] bottom-4 flex items-center gap-2 rounded-full bg-ink-950/85 px-3 py-1.5 text-[11px] text-slate-200 sm:text-xs" onClick={(e) => e.stopPropagation()}>
+            Earth
+            <input type="range" min={0} max={100} value={split} onChange={(e) => onSplit(Number(e.target.value))} aria-label="Compare Earth and Mars" className="h-2 min-w-0 flex-1 cursor-ew-resize accent-[var(--data)]" />
+            Mars
+          </label>
         </div>
       )
     }
