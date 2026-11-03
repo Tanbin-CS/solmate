@@ -4,7 +4,7 @@ import { ArrowRight, Check, Flame, RotateCcw, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { passMark, type Question } from './content'
-import { Stars } from './Hunter'
+import { Stars } from './parts'
 
 const ease = [0.16, 1, 0.3, 1] as const
 

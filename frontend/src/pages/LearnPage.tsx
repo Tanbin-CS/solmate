@@ -86,9 +86,11 @@ export default function LearnPage() {
 
       <section ref={freeRef} className="mx-auto mt-20 w-full max-w-6xl scroll-mt-24 border-t border-border px-6 pt-12" aria-labelledby="free-title">
         <h2 id="free-title" className="text-balance text-3xl font-semibold tracking-tight md:text-4xl">
-          Analog Hunter: free play
+          Analog Hunter
         </h2>
-        <p className="mt-3 max-w-2xl text-[17px] leading-relaxed text-slate-300">All eleven targets, open from the start. Every tap is scored in your browser with the same NASA data and method as the Explorer.</p>
+        <p className="mt-3 max-w-2xl text-[17px] leading-relaxed text-slate-300">
+          A hot-and-cold game for all eleven places, open from the start. Every tap is checked in your browser with the same NASA data SolMate uses.
+        </p>
         <div className="mt-6">{data ? <FreePlay data={data} free={progress.free} onStars={setFree} /> : <p className="text-slate-400">Loading NASA data…</p>}</div>
       </section>
 
