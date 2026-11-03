@@ -1,10 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { ListOrdered } from 'lucide-react'
 import { ErrorState, PanelSkeleton } from '@/components/common/States'
 import { CandidateList } from '@/components/explorer2/CandidateList'
-import { DIM_ORDER } from '@/components/explorer2/labels'
+import { DIM_ORDER, siteName } from '@/components/explorer2/labels'
 import { MapToolbar } from '@/components/explorer2/MapToolbar'
 import { MapView2, type MapCandidate } from '@/components/explorer2/MapView2'
 import { PlaceDetail } from '@/components/explorer2/PlaceDetail'
@@ -20,6 +20,7 @@ import { presetWeights, useModel, usePlaceScore, useScreening, useTerrain100 } f
 import type { Model, Target } from '@/science/v2/model'
 import { rank } from '@/science/v2/screening'
 import { DIMENSION_NAMES } from '@/science/v2/verdict'
+import { countryAt, useCountries } from '@/lib/countries'
 import { cn } from '@/lib/utils'
 
 const EASE = [0.16, 1, 0.3, 1] as const
@@ -78,6 +79,19 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
     return hit?.terrain_100m?.score ?? null
   }, [scr, ui.place])
   const leaderDims = DIM_ORDER.filter((d) => lists?.leaders[d]?.length)
+
+  // place search: known analog sites by name, and a country goes to SolMate's best place in it
+  const countries = useCountries()
+  const sites = useMemo(() => model.known_analogs.sites.map((k) => ({ name: siteName(k.id), lat: k.lat, lon: k.lon })), [model])
+  const bestIn = useCallback(
+    (country: string) => {
+      if (!lists || !countries) return null
+      const all = [...lists.top, ...lists.novel, ...Object.values(lists.leaders).flat()]
+      const hit = all.filter((r) => Number.isFinite(r.sai) && countryAt(countries, r.candidate.lat, r.candidate.lon) === country).sort((a, b) => b.sai - a.sai)[0]
+      return hit ? { lat: hit.candidate.lat, lon: hit.candidate.lon } : null
+    },
+    [lists, countries],
+  )
 
   const pick = (lat: number, lon: number) => {
     ui.pick({ lat, lon })
@@ -208,7 +222,7 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
         )}
       >
         <div className="pointer-events-auto">
-          <MapToolbar layer={ui.layer} onLayer={ui.setLayer} drawing={drawing} onDrawing={setDrawing} onGo={(p) => ui.pick(p)} />
+          <MapToolbar layer={ui.layer} onLayer={ui.setLayer} drawing={drawing} onDrawing={setDrawing} onGo={(p) => ui.pick(p)} sites={sites} bestIn={bestIn} />
         </div>
       </div>
 
