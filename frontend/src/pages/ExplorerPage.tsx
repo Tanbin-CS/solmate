@@ -89,8 +89,9 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
       <div className="space-y-4 border-b border-border p-4">
         <TargetPicker targets={targets} value={target.id} onChange={ui.setTarget} />
         <PresetPicker value={ui.preset === 'lunar_ops' && target.body !== 'moon' ? 'equal' : ui.preset} onChange={ui.setPreset} body={target.body} />
-        <Link to="/method#validation" className="block rounded-lg border border-border bg-ink-850 px-3 py-2 text-[12px] text-slate-300 transition-colors hover:border-slate-300/30">
-          Pre-registered validation against NASA-documented analog sites →
+        <Link to="/method#validation" className="block rounded-lg border border-border bg-ink-850 px-3 py-2 text-[12px] leading-snug text-slate-300 transition-colors hover:border-slate-300/30">
+          <span className="font-medium text-slate-100">How good is this score?</span> We tested it on NASA analog sites like Death Valley and Kīlauea. They beat ordinary land 7 times out of 10 or more.{' '}
+          <span className="text-data">See the test →</span>
         </Link>
       </div>
       <div className="px-3 pb-1 pt-3">
