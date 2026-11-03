@@ -17,7 +17,7 @@ export function CandidateList({ label, items, noveltyKm, selected, onPick }: Pro
   const countries = useCountries()
   return (
     <ol aria-label={label} className="space-y-1">
-      {items.map(({ candidate: c, sai, refined }, i) => {
+      {items.map(({ candidate: c, sai, t100 }, i) => {
         const active = selected !== null && Math.abs(selected.lat - c.lat) < 0.051 && Math.abs(selected.lon - c.lon) < 0.051
         const novel = (c.nearest_known_km ?? 0) > noveltyKm
         const place = placeLabel(c.lat, c.lon, countries)
@@ -46,7 +46,7 @@ export function CandidateList({ label, items, noveltyKm, selected, onPick }: Pro
               </span>
               <span className="text-right">
                 <span className="block font-mono text-sm tabular text-slate-100">{Number.isFinite(sai) ? sai.toFixed(1) : '–'}</span>
-                <span className="block font-mono text-[11px] text-slate-400">{refined ? '100 m terrain' : '1 km terrain'}</span>
+                {t100 !== null && <span className="block font-mono text-[11px] text-slate-400" title="100 m terrain check, not part of the index">100 m {Math.round(t100 * 100)}</span>}
               </span>
             </button>
           </li>

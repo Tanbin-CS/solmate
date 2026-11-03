@@ -1,7 +1,7 @@
 /**
  * Global screening results per target (export_web.py -> data/v2/screening/<id>.json) and
- * the arithmetic the UI needs on them: re-ranking under a weight preset and folding the
- * 100 m terrain score into the SAI (mirrors pipeline/rescore.py refined_sai).
+ * the arithmetic the UI needs on them: re-ranking under a weight preset. The 100 m terrain
+ * score (terrain_100m) is a separate check and never enters the SAI (pipeline/rescore.py).
  */
 import { z } from 'zod'
 import { sai } from './aggregate'
@@ -25,7 +25,6 @@ export const CandidateSchema = z
     nearest_known: z.string().nullable().optional(),
     nearest_known_km: MaybeNum.optional(),
     terrain_100m: Terrain100.optional(),
-    sai_refined: MaybeNum.optional(),
     verdict: z.unknown().optional(),
   })
   .passthrough()
@@ -42,17 +41,16 @@ export const ScreeningSchema = z.object({
 export type Candidate = z.infer<typeof CandidateSchema>
 export type Screening = z.infer<typeof ScreeningSchema>
 
-/** Dimension scores with the ~1 km terrain dimension replaced by the 100 m score when there is one. */
-export function withTerrain100(dims: Readonly<Record<string, number | null | undefined>>, t100: number | null | undefined): Record<string, number> {
+/** Dimension scores with missing values as NaN. */
+export function dimScores(dims: Readonly<Record<string, number | null | undefined>>): Record<string, number> {
   const out: Record<string, number> = {}
   for (const [k, v] of Object.entries(dims)) out[k] = v === null || v === undefined ? Number.NaN : v
-  if (t100 !== null && t100 !== undefined && Number.isFinite(t100)) out.T = t100
   return out
 }
 
-/** SAI (0-100) of a candidate under dimension weights, using 100 m terrain when available. */
+/** SAI (0-100) of a candidate under dimension weights, from its ~1 km dimensions. */
 export function candidateSai(c: Candidate, weights: Readonly<Record<string, number>>): number {
-  const dims = withTerrain100(c.dims, c.terrain_100m?.score)
+  const dims = dimScores(c.dims)
   const w = Object.fromEntries(Object.keys(dims).map((k) => [k, weights[k] ?? 0]))
   return sai(dims, w).sai
 }
@@ -60,12 +58,16 @@ export function candidateSai(c: Candidate, weights: Readonly<Record<string, numb
 export interface Ranked {
   candidate: Candidate
   sai: number
-  refined: boolean
+  /** 100 m terrain check (0-1) where measured, else null; shown, never ranked on. */
+  t100: number | null
 }
 
-/** Rank candidates by SAI under the given weights (refined terrain where measured). */
+/** Rank candidates by SAI under the given weights. */
 export function rank(list: readonly Candidate[], weights: Readonly<Record<string, number>>): Ranked[] {
   return list
-    .map((candidate) => ({ candidate, sai: candidateSai(candidate, weights), refined: Number.isFinite(candidate.terrain_100m?.score ?? Number.NaN) }))
+    .map((candidate) => {
+      const t = candidate.terrain_100m?.score
+      return { candidate, sai: candidateSai(candidate, weights), t100: t !== null && t !== undefined && Number.isFinite(t) ? t : null }
+    })
     .sort((a, b) => (Number.isFinite(b.sai) ? b.sai : -1) - (Number.isFinite(a.sai) ? a.sai : -1))
 }

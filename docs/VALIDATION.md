@@ -217,3 +217,50 @@ Written before any event-day dataset is seen. The Space Apps Resources tab opens
 Rehearsal (3 Nov 2026): NASA GLDAS topsoil moisture added as a context layer; the
 procedure from download to files ready to deploy took about 7 minutes (download 3 min 44 s,
 release 3 min 11 s). No score changed.
+
+## Addendum 3: the 100 m terrain score (found and changed 3–4 Nov 2026, not pre-registered)
+
+This addendum records a problem found after the results were published, the test that
+showed it, and the change made. It was not planned in advance; the numbers are reported
+unedited.
+
+### What was wrong
+1. **The yardstick.** Each similarity divides the gap between a place and the target by
+   Earth's spread of that indicator. For the ~1 km dimensions that spread comes from all
+   land. For the 100 m terrain indicators it came from the 587 refined candidate windows,
+   which run from salt flats to high mountains: the spread of median slope was 8.6°. A flat
+   floodplain (Dhaka, median slope 0.6°) therefore scored 0.99 against Jezero's crater floor
+   (2.1°) on that indicator and 0.75 overall, while the ~1 km terrain dimension gave 0.13.
+2. **The use.** The 100 m score replaced the ~1 km terrain dimension in the SAI of every
+   refined cell, in the rankings and on request in the Explorer, but the validation above
+   never tested it.
+
+### Test (terrain alone, the pre-registered positives against the controls, plain AUC)
+The 100 m yardstick was rebuilt from 500 random land windows: the same land definition as
+the ~1 km statistics (MODIS land fraction > 0.5, |lat| ≤ 83°, area-weighted), seed 2026,
+read from ASTER GDEM v3 exactly like the candidates (`terrain100_baseline.py`,
+`data/screening/stage2_baseline.v2.json`). The spread of median slope fell from 8.6° to
+1.8°, and Dhaka against Jezero from 0.75 to 0.54.
+
+| Terrain alone | ~1 km dimension | 100 m, candidate yardstick | 100 m, land yardstick |
+|---|---|---|---|
+| Jezero Crater | 0.485 | 0.526 | 0.468 |
+| Moon targets (9), median | 0.745 | 0.440 | 0.360 |
+| Moon targets, range | 0.700–0.750 | 0.375–0.560 | 0.325–0.570 |
+
+Per target: `data/validation/terrain100_check.v2.json`. At ~1 km, terrain alone separates
+the Moon analog sites from the controls; at 100 m it does not, under either yardstick.
+One likely reason, not tested here: ASTER GDEM is a surface model that includes trees and
+buildings, so forest controls look as rugged as the lunar highlands. For Jezero, terrain at
+either scale carries no signal on its own (the SAI's strength there is climate and surface).
+
+### Change
+- The 100 m statistics now come from the land sample (`stage2_stats.v2.json`, version 3).
+- The SAI, the rankings, the case studies and the Explorer use the ~1 km dimensions only,
+  which is what the validation above tested. Its results are unchanged.
+- The 100 m score is shown beside the SAI as a **terrain check**, with this result stated,
+  and is never folded in.
+- Effect on the published results: the best region for every target is unchanged (the
+  Tibetan Plateau, the Puna de Atacama, the Sistan Basin); exact cells and scores move by a
+  few points. The Jezero case study moves from 37.05°N 86.75°E to 34.95°N 83.35°E, both on the
+  Tibetan Plateau.

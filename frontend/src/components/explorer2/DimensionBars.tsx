@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils'
 import { BAND_STYLE } from './labels'
 
 /** One bar per dimension: score 0-100, band, and share of the SAI. */
-export function DimensionBars({ verdict, model, refined = false }: { verdict: Verdict; model: Model; refined?: boolean }) {
+export function DimensionBars({ verdict, model }: { verdict: Verdict; model: Model }) {
   const reduced = useReducedMotion()
   return (
     <ul className="space-y-2" aria-label="Dimension scores">
@@ -16,10 +16,7 @@ export function DimensionBars({ verdict, model, refined = false }: { verdict: Ve
         return (
           <li key={d.id} title={dim?.description}>
             <div className="flex items-baseline justify-between gap-2 text-[12.5px]">
-              <span className="text-slate-200">
-                {d.name}
-                {refined && d.id === 'T' && <span className="ml-1.5 font-mono text-[11px] text-data">100 m</span>}
-              </span>
+              <span className="text-slate-200">{d.name}</span>
               <span className="font-mono text-[11px] tabular">
                 <span className="text-slate-100">{s === null ? '–' : Math.round(s * 100)}</span>
                 <span className={cn('ml-2', BAND_STYLE[band].className)}>{BAND_STYLE[band].label}</span>

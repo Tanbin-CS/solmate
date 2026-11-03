@@ -168,7 +168,7 @@ function MethodBody({ data }: { data: HomeData }) {
         </p>
       </Block>
 
-      <Block title="Screen everything, then look closer.">
+      <Block id="terrain-check" title="Screen everything, then look closer.">
         <ul className="list-disc space-y-2 pl-5 marker:text-slate-400">
           <li>Every land cell is scored for every target. The best are kept at least 50 km apart, so one plateau cannot fill the list.</li>
           <li>
@@ -176,8 +176,10 @@ function MethodBody({ data }: { data: HomeData }) {
             others) are listed as <strong className="text-slate-100">novel leads</strong>.
           </li>
           <li>
-            The top cells and leads are then measured again at <strong className="text-slate-100">100 m from NASA ASTER GDEM v3</strong>: median slope, steep-slope tail and
-            hypsometry in a 20 km window. That score replaces the 1 km terrain proxy. Any other place can be measured the same way on request in the Explorer.
+            The top cells and leads also get a <strong className="text-slate-100">100 m terrain check from NASA ASTER GDEM v3</strong>: median slope, steep-slope tail and
+            hypsometry in a 20 km window, judged against 500 random land windows. It is shown next to the index, not inside it. On the validation sites, terrain alone at
+            1 km told Moon analog sites from controls (AUC 0.70 to 0.75); the 100 m check did not (0.33 to 0.57). One likely reason: ASTER GDEM measures the tops of trees and
+            buildings, so forests look rugged. Any other place can be checked the same way in the Explorer.
           </li>
         </ul>
       </Block>
@@ -336,7 +338,7 @@ function MethodBody({ data }: { data: HomeData }) {
             .
           </li>
           <li>Similar conditions do not mean a similar origin: landscapes on Earth, Mars and the Moon formed under different processes.</li>
-          <li>A 0.1° cell averages about 11 km of ground. Terrain is refined at 100 m, but climate, temperature and minerals stay at the coarse scale.</li>
+          <li>A 0.1° cell averages about 11 km of ground. The index uses terrain at about 1 km, with a 100 m check beside it; climate, temperature and minerals stay at the coarse scale.</li>
           <li>Novel leads are unreviewed. They need expert review and field data before anyone plans a test there.</li>
           <li>Validation labels come from documented field use, which reflects logistics as well as science; they are a check, not ground truth.</li>
         </ul>

@@ -3,7 +3,9 @@
 Indicators: median slope, steep-slope tail (p90) and hypsometric integral. Local relief and
 ruggedness are kept for display but not scored, because they correlate with median slope at
 r ~ 0.98 (v1 finding) and would triple-count roughness. Earth statistics for these indicators
-come from the pool of refined 100 m windows (stage2_stats), not from the 0.1 degree stack.
+come from a global land sample of 100 m windows (stage2_stats, built by terrain100_baseline.py),
+the same land the 0.1 degree statistics describe. The score is a separate check shown next to
+the SAI; it does not replace the ~1 km terrain dimension (docs/VALIDATION.md, addendum 3).
 """
 
 from __future__ import annotations

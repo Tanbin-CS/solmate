@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
 import type { Flagship } from '@/hooks/useHomeData'
 import type { Model } from '@/science/v2/model'
-import { withTerrain100 } from '@/science/v2/screening'
+import { dimScores } from '@/science/v2/screening'
 import { DIMENSION_NAMES } from '@/science/v2/verdict'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { BODY } from '@/components/explorer/roles'
@@ -21,7 +21,7 @@ function Card({ d, model, flagships }: { d: Card; model: Model; flagships: Flags
       <dl className="mt-auto space-y-3 border-t border-border pt-4">
         {flagships.map((f, k) => {
           const best = f.top[0]
-          const dims = best ? withTerrain100(best.candidate.dims, best.candidate.terrain_100m?.score) : {}
+          const dims = best ? dimScores(best.candidate.dims) : {}
           const v = dims[d.id]
           const scored = v !== undefined && Number.isFinite(v)
           return (

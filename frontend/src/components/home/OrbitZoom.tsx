@@ -6,7 +6,7 @@ import { useCountries } from '@/lib/countries'
 import { GibsImage } from '@/components/common/GibsImage'
 import { placeLabel } from '@/lib/places'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
-import { withTerrain100 } from '@/science/v2/screening'
+import { dimScores } from '@/science/v2/screening'
 import { DIMENSION_CARDS } from './dimensions'
 
 /**
@@ -29,7 +29,7 @@ export function OrbitZoom({ data }: { data: HomeData }) {
   const best = f.top[0]!
   const c0 = best.candidate
   const place = placeLabel(c0.lat, c0.lon, countries)
-  const dims = withTerrain100(c0.dims, c0.terrain_100m?.score)
+  const dims = dimScores(c0.dims)
   const bars = DIMENSION_CARDS.filter((d) => d.id in dims)
   const score = Math.round(best.sai)
 
