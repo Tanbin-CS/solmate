@@ -71,6 +71,7 @@ Explorer's place panel with their source.
 | Chang'e-4 LND lunar dose | CNSA (Zhang et al. 2020) | Breaks-down context only | Citation |
 | UNSCEAR 2008 background dose | UN | Earth reference dose (breaks-down) | Citation |
 | Natural Earth Admin 0 countries, 1:110m | Natural Earth (`nvkelso/natural-earth-vector` @ ca96624, sha256 6866c877…977f) | Country names for places in the Explorer, Learn and home page (display only). Shrunk by `scripts/shrink_countries.py` to `frontend/public/data/countries.v1.json` | Public domain |
+| Natural Earth populated places, 1:50m | Natural Earth (`nvkelso/natural-earth-vector` @ ca96624, sha256 8e70756b…d978) | 1,251 cities and towns for the Explorer place search (display only). Shrunk by `scripts/shrink_places.py` to `frontend/public/data/places.v1.json` | Public domain |
 
 **Removed in v2:** Sentinel-2 cloudless by EOX (CC BY-NC-SA 4.0). Its non-commercial
 terms do not meet the Space Apps open-licence rule.

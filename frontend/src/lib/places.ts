@@ -7,7 +7,7 @@ import { fmtCoord } from './format'
  * barren deserts: surface pressure 530-650 hPa on the plateaus, 900+ hPa in the basins).
  * Anything outside the boxes is shown by its coordinates only.
  */
-const REGIONS: { name: string; south: number; north: number; west: number; east: number }[] = [
+export const REGIONS: { name: string; south: number; north: number; west: number; east: number }[] = [
   { name: 'Tibetan Plateau', south: 30, north: 38.1, west: 75, east: 95 },
   { name: 'Tarim Basin', south: 38.1, north: 42, west: 75, east: 95 },
   { name: 'Puna de Atacama', south: -30, north: -21, west: -71, east: -65 },
