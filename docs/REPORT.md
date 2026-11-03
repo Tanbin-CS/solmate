@@ -8,34 +8,34 @@ Interactive version: https://solmate-analog.web.app/findings · Explorer: https:
 
 ## Headline findings
 
-- High, cold, barren plateaus are Earth's closest match to both worlds. Of the top five places for each of the 11 targets (55 in all), 35 lie on the Tibetan Plateau and 16 in the Puna de Atacama, roughly 3,500–5,000 m high (judged from NASA POWER surface pressure).
-- 52 of those 55 are more than 300 km from all 31 known analog sites (NASA field sites, the Atacama, Antarctica, Iceland, Hawaiʻi, Devon Island and others): leads nobody has tested, listed for expert and field review.
+- High, cold, barren plateaus are Earth's closest match to both worlds. Of the top five places for each of the 11 targets (55 in all), 35 lie on the Tibetan Plateau and 12 in the Puna de Atacama, roughly 3,500–5,000 m high (judged from NASA POWER surface pressure).
+- 53 of those 55 are more than 300 km from all 31 known analog sites (NASA field sites, the Atacama, Antarctica, Iceland, Hawaiʻi, Devon Island and others): leads nobody has tested, listed for expert and field review.
 - No place matches everything. Nowhere on Earth is as cold, as dry or as airless as the lunar south pole or Mars; those characteristics are ranked toward the target, and the gap is stated with every result.
 - Different places lead on different characteristics: the best terrain match is often not the best thermal or mineral match, which is why every result shows all seven dimensions.
 
 ## Best places for every target
 
-SAI with equal weights, with terrain measured at 100 m from NASA ASTER GDEM where available. A novel lead is more than 300 km from every known analog site.
+SAI with equal weights, from the seven ~1 km dimensions. A novel lead is more than 300 km from every known analog site.
 
 | Target | Best place on Earth | SAI | Best novel lead | SAI | Distance to nearest known site |
 |---|---|---|---|---|---|
-| Peak near Cabeus B | Tibetan Plateau (36.45°N 84.45°E) | 89.6 | Tibetan Plateau (36.45°N 84.45°E) | 89.6 | 692 km from Qaidam Basin (Dalangtan) |
-| Haworth | Tibetan Plateau (36.05°N 85.35°E) | 87.0 | Puna de Atacama (27.45°S 68.75°W) | 86.7 | 395 km from Atacama (Yungay) |
-| Malapert Massif | Tibetan Plateau (36.45°N 84.45°E) | 90.4 | Tibetan Plateau (36.45°N 84.45°E) | 90.4 | 692 km from Qaidam Basin (Dalangtan) |
-| Mons Mouton Plateau | Tibetan Plateau (36.45°N 84.45°E) | 83.5 | Tibetan Plateau (36.45°N 84.45°E) | 83.5 | 692 km from Qaidam Basin (Dalangtan) |
-| Mons Mouton | Puna de Atacama (27.85°S 69.15°W) | 88.0 | Puna de Atacama (27.85°S 69.15°W) | 88.0 | 428 km from Atacama (Yungay) |
-| Nobile Rim 1 | Tibetan Plateau (36.45°N 84.45°E) | 91.6 | Tibetan Plateau (36.45°N 84.45°E) | 91.6 | 692 km from Qaidam Basin (Dalangtan) |
-| Nobile Rim 2 | Puna de Atacama (27.45°S 68.75°W) | 87.4 | Puna de Atacama (27.45°S 68.75°W) | 87.4 | 395 km from Atacama (Yungay) |
-| de Gerlache Rim 2 | Tibetan Plateau (36.45°N 84.45°E) | 91.4 | Puna de Atacama (27.45°S 68.75°W) | 88.9 | 395 km from Atacama (Yungay) |
-| Slater Plain | Tibetan Plateau (35.95°N 82.35°E) | 84.9 | Tibetan Plateau (35.95°N 82.35°E) | 84.9 | 888 km from Qaidam Basin (Dalangtan) |
-| Jezero Crater | Tibetan Plateau (37.05°N 86.75°E) | 85.0 | Tibetan Plateau (37.05°N 86.75°E) | 85.0 | 477 km from Qaidam Basin (Dalangtan) |
+| Peak near Cabeus B | Tibetan Plateau (35.95°N 81.75°E) | 87.4 | Tibetan Plateau (35.95°N 81.75°E) | 87.4 | 939 km from Qaidam Basin (Dalangtan) |
+| Haworth | Puna de Atacama (27.45°S 68.75°W) | 89.0 | Puna de Atacama (27.45°S 68.75°W) | 89.0 | 395 km from Atacama (Yungay) |
+| Malapert Massif | Puna de Atacama (27.85°S 69.15°W) | 88.5 | Puna de Atacama (27.85°S 69.15°W) | 88.5 | 428 km from Atacama (Yungay) |
+| Mons Mouton Plateau | Puna de Atacama (27.95°S 68.85°W) | 81.6 | Puna de Atacama (27.95°S 68.85°W) | 81.6 | 446 km from Atacama (Yungay) |
+| Mons Mouton | 38.75°N 74.05°E | 85.3 | 38.75°N 74.05°E | 85.3 | 1550 km from Qaidam Basin (Dalangtan) |
+| Nobile Rim 1 | 39.15°N 95.55°E | 84.0 | Tibetan Plateau (35.85°N 81.95°E) | 83.9 | 926 km from Qaidam Basin (Dalangtan) |
+| Nobile Rim 2 | Tibetan Plateau (35.85°N 81.85°E) | 86.0 | Tibetan Plateau (35.85°N 81.85°E) | 86.0 | 934 km from Qaidam Basin (Dalangtan) |
+| de Gerlache Rim 2 | Tibetan Plateau (35.95°N 81.95°E) | 87.7 | Tibetan Plateau (35.95°N 81.95°E) | 87.7 | 922 km from Qaidam Basin (Dalangtan) |
+| Slater Plain | Tibetan Plateau (35.35°N 80.25°E) | 87.5 | Tibetan Plateau (35.35°N 80.25°E) | 87.5 | 1089 km from Qaidam Basin (Dalangtan) |
+| Jezero Crater | Tibetan Plateau (34.95°N 83.35°E) | 84.8 | Tibetan Plateau (34.95°N 83.35°E) | 84.8 | 853 km from Qaidam Basin (Dalangtan) |
 | Arcadia Planitia (site AP-1) | Sistan Basin (32.05°N 61.25°E) | 79.5 | Sistan Basin (32.05°N 61.25°E) | 79.5 | 2027 km from Lonar |
 
 ## Case study: Jezero Crater (Mars) and the Tibetan Plateau
 
-The best novel lead for Jezero Crater is the cell at 37.05°N 86.75°E, 477 km from the nearest known analog site, Qaidam Basin (Dalangtan). Its SAI is 85.0.
+The best novel lead for Jezero Crater is the cell at 34.95°N 83.35°E, 853 km from the nearest known analog site, Qaidam Basin (Dalangtan). Its SAI is 84.8.
 
-![Landsat image, 20 km around 37.05°N 86.75°E](https://solmate-analog.web.app/data/report/jezero_crater-imagery.webp) ![ASTER GDEM shaded relief, 20 km around 37.05°N 86.75°E](https://solmate-analog.web.app/data/report/jezero_crater-relief.webp)
+![Landsat image, 20 km around 34.95°N 83.35°E](https://solmate-analog.web.app/data/report/jezero_crater-imagery.webp) ![ASTER GDEM shaded relief, 20 km around 34.95°N 83.35°E](https://solmate-analog.web.app/data/report/jezero_crater-relief.webp)
 
 *NASA/USGS Landsat WELD 1990, 20 km window* · *NASA/METI ASTER GDEM shaded relief, 20 km window*
 
@@ -43,19 +43,23 @@ The best novel lead for Jezero Crater is the cell at 37.05°N 86.75°E, 477 km f
 
 | Characteristic | Score (0–1) |
 |---|---|
-| Terrain | 1.00 |
-| Climate & aridity | 0.89 |
-| Thermal | 0.86 |
-| Surface & barrenness | 0.87 |
-| Mineralogy | 0.68 |
-| Ice & cold-trap | 0.79 |
-| Dust & wind | 0.86 |
+| Terrain | 0.82 |
+| Climate & aridity | 0.87 |
+| Thermal | 0.82 |
+| Surface & barrenness | 0.88 |
+| Mineralogy | 0.99 |
+| Ice & cold-trap | 0.85 |
+| Dust & wind | 0.71 |
+
+100 m terrain check (NASA ASTER GDEM, 20 km window): 0.52. It is shown beside the SAI, not inside it: on the validation sites the 100 m score alone did not pick out known analog sites (docs/VALIDATION.md, addendum 3).
 
 | 100 m terrain (20 km window) | Jezero Crater | This place |
 |---|---|---|
-| Median slope | 2.1° | 2.3° |
-| Steepest 10% of slopes | 10.0° | 11.4° |
-| Hypsometric integral | 0.26 | 0.27 |
+| Median slope | 2.1° | 4.2° |
+| Steepest 10% of slopes | 10.0° | 13.7° |
+| Hypsometric integral | 0.26 | 0.43 |
+
+- Process: Mafic volcanic surface. Basaltic plains and lava flows of the lunar maria and Martian volcanic provinces.
 
 ### Biology and habitability
 
@@ -71,25 +75,23 @@ The best novel lead for Jezero Crater is the cell at 37.05°N 86.75°E, 477 km f
 - Surface pressure is 0.01x this place: no Earth site reproduces vacuum or the thin Martian air (heat transfer, dust lofting, boiling).
 - Surface radiation dose is 97.4x Earth: Earth's atmosphere and magnetic field shield every analog site.
 - Caves, lava tubes and other underground environments are not assessed: satellite data see only the surface. Documented cave and mine analogs are listed in the findings.
-- Air humidity: the target value (5) lies beyond every place on Earth; this place gets 41% of the way from Earth's typical value.
-- Day-night surface temperature swing: the target value (90) lies beyond every place on Earth; this place gets 21% of the way from Earth's typical value.
-- Coldest night surface temperature: the target value (190) lies beyond every place on Earth; this place gets 30% of the way from Earth's typical value.
-- Mean temperature: the target value (-53) lies beyond every place on Earth; this place gets 31% of the way from Earth's typical value.
-- Atmospheric dust: the target value (0.5) lies beyond every place on Earth; this place gets 13% of the way from Earth's typical value.
+- Air humidity: the target value (5) lies beyond every place on Earth; this place gets 44% of the way from Earth's typical value.
+- Day-night surface temperature swing: the target value (90) lies beyond every place on Earth; this place gets 16% of the way from Earth's typical value.
+- Coldest night surface temperature: the target value (190) lies beyond every place on Earth; this place gets 32% of the way from Earth's typical value.
+- Mean temperature: the target value (-53) lies beyond every place on Earth; this place gets 32% of the way from Earth's typical value.
+- Atmospheric dust: the target value (0.5) lies beyond every place on Earth; this place gets 6% of the way from Earth's typical value.
 
 ### What it could be used for
 
-- Landing-pad, regolith-handling and construction trials on flat barren ground.
-- Instrument and habitat thermal-cycling tests in large day-night temperature swings.
 - Ice prospecting, drilling and ISRU rehearsals in frozen ground.
 
-Suggested next step: an expert desk review of geology maps and high-resolution imagery, then a short field visit to check surface materials and access before any test is planned. This is an unreviewed lead, not a recommendation. Open it: https://solmate-analog.web.app/explorer?p=37.05%2C86.75
+Suggested next step: an expert desk review of geology maps and high-resolution imagery, then a short field visit to check surface materials and access before any test is planned. This is an unreviewed lead, not a recommendation. Open it: https://solmate-analog.web.app/explorer?p=34.95%2C83.35
 
-## Case study: Mons Mouton (Moon) and the Puna de Atacama
+## Case study: Mons Mouton (Moon) and 38.75°N 74.05°E
 
-The best novel lead for Mons Mouton is the cell at 27.85°S 69.15°W, 428 km from the nearest known analog site, Atacama (Yungay). Its SAI is 88.0.
+The best novel lead for Mons Mouton is the cell at 38.75°N 74.05°E, 1550 km from the nearest known analog site, Qaidam Basin (Dalangtan). Its SAI is 85.3.
 
-![Landsat image, 20 km around 27.85°S 69.15°W](https://solmate-analog.web.app/data/report/mons_mouton-imagery.webp) ![ASTER GDEM shaded relief, 20 km around 27.85°S 69.15°W](https://solmate-analog.web.app/data/report/mons_mouton-relief.webp)
+![Landsat image, 20 km around 38.75°N 74.05°E](https://solmate-analog.web.app/data/report/mons_mouton-imagery.webp) ![ASTER GDEM shaded relief, 20 km around 38.75°N 74.05°E](https://solmate-analog.web.app/data/report/mons_mouton-relief.webp)
 
 *NASA/USGS Landsat WELD 1990, 20 km window* · *NASA/METI ASTER GDEM shaded relief, 20 km window*
 
@@ -97,20 +99,20 @@ The best novel lead for Mons Mouton is the cell at 27.85°S 69.15°W, 428 km fro
 
 | Characteristic | Score (0–1) |
 |---|---|
-| Terrain | 0.94 |
+| Terrain | 0.91 |
 | Climate & aridity | 0.85 |
-| Thermal | 0.80 |
-| Surface & barrenness | 0.98 |
-| Mineralogy | 0.94 |
-| Ice & cold-trap | 0.76 |
+| Thermal | 0.82 |
+| Surface & barrenness | 1.00 |
+| Mineralogy | 0.64 |
+| Ice & cold-trap | 0.90 |
+
+100 m terrain check (NASA ASTER GDEM, 20 km window): 0.18. It is shown beside the SAI, not inside it: on the validation sites the 100 m score alone did not pick out known analog sites (docs/VALIDATION.md, addendum 3).
 
 | 100 m terrain (20 km window) | Mons Mouton | This place |
 |---|---|---|
-| Median slope | 10.8° | 12.9° |
-| Steepest 10% of slopes | 21.8° | 24.0° |
-| Hypsometric integral | 0.74 | 0.50 |
-
-- Process: Rugged highland relief. Crater rims and massifs of the lunar south pole (Malapert, Cabeus B, de Gerlache).
+| Median slope | 10.8° | 17.1° |
+| Steepest 10% of slopes | 21.8° | 31.4° |
+| Hypsometric integral | 0.74 | 0.39 |
 
 ### Biology and habitability
 
@@ -122,19 +124,20 @@ The best novel lead for Mons Mouton is the cell at 27.85°S 69.15°W, 428 km fro
 - Gravity is 0.17x Earth: Earth tests overload structures, wheels and people.
 - Surface pressure is about 10^-15 of this place: no Earth site reproduces vacuum or the thin Martian air (heat transfer, dust lofting, boiling).
 - Surface radiation dose is 208.3x Earth: Earth's atmosphere and magnetic field shield every analog site.
-- Sunlight: in this region the Sun never rises more than 6° above the horizon, so long shadows and low light shape every operation. At this place on Earth the midsummer noon Sun reaches 86°.
+- Sunlight: in this region the Sun never rises more than 6° above the horizon, so long shadows and low light shape every operation. At this place on Earth the midsummer noon Sun reaches 75°.
 - Caves, lava tubes and other underground environments are not assessed: satellite data see only the surface. Documented cave and mine analogs are listed in the findings.
-- Day-night surface temperature swing: the target value (177.2) lies beyond every place on Earth; this place gets 11% of the way from Earth's typical value.
-- Coldest night surface temperature: the target value (58.5) lies beyond every place on Earth; this place gets 7% of the way from Earth's typical value.
-- Mean temperature: the target value (-147.3) lies beyond every place on Earth; this place gets 9% of the way from Earth's typical value.
-- Coldest-season temperature: the target value (-161.9) lies beyond every place on Earth; this place gets 7% of the way from Earth's typical value.
+- Air humidity: the target value (0) lies beyond every place on Earth; this place gets 28% of the way from Earth's typical value.
+- Day-night surface temperature swing: the target value (177.2) lies beyond every place on Earth; this place gets 7% of the way from Earth's typical value.
+- Coldest night surface temperature: the target value (58.5) lies beyond every place on Earth; this place gets 13% of the way from Earth's typical value.
+- Mean temperature: the target value (-147.3) lies beyond every place on Earth; this place gets 13% of the way from Earth's typical value.
+- Coldest-season temperature: the target value (-161.9) lies beyond every place on Earth; this place gets 14% of the way from Earth's typical value.
 
 ### What it could be used for
 
 - Rover and EVA mobility trials on slopes and loose barren ground.
-- Instrument and habitat thermal-cycling tests in large day-night temperature swings.
+- Ice prospecting, drilling and ISRU rehearsals in frozen ground.
 
-Suggested next step: an expert desk review of geology maps and high-resolution imagery, then a short field visit to check surface materials and access before any test is planned. This is an unreviewed lead, not a recommendation. Open it: https://solmate-analog.web.app/explorer?t=mons_mouton&p=-27.85%2C-69.15
+Suggested next step: an expert desk review of geology maps and high-resolution imagery, then a short field visit to check surface materials and access before any test is planned. This is an unreviewed lead, not a recommendation. Open it: https://solmate-analog.web.app/explorer?t=mons_mouton&p=38.75%2C74.05
 
 ## Caves, lava tubes and mines
 
@@ -229,10 +232,10 @@ AUC is the chance that a site NASA has used as an analog outscores a control (fa
 - Near the lunar south pole the Sun never rises more than a few degrees; no place on Earth reproduces that lighting, and every Moon result compares it with the place's own noon Sun.
 - Caves, lava tubes and other underground environments cannot be assessed from satellite data.
 - Biology and habitability are described for every place but not scored.
-- A 0.1° cell averages about 11 km of ground; only terrain is refined at 100 m.
+- A 0.1° cell averages about 11 km of ground. The SAI uses terrain at about 1 km; a 100 m terrain check is shown beside it and is not part of the score.
 - Novel leads are unreviewed: they need expert review and field data before anyone plans a test.
 - Validation labels reflect where agencies have worked, which includes logistics as well as science.
 
 ## Data and reproducibility
 
-All scored inputs are NASA data: MODIS (MYD11C3, MOD10CM, MCD43C3, MCD12C1), ASTER GED and GDEM v3, MERRA-2, NASA POWER and SRTMGL30 on Earth; LRO LOLA and Diviner on the Moon; MOLA, CTX and Mars 2020 results on Mars. Sources, licences and checksums: https://solmate-analog.web.app/provenance. Code: https://github.com/Tanbin-CS/solmate (results version 3d8a04c364c4).
+All scored inputs are NASA data: MODIS (MYD11C3, MOD10CM, MCD43C3, MCD12C1), ASTER GED and GDEM v3, MERRA-2, NASA POWER and SRTMGL30 on Earth; LRO LOLA and Diviner on the Moon; MOLA, CTX and Mars 2020 results on Mars. Sources, licences and checksums: https://solmate-analog.web.app/provenance. Code: https://github.com/Tanbin-CS/solmate (results version 687e6cf45278).
