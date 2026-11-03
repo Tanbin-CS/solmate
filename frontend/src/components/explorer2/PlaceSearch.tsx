@@ -10,12 +10,30 @@ const ICON: Record<HitKind, typeof MapPin> = { coords: Crosshair, country: Flag,
  * Search box over the map: type a city, country, region, known analog site or "lat, lon", pick a
  * suggestion with the mouse or the arrow keys and Enter, and the globe flies there and scores it.
  */
-export function PlaceSearch({ onGo, sites, bestIn }: { onGo: (p: LatLon, title: string | null) => void; sites?: SearchOptions['sites']; bestIn?: SearchOptions['bestIn'] }) {
+interface Props {
+  onGo: (p: LatLon, title: string | null) => void
+  /** The place the panel shows; when it changes by any other route than this box, the text clears. */
+  placeKey?: string | null
+  fromSearch?: boolean
+  sites?: SearchOptions['sites']
+  bestIn?: SearchOptions['bestIn']
+}
+
+export function PlaceSearch({ onGo, placeKey = null, fromSearch = false, sites, bestIn }: Props) {
   const [text, setText] = useState('')
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState(0)
   const [used, setUsed] = useState(false)
   const [bad, setBad] = useState(false)
+  // A place picked from the list, the map or a drawn box would leave the old name here, as if it were still selected.
+  const [seen, setSeen] = useState(placeKey)
+  if (placeKey !== seen) {
+    setSeen(placeKey)
+    if (!fromSearch) {
+      setText('')
+      setBad(false)
+    }
+  }
   const data = useSearchData(used)
   const listId = useId()
   const input = useRef<HTMLInputElement>(null)
