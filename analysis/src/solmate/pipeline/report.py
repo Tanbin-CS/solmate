@@ -65,17 +65,15 @@ def explorer(tid: str, lat: float, lon: float) -> str:
     return f"{SITE}/explorer?{urlencode(q)}"
 
 
-def gibs(lat: float, lon: float, kind: str, km: float = 20, px: int = 512) -> str:
-    d = km / 2 / 111.32
-    import math
+def image(tid: str, kind: str) -> str:
+    """Path under frontend/public of a case-study picture, written by report_images.py."""
+    return f"data/report/{tid}-{kind}.webp"
 
-    dl = d / math.cos(math.radians(lat))
-    q = {"SERVICE": "WMS", "REQUEST": "GetMap", "VERSION": "1.3.0", "STYLES": "", "CRS": "EPSG:4326",
-         "LAYERS": "Landsat_WELD_CorrectedReflectance_TrueColor_Global_Annual" if kind == "imagery"
-         else "ASTER_GDEM_Greyscale_Shaded_Relief",
-         "BBOX": ",".join(f"{v:.5f}" for v in (lat - d, lon - dl, lat + d, lon + dl)),
-         "WIDTH": px, "HEIGHT": px, "FORMAT": "image/jpeg", **({"TIME": "1990-12-01"} if kind == "imagery" else {})}
-    return f"https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?{urlencode(q)}"
+
+def case_leads(d: dict) -> list[tuple[str, str, dict]]:
+    """(target id, world, best novel lead cell) for each case study."""
+    leads = {tid: sorted(s["novel_leads"], key=lambda c: -sai_of(c)) for tid, s in d["screens"].items()}
+    return [(tid, world, leads[tid][0]) for tid, world in CASES]
 
 
 def load() -> dict:
@@ -155,9 +153,8 @@ def build(d: dict) -> list[dict]:
                   for t in targets]},
     ]
 
-    for tid, world in CASES:
+    for tid, world, c in case_leads(d):
         t = next(x for x in targets if x["id"] == tid)
-        c = leads[tid][0]
         ver = c["verdict"]
         t100 = c.get("terrain_100m") or {}
         ti = (t100.get("indicators") or {})
@@ -174,9 +171,9 @@ def build(d: dict) -> list[dict]:
                 f"{c['nearest_known_km']:.0f} km from the nearest known analog site, {site_name(c['nearest_known'])}. "
                 f"Its SAI is {sai_of(c):.1f}.")},
             {"type": "figure", "images": [
-                {"src": gibs(c["lat"], c["lon"], "imagery"), "alt": f"Landsat image, 20 km around {here}",
+                {"src": image(tid, "imagery"), "alt": f"Landsat image, 20 km around {here}",
                  "caption": "NASA/USGS Landsat WELD 1990, 20 km window"},
-                {"src": gibs(c["lat"], c["lon"], "relief"), "alt": f"ASTER GDEM shaded relief, 20 km around {here}",
+                {"src": image(tid, "relief"), "alt": f"ASTER GDEM shaded relief, 20 km around {here}",
                  "caption": "NASA/METI ASTER GDEM shaded relief, 20 km window"},
             ]},
             {"type": "h3", "text": "Why it is analogous"},
@@ -296,7 +293,8 @@ def to_markdown(blocks: list[dict]) -> str:
             out.append("| " + " | ".join(blk["head"]) + " |\n|" + "---|" * len(blk["head"]) + "\n"
                        + "\n".join("| " + " | ".join(r) + " |" for r in blk["rows"]) + "\n")
         elif k == "figure":
-            out.append(" ".join(f"![{i['alt']}]({i['src']})" for i in blk["images"]) + "\n\n"
+            # Pictures are site files, linked absolutely so the Markdown works on GitHub and on the NASA page.
+            out.append(" ".join(f"![{i['alt']}]({SITE}/{i['src']})" for i in blk["images"]) + "\n\n"
                        + " · ".join(f"*{i['caption']}*" for i in blk["images"]) + "\n")
     return "\n".join(out)
 

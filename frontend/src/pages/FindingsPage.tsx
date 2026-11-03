@@ -17,7 +17,7 @@ const Block = z.discriminatedUnion('type', [
   z.object({ type: z.literal('p'), text: z.string() }),
   z.object({ type: z.literal('ul'), items: z.array(z.string()) }),
   z.object({ type: z.literal('table'), head: z.array(z.string()), rows: z.array(z.array(z.string())) }),
-  z.object({ type: z.literal('figure'), images: z.array(z.object({ src: z.string().url(), alt: z.string(), caption: z.string() })) }),
+  z.object({ type: z.literal('figure'), images: z.array(z.object({ src: z.string().regex(/^data\/report\/[a-z0-9_-]+\.webp$/), alt: z.string(), caption: z.string() })) }),
 ])
 const ReportSchema = z.object({ version: z.literal(1), blocks: z.array(Block) })
 type Block = z.infer<typeof Block>
@@ -104,7 +104,7 @@ function Render({ b }: { b: Block }) {
         <div className="grid gap-3 sm:grid-cols-2">
           {b.images.map((im) => (
             <figure key={im.src} className="overflow-hidden rounded-xl border border-border bg-ink-900">
-              <img src={im.src} alt={im.alt} loading="lazy" className="aspect-square w-full object-cover" />
+              <img src={asset(im.src)} alt={im.alt} loading="lazy" className="aspect-square w-full object-cover" />
               <figcaption className="px-3 py-2 font-mono text-[11px] text-slate-400">{im.caption}</figcaption>
             </figure>
           ))}

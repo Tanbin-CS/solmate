@@ -35,7 +35,7 @@ SAI with equal weights, with terrain measured at 100 m from NASA ASTER GDEM wher
 
 The best novel lead for Jezero Crater is the cell at 37.05°N 86.75°E, 477 km from the nearest known analog site, Qaidam Basin (Dalangtan). Its SAI is 85.0.
 
-![Landsat image, 20 km around 37.05°N 86.75°E](https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0&STYLES=&CRS=EPSG%3A4326&LAYERS=Landsat_WELD_CorrectedReflectance_TrueColor_Global_Annual&BBOX=36.96017%2C86.63745%2C37.13983%2C86.86255&WIDTH=512&HEIGHT=512&FORMAT=image%2Fjpeg&TIME=1990-12-01) ![ASTER GDEM shaded relief, 20 km around 37.05°N 86.75°E](https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0&STYLES=&CRS=EPSG%3A4326&LAYERS=ASTER_GDEM_Greyscale_Shaded_Relief&BBOX=36.96017%2C86.63745%2C37.13983%2C86.86255&WIDTH=512&HEIGHT=512&FORMAT=image%2Fjpeg)
+![Landsat image, 20 km around 37.05°N 86.75°E](https://solmate-analog.web.app/data/report/jezero_crater-imagery.webp) ![ASTER GDEM shaded relief, 20 km around 37.05°N 86.75°E](https://solmate-analog.web.app/data/report/jezero_crater-relief.webp)
 
 *NASA/USGS Landsat WELD 1990, 20 km window* · *NASA/METI ASTER GDEM shaded relief, 20 km window*
 
@@ -89,7 +89,7 @@ Suggested next step: an expert desk review of geology maps and high-resolution i
 
 The best novel lead for Mons Mouton is the cell at 27.85°S 69.15°W, 428 km from the nearest known analog site, Atacama (Yungay). Its SAI is 88.0.
 
-![Landsat image, 20 km around 27.85°S 69.15°W](https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0&STYLES=&CRS=EPSG%3A4326&LAYERS=Landsat_WELD_CorrectedReflectance_TrueColor_Global_Annual&BBOX=-27.93983%2C-69.25160%2C-27.76017%2C-69.04840&WIDTH=512&HEIGHT=512&FORMAT=image%2Fjpeg&TIME=1990-12-01) ![ASTER GDEM shaded relief, 20 km around 27.85°S 69.15°W](https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0&STYLES=&CRS=EPSG%3A4326&LAYERS=ASTER_GDEM_Greyscale_Shaded_Relief&BBOX=-27.93983%2C-69.25160%2C-27.76017%2C-69.04840&WIDTH=512&HEIGHT=512&FORMAT=image%2Fjpeg)
+![Landsat image, 20 km around 27.85°S 69.15°W](https://solmate-analog.web.app/data/report/mons_mouton-imagery.webp) ![ASTER GDEM shaded relief, 20 km around 27.85°S 69.15°W](https://solmate-analog.web.app/data/report/mons_mouton-relief.webp)
 
 *NASA/USGS Landsat WELD 1990, 20 km window* · *NASA/METI ASTER GDEM shaded relief, 20 km window*
 
