@@ -142,7 +142,7 @@ jobs:
         run: |
           set -euo pipefail
           sleep 20
-          for p in / /explorer /findings /method /provenance /data/v2/model.json /data/v2/tiles/05_26.bin.gz /api/v1/health; do
+          for p in / /explorer /findings /method /provenance /learn /data/v2/model.json /data/v2/tiles/05_26.bin.gz /api/v1/health; do
             code=$(curl -s -o /dev/null -w '%{http_code}' "$SITE$p"); echo "$p $code"; test "$code" = "200"
           done
           h=$(curl -sI "$SITE/explorer")
