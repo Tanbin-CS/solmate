@@ -147,9 +147,10 @@
     font-variant-numeric: tabular-nums;
     letter-spacing: -0.01em;
   }
-  /* solid elevated surface used for floating map panels (no glassmorphism) */
+  /* solid elevated surface used for floating map panels (no glassmorphism); fully opaque so map
+     markers never show through */
   .surface {
-    background: color-mix(in oklab, var(--ink-850) 94%, transparent);
+    background: var(--ink-850);
     border: 1px solid var(--border);
     box-shadow:
       0 1px 0 rgb(255 255 255 / 0.03) inset,
