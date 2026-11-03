@@ -467,3 +467,24 @@ export function distanceKm(a: { lat: number; lon: number }, b: { lat: number; lo
 
 /** Natural background radiation on Earth, world average (UNSCEAR 2008: 2.4 mSv per year). */
 export const EARTH_DOSE_MSV_DAY = 2.4 / 365
+
+export type LatLon = { lat: number; lon: number }
+
+/** Position of a point on an equirectangular map, in % of the map. */
+export const mapPos = (p: LatLon) => ({ left: `${((p.lon + 180) / 360) * 100}%`, top: `${((90 - p.lat) / 180) * 100}%` })
+
+/** A word for a 0-100 score, so the number means something to a ten-year-old (bands as on the Method page). */
+export function alike(sai: number): { word: string; tone: string } {
+  return sai >= 75 ? { word: 'Very alike', tone: 'text-positive' } : sai >= 40 ? { word: 'A bit alike', tone: 'text-reference' } : { word: 'Not very alike', tone: 'text-slate-300' }
+}
+
+/** Story visuals the student can play with (the card shows a "Try it" prompt). */
+export function isInteractive(v: Visual): boolean {
+  return ['analog-map', 'dimensions', 'layers', 'grid', 'bars', 'sun', 'gravity', 'validation'].includes(v.kind)
+}
+
+/** The clues used for a target in the levels (every target has exactly one round). */
+export function cluesFor(targetId: string): string[] {
+  for (const l of LEVELS) if (l.activity?.kind === 'rounds') for (const r of l.activity.rounds) if (r.target === targetId) return r.clues
+  return []
+}

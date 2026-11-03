@@ -3,7 +3,7 @@ import model from '../../../public/data/v2/model.json'
 import targets from '../../../public/data/v2/targets.json'
 import validation from '../../../public/data/v2/validation.json'
 import { DIMENSION_CARDS } from '@/components/home/dimensions'
-import { distanceKm, huntStars, LEVELS, mapToLatLon, passMark } from './content'
+import { alike, cluesFor, distanceKm, huntStars, isInteractive, LEVELS, mapPos, mapToLatLon, passMark } from './content'
 import { EMPTY, isComplete, isUnlocked, parseProgress, type Progress } from './progress'
 import { LENGTH, SCENES, sceneAt } from './scenes'
 
@@ -75,6 +75,27 @@ describe('game maths', () => {
   it('measures great-circle distances', () => {
     expect(distanceKm({ lat: 0, lon: 0 }, { lat: 0, lon: 0 })).toBe(0)
     expect(distanceKm({ lat: 0, lon: 0 }, { lat: 0, lon: 180 })).toBeCloseTo(Math.PI * 6371, 0)
+  })
+
+  it('puts a word on every score, with the Method page bands', () => {
+    expect(alike(80).word).toBe('Very alike')
+    expect(alike(75).word).toBe('Very alike')
+    expect(alike(50).word).toBe('A bit alike')
+    expect(alike(39.9).word).toBe('Not very alike')
+  })
+
+  it('places points on the map and back', () => {
+    expect(mapPos({ lat: 0, lon: 0 })).toEqual({ left: '50%', top: '50%' })
+    expect(mapPos({ lat: 90, lon: -180 })).toEqual({ left: '0%', top: '0%' })
+  })
+
+  it('has clues for every target, for free play', () => {
+    for (const id of ids) expect(cluesFor(id).length).toBeGreaterThanOrEqual(3)
+  })
+
+  it('gives most levels something to play with in the story', () => {
+    const levels = LEVELS.filter((l) => l.cards.some((c) => isInteractive(c.visual)))
+    expect(levels.length).toBeGreaterThanOrEqual(4)
   })
 
   it('passes a quiz at 60%', () => {
