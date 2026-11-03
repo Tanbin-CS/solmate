@@ -10,7 +10,8 @@ interface Props {
   onLayer: (l: Layer2) => void
   drawing: boolean
   onDrawing: (on: boolean) => void
-  onGo: (p: LatLon) => void
+  /** Fly to a searched place; title is the searched name when it should head the place panel. */
+  onGo: (p: LatLon, title: string | null) => void
   sites?: SearchOptions['sites']
   bestIn?: SearchOptions['bestIn']
 }

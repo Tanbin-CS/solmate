@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import countriesRaw from '../../public/data/countries.v1.json'
 import placesRaw from '../../public/data/places.v1.json'
 import type { Countries } from './countries'
-import { fold, parseCoords, search, type City, type SearchData } from './search'
+import { fold, hitTitle, parseCoords, search, type City, type SearchData } from './search'
 
 const data: SearchData = {
   countries: (countriesRaw as { countries: Countries }).countries,
@@ -40,5 +40,11 @@ describe('place search', () => {
   it('needs two letters and caps the list', () => {
     expect(search('a', data)).toEqual([])
     expect(search('an', data).length).toBeLessThanOrEqual(8)
+  })
+  it('keeps the searched name as the place heading', () => {
+    expect(hitTitle(search('death valley', data, { sites })[0]!)).toBe('Death Valley')
+    expect(hitTitle(search('Dhaka', data)[0]!)).toBe('Dhaka, Bangladesh')
+    expect(hitTitle(search('Chile', data)[0]!)).toBeNull()
+    expect(hitTitle(search('23.8, 90.4', data)[0]!)).toBeNull()
   })
 })

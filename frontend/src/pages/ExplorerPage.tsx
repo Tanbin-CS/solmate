@@ -45,6 +45,8 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
   const reduced = useReducedMotion() ?? false
   const isDesktop = useMediaQuery('(min-width: 1024px)')
   const ui = useExplorer2State()
+  // The name typed in the search box, kept only while the panel shows that same spot.
+  const [searched, setSearched] = useState<{ lat: number; lon: number; title: string } | null>(null)
   const target = targets.find((t) => t.id === ui.target) ?? targets[0]!
   const weights = presetWeights(model, ui.preset, target.body)
   const screening = useScreening(target.id)
@@ -52,6 +54,10 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
   const place = usePlaceScore(ui.place, ui.box, target.id, weights)
   const terrain = useTerrain100(ui.place, ui.box, target.id)
   const [drawing, setDrawing] = useState(false)
+  const goTo = (p: { lat: number; lon: number }, t: string | null) => {
+    setSearched(t ? { ...p, title: t } : null)
+    ui.pick(p)
+  }
   const [listOpen, setListOpen] = useState(false)
 
   const lists = useMemo(() => {
@@ -83,6 +89,10 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
   // place search: known analog sites by name, and a country goes to SolMate's best place in it
   const countries = useCountries()
   const sites = useMemo(() => model.known_analogs.sites.map((k) => ({ name: siteName(k.id), lat: k.lat, lon: k.lon })), [model])
+  // Heading for the panel: the searched name while it shows that spot, else a known analog site's
+  // name when the point is one (shared links), else PlaceDetail names it from region and country.
+  const near = (a: { lat: number; lon: number }, d: number) => !!ui.place && Math.abs(a.lat - ui.place.lat) < d && Math.abs(a.lon - ui.place.lon) < d
+  const title = searched && near(searched, 1e-3) ? searched.title : sites.find((s) => near(s, 5e-3))?.name
   const bestIn = useCallback(
     (country: string) => {
       if (!lists || !countries) return null
@@ -164,6 +174,7 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
         model={model}
         weights={weights}
         isBox={!!ui.box}
+        title={ui.box ? undefined : title}
         terrain={terrain.state}
         storedT100={storedT100}
         onRefine={terrain.run}
@@ -222,7 +233,7 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
         )}
       >
         <div className="pointer-events-auto">
-          <MapToolbar layer={ui.layer} onLayer={ui.setLayer} drawing={drawing} onDrawing={setDrawing} onGo={(p) => ui.pick(p)} sites={sites} bestIn={bestIn} />
+          <MapToolbar layer={ui.layer} onLayer={ui.setLayer} drawing={drawing} onDrawing={setDrawing} onGo={goTo} sites={sites} bestIn={bestIn} />
         </div>
       </div>
 
