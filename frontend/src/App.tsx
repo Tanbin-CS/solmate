@@ -11,6 +11,7 @@ const PrototypeExplorerPage = lazy(() => import('@/pages/PrototypeExplorerPage')
 const MethodPage = lazy(() => import('@/pages/MethodPage'))
 const FindingsPage = lazy(() => import('@/pages/FindingsPage'))
 const DataPage = lazy(() => import('@/pages/DataPage'))
+const LearnPage = lazy(() => import('@/pages/LearnPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 
 // BASE_URL is '/' on Firebase Hosting and '/solmate/' on the GitHub Pages mirror (always with a trailing slash).
@@ -29,6 +30,7 @@ export default function App() {
                 <Route path="prototype" element={<PrototypeExplorerPage />} />
                 <Route path="findings" element={<FindingsPage />} />
                 <Route path="method" element={<MethodPage />} />
+                <Route path="learn" element={<LearnPage />} />
                 <Route path="provenance" element={<DataPage />} />
                 <Route path="data" element={<Navigate to="/provenance" replace />} />
                 <Route path="*" element={<NotFoundPage />} />

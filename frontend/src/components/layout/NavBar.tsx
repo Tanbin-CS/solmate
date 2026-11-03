@@ -11,6 +11,7 @@ const LINKS = [
   { to: '/findings', label: 'Findings' },
   { to: '/method', label: 'Method' },
   { to: '/provenance', label: 'Data' },
+  { to: '/learn', label: 'Learn' },
 ]
 
 export const TEAM_URL = 'https://www.spaceappschallenge.org/2026/find-a-team/northern-lights3/'
@@ -34,17 +35,17 @@ export function NavBar({ overlay = false }: { overlay?: boolean }) {
       {overlay && (
         <motion.div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px origin-left bg-gradient-to-r from-reference via-data to-screen" style={{ scaleX: progress }} />
       )}
-      <Link to="/" className="rounded-md text-slate-100" aria-label="SolMate home">
+      <Link to="/" className="mr-2 shrink-0 rounded-md text-slate-100" aria-label="SolMate home">
         <BrandMark />
       </Link>
-      <nav aria-label="Primary" className="flex items-center gap-1">
+      <nav aria-label="Primary" className="-mr-2 flex min-w-0 items-center overflow-x-auto [mask-image:linear-gradient(to_right,black_85%,transparent)] [scrollbar-width:none] sm:mr-0 sm:gap-1 sm:[mask-image:none]">
         {LINKS.map((l) => (
           <NavLink
             key={l.to}
             to={l.to}
             className={({ isActive }) =>
               cn(
-                'relative rounded-md px-3 py-2 text-sm transition-colors',
+                'relative shrink-0 rounded-md px-2 py-2 text-sm whitespace-nowrap transition-colors sm:px-3',
                 isActive ? 'text-slate-100' : 'text-slate-300 hover:text-slate-100',
               )
             }
