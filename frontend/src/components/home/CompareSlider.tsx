@@ -1,14 +1,23 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 import { MoveHorizontal } from 'lucide-react'
+import { GibsImage } from '@/components/common/GibsImage'
 import { asset } from '@/lib/asset'
+import type { GibsSpot } from '@/lib/gibs'
 import { cn } from '@/lib/utils'
 
 type View = 'hillshade' | 'slope' | 'imagery'
+/** A file in /public, or a NASA GIBS window around a point. */
+type Quicklook = string | GibsSpot
+
+function Picture({ src, alt }: { src: Quicklook; alt: string }) {
+  if (typeof src !== 'string') return <GibsImage {...src} alt={alt} className="absolute inset-0 h-full w-full" />
+  return <img src={asset(src)} alt={alt} className="absolute inset-0 h-full w-full object-cover" draggable={false} />
+}
 
 interface Props {
-  left: { label: string; sub: string; quicklooks: Partial<Record<View, string>>; accent: string }
-  right: { label: string; sub: string; quicklooks: Partial<Record<View, string>>; accent: string }
+  left: { label: string; sub: string; quicklooks: Partial<Record<View, Quicklook>>; accent: string }
+  right: { label: string; sub: string; quicklooks: Partial<Record<View, Quicklook>>; accent: string }
   view: View
 }
 
@@ -61,9 +70,9 @@ export function CompareSlider({ left, right, view }: Props) {
         setTimeout(() => setPos(0.5), 1500)
       }}
     >
-      {rightSrc && <img src={asset(rightSrc)} alt={`${right.label} terrain`} className="absolute inset-0 h-full w-full object-cover" draggable={false} />}
+      {rightSrc && <Picture src={rightSrc} alt={`${right.label} terrain`} />}
       <div className="absolute inset-0" style={{ clipPath: `inset(0 ${100 - pos * 100}% 0 0)`, transition: dragging ? 'none' : 'clip-path 600ms cubic-bezier(0.16,1,0.3,1)' }}>
-        {leftSrc && <img src={asset(leftSrc)} alt={`${left.label} terrain`} className="absolute inset-0 h-full w-full object-cover" draggable={false} />}
+        {leftSrc && <Picture src={leftSrc} alt={`${left.label} terrain`} />}
       </div>
 
       <div className="pointer-events-none absolute inset-y-0" style={{ left: `${pos * 100}%`, transition: dragging ? 'none' : 'left 600ms cubic-bezier(0.16,1,0.3,1)' }}>

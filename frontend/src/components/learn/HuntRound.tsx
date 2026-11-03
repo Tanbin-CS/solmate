@@ -3,7 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { ArrowDown, ArrowUp, Check, Eye, Flame, Lightbulb, Loader2, MapPin, Minus, Snowflake, Thermometer } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCountries } from '@/lib/countries'
-import { gibsWindow, placeLabel } from '@/lib/places'
+import { placeLabel } from '@/lib/places'
 import { cn } from '@/lib/utils'
 import type { Verdict } from '@/science/v2/verdict'
 import { DIM_WORDS, distanceKm, heat, huntStars, mapPos, trend, type Heat, type LatLon } from './content'
@@ -399,7 +399,7 @@ export function HuntRound({ round, data, onScored }: { round: { target: string }
               <p className="text-lg font-semibold text-slate-100">{won ? 'You found it!' : 'Here is SolMate’s best place'}</p>
               <div className="mt-3 flex gap-3">
                 <div className="relative size-20 shrink-0 overflow-hidden rounded-xl bg-ink-950">
-                  <SatImage src={gibsWindow(best.lat, best.lon, 40, 'imagery', 256)} alt={`Satellite picture of ${placeLabel(best.lat, best.lon, countries).name}`} />
+                  <SatImage spot={{ lat: best.lat, lon: best.lon, km: 40, kind: 'imagery' }} alt={`Satellite picture of ${placeLabel(best.lat, best.lon, countries).name}`} />
                 </div>
                 <p className="text-[14px] leading-relaxed text-slate-300">
                   <span className="text-slate-100">{placeLabel(best.lat, best.lon, countries).name}</span> scores <span className="tabular text-reference">{Math.round(best.sai)}</span>.

@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { ArrowRight } from 'lucide-react'
 import { explorerLink, type Flagship } from '@/hooks/useHomeData'
 import { useCountries } from '@/lib/countries'
-import { gibsWindow, placeLabel } from '@/lib/places'
+import { placeLabel } from '@/lib/places'
 import { cn } from '@/lib/utils'
 import { spring } from '@/design/motion'
 import { BODY } from '@/components/explorer/roles'
@@ -44,7 +44,7 @@ export function TargetShowcase({ flagship }: { flagship: Flagship }) {
           right={{
             label: place.name,
             sub: `Earth · ${place.coords}`,
-            quicklooks: { hillshade: gibsWindow(c.lat, c.lon, 20, 'relief'), imagery: gibsWindow(c.lat, c.lon, 20, 'imagery') },
+            quicklooks: { hillshade: { lat: c.lat, lon: c.lon, km: 20, kind: 'relief', px: 512 }, imagery: { lat: c.lat, lon: c.lon, km: 20, kind: 'imagery', px: 512 } },
             accent: 'var(--screen)',
           }}
         />

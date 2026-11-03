@@ -3,7 +3,8 @@ import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScro
 import type { HomeData } from '@/hooks/useHomeData'
 import { asset } from '@/lib/asset'
 import { useCountries } from '@/lib/countries'
-import { gibsWindow, placeLabel } from '@/lib/places'
+import { GibsImage } from '@/components/common/GibsImage'
+import { placeLabel } from '@/lib/places'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { withTerrain100 } from '@/science/v2/screening'
 import { DIMENSION_CARDS } from './dimensions'
@@ -103,7 +104,7 @@ export function OrbitZoom({ data }: { data: HomeData }) {
             </motion.figure>
             {/* Earth match */}
             <motion.figure style={{ opacity: matchOpacity, x: matchX, scale: matchScale }} className="absolute inset-[18%] overflow-hidden rounded-lg border-2 border-data/70 will-change-transform">
-              <img src={gibsWindow(c0.lat, c0.lon, 20, 'imagery')} alt={`${place.name}, 20 km window of Landsat imagery`} className="h-full w-full object-cover" decoding="async" />
+              <GibsImage lat={c0.lat} lon={c0.lon} km={20} kind="imagery" px={512} alt={`${place.name}, 20 km window of Landsat imagery`} className="h-full w-full" />
               <figcaption className="absolute left-2 top-2 rounded bg-ink-950/80 px-2 py-1 font-mono text-[11px] text-data">EARTH · {place.name}</figcaption>
             </motion.figure>
             {/* score + bars */}

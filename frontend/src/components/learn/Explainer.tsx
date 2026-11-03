@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button'
 import facts from '@/data/site_facts.json'
 import { usePlaceScore } from '@/hooks/useV2'
 import { asset } from '@/lib/asset'
-import { gibsWindow } from '@/lib/places'
+import { GibsImage } from '@/components/common/GibsImage'
+import { gibsTiles } from '@/lib/gibs'
 import { cn } from '@/lib/utils'
 import type { LearnData } from './data'
 import { FACTS, LENGTH, SCENES, sceneAt, TIBET, type Numbers } from './scenes'
@@ -129,7 +130,7 @@ export function Explainer({ data, onStart, onFree }: { data: LearnData | null; o
 
   // Fetch every picture up front so no scene starts on an empty frame.
   useEffect(() => {
-    for (const src of [asset('media/globe-moon.webp'), asset('media/globe-mars.webp'), asset('data/quicklooks/jezero-hillshade.webp'), asset('media/earth-2k.webp'), gibsWindow(TIBET.lat, TIBET.lon, 40, 'imagery', 512)]) new Image().src = src
+    for (const src of [asset('media/globe-moon.webp'), asset('media/globe-mars.webp'), asset('data/quicklooks/jezero-hillshade.webp'), asset('media/earth-2k.webp'), ...gibsTiles({ ...TIBET, km: 40, kind: 'imagery', px: 512 }).map((t) => t.url)]) new Image().src = src
   }, [])
 
   // Start once when half of it is on screen (not with reduced motion); pause when it leaves. After a
@@ -459,7 +460,7 @@ function Stage({ i, p, nums, sites, split, onSplit }: { i: number; p: number; nu
           {/* Mars underneath, Earth on top, clipped by the slider: drag to compare */}
           <img src={asset('data/quicklooks/jezero-hillshade.webp')} alt="" className="absolute inset-0 h-full w-full object-cover" style={{ transform: zoom }} />
           <div className="absolute inset-0" style={{ clipPath: `inset(0 ${100 - split}% 0 0)` }}>
-            <img src={gibsWindow(TIBET.lat, TIBET.lon, 40, 'imagery', 512)} alt="" className="absolute inset-0 h-full w-full object-cover" style={{ transform: zoom }} />
+            <GibsImage lat={TIBET.lat} lon={TIBET.lon} km={40} kind="imagery" px={512} alt="" className="absolute inset-0 h-full w-full" style={{ transform: zoom }} />
           </div>
           <div className="pointer-events-none absolute inset-y-0 w-0.5 bg-white/90" style={{ left: `${split}%` }} />
           <Label className="left-3 top-3 text-data">Earth: Tibetan Plateau</Label>
