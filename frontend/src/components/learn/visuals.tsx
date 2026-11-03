@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { motion, useReducedMotion } from 'motion/react'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { DIMENSION_CARDS } from '@/components/home/dimensions'
 import { DimensionBars } from '@/components/explorer2/DimensionBars'
 import facts from '@/data/site_facts.json'
@@ -7,7 +7,7 @@ import { usePlaceScore } from '@/hooks/useV2'
 import { asset } from '@/lib/asset'
 import { cn } from '@/lib/utils'
 import { DIMENSION_NAMES, EARTH_OBLIQUITY, MOON_OBLIQUITY, maxSunElevation } from '@/science/v2/verdict'
-import { EARTH_DOSE_MSV_DAY, type Visual } from './content'
+import { alike, EARTH_DOSE_MSV_DAY, type Visual } from './content'
 import { breaksDown, EARTH_G, EARTH_HPA, type LearnData } from './data'
 
 const ease = [0.16, 1, 0.3, 1] as const
@@ -107,29 +107,49 @@ function EarthMap({ children, className }: { children?: React.ReactNode; classNa
   )
 }
 
+function siteName(id: string) {
+  return id.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+}
+
 function AnalogMap({ data }: { data: LearnData | null }) {
   const reduced = useReducedMotion()
   const sites = data?.model.known_analogs.sites ?? []
+  const [pick, setPick] = useState<string | null>(null)
+  const sel = sites.find((s) => s.id === pick)
   return (
     <Frame credit="Field sites already used as analogs (NASA, ESA and partners) on NASA Blue Marble">
       <div className="flex h-full items-center">
         <EarthMap>
           {sites.map((s, i) => (
-            <motion.span
+            <motion.button
               key={s.id}
-              aria-hidden="true"
-              className="absolute size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-reference bg-reference/40"
+              type="button"
+              aria-label={siteName(s.id)}
+              aria-pressed={pick === s.id}
+              onClick={() => setPick(s.id)}
+              className="absolute flex size-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center"
               style={{ left: px(s.lon), top: py(s.lat) }}
               initial={reduced ? false : { scale: 0, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
+              whileHover={{ scale: 1.4 }}
               viewport={{ once: true }}
-              transition={{ delay: reduced ? 0 : 0.1 + i * 0.04, type: 'spring', stiffness: 380, damping: 20 }}
-            />
+              transition={{ delay: reduced ? 0 : 0.1 + i * 0.03, type: 'spring', stiffness: 380, damping: 20 }}
+            >
+              <span className={cn('size-2.5 rounded-full border-2 transition-colors', pick === s.id ? 'border-white bg-reference' : 'border-reference bg-reference/40')} />
+            </motion.button>
           ))}
         </EarthMap>
       </div>
-      <p className="absolute bottom-3 left-3 rounded bg-ink-950/85 px-2 py-1 text-xs text-slate-200">
-        <span className="tabular text-reference">{sites.length || '…'}</span> places already used to practise
+      <p className="absolute bottom-3 left-3 right-3 rounded-lg bg-ink-950/90 px-2.5 py-1.5 text-xs text-slate-200" aria-live="polite">
+        {sel ? (
+          <>
+            <span className="font-medium text-reference">{siteName(sel.id)}</span> · listed by {sel.source ?? 'analog missions'}
+          </>
+        ) : (
+          <>
+            <span className="tabular text-reference">{sites.length || '…'}</span> places already used to practise. Tap a dot to see its name.
+          </>
+        )}
       </p>
     </Frame>
   )
@@ -169,85 +189,158 @@ const LAYER_STACK = ['SRTM height', 'NASA POWER climate', 'MODIS temperature', '
 
 function Layers() {
   const reduced = useReducedMotion()
+  const [n, setN] = useState(3)
+  const all = n >= LAYER_STACK.length
   return (
     <Panel credit="Layer list: Data page">
-      <div className="relative mx-auto h-56 w-full max-w-sm" aria-hidden="true">
-        {LAYER_STACK.map((name, i) => (
-          <motion.div
-            key={name}
-            className="absolute inset-x-0 flex h-9 items-center rounded-lg border border-data/30 bg-ink-800/90 px-3 text-xs text-slate-200 shadow-[0_10px_24px_-14px_rgb(0_0_0/0.9)]"
-            style={{ bottom: i * 22, zIndex: i, transform: `translateX(${i * 6}px)` }}
-            initial={reduced ? false : { opacity: 0, y: -40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: reduced ? 0 : 0.15 + i * 0.12, duration: 0.6, ease }}
-          >
-            {name}
-          </motion.div>
-        ))}
+      <div className="relative mx-auto h-48 w-full max-w-sm" aria-hidden="true">
+        <AnimatePresence>
+          {LAYER_STACK.slice(0, n).map((name, i) => (
+            <motion.div
+              key={name}
+              className="absolute inset-x-0 flex h-9 items-center rounded-lg border border-data/30 bg-ink-800/95 px-3 text-xs text-slate-200 shadow-[0_10px_24px_-14px_rgb(0_0_0/0.9)]"
+              style={{ bottom: i * 19, zIndex: i, left: i * 5 }}
+              initial={reduced ? false : { opacity: 0, y: -60, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 380, damping: 24 }}
+            >
+              {name}
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
-      <p className="mt-4 text-center text-sm text-slate-300">
-        <span className="tabular text-2xl font-semibold text-data">{facts.nasa_layers}</span> NASA data layers in all
-      </p>
+      <div className="mt-4 flex items-center justify-center gap-3">
+        {all ? (
+          <p className="text-center text-sm text-slate-300">
+            <span className="tabular text-2xl font-semibold text-data">{facts.nasa_layers}</span> NASA data layers in all, stacked on every square
+          </p>
+        ) : (
+          <button type="button" onClick={() => setN((v) => v + 1)} className="rounded-full border border-data/50 bg-data/10 px-4 py-2 text-sm font-medium text-data transition-colors hover:bg-data/20">
+            Add a layer ({n} of {LAYER_STACK.length})
+          </button>
+        )}
+        {all && (
+          <button type="button" onClick={() => setN(1)} className="text-xs text-slate-400 underline-offset-2 hover:underline">
+            Again
+          </button>
+        )}
+      </div>
     </Panel>
   )
 }
 
 function GridZoom() {
+  const [z, setZ] = useState(1)
+  const k = (z - 1) / 5 // 0..1
   return (
     <Frame credit="NASA Blue Marble; grid of 0.1° squares">
-      <div className="flex h-full items-center">
-        <EarthMap>
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 opacity-40"
-            style={{
-              backgroundImage: 'linear-gradient(rgb(127 216 230 / 0.35) 1px, transparent 1px), linear-gradient(90deg, rgb(127 216 230 / 0.35) 1px, transparent 1px)',
-              backgroundSize: '2.5% 5%',
-            }}
-          />
-          <div className="absolute left-[70%] top-[24%] grid size-[22%] grid-cols-5 grid-rows-5 rounded-md border-2 border-data bg-ink-950/60" aria-hidden="true">
-            {Array.from({ length: 25 }, (_, i) => (
-              <span key={i} className="border border-data/25" style={{ background: `rgb(127 216 230 / ${((i * 37) % 100) / 220})` }} />
-            ))}
-          </div>
-        </EarthMap>
+      <div className="relative h-full overflow-hidden">
+        <div className="absolute inset-0 flex items-center will-change-transform" style={{ transform: `scale(${z})`, transformOrigin: '72% 33%', transition: 'transform 0.35s cubic-bezier(0.16,1,0.3,1)' }}>
+          <EarthMap>
+            <div
+              aria-hidden="true"
+              className="absolute inset-0"
+              style={{
+                opacity: 0.15 + k * 0.6,
+                backgroundImage: 'linear-gradient(rgb(127 216 230 / 0.5) 1px, transparent 1px), linear-gradient(90deg, rgb(127 216 230 / 0.5) 1px, transparent 1px)',
+                backgroundSize: `${2.5 / Math.max(1, z / 2)}% ${5 / Math.max(1, z / 2)}%`,
+              }}
+            />
+          </EarthMap>
+        </div>
       </div>
-      <p className="absolute bottom-3 left-3 rounded bg-ink-950/85 px-2 py-1 text-xs text-slate-200">
-        about <span className="tabular text-data">1.9 million</span> land squares, each about 11 km wide
-      </p>
+      <div className="absolute inset-x-3 bottom-3 rounded-lg bg-ink-950/90 px-3 py-2">
+        <label className="flex items-center gap-3 text-xs text-slate-200">
+          Zoom in
+          <input type="range" min={1} max={6} step={0.1} value={z} onChange={(e) => setZ(Number(e.target.value))} className="h-2 flex-1 cursor-pointer accent-[var(--data)]" />
+        </label>
+        <p className="mt-1 text-xs text-slate-300">
+          {z < 4 ? (
+            'Slide to zoom in on the squares.'
+          ) : (
+            <>
+              Each square is about 11 km wide. There are about <span className="tabular text-data">1.9 million</span> on land.
+            </>
+          )}
+        </p>
+      </div>
     </Frame>
   )
 }
 
+const COMPARE = [
+  { name: 'Sahara Desert, Algeria', lat: 24.5, lon: 5.5 },
+  { name: 'Amazon rainforest, Brazil', lat: -2.6, lon: -60.2 },
+]
+
 function LiveBars({ visual, data }: { visual: Extract<Visual, { kind: 'bars' }>; data: LearnData | null }) {
+  const places = [{ name: visual.caption.split(' against ')[0] ?? 'This place', lat: visual.lat, lon: visual.lon }, ...COMPARE]
+  const [n, setN] = useState(0)
+  const at = places[n]!
   const weights = data?.model.presets.equal ?? null
-  const state = usePlaceScore({ lat: visual.lat, lon: visual.lon }, null, visual.target, weights)
+  const state = usePlaceScore({ lat: at.lat, lon: at.lon }, null, visual.target, weights)
   const verdict = state?.status === 'ready' ? state.data.verdict : null
+  const target = data?.targets.find((t) => t.id === visual.target)?.name ?? ''
   return (
     <Panel credit="Scored live in your browser from NASA data">
-      <p className="text-sm text-slate-300">{visual.caption}</p>
-      <p className="mt-1 text-4xl font-semibold tabular text-slate-100">
-        {verdict?.sai != null ? verdict.sai.toFixed(0) : '…'}
-        <span className="ml-1 text-base font-normal text-slate-400">/100</span>
+      <div className="flex flex-wrap gap-1.5" role="group" aria-label="Pick a place">
+        {places.map((p, i) => (
+          <button
+            key={p.name}
+            type="button"
+            aria-pressed={n === i}
+            onClick={() => setN(i)}
+            className={cn('rounded-full border px-2.5 py-1 text-[11.5px] transition-colors', n === i ? 'border-data/60 bg-data/10 text-data' : 'border-border text-slate-300 hover:text-slate-100')}
+          >
+            {p.name.split(',')[0]}
+          </button>
+        ))}
+      </div>
+      <p className="mt-3 text-sm text-slate-300">
+        {at.name.split(',')[0]} against {target}
       </p>
-      <div className="mt-4">{verdict && data ? <DimensionBars verdict={verdict} model={data.model} /> : <p className="text-sm text-slate-400">Scoring…</p>}</div>
+      <p className="mt-0.5 flex items-baseline gap-2">
+        <span className="text-4xl font-semibold tabular text-slate-100">{verdict?.sai != null ? verdict.sai.toFixed(0) : '…'}</span>
+        <span className="text-base text-slate-400">/100</span>
+        {verdict?.sai != null && <span className={cn('text-sm', alike(verdict.sai).tone)}>{alike(verdict.sai).word}</span>}
+      </p>
+      <div className="mt-3">{verdict && data ? <DimensionBars verdict={verdict} model={data.model} /> : <p className="text-sm text-slate-400">Scoring…</p>}</div>
     </Panel>
   )
 }
 
-const DHAKA = { name: 'Dhaka', lat: 23.8 }
+const EARTH_PLACES = [
+  { name: 'Dhaka', lat: 23.8 },
+  { name: 'Oslo', lat: 59.9 },
+  { name: 'Quito, on the equator', lat: -0.2 },
+]
 
 function SunHeights({ targetId, data }: { targetId: string; data: LearnData | null }) {
+  const [n, setN] = useState(0)
   const t = data?.targets.find((x) => x.id === targetId)
   const tlat = (t as { centroid?: { lat?: number } } | undefined)?.centroid?.lat
   const moon = tlat === undefined ? null : maxSunElevation(tlat, MOON_OBLIQUITY)
-  const earth = maxSunElevation(DHAKA.lat, EARTH_OBLIQUITY)
+  const place = EARTH_PLACES[n]!
+  const earth = maxSunElevation(place.lat, EARTH_OBLIQUITY)
   return (
     <Panel credit="Highest midsummer noon Sun, from latitude and axis tilt">
       <div className="grid grid-cols-2 gap-4">
         <SunArc angle={moon} label={t?.name ?? 'Moon region'} tone="var(--reference)" />
-        <SunArc angle={earth} label={`${DHAKA.name}, on Earth`} tone="var(--data)" />
+        <SunArc angle={earth} label={`${place.name}, on Earth`} tone="var(--data)" />
+      </div>
+      <div className="mt-3 flex flex-wrap justify-center gap-1.5" role="group" aria-label="Pick a place on Earth">
+        {EARTH_PLACES.map((p, i) => (
+          <button
+            key={p.name}
+            type="button"
+            aria-pressed={n === i}
+            onClick={() => setN(i)}
+            className={cn('rounded-full border px-2.5 py-1 text-[11.5px] transition-colors', n === i ? 'border-data/60 bg-data/10 text-data' : 'border-border text-slate-300 hover:text-slate-100')}
+          >
+            {p.name.split(',')[0]}
+          </button>
+        ))}
       </div>
     </Panel>
   )
@@ -264,13 +357,12 @@ function SunArc({ angle, label, tone }: { angle: number | null; label: string; t
       <svg viewBox="0 0 180 100" className="w-full" role="img" aria-label={`${label}: the Sun reaches ${angle === null ? 'unknown' : Math.round(angle)} degrees`}>
         <path d="M 20 90 A 70 70 0 0 1 160 90" fill="none" stroke="var(--ink-500)" strokeDasharray="3 4" />
         <line x1="8" y1="90" x2="172" y2="90" stroke="var(--slate-400)" />
-        <line x1="90" y1="90" x2={sx} y2={sy} stroke={tone} strokeOpacity="0.5" />
+        <motion.line x1="90" y1="90" initial={false} animate={{ x2: sx, y2: sy }} transition={{ duration: reduced ? 0 : 1.4, ease }} stroke={tone} strokeOpacity="0.5" />
         <motion.circle
           r="8"
           fill={tone}
           initial={reduced ? false : { cx: 20, cy: 90 }}
-          whileInView={{ cx: sx, cy: sy }}
-          viewport={{ once: true }}
+          animate={{ cx: sx, cy: sy }}
           transition={{ duration: reduced ? 0 : 1.4, ease }}
           cx={sx}
           cy={sy}
@@ -340,20 +432,57 @@ function Bars({ rows, credit, unit }: { rows: { label: string; value: number; te
 const moonT = (d: LearnData | null) => d?.targets.find((t) => t.body === 'moon')
 const marsT = (d: LearnData | null) => d?.targets.find((t) => t.id === 'jezero_crater')
 
+/** Drop a ball from the same height on three worlds; fall times follow t = sqrt(2h/g), shown 1.6 times slower. */
 function Gravity({ data }: { data: LearnData | null }) {
+  const reduced = useReducedMotion()
   const mars = breaksDown(marsT(data), 'gravity_m_s2') ?? 3.73
   const moon = breaksDown(moonT(data), 'gravity_m_s2') ?? 1.62
-  const g = (v: number) => `${(v / EARTH_G).toFixed(2)} × Earth`
+  const [drop, setDrop] = useState(0)
+  const worlds = [
+    { name: 'Earth', g: EARTH_G, tone: 'bg-data', text: 'text-data' },
+    { name: 'Mars', g: mars, tone: 'bg-mars', text: 'text-mars' },
+    { name: 'Moon', g: moon, tone: 'bg-reference', text: 'text-reference' },
+  ]
+  const H = 1.5 // metres
   return (
-    <Bars
-      unit="Surface gravity"
-      credit="NASA planetary fact sheets"
-      rows={[
-        { label: 'Earth', value: EARTH_G, text: '1 × Earth', tone: 'var(--data)' },
-        { label: 'Mars', value: mars, text: g(mars), tone: 'var(--mars)' },
-        { label: 'Moon', value: moon, text: g(moon), tone: 'var(--reference)' },
-      ]}
-    />
+    <Panel credit="Gravity: NASA planetary fact sheets. Each ball falls 1.5 m, shown 1.6 times slower">
+      <div className="grid h-36 grid-cols-3 gap-3">
+        {worlds.map((w) => {
+          const t = Math.sqrt((2 * H) / w.g)
+          return (
+            <div key={w.name} className="relative rounded-lg border border-border bg-ink-900/60">
+              <motion.span
+                key={drop}
+                className={cn('absolute left-1/2 top-2 -ml-3 size-6 rounded-full', w.tone)}
+                initial={{ y: 0 }}
+                animate={{ y: drop ? 96 : 0 }}
+                transition={{ duration: drop && !reduced ? t * 1.6 : 0, ease: [0.4, 0, 1, 1] }}
+              />
+              <span className="absolute inset-x-2 bottom-2 h-0.5 rounded bg-slate-400/50" />
+            </div>
+          )
+        })}
+      </div>
+      <div className="mt-3 grid grid-cols-3 gap-3 text-center text-sm">
+        {worlds.map((w) => {
+          const t = Math.sqrt((2 * H) / w.g)
+          return (
+            <span key={w.name} className="text-slate-200">
+              {w.name}
+              <span className="block text-[11px] text-slate-400">{(w.g / EARTH_G).toFixed(2)} × Earth</span>
+              {drop > 0 && (
+                <motion.span key={`t${drop}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: reduced ? 0 : t * 1.6 }} className={cn('block tabular text-xs font-semibold', w.text)}>
+                  landed in {t.toFixed(2)} s
+                </motion.span>
+              )}
+            </span>
+          )
+        })}
+      </div>
+      <button type="button" onClick={() => setDrop((d) => d + 1)} className="mx-auto mt-3 block rounded-full border border-data/50 bg-data/10 px-4 py-2 text-sm font-medium text-data transition-colors hover:bg-data/20">
+        {drop ? 'Drop them again' : 'Drop the balls!'}
+      </button>
+    </Panel>
   )
 }
 
@@ -397,26 +526,32 @@ function Radiation({ data }: { data: LearnData | null }) {
 
 function ValidationDots({ data }: { data: LearnData | null }) {
   const reduced = useReducedMotion()
+  const [run, setRun] = useState(0)
   const auc = data?.validation.targets.jezero_crater?.auc_equal ?? null
   const won = auc === null ? 0 : Math.round(auc * 100)
   return (
     <Panel credit="Pre-registered test, docs/VALIDATION.md">
-      <p className="text-sm text-slate-300">Real Jezero analog sites against other places: 100 match-ups</p>
-      <div className="mt-4 grid grid-cols-10 gap-1.5" role="img" aria-label={`${won} of 100 match-ups won by real analog sites`}>
+      <p className="text-sm text-slate-300">100 match-ups: a real Jezero analog site against a random other place</p>
+      <div key={run} className="mt-4 grid grid-cols-10 gap-1.5" role="img" aria-label={`${won} of 100 match-ups won by real analog sites`}>
         {Array.from({ length: 100 }, (_, i) => (
           <motion.span
             key={i}
             className={cn('aspect-square rounded-full', i < won ? 'bg-data' : 'bg-ink-600')}
-            initial={reduced ? false : { opacity: 0, scale: 0.4 }}
+            initial={reduced ? false : { opacity: 0, scale: 0.3 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ delay: reduced ? 0 : i * 0.012, duration: 0.3 }}
+            transition={{ delay: reduced ? 0 : i * 0.015, type: 'spring', stiffness: 500, damping: 20 }}
           />
         ))}
       </div>
-      <p className="mt-4 text-sm text-slate-200">
-        Real analog sites won <span className="tabular font-semibold text-data">{auc === null ? '…' : won}</span> times. Guessing would win about 50.
-      </p>
+      <div className="mt-4 flex items-center justify-between gap-3">
+        <p className="text-sm text-slate-200">
+          Real analog sites won <span className="tabular font-semibold text-data">{auc === null ? '…' : won}</span>. Guessing would win about 50.
+        </p>
+        <button type="button" onClick={() => setRun((r) => r + 1)} className="shrink-0 rounded-full border border-data/50 bg-data/10 px-3 py-1.5 text-xs font-medium text-data hover:bg-data/20">
+          Run again
+        </button>
+      </div>
     </Panel>
   )
 }

@@ -36,8 +36,16 @@ export default function LearnPage() {
     <div className="pb-24">
       <PageHeader
         title="Learn: find the Moon and Mars on Earth"
-        lead="Astronauts and rovers practise on Earth before they go. Learn how SolMate uses NASA satellite data to find the best places to practise, then hunt for them yourself."
+        lead="Astronauts and rovers practise on Earth before they go. Watch the short clip, then play six levels to find the best places to practise yourself."
       />
+      <ol className="mx-auto -mt-4 mb-10 flex w-full max-w-4xl flex-wrap gap-2 px-6" aria-label="How it works">
+        {['Watch the 30-second clip', 'Read, play, then take the quiz', 'Collect stars and badges'].map((t, i) => (
+          <li key={t} className="flex items-center gap-2 rounded-full border border-border bg-ink-850 py-1.5 pl-1.5 pr-3.5 text-sm text-slate-200">
+            <span className="flex size-6 items-center justify-center rounded-full bg-data/15 text-xs font-semibold text-data">{i + 1}</span>
+            {t}
+          </li>
+        ))}
+      </ol>
 
       <section className="mx-auto w-full max-w-5xl px-6" aria-label="Explainer">
         <Explainer
@@ -52,15 +60,15 @@ export default function LearnPage() {
 
       <section ref={levelsRef} className="mx-auto mt-20 w-full max-w-6xl scroll-mt-24 px-6" aria-labelledby="levels-title">
         <h2 id="levels-title" className="text-balance text-3xl font-semibold tracking-tight md:text-4xl">
-          Six levels, step by step
+          Your mission map
         </h2>
         <p className="mt-3 max-w-2xl text-[17px] leading-relaxed text-slate-300">
-          Each level has story cards, then a game, then a short quiz. Pass the quiz to earn the badge and open the next level. Your progress stays on this device only.
+          Six levels. In each one you read a few story cards, play a game and answer a short quiz. Pass the quiz to win a badge and open the next level. Your progress is saved on this device only.
         </p>
-        <div className="mt-6">
+        <div className="mt-8">
           <LevelPath progress={progress} active={active} onPick={setActive} />
         </div>
-        <div className="mt-10 border-t border-border pt-10">
+        <div className="mt-8">
           <LevelView
             key={LEVELS[active]!.id}
             level={LEVELS[active]!}
