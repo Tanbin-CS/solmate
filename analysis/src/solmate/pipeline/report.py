@@ -57,7 +57,7 @@ def site_name(sid: str) -> str:
 
 
 def sai_of(c: dict) -> float:
-    return c["sai_refined"] if c.get("sai_refined") is not None else c["sai"]
+    return c["sai"]
 
 
 def explorer(tid: str, lat: float, lon: float) -> str:
@@ -143,7 +143,7 @@ def build(d: dict) -> list[dict]:
 
         {"type": "h2", "text": "Best places for every target"},
         {"type": "p", "text": (
-            "SAI with equal weights, with terrain measured at 100 m from NASA ASTER GDEM where available. "
+            "SAI with equal weights, from the seven ~1 km dimensions. "
             f"A novel lead is more than {novelty_km} km from every known analog site.")},
         {"type": "table",
          "head": ["Target", "Best place on Earth", "SAI", "Best novel lead", "SAI", "Distance to nearest known site"],
@@ -160,12 +160,11 @@ def build(d: dict) -> list[dict]:
         ti = (t100.get("indicators") or {})
         tt = d["stage2"].get(tid, {})
         dims = {x["id"]: x["score"] for x in ver["dimensions"]}
-        if t100.get("score") is not None:
-            dims["T"] = t100["score"]
-        where = region(c["lat"], c["lon"]) or coords(c["lat"], c["lon"])
+        r = region(c["lat"], c["lon"])
+        where = f"the {r}" if r else coords(c["lat"], c["lon"])
         here = coords(c["lat"], c["lon"])
         b += [
-            {"type": "h2", "text": f"Case study: {t['name']} ({world}) and the {where}"},
+            {"type": "h2", "text": f"Case study: {t['name']} ({world}) and {where}"},
             {"type": "p", "text": (
                 f"The best novel lead for {t['name']} is the cell at {coords(c['lat'], c['lon'])}, "
                 f"{c['nearest_known_km']:.0f} km from the nearest known analog site, {site_name(c['nearest_known'])}. "
@@ -180,6 +179,11 @@ def build(d: dict) -> list[dict]:
             {"type": "table", "head": ["Characteristic", "Score (0–1)"],
              "rows": [[DIM_NAMES[k], f"{s:.2f}" if s is not None else "–"] for k, s in dims.items()]},
         ]
+        if ti and tt and t100.get("score") is not None:
+            b.append({"type": "p", "text": (
+                f"100 m terrain check (NASA ASTER GDEM, 20 km window): {t100['score']:.2f}. It is shown beside the SAI, "
+                "not inside it: on the validation sites the 100 m score alone did not pick out known analog sites "
+                "(docs/VALIDATION.md, addendum 3).")})
         if ti and tt:
             b.append({"type": "table", "head": ["100 m terrain (20 km window)", t["name"], "This place"], "rows": [
                 ["Median slope", f"{tt['slope_median']:.1f}°", f"{ti['slope_median']:.1f}°"],
@@ -265,7 +269,8 @@ def build(d: dict) -> list[dict]:
              "lighting, and every Moon result compares it with the place's own noon Sun."),
             "Caves, lava tubes and other underground environments cannot be assessed from satellite data.",
             "Biology and habitability are described for every place but not scored.",
-            "A 0.1° cell averages about 11 km of ground; only terrain is refined at 100 m.",
+            ("A 0.1° cell averages about 11 km of ground. The SAI uses terrain at about 1 km; a 100 m terrain check "
+             "is shown beside it and is not part of the score."),
             "Novel leads are unreviewed: they need expert review and field data before anyone plans a test.",
             "Validation labels reflect where agencies have worked, which includes logistics as well as science.",
         ]},
