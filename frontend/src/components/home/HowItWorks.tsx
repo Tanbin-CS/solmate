@@ -90,7 +90,7 @@ function LayersVisual(_props: { data: HomeData }) {
           <motion.line key={`h${i}`} y1={i * 10} y2={i * 10} x1={0} x2={360} stroke="rgb(127 216 230 / 0.35)" strokeWidth={0.4} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 + i * 0.03 }} />
         ))}
       </svg>
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="absolute inset-x-4 bottom-4 rounded-lg border border-white/10 bg-ink-950/85 p-3 backdrop-blur">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="absolute inset-x-4 bottom-4 rounded-lg border border-white/10 bg-ink-950/95 p-3">
         <p className="text-sm text-slate-100">
           <span className="tabular text-xl">{facts.nasa_layers}</span> NASA layers · <span className="tabular text-xl">1.9 M</span> land cells at 0.1°
         </p>
@@ -218,7 +218,7 @@ function DiscoverVisual({ data }: { data: HomeData }) {
           />
         ))}
       </div>
-      <div className="absolute bottom-4 left-4 rounded-lg border border-white/10 bg-ink-950/85 px-3 py-2 backdrop-blur">
+      <div className="absolute bottom-4 left-4 rounded-lg border border-white/10 bg-ink-950/95 px-3 py-2">
         <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-screen">Novel leads · unreviewed</p>
         <p className="text-sm text-slate-100">Pink: over {data.model.known_analogs.novelty_km} km from every known site (rings)</p>
       </div>
@@ -263,14 +263,14 @@ export function HowItWorks({ data }: { data: HomeData }) {
   return (
     <div ref={ref} className="relative grid gap-x-12 lg:grid-cols-[1fr_1.1fr]">
       {/* pinned visual */}
-      <div className="sticky top-16 z-10 -mx-6 bg-background/90 px-6 pb-4 pt-3 backdrop-blur-md lg:order-2 lg:top-24 lg:mx-0 lg:h-[calc(100svh-8rem)] lg:bg-transparent lg:px-0 lg:py-0 lg:backdrop-blur-none">
+      <div className="sticky top-16 z-10 -mx-6 bg-background/97 px-6 pb-4 pt-3 lg:order-2 lg:top-24 lg:mx-0 lg:h-[calc(100svh-8rem)] lg:bg-transparent lg:px-0 lg:py-0">
         <div className="relative h-[34svh] overflow-hidden rounded-2xl border border-border bg-ink-900 lg:h-full lg:max-h-[620px]">
           <AnimatePresence mode="wait">
             <motion.div
               key={active}
-              initial={{ opacity: 0, scale: reduced ? 1 : 0.97, filter: 'blur(6px)' }}
-              animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, scale: reduced ? 1 : 1.02, filter: 'blur(6px)' }}
+              initial={{ opacity: 0, scale: reduced ? 1 : 0.97 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: reduced ? 1 : 1.02 }}
               transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
               className="absolute inset-0"
             >

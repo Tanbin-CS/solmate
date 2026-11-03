@@ -17,7 +17,10 @@ export function OrbitZoom({ data }: { data: HomeData }) {
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress: p } = useScroll({ target: ref, offset: ['start start', 'end end'] })
   const [phase, setPhase] = useState(0)
-  useMotionValueEvent(p, 'change', (v) => setPhase(v < 0.3 ? 0 : v < 0.52 ? 1 : v < 0.74 ? 2 : 3))
+  useMotionValueEvent(p, 'change', (v) => {
+    const next = v < 0.3 ? 0 : v < 0.52 ? 1 : v < 0.74 ? 2 : 3
+    setPhase((cur) => (cur === next ? cur : next))
+  })
 
   const f = data.flagships.find((x) => x.target.body === 'mars') ?? data.flagships[0]!
   const best = f.top[0]!
@@ -29,7 +32,7 @@ export function OrbitZoom({ data }: { data: HomeData }) {
 
   // stage transforms
   const g0 = narrow ? 0.92 : 0.62
-  const globeScale = useTransform(p, [0.08, 0.42], [g0, reduced ? g0 : 7])
+  const globeScale = useTransform(p, [0.08, 0.42], [g0, reduced ? g0 : 3.2])
   const globeOpacity = useTransform(p, [0.3, 0.42], [1, 0])
   const winOpacity = useTransform(p, [0.3, 0.42], [0, 1])
   const split = narrow ? 0.74 : 1 // side by side must fit a phone's width
@@ -59,10 +62,10 @@ export function OrbitZoom({ data }: { data: HomeData }) {
           <AnimatePresence mode="wait">
             <motion.div
               key={phase}
-              initial={{ opacity: 0, y: 16, filter: 'blur(6px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, y: -16, filter: 'blur(6px)' }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0, y: reduced ? 0 : 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: reduced ? 0 : -16 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             >
               <h2 className="text-balance text-3xl font-semibold tracking-tight md:text-4xl">{c.h}</h2>
               <p className="mt-3 max-w-md text-pretty text-sm leading-relaxed text-muted-foreground md:text-base">{c.s}</p>
@@ -76,26 +79,33 @@ export function OrbitZoom({ data }: { data: HomeData }) {
         {/* stage */}
         <div className="relative order-1 flex flex-1 items-center justify-center pt-20 lg:order-2 lg:h-full lg:pt-0">
           <div className="relative aspect-square w-[min(78vw,46svh)] lg:w-[min(40vw,62svh)]">
+            {/* glow sits on its own layer: a filter on the zooming image would repaint every frame */}
+            <motion.div
+              aria-hidden="true"
+              style={{ opacity: globeOpacity }}
+              className="absolute inset-[6%] rounded-full bg-[radial-gradient(circle,rgb(217_120_90/0.22)_55%,transparent_72%)]"
+            />
             <motion.img
               src={asset('media/globe-mars.webp')}
               alt="Mars, centred on Jezero Crater"
               style={{ scale: globeScale, opacity: globeOpacity }}
-              className="absolute inset-0 h-full w-full object-contain drop-shadow-[0_0_60px_rgb(217_120_90/0.25)]"
+              className="absolute inset-0 h-full w-full object-contain will-change-transform"
+              decoding="async"
               draggable={false}
             />
             {/* Jezero window */}
-            <motion.figure style={{ opacity: winOpacity, scale: winScale, x: winX }} className="absolute inset-[18%] overflow-hidden rounded-lg">
+            <motion.figure style={{ opacity: winOpacity, scale: winScale, x: winX }} className="absolute inset-[18%] overflow-hidden rounded-lg will-change-transform">
               <img src={asset(f.quicklooks.imagery)} alt="Jezero Crater, 20 km window" className="h-full w-full object-cover" />
               <motion.div style={{ opacity: frame }} className="pointer-events-none absolute inset-0 rounded-lg border-2 border-dashed border-reference" />
               <figcaption className="absolute left-2 top-2 rounded bg-ink-950/80 px-2 py-1 font-mono text-[11px] text-reference">MARS · {f.short}</figcaption>
             </motion.figure>
             {/* Earth match */}
-            <motion.figure style={{ opacity: matchOpacity, x: matchX, scale: matchScale }} className="absolute inset-[18%] overflow-hidden rounded-lg border-2 border-data/70">
-              <img src={gibsWindow(c0.lat, c0.lon, 20, 'imagery')} alt={`${place.name}, 20 km window of Landsat imagery`} className="h-full w-full object-cover" loading="lazy" />
+            <motion.figure style={{ opacity: matchOpacity, x: matchX, scale: matchScale }} className="absolute inset-[18%] overflow-hidden rounded-lg border-2 border-data/70 will-change-transform">
+              <img src={gibsWindow(c0.lat, c0.lon, 20, 'imagery')} alt={`${place.name}, 20 km window of Landsat imagery`} className="h-full w-full object-cover" decoding="async" />
               <figcaption className="absolute left-2 top-2 rounded bg-ink-950/80 px-2 py-1 font-mono text-[11px] text-data">EARTH · {place.name}</figcaption>
             </motion.figure>
             {/* score + bars */}
-            <motion.div style={{ opacity: scoreOpacity, y: scoreY }} className="absolute inset-x-[4%] -bottom-[6%] rounded-xl border border-white/10 bg-ink-950/85 p-3 backdrop-blur-md lg:-bottom-[14%]">
+            <motion.div style={{ opacity: scoreOpacity, y: scoreY }} className="absolute inset-x-[4%] -bottom-[6%] rounded-xl border border-white/10 bg-ink-950/95 p-3 lg:-bottom-[14%]">
               <div className="flex items-center justify-between">
                 <span className="label-mono">Analog Index</span>
                 <span className="tabular text-2xl text-slate-100">
