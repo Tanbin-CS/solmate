@@ -8,7 +8,7 @@ import { placeLabel } from '@/lib/places'
 import { cn } from '@/lib/utils'
 import { spring } from '@/design/motion'
 import { BODY } from '@/components/explorer/roles'
-import { withTerrain100 } from '@/science/v2/screening'
+import { dimScores } from '@/science/v2/screening'
 import { DIMENSION_NAMES } from '@/science/v2/verdict'
 import { CompareSlider } from './CompareSlider'
 import { DIMENSION_CARDS } from './dimensions'
@@ -28,7 +28,7 @@ export function TargetShowcase({ flagship }: { flagship: Flagship }) {
   if (!match) return null
   const c = match.candidate
   const place = placeLabel(c.lat, c.lon, countries)
-  const dims = withTerrain100(c.dims, c.terrain_100m?.score)
+  const dims = dimScores(c.dims)
   const body = flagship.target.body
   const views: { id: View; label: string }[] = [
     { id: 'hillshade', label: 'Shaded relief' },
@@ -113,10 +113,7 @@ export function TargetShowcase({ flagship }: { flagship: Flagship }) {
                 return (
                   <li key={d.id}>
                     <div className="flex items-baseline justify-between gap-3 text-xs">
-                      <span className="truncate text-slate-300">
-                        {DIMENSION_NAMES[d.id]}
-                        {d.id === 'T' && c.terrain_100m?.score != null && <span className="ml-1.5 font-mono text-[11px] text-data">100 m</span>}
-                      </span>
+                      <span className="truncate text-slate-300">{DIMENSION_NAMES[d.id]}</span>
                       <span className="shrink-0 font-mono tabular text-slate-400">{ok ? Math.round(v * 100) : '–'}</span>
                     </div>
                     <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-ink-700">

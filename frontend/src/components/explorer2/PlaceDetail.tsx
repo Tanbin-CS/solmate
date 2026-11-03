@@ -1,3 +1,4 @@
+import { Link } from 'react-router'
 import { Loader2, Mountain, X } from 'lucide-react'
 import type { TerrainResult } from '@/api/client'
 import { Button } from '@/components/ui/button'
@@ -5,7 +6,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import type { Async } from '@/hooks/useV2'
 import type { Model, Target } from '@/science/v2/model'
 import type { PlaceResult } from '@/science/v2/place'
-import { withRefinedTerrain } from '@/science/v2/verdict'
 import { useCountries } from '@/lib/countries'
 import { placeLabel } from '@/lib/places'
 import { BAND_STYLE } from './labels'
@@ -18,28 +18,26 @@ interface Props {
   state: Async<PlaceResult>
   target: Target
   model: Model
-  weights: Record<string, number>
   isBox: boolean
   /** Name the user searched for ("Death Valley"); otherwise the region and country under the point. */
   title?: string
   terrain: { status: 'idle' } | { status: 'loading' } | { status: 'done'; result: TerrainResult }
-  /** 100 m terrain score already measured for this screening cell (stage 2), if any */
-  storedT100?: number | null
+  /** 100 m terrain check already measured for this screening cell (stage 2), if any */
+  stored100?: Terrain100 | null
   onRefine: () => void
   onClose: () => void
   onTarget: (id: string) => void
 }
 
-export function PlaceDetail({ state, target, model, weights, isBox, title, terrain, storedT100, onRefine, onClose, onTarget }: Props) {
+export function PlaceDetail({ state, target, model, isBox, title, terrain, stored100, onRefine, onClose, onTarget }: Props) {
   const r = state.status === 'ready' ? state.data : null
   const countries = useCountries()
   const auto = r ? placeLabel(r.centre.lat, r.centre.lon, countries) : null
   const place = auto && title ? { ...auto, name: title } : auto
-  const live = terrain.status === 'done' && terrain.result.ok ? terrain.result.data.terrain_score : null
-  const t100 = live ?? (!isBox && storedT100 !== undefined && storedT100 !== null && Number.isFinite(storedT100) ? storedT100 : null)
-  const coarse = r?.verdict ?? null
-  const refined = coarse !== null && t100 !== null
-  const verdict = coarse && t100 !== null ? withRefinedTerrain(coarse, t100, weights) : coarse
+  const live = terrain.status === 'done' && terrain.result.ok ? { score: terrain.result.data.terrain_score, indicators: terrain.result.data.indicators } : null
+  const check = live ?? (!isBox && stored100 && stored100.score !== null && Number.isFinite(stored100.score) ? stored100 : null)
+  // The Analog Index stays on the validated ~1 km terrain; the 100 m score is shown beside it as a check.
+  const verdict = r?.verdict ?? null
   const shown = verdict?.sai ?? null
   const band = shown === null ? 'n/a' : shown >= 75 ? 'strong' : shown >= 40 ? 'partial' : 'weak'
 
@@ -84,17 +82,13 @@ export function PlaceDetail({ state, target, model, weights, isBox, title, terra
                   <span className="text-lg text-slate-400">/100</span>
                 </p>
                 <p className={`mt-1 font-mono text-[11px] ${BAND_STYLE[band].className}`}>
-                  {BAND_STYLE[band].label} analog{refined && <span className="text-slate-400"> · with 100 m terrain</span>}
+                  {BAND_STYLE[band].label} analog
                   {verdict.insufficient && <span className="text-negative"> · low data coverage ({Math.round(verdict.coverage * 100)}%)</span>}
                 </p>
               </div>
-              {t100 === null && <TerrainButton terrain={terrain} onRefine={onRefine} />}
             </div>
-            {terrain.status === 'done' && !terrain.result.ok && <p className="text-[12px] text-slate-400">{terrain.result.message}</p>}
-            {terrain.status === 'done' && terrain.result.ok && terrain.result.data.partial && (
-              <p className="text-[12px] text-slate-400">NASA terrain arrived only in part; showing what was measured.</p>
-            )}
-            <DimensionBars verdict={verdict} model={model} refined={refined} />
+            <DimensionBars verdict={verdict} model={model} />
+            <TerrainCheck check={check} terrain={terrain} targetName={target.name} onRefine={onRefine} />
             <PlaceImages lat={r.centre.lat} lon={r.centre.lon} targetId={target.id} />
             <VerdictCard verdict={verdict} />
             <ExtraData layers={model.context_layers} values={r.values} />
@@ -135,5 +129,52 @@ function TerrainButton({ terrain, onRefine }: { terrain: Props['terrain']; onRef
     <Button size="sm" variant="outline" onClick={onRefine} title="Measure slope and relief at 100 m from NASA ASTER GDEM v3">
       <Mountain /> 100 m terrain
     </Button>
+  )
+}
+
+type Terrain100 = { score: number | null; indicators: Record<string, number | null> }
+
+/** The 100 m terrain score as its own check: measured on request, never folded into the Analog Index. */
+function TerrainCheck({ check, terrain, targetName, onRefine }: { check: Terrain100 | null; terrain: Props['terrain']; targetName: string; onRefine: () => void }) {
+  const score = check?.score ?? null
+  const pct = score === null ? null : Math.round(score * 100)
+  const band = pct === null ? 'n/a' : pct >= 75 ? 'strong' : pct >= 40 ? 'partial' : 'weak'
+  const deg = (k: string) => {
+    const v = check?.indicators[k]
+    return v === null || v === undefined ? '–' : `${v.toFixed(1)}°`
+  }
+  return (
+    <section aria-labelledby="terrain-check" className="rounded-lg border border-border p-3">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h3 id="terrain-check" className="text-[12px] font-medium text-slate-200">
+            100 m terrain check
+          </h3>
+          {pct !== null && (
+            <p className="mt-1 font-mono text-[11px] text-slate-400">
+              median slope {deg('slope_median')} · steepest 10% {deg('slope_p90')}
+            </p>
+          )}
+        </div>
+        {pct !== null ? (
+          <p className="shrink-0 text-right font-mono text-sm tabular text-slate-100">
+            {pct} <span className={`text-[11px] ${BAND_STYLE[band].className}`}>{BAND_STYLE[band].label}</span>
+          </p>
+        ) : (
+          <TerrainButton terrain={terrain} onRefine={onRefine} />
+        )}
+      </div>
+      {terrain.status === 'done' && !terrain.result.ok && <p className="mt-2 text-[12px] text-slate-400">{terrain.result.message}</p>}
+      {terrain.status === 'done' && terrain.result.ok && terrain.result.data.partial && (
+        <p className="mt-2 text-[12px] text-slate-400">NASA terrain arrived only in part; showing what was measured.</p>
+      )}
+      <p className="mt-2 text-[11px] leading-relaxed text-slate-400">
+        {pct === null ? `Measure slope at 100 m from NASA ASTER GDEM and compare it with ${targetName}. ` : `Slope at 100 m from NASA ASTER GDEM, compared with ${targetName}. `}
+        Not part of the Analog Index: on its own it did not pick out known analog sites in our test.{' '}
+        <Link to="/method#terrain-check" className="text-slate-300 underline underline-offset-2 hover:text-slate-100">
+          Why
+        </Link>
+      </p>
+    </section>
   )
 }

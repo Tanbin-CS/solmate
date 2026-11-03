@@ -7,7 +7,7 @@ import { useCountries } from '@/lib/countries'
 import { placeLabel } from '@/lib/places'
 import { cn } from '@/lib/utils'
 import { BODY } from '@/components/explorer/roles'
-import { withTerrain100 } from '@/science/v2/screening'
+import { dimScores } from '@/science/v2/screening'
 import { DIMENSION_CARDS } from './dimensions'
 import facts from '@/data/site_facts.json'
 
@@ -39,7 +39,7 @@ const STEPS = [
   {
     icon: Radar,
     title: 'Find places nobody has tested.',
-    body: 'The best cells more than 300 km from every known analog site become novel leads. They are refined with 100 m NASA terrain and listed for expert and field review.',
+    body: 'The best cells more than 300 km from every known analog site become novel leads. They get a 100 m NASA terrain check and are listed for expert and field review.',
     tone: 'var(--screen)',
   },
 ]
@@ -110,7 +110,7 @@ function LayersVisual(_props: { data: HomeData }) {
 function ScoreVisual({ data }: { data: HomeData }) {
   const f = data.flagships[0]!
   const best = f.top[0]!
-  const dims = withTerrain100(best.candidate.dims, best.candidate.terrain_100m?.score)
+  const dims = dimScores(best.candidate.dims)
   const countries = useCountries()
   const place = placeLabel(best.candidate.lat, best.candidate.lon, countries)
   return (

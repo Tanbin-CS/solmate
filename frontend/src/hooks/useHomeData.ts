@@ -14,7 +14,7 @@ export interface Flagship {
   target: Target
   short: string
   screening: Screening
-  /** top cells ranked by SAI with equal weights, 100 m terrain where measured */
+  /** top cells ranked by SAI with equal weights */
   top: Ranked[]
   validation: TargetValidation
   quicklooks: { hillshade: string; imagery: string }

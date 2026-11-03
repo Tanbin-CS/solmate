@@ -1,0 +1,81 @@
+{
+ "version": 1,
+ "generated_at": "2026-11-03T19:06:04+00:00",
+ "test": "terrain alone, pre-registered positives vs controls (validation_sites.yaml), plain AUC",
+ "targets": {
+  "peak_near_cabeus_b": {
+   "body": "moon",
+   "auc_100m": 0.36,
+   "n_positives_100m": 10,
+   "n_controls_100m": 20,
+   "auc_1km": 0.75
+  },
+  "haworth": {
+   "body": "moon",
+   "auc_100m": 0.42,
+   "n_positives_100m": 10,
+   "n_controls_100m": 20,
+   "auc_1km": 0.725
+  },
+  "malapert_massif": {
+   "body": "moon",
+   "auc_100m": 0.36,
+   "n_positives_100m": 10,
+   "n_controls_100m": 20,
+   "auc_1km": 0.75
+  },
+  "mons_mouton_plateau": {
+   "body": "moon",
+   "auc_100m": 0.57,
+   "n_positives_100m": 10,
+   "n_controls_100m": 20,
+   "auc_1km": 0.745
+  },
+  "mons_mouton": {
+   "body": "moon",
+   "auc_100m": 0.33,
+   "n_positives_100m": 10,
+   "n_controls_100m": 20,
+   "auc_1km": 0.7
+  },
+  "nobile_rim_1": {
+   "body": "moon",
+   "auc_100m": 0.34,
+   "n_positives_100m": 10,
+   "n_controls_100m": 20,
+   "auc_1km": 0.745
+  },
+  "nobile_rim_2": {
+   "body": "moon",
+   "auc_100m": 0.325,
+   "n_positives_100m": 10,
+   "n_controls_100m": 20,
+   "auc_1km": 0.705
+  },
+  "de_gerlache_rim_2": {
+   "body": "moon",
+   "auc_100m": 0.445,
+   "n_positives_100m": 10,
+   "n_controls_100m": 20,
+   "auc_1km": 0.74
+  },
+  "slater_plain": {
+   "body": "moon",
+   "auc_100m": 0.465,
+   "n_positives_100m": 10,
+   "n_controls_100m": 20,
+   "auc_1km": 0.745
+  },
+  "jezero_crater": {
+   "body": "mars",
+   "auc_100m": 0.468,
+   "n_positives_100m": 17,
+   "n_controls_100m": 20,
+   "auc_1km": 0.485
+  },
+  "arcadia_planitia": {
+   "body": "mars",
+   "auc_1km": 0.165
+  }
+ }
+}

@@ -77,12 +77,12 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
     () => shown.map((r) => ({ lat: r.candidate.lat, lon: r.candidate.lon, sai: r.sai, novel: (r.candidate.nearest_known_km ?? 0) > (scr?.novelty_km ?? 300) })),
     [shown, scr],
   )
-  // screening cells carry their stage-2 (100 m) terrain score; reuse it instead of calling the API
-  const storedT100 = useMemo(() => {
+  // screening cells carry their stage-2 (100 m) terrain check; reuse it instead of calling the API
+  const stored100 = useMemo(() => {
     if (!scr || !ui.place) return null
     const all = [...scr.top, ...scr.novel_leads, ...Object.values(scr.dimension_leaders).flat()]
     const hit = all.find((c) => Math.abs(c.lat - ui.place!.lat) < 0.05 && Math.abs(c.lon - ui.place!.lon) < 0.05)
-    return hit?.terrain_100m?.score ?? null
+    return hit?.terrain_100m ?? null
   }, [scr, ui.place])
   const leaderDims = DIM_ORDER.filter((d) => lists?.leaders[d]?.length)
 
@@ -172,11 +172,10 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
         state={place}
         target={target}
         model={model}
-        weights={weights}
         isBox={!!ui.box}
         title={ui.box ? undefined : title}
         terrain={terrain.state}
-        storedT100={storedT100}
+        stored100={stored100}
         onRefine={terrain.run}
         onClose={ui.clear}
         onTarget={ui.setTarget}
