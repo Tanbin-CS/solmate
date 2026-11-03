@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import type { LearnData } from './data'
-import { HuntRound, Stars } from './Hunter'
+import { cluesFor } from './content'
+import { Clues, HuntRound, Stars } from './Hunter'
 
 /** Analog Hunter with any of the 11 targets, open from the start. Best stars per target are kept. */
 export function FreePlay({ data, free, onStars }: { data: LearnData; free: Record<string, number>; onStars: (targetId: string, stars: number) => void }) {
@@ -45,10 +46,13 @@ export function FreePlay({ data, free, onStars }: { data: LearnData; free: Recor
           </div>
         ))}
       </div>
-      <h3 className="mt-6 text-xl font-semibold text-slate-100">
-        Find Earth’s match for {t.name} <span className={t.body === 'mars' ? 'text-mars' : 'text-reference'}>({t.body === 'mars' ? 'Mars' : 'Moon'})</span>
+      <h3 className="mt-6 text-balance text-2xl font-semibold tracking-tight text-slate-100">
+        Where on Earth is most like <span className={t.body === 'mars' ? 'text-mars' : 'text-reference'}>{t.name}</span>?
       </h3>
       <div className="mt-4">
+        <Clues key={target} clues={cluesFor(target)} />
+      </div>
+      <div className="mt-5">
         <HuntRound key={target} round={{ target }} data={data} onScored={(s) => onStars(target, s)} />
       </div>
     </div>

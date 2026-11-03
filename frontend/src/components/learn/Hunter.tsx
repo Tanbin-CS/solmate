@@ -1,29 +1,122 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { ArrowRight, Crosshair, Loader2, MapPin, RotateCcw, Star } from 'lucide-react'
+import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, useTransform } from 'motion/react'
+import { ArrowRight, Check, Crosshair, Droplets, Lightbulb, Loader2, MapPin, Mountain, RotateCcw, Search, Snowflake, Sprout, Star, Thermometer, Wind } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { asset } from '@/lib/asset'
 import { gibsWindow, placeLabel } from '@/lib/places'
 import { cn } from '@/lib/utils'
 import type { PlaceResult } from '@/science/v2/place'
 import { score } from '@/science/v2/scorer'
 import type { Verdict } from '@/science/v2/verdict'
-import { distanceKm, huntStars, mapToLatLon, type Place, type Round } from './content'
+import { alike, distanceKm, huntStars, mapPos, type LatLon, type Place, type Round } from './content'
 import { bestFor, type LearnData } from './data'
+import { Upright, ZoomMap } from './ZoomMap'
 
-type LatLon = { lat: number; lon: number }
-
-const px = (lon: number) => `${((lon + 180) / 360) * 100}%`
-const py = (lat: number) => `${((90 - lat) / 180) * 100}%`
-
-export function Stars({ n, size = 'size-5', label = true }: { n: number; size?: string; label?: boolean }) {
+export function Stars({ n, size = 'size-5', label = true, pop = false }: { n: number; size?: string; label?: boolean; pop?: boolean }) {
+  const reduced = useReducedMotion()
   return (
     <span className="inline-flex items-center gap-0.5" role={label ? 'img' : undefined} aria-label={label ? `${n} of 3 stars` : undefined} aria-hidden={label ? undefined : true}>
       {[0, 1, 2].map((i) => (
-        <Star key={i} className={cn(size, i < n ? 'fill-reference text-reference' : 'text-ink-500')} />
+        <motion.span
+          key={i}
+          initial={pop && !reduced ? { scale: 0, rotate: -40 } : false}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ delay: pop ? 0.25 + i * 0.18 : 0, type: 'spring', stiffness: 500, damping: 14 }}
+          className="inline-flex"
+        >
+          <Star className={cn(size, i < n ? 'fill-reference text-reference' : 'text-ink-500')} />
+        </motion.span>
       ))}
     </span>
   )
+}
+
+/** A picture for each clue, picked from its words. */
+function ClueIcon({ text }: { text: string }) {
+  const t = text.toLowerCase()
+  const Icon = /°c|temperature|swing/.test(t)
+    ? Thermometer
+    : /cold|frost|ice|freez/.test(t)
+      ? Snowflake
+      : /dry|rain|water|river/.test(t)
+        ? Droplets
+        : /plant/.test(t)
+          ? Sprout
+          : /dust|wind|air/.test(t)
+            ? Wind
+            : /bare|grey|sand|rock|mineral|mountain|rim|crater|plain|flat|landing|pole/.test(t)
+              ? Mountain
+              : Search
+  return <Icon className="size-4 shrink-0 text-data" aria-hidden="true" />
+}
+
+export function Clues({ clues }: { clues: string[] }) {
+  const reduced = useReducedMotion()
+  return (
+    <ul className="grid gap-2 sm:grid-cols-2" aria-label="Clues">
+      {clues.map((c, i) => (
+        <motion.li
+          key={c}
+          initial={reduced ? false : { opacity: 0, y: 10, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay: reduced ? 0 : 0.08 * i, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="flex items-start gap-2.5 rounded-xl border border-border bg-ink-800 px-3.5 py-2.5 text-[14px] leading-snug text-slate-100"
+        >
+          <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-data/10">
+            <ClueIcon text={c} />
+          </span>
+          {c}
+        </motion.li>
+      ))}
+    </ul>
+  )
+}
+
+/** A 0-100 gauge with your spot and SolMate's best, so the gap is easy to see. */
+function MatchMeter({ yours, best }: { yours: number; best: number }) {
+  const reduced = useReducedMotion()
+  const mark = (v: number, tone: string, bg: string, label: string, delay: number, above: boolean) => (
+    <motion.div
+      className="absolute top-0 h-full"
+      initial={reduced ? { left: `${v}%` } : { left: '0%' }}
+      animate={{ left: `${v}%` }}
+      transition={{ delay: reduced ? 0 : delay, duration: reduced ? 0 : 1, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <span className={cn('absolute -translate-x-1/2 whitespace-nowrap text-[11px] font-medium', tone, above ? '-top-5' : 'top-[calc(100%+4px)]')}>
+        {label} {Math.round(v)}
+      </span>
+      <span className={cn('absolute inset-y-[-3px] w-1 -translate-x-1/2 rounded-full', bg)} />
+    </motion.div>
+  )
+  return (
+    <div className="py-5" aria-hidden="true">
+      <div className="relative h-3.5">
+        <div className="absolute inset-0 flex overflow-hidden rounded-full">
+          <span className="w-[40%] bg-ink-600" />
+          <span className="w-[35%] bg-reference/35" />
+          <span className="w-[25%] bg-positive/40" />
+        </div>
+        {mark(best, 'text-reference', 'bg-reference', 'Best', 0.2, false)}
+        {mark(yours, 'text-data', 'bg-data', 'You', 0, true)}
+      </div>
+      <div className="mt-6 flex justify-between text-[11px] text-slate-400">
+        <span>Not alike</span>
+        <span>A bit alike</span>
+        <span>Very alike</span>
+      </div>
+    </div>
+  )
+}
+
+export function CountUp({ to, className }: { to: number; className?: string }) {
+  const reduced = useReducedMotion()
+  const v = useMotionValue(reduced ? to : 0)
+  const text = useTransform(v, (n) => String(Math.round(n)))
+  useEffect(() => {
+    if (reduced) return v.set(to)
+    const c = animate(v, to, { duration: 0.9, ease: [0.16, 1, 0.3, 1] })
+    return () => c.stop()
+  }, [to, reduced, v])
+  return <motion.span className={className}>{text}</motion.span>
 }
 
 function bodyLabel(data: LearnData, id: string) {
@@ -41,22 +134,15 @@ function strengths(v: Verdict | null): { best?: string; worst?: string } {
 
 /** Plays a list of rounds; reports the stars of each round as it ends. */
 export function Hunter({ rounds, data, stars, onRound, onAllDone }: { rounds: Round[]; data: LearnData; stars: number[]; onRound: (i: number, stars: number) => void; onAllDone?: () => void }) {
+  const reduced = useReducedMotion()
   const [i, setI] = useState(() => Math.min(stars.length, rounds.length - 1))
   const round = rounds[i]!
   const t = bodyLabel(data, round.target)
   const finished = stars.length >= rounds.length
   return (
     <div>
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <p className="tabular text-sm text-slate-400">
-            Round {i + 1} of {rounds.length} · {round.kind === 'hunt' ? 'Hunt' : 'Pick one'}
-          </p>
-          <h3 className="mt-1 text-balance text-2xl font-semibold tracking-tight text-slate-100">
-            Find Earth’s match for {t.name} <span className={t.body === 'Mars' ? 'text-mars' : 'text-reference'}>({t.body})</span>
-          </h3>
-        </div>
-        <ol className="flex gap-1.5" aria-label="Rounds">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <ol className="flex flex-wrap gap-1.5" aria-label="Rounds">
           {rounds.map((r, n) => (
             <li key={r.target}>
               <button
@@ -66,8 +152,8 @@ export function Hunter({ rounds, data, stars, onRound, onAllDone }: { rounds: Ro
                 aria-current={n === i ? 'step' : undefined}
                 aria-label={`Round ${n + 1}${stars[n] !== undefined ? `, ${stars[n]} stars` : ''}`}
                 className={cn(
-                  'flex h-8 min-w-8 items-center justify-center rounded-md border px-2 text-xs tabular transition-colors disabled:opacity-40',
-                  n === i ? 'border-data/60 bg-data/10 text-data' : 'border-border text-slate-300 hover:border-slate-300/40',
+                  'flex h-9 min-w-9 items-center justify-center rounded-full border px-2.5 text-xs tabular transition-colors disabled:opacity-35',
+                  n === i ? 'border-data bg-data/15 text-data' : 'border-border text-slate-300 hover:border-slate-300/40',
                 )}
               >
                 {stars[n] !== undefined ? <Stars n={stars[n]!} size="size-3" label={false} /> : n + 1}
@@ -75,29 +161,44 @@ export function Hunter({ rounds, data, stars, onRound, onAllDone }: { rounds: Ro
             </li>
           ))}
         </ol>
+        <p className="text-sm text-slate-400">
+          Round {i + 1} of {rounds.length}
+        </p>
       </div>
-      <ul className="mt-4 flex flex-wrap gap-2" aria-label="Clues">
-        {round.clues.map((c) => (
-          <li key={c} className="rounded-full border border-border bg-ink-800 px-3 py-1.5 text-[13px] text-slate-200">
-            {c}
-          </li>
-        ))}
-      </ul>
-      <div className="mt-5">
-        {round.kind === 'hunt' ? (
-          <HuntRound key={`h-${i}`} round={round} data={data} onScored={(s) => onRound(i, s)} />
-        ) : (
-          <PickRound key={`p-${i}`} round={round} data={data} onScored={(s) => onRound(i, s)} />
-        )}
-      </div>
+
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={i}
+          initial={reduced ? { opacity: 0 } : { opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={reduced ? { opacity: 0 } : { opacity: 0, x: -30 }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <h3 className="mt-4 text-balance text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
+            {round.kind === 'hunt' ? 'Where on Earth is most like ' : 'Which place is most like '}
+            <span className={t.body === 'Mars' ? 'text-mars' : 'text-reference'}>{t.name}</span>?
+          </h3>
+          <p className="mt-1 text-[15px] text-slate-400">
+            {t.body === 'Mars' ? 'A place on Mars.' : 'A landing region near the Moon’s south pole.'} Read the clues, then {round.kind === 'hunt' ? 'find a match on the map.' : 'pick one of three places.'}
+          </p>
+          <div className="mt-4">
+            <Clues clues={round.clues} />
+          </div>
+          <div className="mt-5">
+            {round.kind === 'hunt' ? <HuntRound round={round} data={data} onScored={(s) => onRound(i, s)} /> : <PickRound round={round} data={data} onScored={(s) => onRound(i, s)} />}
+          </div>
+        </motion.div>
+      </AnimatePresence>
+
       <div className="mt-5 flex justify-end">
         {i < rounds.length - 1 ? (
-          <Button onClick={() => setI(i + 1)} disabled={stars[i] === undefined}>
+          <Button size="lg" onClick={() => setI(i + 1)} disabled={stars[i] === undefined}>
             Next round <ArrowRight />
           </Button>
         ) : (
-          finished && onAllDone && (
-            <Button onClick={onAllDone}>
+          finished &&
+          onAllDone && (
+            <Button size="lg" onClick={onAllDone}>
               On to the quiz <ArrowRight />
             </Button>
           )
@@ -111,12 +212,30 @@ function scorePoint(p: LatLon, targetId: string, data: LearnData): Promise<Place
   return score({ kind: 'point', lat: p.lat, lon: p.lon, targetId, weights: data.model.presets.equal! })
 }
 
+/** A circle a few thousand km wide around (not centred on) the answer, the same on every visit. */
+function hintArea(id: string, best: LatLon) {
+  let h = 0
+  for (const c of id) h = (h * 31 + c.charCodeAt(0)) >>> 0
+  const a = ((h % 360) * Math.PI) / 180
+  return { lat: Math.max(-70, Math.min(70, best.lat + Math.sin(a) * 7)), lon: best.lon + Math.cos(a) * 9, r: 16 }
+}
+
+type HuntState =
+  | { status: 'idle' }
+  | { status: 'scoring' }
+  | { status: 'ocean' }
+  | { status: 'error' }
+  | { status: 'done'; result: PlaceResult; best: LatLon & { sai: number }; stars: number }
+
+const STEPS = ['Read the clues', 'Tap the map to drop your pin', 'Check how alike it is']
+
 export function HuntRound({ round, data, onScored }: { round: { target: string }; data: LearnData; onScored: (stars: number) => void }) {
   const reduced = useReducedMotion()
   const [pin, setPin] = useState<LatLon | null>(null)
-  const [state, setState] = useState<{ status: 'idle' } | { status: 'scoring' } | { status: 'ocean' } | { status: 'error' } | { status: 'done'; result: PlaceResult; best: LatLon & { sai: number }; stars: number }>({ status: 'idle' })
+  const [state, setState] = useState<HuntState>({ status: 'idle' })
   const [bestStars, setBestStars] = useState(0)
-  const mapRef = useRef<HTMLDivElement>(null)
+  const [hint, setHint] = useState<(LatLon & { r: number }) | null>(null)
+  const [fit, setFit] = useState<LatLon[] | null>(null)
   const pinId = useId()
 
   const check = async (p: LatLon) => {
@@ -126,166 +245,217 @@ export function HuntRound({ round, data, onScored }: { round: { target: string }
       if (!result.land || result.verdict?.sai == null) return setState({ status: 'ocean' })
       const s = huntStars(result.verdict.sai, best.sai)
       setState({ status: 'done', result, best, stars: s })
+      setFit([p, best])
       setBestStars((b) => Math.max(b, s))
       onScored(s)
     } catch {
       setState({ status: 'error' })
     }
   }
-  const place = (fx: number, fy: number) => {
-    setPin(mapToLatLon(fx, fy))
-    setState({ status: 'idle' })
+  const showHint = async () => {
+    const best = await bestFor(round.target, data.model)
+    const h = hintArea(round.target, best)
+    setHint(h)
+    setFit([
+      { lat: h.lat + h.r, lon: h.lon - h.r },
+      { lat: h.lat - h.r, lon: h.lon + h.r },
+    ])
   }
   const done = state.status === 'done' ? state : null
-  const word = done ? (['Keep exploring', 'A start', 'Close!', 'Excellent!'] as const)[done.stars] : ''
+  const step = !pin ? 2 : done ? 4 : 3
+  const word = done ? (['Keep exploring', 'Getting warmer', 'Close!', 'Excellent match!'] as const)[done.stars] : ''
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
-      <div className="self-start overflow-hidden rounded-2xl border border-border bg-ink-950">
-        <div className="overflow-x-auto overscroll-x-contain [scrollbar-width:thin]">
-          <div
-            ref={mapRef}
-            tabIndex={0}
-            role="application"
-            aria-label="World map. Tap a place, or use the arrow keys to move the marker and Enter to score it."
-            aria-describedby={pinId}
-            className="relative aspect-[2/1] w-full min-w-[640px] cursor-crosshair sm:min-w-0 touch-manipulation select-none focus-visible:outline-2 focus-visible:-outline-offset-2"
-            onClick={(e) => {
-              const r = e.currentTarget.getBoundingClientRect()
-              place((e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height)
-            }}
-            onKeyDown={(e) => {
-              const step = e.shiftKey ? 10 : 1
-              const p = pin ?? { lat: 20, lon: 0 }
-              const moves: Record<string, LatLon> = {
-                ArrowUp: { lat: Math.min(89, p.lat + step), lon: p.lon },
-                ArrowDown: { lat: Math.max(-89, p.lat - step), lon: p.lon },
-                ArrowLeft: { lat: p.lat, lon: p.lon - step < -180 ? p.lon - step + 360 : p.lon - step },
-                ArrowRight: { lat: p.lat, lon: p.lon + step > 180 ? p.lon + step - 360 : p.lon + step },
-              }
-              if (moves[e.key]) {
-                e.preventDefault()
-                setPin(moves[e.key]!)
-                setState({ status: 'idle' })
-              } else if (e.key === 'Enter' && pin) {
-                e.preventDefault()
-                void check(pin)
-              }
-            }}
-          >
-            <img src={asset('media/earth-2k.webp')} srcSet={`${asset('media/earth-1k.webp')} 1024w, ${asset('media/earth-2k.webp')} 2048w`} sizes="(min-width: 1024px) 760px, 640px" alt="" draggable={false} className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-85" />
-            {done && (
-              <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 360 180" preserveAspectRatio="none" aria-hidden="true">
-                <motion.line
-                  x1={pin!.lon + 180}
-                  y1={90 - pin!.lat}
-                  x2={done.best.lon + 180}
-                  y2={90 - done.best.lat}
-                  stroke="var(--reference)"
-                  strokeWidth="0.6"
-                  strokeDasharray="2 1.5"
-                  vectorEffect="non-scaling-stroke"
-                  initial={reduced ? false : { pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ duration: 0.8 }}
+    <div className="grid gap-5 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)]">
+      <div className="min-w-0">
+        <ZoomMap
+          label="World map. Tap a place to drop your pin. Drag to move, pinch or use the + and − buttons to zoom. With a keyboard, arrow keys move the pin and Enter checks it."
+          describedBy={pinId}
+          fit={fit}
+          onTap={(p) => {
+            setPin(p)
+            if (state.status !== 'scoring') setState({ status: 'idle' })
+          }}
+          onKey={(e) => {
+            const d = e.shiftKey ? 10 : 1
+            const wrap = (lon: number) => (lon > 180 ? lon - 360 : lon < -180 ? lon + 360 : lon)
+            const moves: Record<string, (p: LatLon) => LatLon> = {
+              ArrowUp: (p) => ({ lat: Math.min(89, p.lat + d), lon: p.lon }),
+              ArrowDown: (p) => ({ lat: Math.max(-89, p.lat - d), lon: p.lon }),
+              ArrowLeft: (p) => ({ lat: p.lat, lon: wrap(p.lon - d) }),
+              ArrowRight: (p) => ({ lat: p.lat, lon: wrap(p.lon + d) }),
+            }
+            const move = moves[e.key]
+            if (move) {
+              e.preventDefault()
+              setPin((p) => move(p ?? { lat: 20, lon: 0 }))
+              setState({ status: 'idle' })
+            } else if (e.key === 'Enter' && pin) {
+              e.preventDefault()
+              void check(pin)
+            }
+          }}
+        >
+          {(scale) => (
+            <>
+              {hint && (
+                <motion.span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-dashed border-reference/80 bg-reference/10"
+                  style={{ ...mapPos(hint), width: `${((hint.r * 2) / 360) * 100}%`, height: `${((hint.r * 2) / 180) * 100}%` }}
+                  initial={reduced ? false : { opacity: 0, scale: 0.4 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ type: 'spring', stiffness: 200, damping: 20 }}
                 />
-              </svg>
-            )}
-            {done && (
-              <motion.span
-                className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2"
-                style={{ left: px(done.best.lon), top: py(done.best.lat) }}
-                initial={reduced ? false : { scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: reduced ? 0 : 0.6, type: 'spring', stiffness: 420, damping: 18 }}
-              >
-                <span className="block size-4 rounded-full border-2 border-reference bg-reference/40 shadow-[0_0_0_6px_rgb(240_187_110/0.2)]" />
-                <span className="absolute left-1/2 top-5 -translate-x-1/2 whitespace-nowrap rounded bg-ink-950/90 px-1.5 py-0.5 text-[11px] text-reference">SolMate’s best</span>
-              </motion.span>
-            )}
-            {pin && (
-              <motion.span
-                key={`${pin.lat},${pin.lon}`}
-                className="pointer-events-none absolute -translate-x-1/2 -translate-y-full text-data"
-                style={{ left: px(pin.lon), top: py(pin.lat) }}
-                initial={reduced ? false : { y: -14, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ type: 'spring', stiffness: 500, damping: 26 }}
-              >
-                <MapPin className="size-7 fill-data/30 drop-shadow-[0_2px_4px_rgb(0_0_0/0.8)]" />
-              </motion.span>
-            )}
-          </div>
-        </div>
-        <p className="px-3 py-2 text-xs text-slate-400 sm:hidden">Swipe the map sideways to see the whole world.</p>
+              )}
+              {done && pin && (
+                <svg className="pointer-events-none absolute inset-0 h-full w-full overflow-visible" viewBox="0 0 360 180" preserveAspectRatio="none" aria-hidden="true">
+                  <motion.line
+                    x1={pin.lon + 180}
+                    y1={90 - pin.lat}
+                    x2={done.best.lon + 180}
+                    y2={90 - done.best.lat}
+                    stroke="var(--reference)"
+                    strokeWidth="2"
+                    strokeDasharray="6 5"
+                    vectorEffect="non-scaling-stroke"
+                    initial={reduced ? false : { pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ delay: 0.5, duration: 0.9 }}
+                  />
+                </svg>
+              )}
+              {done && (
+                <Upright scale={scale} at={done.best}>
+                  <motion.div
+                    className="relative -translate-x-1/2 -translate-y-1/2"
+                    initial={reduced ? false : { scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: reduced ? 0 : 1.1, type: 'spring', stiffness: 420, damping: 16 }}
+                  >
+                    <span className="relative flex size-5 items-center justify-center">
+                      {!reduced && <span className="absolute inset-0 animate-ping rounded-full bg-reference/50" />}
+                      <span className="size-5 rounded-full border-[3px] border-reference bg-ink-950" />
+                    </span>
+                    <span className="absolute left-1/2 top-6 -translate-x-1/2 whitespace-nowrap rounded-md bg-ink-950/95 px-2 py-1 text-xs font-medium text-reference">SolMate’s best</span>
+                  </motion.div>
+                </Upright>
+              )}
+              {pin && (
+                <Upright scale={scale} at={pin}>
+                  <motion.div
+                    key={`${pin.lat},${pin.lon}`}
+                    className="-translate-x-1/2 -translate-y-full text-data"
+                    initial={reduced ? false : { y: -24, opacity: 0, scale: 0.6 }}
+                    animate={{ y: 0, opacity: 1, scale: 1 }}
+                    transition={{ type: 'spring', stiffness: 520, damping: 22 }}
+                  >
+                    <MapPin className="size-9 fill-data/40 stroke-[2.2] drop-shadow-[0_3px_4px_rgb(0_0_0/0.9)]" />
+                  </motion.div>
+                </Upright>
+              )}
+            </>
+          )}
+        </ZoomMap>
+        <p className="mt-2 text-xs text-slate-400">Drag to move · pinch, double-tap or + / − to zoom · tap to drop your pin</p>
       </div>
 
-      <div className="flex flex-col rounded-2xl border border-border bg-ink-850 p-5" aria-live="polite">
-        <p id={pinId} className="text-sm text-slate-300">
+      <div className="flex flex-col rounded-2xl border border-border bg-ink-850 p-5">
+        <ol className="space-y-2.5" aria-label="How to play">
+          {STEPS.map((s, n) => {
+            const at = n + 1
+            const st = step > at ? 'done' : step === at ? 'now' : 'next'
+            return (
+              <li key={s} className={cn('flex items-center gap-3 text-[15px] transition-colors', st === 'now' ? 'text-slate-100' : st === 'done' ? 'text-slate-400' : 'text-slate-500')}>
+                <span
+                  className={cn(
+                    'flex size-7 shrink-0 items-center justify-center rounded-full border text-xs tabular transition-colors',
+                    st === 'now' ? 'border-data bg-data/15 text-data' : st === 'done' ? 'border-positive/60 bg-positive/15 text-positive' : 'border-ink-500',
+                  )}
+                >
+                  {st === 'done' ? <Check className="size-3.5" aria-label="done" /> : at}
+                </span>
+                {s}
+              </li>
+            )
+          })}
+        </ol>
+
+        <p id={pinId} className="mt-4 min-h-6 text-sm text-slate-300" aria-live="polite">
           {pin ? (
             <>
-              Your spot: <span className="text-slate-100">{placeLabel(pin.lat, pin.lon).name}</span>
+              Your pin: <span className="text-slate-100">{placeLabel(pin.lat, pin.lon).name}</span>
             </>
           ) : (
-            'Tap the map where you think Earth matches best.'
+            'No pin yet.'
           )}
         </p>
-        <Button className="mt-3 self-start" disabled={!pin || state.status === 'scoring'} onClick={() => pin && void check(pin)}>
-          {state.status === 'scoring' ? <Loader2 className="animate-spin" /> : <Crosshair />}
-          {state.status === 'scoring' ? 'Scoring with NASA data…' : 'Score my spot'}
-        </Button>
-        {state.status === 'ocean' && <p className="mt-4 text-[15px] text-slate-200">That is ocean or ice-covered land with no data. Try a spot on land.</p>}
-        {state.status === 'error' && <p className="mt-4 text-[15px] text-negative">Scoring did not work this time. Try again.</p>}
-        <AnimatePresence>
-          {done && (
-            <motion.div initial={reduced ? { opacity: 0 } : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-5 space-y-3">
-              <div className="flex items-center gap-3">
-                <Stars n={done.stars} size="size-6" />
-                <p className="text-lg font-semibold text-slate-100">{word}</p>
-              </div>
-              <dl className="grid grid-cols-2 gap-3">
-                <div>
-                  <dt className="text-xs text-slate-400">Your spot</dt>
-                  <dd className="tabular text-3xl font-semibold text-data">{Math.round(done.result.verdict!.sai!)}</dd>
-                </div>
-                <div>
-                  <dt className="text-xs text-slate-400">SolMate’s best</dt>
-                  <dd className="tabular text-3xl font-semibold text-reference">{Math.round(done.best.sai)}</dd>
-                </div>
-              </dl>
-              <p className="text-[14px] leading-relaxed text-slate-300">
-                SolMate’s best is in <span className="text-slate-100">{placeLabel(done.best.lat, done.best.lon).name}</span>,{' '}
-                <span className="tabular">{Math.round(distanceKm(pin!, done.best)).toLocaleString('en')}</span> km from your spot.
-                {(() => {
-                  const s = strengths(done.result.verdict)
-                  return s.best ? ` Your spot matches best on ${s.best} and differs most on ${s.worst}.` : ''
-                })()}
-              </p>
-              {done.stars < 3 && (
-                <p className="flex items-center gap-1.5 text-[13px] text-slate-400">
-                  <RotateCcw className="size-3.5" aria-hidden="true" /> Tap somewhere else to try again. Your best so far: <Stars n={bestStars} size="size-3.5" label={false} />
-                </p>
-              )}
-            </motion.div>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Button size="lg" disabled={!pin || state.status === 'scoring'} onClick={() => pin && void check(pin)}>
+            {state.status === 'scoring' ? <Loader2 className="animate-spin" /> : <Crosshair />}
+            {state.status === 'scoring' ? 'Checking…' : 'Check my spot'}
+          </Button>
+          {!done && !hint && (
+            <Button size="lg" variant="ghost" onClick={() => void showHint()}>
+              <Lightbulb /> Hint
+            </Button>
           )}
-        </AnimatePresence>
+        </div>
+        {hint && !done && <p className="mt-3 text-[13px] text-reference">The best match is somewhere inside the dashed circle.</p>}
+
+        <div aria-live="polite">
+          {state.status === 'ocean' && <p className="mt-4 text-[15px] text-slate-200">That is sea, or ice with no data. Try a spot on land.</p>}
+          {state.status === 'error' && <p className="mt-4 text-[15px] text-negative">That did not work. Try again.</p>}
+          <AnimatePresence>
+            {done && (
+              <motion.div initial={reduced ? { opacity: 0 } : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="mt-5 border-t border-border pt-4">
+                <div className="flex items-center gap-3">
+                  <Stars n={done.stars} size="size-7" pop />
+                  <p className="text-lg font-semibold text-slate-100">{word}</p>
+                </div>
+                <p className="mt-3 text-[15px] leading-relaxed text-slate-200">
+                  Your spot scores <CountUp to={Math.round(done.result.verdict!.sai!)} className="tabular font-semibold text-data" /> out of 100:{' '}
+                  <span className={alike(done.result.verdict!.sai!).tone}>{alike(done.result.verdict!.sai!).word.toLowerCase()}</span>.
+                </p>
+                <MatchMeter yours={done.result.verdict!.sai!} best={done.best.sai} />
+                <p className="text-[14px] leading-relaxed text-slate-300">
+                  SolMate’s best match is in <span className="text-slate-100">{placeLabel(done.best.lat, done.best.lon).name}</span>, about{' '}
+                  <span className="tabular">{(Math.round(distanceKm(pin!, done.best) / 10) * 10).toLocaleString('en')}</span> km from your pin.
+                  {(() => {
+                    const s = strengths(done.result.verdict)
+                    return s.best ? ` Your spot is most alike in ${s.best} and least alike in ${s.worst}.` : ''
+                  })()}
+                </p>
+                {done.stars < 3 && (
+                  <p className="mt-3 flex flex-wrap items-center gap-1.5 text-[13px] text-slate-400">
+                    <RotateCcw className="size-3.5" aria-hidden="true" /> Move your pin and check again to win more stars. Best so far: <Stars n={bestStars} size="size-3.5" label={false} />
+                  </p>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   )
 }
 
-/** A NASA GIBS image that fades in when it arrives (GIBS can take a few seconds). */
+/** A NASA GIBS picture that fades in when it arrives (GIBS can take a few seconds). */
 function SatImage({ src, alt }: { src: string; alt: string }) {
   const [state, setState] = useState<'loading' | 'ready' | 'failed'>('loading')
   return (
     <>
-      {state !== 'ready' && <span className="absolute inset-0 flex items-center justify-center text-xs text-slate-400">{state === 'loading' ? 'Loading image…' : 'Image not available'}</span>}
+      {state !== 'ready' && (
+        <span className={cn('absolute inset-0 flex items-center justify-center text-xs text-slate-400', state === 'loading' && 'animate-pulse bg-ink-800')}>
+          {state === 'loading' ? 'Loading picture…' : 'Picture not available'}
+        </span>
+      )}
       <img
         src={src}
         alt={alt}
         onLoad={() => setState('ready')}
         onError={() => setState('failed')}
-        className={cn('h-full w-full object-cover transition-[opacity,transform] duration-500 group-hover:scale-[1.03]', state === 'ready' ? 'opacity-100' : 'opacity-0')}
+        className={cn('h-full w-full object-cover transition-[opacity,transform] duration-500 group-hover:scale-[1.04]', state === 'ready' ? 'opacity-100' : 'opacity-0')}
       />
     </>
   )
@@ -323,54 +493,73 @@ function PickRound({ round, data, onScored }: { round: Extract<Round, { kind: 'p
 
   return (
     <div>
-      <p className="text-[15px] text-slate-300">{choice === null ? 'Which place is the best training ground? Pick one.' : stars === null ? 'Scoring all three with NASA data…' : ''}</p>
+      <p className="text-[15px] text-slate-300" aria-live="polite">
+        {choice === null ? 'Tap the place you think is the best training ground.' : stars === null ? 'Checking all three with NASA data…' : 'Here is how alike each place is, out of 100:'}
+      </p>
       <div className="mt-4 grid gap-3 sm:grid-cols-3">
         {round.options.map((o: Place, n) => {
           const s = sai(n)
           const winner = order?.[0] === n
           return (
-            <button
+            <motion.button
               key={o.name}
               type="button"
               disabled={choice !== null}
               aria-pressed={choice === n}
               onClick={() => setChoice(n)}
+              whileHover={choice === null && !reduced ? { y: -4 } : undefined}
+              whileTap={choice === null && !reduced ? { scale: 0.97 } : undefined}
               className={cn(
-                'group overflow-hidden rounded-2xl border bg-ink-850 text-left transition-colors',
-                choice === null && 'border-border hover:border-data/50',
-                choice === n && 'border-data/70',
+                'group relative overflow-hidden rounded-2xl border-2 bg-ink-850 text-left transition-colors',
+                choice === null && 'border-border hover:border-data/60',
+                choice === n && 'border-data',
                 choice !== null && choice !== n && 'border-border',
-                winner && 'ring-2 ring-reference/70',
+                winner && 'border-reference',
               )}
             >
               <div className="relative aspect-[4/3] overflow-hidden bg-ink-950">
-                <SatImage src={gibsWindow(o.lat, o.lon, 40, 'imagery', 256)} alt={`Satellite image of ${o.name}`} />
-                {choice === n && <span className="absolute left-2 top-2 rounded bg-ink-950/90 px-2 py-0.5 text-xs text-data">Your pick</span>}
-                {winner && <span className="absolute right-2 top-2 rounded bg-ink-950/90 px-2 py-0.5 text-xs text-reference">Best match</span>}
-              </div>
-              <div className="flex items-baseline justify-between gap-2 p-3.5">
-                <span className="text-[14px] text-slate-100">{o.name}</span>
-                {s !== null && (
-                  <motion.span initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} className="tabular text-xl font-semibold text-slate-100">
-                    {Math.round(s)}
+                <SatImage src={gibsWindow(o.lat, o.lon, 40, 'imagery', 256)} alt={`Satellite picture of ${o.name}`} />
+                {choice === n && <span className="absolute left-2 top-2 rounded-md bg-ink-950/90 px-2 py-0.5 text-xs font-medium text-data">Your pick</span>}
+                {winner && (
+                  <motion.span
+                    initial={reduced ? false : { scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.6, type: 'spring', stiffness: 500, damping: 15 }}
+                    className="absolute right-2 top-2 rounded-md bg-reference px-2 py-0.5 text-xs font-semibold text-ink-950"
+                  >
+                    Best match
                   </motion.span>
                 )}
               </div>
-            </button>
+              <div className="flex items-end justify-between gap-2 p-3.5">
+                <span className="text-[14px] leading-snug text-slate-100">{o.name}</span>
+                {s !== null && (
+                  <span className="shrink-0 text-right">
+                    <CountUp to={Math.round(s)} className="tabular block text-2xl font-semibold text-slate-100" />
+                    <span className={cn('block text-[11px]', alike(s).tone)}>{alike(s).word}</span>
+                  </span>
+                )}
+              </div>
+            </motion.button>
           )
         })}
       </div>
-      <p className="mt-2 font-mono text-[10.5px] text-slate-400">Images: NASA/USGS Landsat via NASA GIBS, 40 km across</p>
-      {error && <p className="mt-4 text-negative">Scoring did not work this time. Reload the page to try again.</p>}
+      <p className="mt-2 font-mono text-[10.5px] text-slate-400">Pictures: NASA/USGS Landsat via NASA GIBS, 40 km across</p>
+      {error && <p className="mt-4 text-negative">That did not work. Reload the page to try again.</p>}
       {stars !== null && order && (
-        <motion.div initial={reduced ? { opacity: 0 } : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-5 flex flex-col gap-3 rounded-2xl border border-border bg-ink-850 p-5 sm:flex-row sm:items-center" aria-live="polite">
-          <Stars n={stars} size="size-6" />
+        <motion.div
+          initial={reduced ? { opacity: 0 } : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="mt-5 flex flex-col gap-3 rounded-2xl border border-border bg-ink-850 p-5 sm:flex-row sm:items-center"
+        >
+          <Stars n={stars} size="size-7" pop />
           <p className="text-[15px] leading-relaxed text-slate-200">
-            <span className="font-semibold text-slate-100">{stars === 3 ? 'Right! ' : 'Good try. '}</span>
-            {order[0] === round.answer ? round.lesson : `${round.options[order[0]!]!.name} scores highest.`}
+            <span className="font-semibold text-slate-100">{stars === 3 ? 'You got it! ' : 'Good try! '}</span>
+            {order[0] === round.answer ? round.lesson : `${round.options[order[0]!]!.name} is the most alike.`}
             {(() => {
               const s = strengths(scores?.[order[0]!]?.verdict ?? null)
-              return s.best ? ` It matches best on ${s.best}.` : ''
+              return s.best ? ` It is most alike in ${s.best}.` : ''
             })()}
           </p>
         </motion.div>
