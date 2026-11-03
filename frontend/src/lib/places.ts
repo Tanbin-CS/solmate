@@ -1,3 +1,4 @@
+import { countryAt, type Countries } from './countries'
 import { fmtCoord } from './format'
 
 /**
@@ -17,10 +18,17 @@ export function regionOf(lat: number, lon: number): string | null {
   return REGIONS.find((r) => lat >= r.south && lat < r.north && lon >= r.west && lon < r.east)?.name ?? null
 }
 
-/** "Tibetan Plateau · 37.05°N 86.75°E", or just the coordinates. */
-export function placeLabel(lat: number, lon: number): { name: string; coords: string } {
+/**
+ * A readable name and the coordinates. With country outlines loaded the name is "Region, Country"
+ * or just the country ("Tibetan Plateau, China", "Somalia"); without them it is the region name,
+ * or the coordinates when the place has no region.
+ */
+export function placeLabel(lat: number, lon: number, countries?: Countries | null): { name: string; coords: string } {
   const coords = fmtCoord(lat, lon)
-  return { name: regionOf(lat, lon) ?? coords, coords }
+  const region = regionOf(lat, lon)
+  const country = countries ? countryAt(countries, lat, lon) : null
+  const name = region && country ? `${region}, ${country}` : (region ?? country ?? coords)
+  return { name, coords }
 }
 
 /**

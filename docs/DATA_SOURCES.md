@@ -70,6 +70,7 @@ Explorer's place panel with their source.
 | AWS Terrain Tiles (Terrarium) | Mapzen / AWS | Optional 3D terrain view | Open |
 | Chang'e-4 LND lunar dose | CNSA (Zhang et al. 2020) | Breaks-down context only | Citation |
 | UNSCEAR 2008 background dose | UN | Earth reference dose (breaks-down) | Citation |
+| Natural Earth Admin 0 countries, 1:110m | Natural Earth (`nvkelso/natural-earth-vector` @ ca96624, sha256 6866c877…977f) | Country names for places in the Explorer, Learn and home page (display only). Shrunk by `scripts/shrink_countries.py` to `frontend/public/data/countries.v1.json` | Public domain |
 
 **Removed in v2:** Sentinel-2 cloudless by EOX (CC BY-NC-SA 4.0). Its non-commercial
 terms do not meet the Space Apps open-licence rule.
