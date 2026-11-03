@@ -14,6 +14,12 @@ import { ClipSound } from './sound'
 
 const SOUND_KEY = 'solmate-sound'
 
+/** False when the visitor has not clicked or tapped this page yet, so the browser will block sound. */
+function canSound(): boolean {
+  const ua = (navigator as Navigator & { userActivation?: { hasBeenActive: boolean } }).userActivation
+  return ua ? ua.hasBeenActive : true
+}
+
 const clamp = (x: number, a = 0, b = 1) => Math.min(b, Math.max(a, x))
 const out = (x: number) => 1 - (1 - clamp(x)) ** 3 // ease out
 const span = (p: number, a: number, b: number) => out((p - a) / (b - a)) // 0..1 between a and b
@@ -43,6 +49,7 @@ export function Explainer({ data, onStart, onFree }: { data: LearnData | null; o
   const [audible, setAudible] = useState(false)
   const touched = useRef(false)
   const box = useRef<HTMLElement>(null)
+  const stage = useRef<HTMLDivElement>(null)
   const tRef = useRef(0)
   const analogs = data?.model.known_analogs.sites.length ?? 30
   const sound = useRef<ClipSound | null>(null)
@@ -125,16 +132,29 @@ export function Explainer({ data, onStart, onFree }: { data: LearnData | null; o
     for (const src of [asset('media/globe-moon.webp'), asset('media/globe-mars.webp'), asset('data/quicklooks/jezero-hillshade.webp'), asset('media/earth-2k.webp'), gibsWindow(TIBET.lat, TIBET.lon, 40, 'imagery', 512)]) new Image().src = src
   }, [])
 
-  // Start once when half of it is on screen (not with reduced motion); pause when it leaves.
+  // Start once when half of it is on screen (not with reduced motion); pause when it leaves. After a
+  // fresh load or refresh nobody has tapped the page yet, and every browser then blocks sound. A
+  // silent clip looks broken, so in that case it waits: the first tap on the clip or anywhere else
+  // on the page starts picture and music together.
+  const soundRef = useRef(soundOn)
+  useEffect(() => {
+    soundRef.current = soundOn
+  }, [soundOn])
+  const inView = useRef(false)
+  const [waiting, setWaiting] = useState(false)
   useEffect(() => {
     const el = box.current
     if (!el || typeof IntersectionObserver === 'undefined') return
     const io = new IntersectionObserver(
       ([e]) => {
         if (!e) return
+        inView.current = e.isIntersecting
         if (e.isIntersecting && !touched.current && !reduced) {
-          touched.current = true
-          setPlaying(true)
+          if (soundRef.current && !canSound()) setWaiting(true)
+          else {
+            touched.current = true
+            setPlaying(true)
+          }
         }
         if (!e.isIntersecting) setPlaying(false)
       },
@@ -143,6 +163,22 @@ export function Explainer({ data, onStart, onFree }: { data: LearnData | null; o
     io.observe(el)
     return () => io.disconnect()
   }, [reduced])
+  useEffect(() => {
+    if (!waiting) return
+    const go = (e: Event) => {
+      if (touched.current || !inView.current) return
+      if (e.target instanceof Element && (stage.current?.contains(e.target) || e.target.closest('button, input'))) return // those start or seek the clip themselves
+      touched.current = true
+      sound.current?.unlock()
+      setPlaying(true)
+    }
+    window.addEventListener('pointerdown', go)
+    window.addEventListener('keydown', go)
+    return () => {
+      window.removeEventListener('pointerdown', go)
+      window.removeEventListener('keydown', go)
+    }
+  }, [waiting])
 
   const i = sceneAt(t)
   const scene = SCENES[i]!
@@ -184,7 +220,7 @@ export function Explainer({ data, onStart, onFree }: { data: LearnData | null; o
 
   return (
     <figure ref={box} className="overflow-hidden rounded-2xl border border-border bg-ink-850" aria-label="30-second explainer: how SolMate finds Earth analogs">
-      <div className="relative aspect-video w-full cursor-pointer overflow-hidden bg-ink-950" onClick={toggle}>
+      <div ref={stage} className="relative aspect-video w-full cursor-pointer overflow-hidden bg-ink-950" onClick={toggle}>
         <Stage i={i} p={p} nums={nums} sites={data?.model.known_analogs.sites ?? []} split={split} onSplit={setSplit} />
 
         {/* tap-to-learn point for this scene */}
@@ -231,8 +267,10 @@ export function Explainer({ data, onStart, onFree }: { data: LearnData | null; o
         {/* big start button before the first play */}
         {!playing && t === 0 && !f && (
           <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-ink-950/30">
-            <span className="flex items-center gap-2 rounded-full bg-data px-5 py-3 text-base font-semibold text-ink-950 shadow-[0_10px_30px_-8px_rgb(0_0_0/0.8)]">
-              <Play className="size-5 fill-ink-950" /> Play · 30 s
+            <span className="relative flex items-center gap-2 rounded-full bg-data px-5 py-3 text-base font-semibold text-ink-950 shadow-[0_10px_30px_-8px_rgb(0_0_0/0.8)]">
+              {waiting && !reduced && <span className="absolute inset-0 animate-ping rounded-full bg-data/40 [animation-duration:1.8s]" aria-hidden="true" />}
+              <Play className="relative size-5 fill-ink-950" />
+              <span className="relative">{soundOn ? 'Play with sound' : 'Play'} · 30 s</span>
             </span>
           </span>
         )}
