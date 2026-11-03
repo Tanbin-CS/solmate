@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { explorerLink, type Flagship } from '@/hooks/useHomeData'
 import { asset } from '@/lib/asset'
+import { useCountries } from '@/lib/countries'
 import { placeLabel } from '@/lib/places'
 import { siteName } from '@/components/explorer2/labels'
 import { rank } from '@/science/v2/screening'
@@ -34,6 +35,7 @@ export function WorldMap({ flagship, known, weights }: { flagship: Flagship; kno
   const navigate = useNavigate()
   const reduced = useReducedMotion()
   const [hover, setHover] = useState<Point | null>(null)
+  const countries = useCountries()
   const id = flagship.target.id
 
   const points = useMemo<Point[]>(() => {
@@ -44,12 +46,12 @@ export function WorldMap({ flagship, known, weights }: { flagship: Flagship; kno
         const key = `${r.candidate.lat},${r.candidate.lon}`
         if (seen.has(key)) return
         seen.add(key)
-        out.push({ key, lat: r.candidate.lat, lon: r.candidate.lon, kind, sai: r.sai, rank: i + 1, label: placeLabel(r.candidate.lat, r.candidate.lon).name })
+        out.push({ key, lat: r.candidate.lat, lon: r.candidate.lon, kind, sai: r.sai, rank: i + 1, label: placeLabel(r.candidate.lat, r.candidate.lon, countries).name })
       })
     add(flagship.top, 'top')
     add(rank(flagship.screening.novel_leads, weights), 'novel')
     return out
-  }, [flagship, known, weights])
+  }, [flagship, known, weights, countries])
 
   const scored = points.filter((p) => p.kind !== 'known')
   const lo = Math.min(...scored.map((p) => p.sai ?? 0))

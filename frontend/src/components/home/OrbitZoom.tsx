@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from 'motion/react'
 import type { HomeData } from '@/hooks/useHomeData'
 import { asset } from '@/lib/asset'
+import { useCountries } from '@/lib/countries'
 import { gibsWindow, placeLabel } from '@/lib/places'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { withTerrain100 } from '@/science/v2/screening'
@@ -13,6 +14,7 @@ import { DIMENSION_CARDS } from './dimensions'
  */
 export function OrbitZoom({ data }: { data: HomeData }) {
   const reduced = useReducedMotion() ?? false
+  const countries = useCountries()
   const narrow = !useMediaQuery('(min-width: 1024px)')
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress: p } = useScroll({ target: ref, offset: ['start start', 'end end'] })
@@ -25,7 +27,7 @@ export function OrbitZoom({ data }: { data: HomeData }) {
   const f = data.flagships.find((x) => x.target.body === 'mars') ?? data.flagships[0]!
   const best = f.top[0]!
   const c0 = best.candidate
-  const place = placeLabel(c0.lat, c0.lon)
+  const place = placeLabel(c0.lat, c0.lon, countries)
   const dims = withTerrain100(c0.dims, c0.terrain_100m?.score)
   const bars = DIMENSION_CARDS.filter((d) => d.id in dims)
   const score = Math.round(best.sai)

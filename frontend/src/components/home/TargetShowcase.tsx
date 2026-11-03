@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { AnimatePresence, motion } from 'motion/react'
 import { ArrowRight } from 'lucide-react'
 import { explorerLink, type Flagship } from '@/hooks/useHomeData'
+import { useCountries } from '@/lib/countries'
 import { gibsWindow, placeLabel } from '@/lib/places'
 import { cn } from '@/lib/utils'
 import { spring } from '@/design/motion'
@@ -20,12 +21,13 @@ type View = 'hillshade' | 'imagery'
  */
 export function TargetShowcase({ flagship }: { flagship: Flagship }) {
   const top = flagship.top.slice(0, 4)
+  const countries = useCountries()
   const [picked, setPicked] = useState(0)
   const [view, setView] = useState<View>('hillshade')
   const match = top[picked] ?? top[0]
   if (!match) return null
   const c = match.candidate
-  const place = placeLabel(c.lat, c.lon)
+  const place = placeLabel(c.lat, c.lon, countries)
   const dims = withTerrain100(c.dims, c.terrain_100m?.score)
   const body = flagship.target.body
   const views: { id: View; label: string }[] = [
@@ -74,7 +76,7 @@ export function TargetShowcase({ flagship }: { flagship: Flagship }) {
           <h3 className="text-sm font-medium text-slate-200">Compare with</h3>
           <div className="mt-3 grid grid-cols-2 gap-2">
             {top.map((r, i) => {
-              const pl = placeLabel(r.candidate.lat, r.candidate.lon)
+              const pl = placeLabel(r.candidate.lat, r.candidate.lon, countries)
               return (
                 <button
                   key={`${r.candidate.lat},${r.candidate.lon}`}

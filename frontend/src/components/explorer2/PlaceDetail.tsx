@@ -6,7 +6,8 @@ import type { Async } from '@/hooks/useV2'
 import type { Model, Target } from '@/science/v2/model'
 import type { PlaceResult } from '@/science/v2/place'
 import { withRefinedTerrain } from '@/science/v2/verdict'
-import { fmtCoord } from '@/lib/format'
+import { useCountries } from '@/lib/countries'
+import { placeLabel } from '@/lib/places'
 import { BAND_STYLE } from './labels'
 import { DimensionBars } from './DimensionBars'
 import { ExtraData } from './ExtraData'
@@ -29,6 +30,8 @@ interface Props {
 
 export function PlaceDetail({ state, target, model, weights, isBox, terrain, storedT100, onRefine, onClose, onTarget }: Props) {
   const r = state.status === 'ready' ? state.data : null
+  const countries = useCountries()
+  const place = r ? placeLabel(r.centre.lat, r.centre.lon, countries) : null
   const live = terrain.status === 'done' && terrain.result.ok ? terrain.result.data.terrain_score : null
   const t100 = live ?? (!isBox && storedT100 !== undefined && storedT100 !== null && Number.isFinite(storedT100) ? storedT100 : null)
   const coarse = r?.verdict ?? null
@@ -42,11 +45,12 @@ export function PlaceDetail({ state, target, model, weights, isBox, terrain, sto
       <header className="flex items-start justify-between gap-3 border-b border-border px-5 pb-4 pt-5">
         <div className="min-w-0">
           <p className="label-mono">{isBox ? 'Drawn area' : 'Selected place'} · vs {target.name}</p>
-          <h2 id="place-title" className="mt-1.5 font-mono text-lg tracking-tight">
-            {r ? fmtCoord(r.centre.lat, r.centre.lon) : 'Scoring…'}
+          <h2 id="place-title" className={place && place.name !== place.coords ? 'mt-1.5 text-lg font-semibold tracking-tight' : 'mt-1.5 font-mono text-lg tracking-tight'}>
+            {place ? place.name : 'Scoring…'}
           </h2>
-          {r && (
+          {r && place && (
             <p className="mt-1 font-mono text-[11px] text-slate-400">
+              {place.name !== place.coords && `${place.coords} · `}
               {r.land ? `${r.cells} NASA stack cell${r.cells === 1 ? '' : 's'} at 0.1°` : 'Ocean or no land data'}
             </p>
           )}

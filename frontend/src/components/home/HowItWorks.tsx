@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useInView, useReducedMotion, useScroll, useSpr
 import { Layers, ListOrdered, Mountain, Radar, Scale } from 'lucide-react'
 import type { HomeData } from '@/hooks/useHomeData'
 import { asset } from '@/lib/asset'
+import { useCountries } from '@/lib/countries'
 import { placeLabel } from '@/lib/places'
 import { cn } from '@/lib/utils'
 import { BODY } from '@/components/explorer/roles'
@@ -110,7 +111,8 @@ function ScoreVisual({ data }: { data: HomeData }) {
   const f = data.flagships[0]!
   const best = f.top[0]!
   const dims = withTerrain100(best.candidate.dims, best.candidate.terrain_100m?.score)
-  const place = placeLabel(best.candidate.lat, best.candidate.lon)
+  const countries = useCountries()
+  const place = placeLabel(best.candidate.lat, best.candidate.lon, countries)
   return (
     <div className="flex h-full flex-col justify-center gap-3 p-6">
       <p className="font-mono text-[11px] text-slate-400">
