@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
-import { describe, expect, it } from 'vitest'
-import { IndexSchema, decodeGrid, findPlace, rowProfile, slopeDeg, slopeStats, type GridMeta, type Terrain3dIndex } from './terrain3d'
+import { gunzipSync, gzipSync } from 'node:zlib'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { IndexSchema, decodeGrid, loadGrid, findPlace, rowProfile, slopeDeg, slopeStats, type GridMeta, type Terrain3dIndex } from './terrain3d'
 
 const meta = (n: number, min: number, max: number): GridMeta => ({
   file: 'x.bin',
@@ -80,11 +81,37 @@ describe('findPlace', () => {
 })
 
 describe('the shipped index', () => {
-  it('parses, and every grid file has the size its n says', () => {
+  it('parses, and every grid file is gzipped and unpacks to the size its n says', () => {
     const root = new URL('../../public/data/v2/terrain3d/', import.meta.url)
     const idx = IndexSchema.parse(JSON.parse(readFileSync(new URL('index.json', root), 'utf8')))
     const all = [...Object.values(idx.targets), ...Object.values(idx.places)]
     expect(Object.keys(idx.places).length).toBeGreaterThan(0)
-    for (const m of all) expect(readFileSync(new URL(m.file, root)).byteLength).toBe(m.n * m.n * 2)
+    for (const m of all) {
+      const buf = readFileSync(new URL(m.file, root))
+      expect([buf[0], buf[1]]).toEqual([0x1f, 0x8b])
+      expect(gunzipSync(buf).byteLength).toBe(m.n * m.n * 2)
+    }
+  })
+})
+
+describe('loadGrid', () => {
+  afterEach(() => vi.unstubAllGlobals())
+  it('gunzips a packed grid and fetches each file once', async () => {
+    const z = [0, 50, 100, 25]
+    const raw = new Uint8Array(encode(z, 0, 100))
+    const fetchMock = vi.fn(async () => new Response(gzipSync(raw)))
+    vi.stubGlobal('fetch', fetchMock)
+    const m = { ...meta(2, 0, 100), file: 'packed_test.bin' }
+    const g = await loadGrid(m)
+    expect(g.z[1]).toBeCloseTo(50, 2)
+    await loadGrid(m)
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+  })
+  it('does not keep a failed fetch, so a retry can succeed', async () => {
+    const m = { ...meta(2, 0, 100), file: 'flaky_test.bin' }
+    vi.stubGlobal('fetch', vi.fn(async () => new Response('', { status: 503 })))
+    await expect(loadGrid(m)).rejects.toThrow(/503/)
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(new Uint8Array(encode([1, 2, 3, 4], 0, 100)))))
+    await expect(loadGrid(m)).resolves.toHaveProperty('n', 2)
   })
 })

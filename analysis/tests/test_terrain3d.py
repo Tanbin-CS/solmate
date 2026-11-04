@@ -31,3 +31,13 @@ def test_leading_places_dedupes_and_records_targets():
     assert list(places) == ["earth_1.000_2.000"]
     assert places["earth_1.000_2.000"]["for"] == ["a", "b"]
     assert terrain3d.place_id(-1.5, -70.25) == "earth_m1.500_m70.250"
+
+
+def test_pack_is_deterministic_and_decodes():
+    z = np.arange(64, dtype=np.float32).reshape(8, 8)
+    buf, lo, hi = terrain3d.encode(z)
+    packed = terrain3d.pack(buf)
+    assert packed == terrain3d.pack(buf)
+    assert packed[:2] == b"\x1f\x8b"
+    assert np.allclose(terrain3d.decode(packed, 8, lo, hi), z, atol=(hi - lo) / 65534)
+    assert terrain3d.unpack(buf) == buf
