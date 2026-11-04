@@ -1,11 +1,11 @@
 {
  "version": 1,
- "generated_at": "2026-11-04T08:41:34+00:00",
+ "generated_at": "2026-11-04T11:19:27+00:00",
  "window": {
   "size_m": 20000.0,
   "cell_m": 100.0
  },
- "encoding": "n x n little-endian uint16; 0 = no data; 1..65535 linear on [min_m, max_m]",
+ "encoding": "gzip of n x n little-endian uint16; 0 = no data; 1..65535 linear on [min_m, max_m]",
  "use": "context only (3D view); never scored",
  "targets": {
   "peak_near_cabeus_b": {
@@ -171,12 +171,337 @@
    "valid_fraction": 1.0,
    "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
   },
+  "earth_35.750_78.650": {
+   "lat": 35.75,
+   "lon": 78.65,
+   "for": [
+    "peak_near_cabeus_b"
+   ],
+   "file": "earth_35.750_78.650.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4525.95,
+   "max_m": 6507.8,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.450_84.450": {
+   "lat": 36.45,
+   "lon": 84.45,
+   "for": [
+    "peak_near_cabeus_b",
+    "malapert_massif",
+    "mons_mouton_plateau",
+    "nobile_rim_1"
+   ],
+   "file": "earth_36.450_84.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4266.49,
+   "max_m": 5496.94,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.450_77.450": {
+   "lat": 36.45,
+   "lon": 77.45,
+   "for": [
+    "peak_near_cabeus_b"
+   ],
+   "file": "earth_36.450_77.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3969.91,
+   "max_m": 6358.73,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_37.750_75.150": {
+   "lat": 37.75,
+   "lon": 75.15,
+   "for": [
+    "peak_near_cabeus_b",
+    "nobile_rim_1"
+   ],
+   "file": "earth_37.750_75.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3010.76,
+   "max_m": 5627.13,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.150_73.650": {
+   "lat": 38.15,
+   "lon": 73.65,
+   "for": [
+    "peak_near_cabeus_b"
+   ],
+   "file": "earth_38.150_73.650.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3503.32,
+   "max_m": 5510.33,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m27.850_m69.150": {
+   "lat": -27.85,
+   "lon": -69.15,
+   "for": [
+    "peak_near_cabeus_b",
+    "malapert_massif",
+    "mons_mouton"
+   ],
+   "file": "earth_m27.850_m69.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3583.5,
+   "max_m": 5478.66,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m28.950_m69.950": {
+   "lat": -28.95,
+   "lon": -69.95,
+   "for": [
+    "peak_near_cabeus_b"
+   ],
+   "file": "earth_m28.950_m69.950.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1795.97,
+   "max_m": 5174.17,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_39.150_95.550": {
+   "lat": 39.15,
+   "lon": 95.55,
+   "for": [
+    "peak_near_cabeus_b",
+    "nobile_rim_1"
+   ],
+   "file": "earth_39.150_95.550.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3143.82,
+   "max_m": 5536.02,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_34.050_78.950": {
+   "lat": 34.05,
+   "lon": 78.95,
+   "for": [
+    "peak_near_cabeus_b"
+   ],
+   "file": "earth_34.050_78.950.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4532.93,
+   "max_m": 6311.56,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.350_78.250": {
+   "lat": 36.35,
+   "lon": 78.25,
+   "for": [
+    "peak_near_cabeus_b"
+   ],
+   "file": "earth_36.350_78.250.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3624.55,
+   "max_m": 6088.59,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_32.650_79.450": {
+   "lat": 32.65,
+   "lon": 79.45,
+   "for": [
+    "peak_near_cabeus_b"
+   ],
+   "file": "earth_32.650_79.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4165.67,
+   "max_m": 6264.27,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_32.750_81.550": {
+   "lat": 32.75,
+   "lon": 81.55,
+   "for": [
+    "peak_near_cabeus_b",
+    "malapert_massif",
+    "nobile_rim_1"
+   ],
+   "file": "earth_32.750_81.550.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4412.66,
+   "max_m": 5908.5,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.450_82.750": {
+   "lat": 35.45,
+   "lon": 82.75,
+   "for": [
+    "peak_near_cabeus_b",
+    "malapert_massif",
+    "nobile_rim_1"
+   ],
+   "file": "earth_35.450_82.750.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4921.12,
+   "max_m": 5338.79,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_37.650_73.250": {
+   "lat": 37.65,
+   "lon": 73.25,
+   "for": [
+    "peak_near_cabeus_b",
+    "malapert_massif",
+    "mons_mouton"
+   ],
+   "file": "earth_37.650_73.250.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3793.84,
+   "max_m": 5411.39,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.850_74.050": {
+   "lat": 38.85,
+   "lon": 74.05,
+   "for": [
+    "peak_near_cabeus_b",
+    "nobile_rim_1"
+   ],
+   "file": "earth_38.850_74.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3647.62,
+   "max_m": 5433.44,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_33.850_79.850": {
+   "lat": 33.85,
+   "lon": 79.85,
+   "for": [
+    "peak_near_cabeus_b"
+   ],
+   "file": "earth_33.850_79.850.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4514.61,
+   "max_m": 6364.38,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m26.350_m68.750": {
+   "lat": -26.35,
+   "lon": -68.75,
+   "for": [
+    "peak_near_cabeus_b",
+    "malapert_massif"
+   ],
+   "file": "earth_m26.350_m68.750.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4117.41,
+   "max_m": 5772.57,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.650_80.950": {
+   "lat": 35.65,
+   "lon": 80.95,
+   "for": [
+    "peak_near_cabeus_b"
+   ],
+   "file": "earth_35.650_80.950.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4052.03,
+   "max_m": 6422.3,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m27.250_m68.750": {
+   "lat": -27.25,
+   "lon": -68.75,
+   "for": [
+    "peak_near_cabeus_b"
+   ],
+   "file": "earth_m27.250_m68.750.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4084.98,
+   "max_m": 6219.45,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.150_86.950": {
+   "lat": 38.15,
+   "lon": 86.95,
+   "for": [
+    "peak_near_cabeus_b"
+   ],
+   "file": "earth_38.150_86.950.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1523.71,
+   "max_m": 3916.12,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.950_82.350": {
+   "lat": 35.95,
+   "lon": 82.35,
+   "for": [
+    "peak_near_cabeus_b",
+    "slater_plain"
+   ],
+   "file": "earth_35.950_82.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4168.79,
+   "max_m": 5224.91,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m30.450_m70.050": {
+   "lat": -30.45,
+   "lon": -70.05,
+   "for": [
+    "peak_near_cabeus_b"
+   ],
+   "file": "earth_m30.450_m70.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3164.75,
+   "max_m": 5561.28,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
   "earth_m27.450_m68.750": {
    "lat": -27.45,
    "lon": -68.75,
    "for": [
     "haworth",
-    "nobile_rim_2"
+    "nobile_rim_2",
+    "de_gerlache_rim_2"
    ],
    "file": "earth_m27.450_m68.750.bin",
    "n": 200,
@@ -190,7 +515,9 @@
    "lat": 32.45,
    "lon": 80.55,
    "for": [
-    "haworth"
+    "haworth",
+    "nobile_rim_2",
+    "de_gerlache_rim_2"
    ],
    "file": "earth_32.450_80.550.bin",
    "n": 200,
@@ -243,17 +570,330 @@
    "valid_fraction": 1.0,
    "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
   },
-  "earth_m27.850_m69.150": {
-   "lat": -27.85,
-   "lon": -69.15,
+  "earth_m26.350_m68.650": {
+   "lat": -26.35,
+   "lon": -68.65,
    "for": [
-    "malapert_massif"
+    "haworth"
    ],
-   "file": "earth_m27.850_m69.150.bin",
+   "file": "earth_m26.350_m68.650.bin",
    "n": 200,
    "cell_m": 100.0,
-   "min_m": 3583.5,
-   "max_m": 5478.66,
+   "min_m": 4118.51,
+   "max_m": 5768.11,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m27.750_m69.150": {
+   "lat": -27.75,
+   "lon": -69.15,
+   "for": [
+    "haworth",
+    "nobile_rim_2"
+   ],
+   "file": "earth_m27.750_m69.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3800.48,
+   "max_m": 5856.66,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.850_82.250": {
+   "lat": 35.85,
+   "lon": 82.25,
+   "for": [
+    "haworth"
+   ],
+   "file": "earth_35.850_82.250.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3935.06,
+   "max_m": 5795.96,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_31.850_80.350": {
+   "lat": 31.85,
+   "lon": 80.35,
+   "for": [
+    "haworth"
+   ],
+   "file": "earth_31.850_80.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4394.07,
+   "max_m": 6123.5,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_32.750_81.850": {
+   "lat": 32.75,
+   "lon": 81.85,
+   "for": [
+    "haworth",
+    "de_gerlache_rim_2"
+   ],
+   "file": "earth_32.750_81.850.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4330.17,
+   "max_m": 5553.95,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.850_73.450": {
+   "lat": 38.85,
+   "lon": 73.45,
+   "for": [
+    "haworth"
+   ],
+   "file": "earth_38.850_73.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3911.8,
+   "max_m": 5434.7,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.050_77.550": {
+   "lat": 36.05,
+   "lon": 77.55,
+   "for": [
+    "haworth"
+   ],
+   "file": "earth_36.050_77.550.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4418.07,
+   "max_m": 5712.58,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_32.550_79.650": {
+   "lat": 32.55,
+   "lon": 79.65,
+   "for": [
+    "haworth"
+   ],
+   "file": "earth_32.550_79.650.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4190.45,
+   "max_m": 5923.08,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m26.950_m68.750": {
+   "lat": -26.95,
+   "lon": -68.75,
+   "for": [
+    "haworth"
+   ],
+   "file": "earth_m26.950_m68.750.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4367.27,
+   "max_m": 6095.55,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.850_79.350": {
+   "lat": 36.85,
+   "lon": 79.35,
+   "for": [
+    "haworth"
+   ],
+   "file": "earth_36.850_79.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1743.47,
+   "max_m": 3593.06,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_39.150_93.750": {
+   "lat": 39.15,
+   "lon": 93.75,
+   "for": [
+    "haworth",
+    "nobile_rim_2"
+   ],
+   "file": "earth_39.150_93.750.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3636.18,
+   "max_m": 5474.1,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m29.450_m69.850": {
+   "lat": -29.45,
+   "lon": -69.85,
+   "for": [
+    "haworth",
+    "nobile_rim_2"
+   ],
+   "file": "earth_m29.450_m69.850.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3763.15,
+   "max_m": 5254.18,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.650_81.750": {
+   "lat": 35.65,
+   "lon": 81.75,
+   "for": [
+    "haworth"
+   ],
+   "file": "earth_35.650_81.750.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4670.81,
+   "max_m": 6229.85,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m25.450_m68.650": {
+   "lat": -25.45,
+   "lon": -68.65,
+   "for": [
+    "haworth"
+   ],
+   "file": "earth_m25.450_m68.650.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3778.19,
+   "max_m": 5398.47,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.950_74.450": {
+   "lat": 38.95,
+   "lon": 74.45,
+   "for": [
+    "haworth"
+   ],
+   "file": "earth_38.950_74.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3427.93,
+   "max_m": 5064.15,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m27.150_m68.150": {
+   "lat": -27.15,
+   "lon": -68.15,
+   "for": [
+    "haworth"
+   ],
+   "file": "earth_m27.150_m68.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3655.61,
+   "max_m": 5023.91,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.150_74.250": {
+   "lat": 38.15,
+   "lon": 74.25,
+   "for": [
+    "haworth"
+   ],
+   "file": "earth_38.150_74.250.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3620.19,
+   "max_m": 4606.86,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_39.250_73.850": {
+   "lat": 39.25,
+   "lon": 73.85,
+   "for": [
+    "haworth"
+   ],
+   "file": "earth_39.250_73.850.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3336.02,
+   "max_m": 5518.92,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_32.950_79.150": {
+   "lat": 32.95,
+   "lon": 79.15,
+   "for": [
+    "haworth"
+   ],
+   "file": "earth_32.950_79.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4136.72,
+   "max_m": 6084.88,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.650_79.650": {
+   "lat": 35.65,
+   "lon": 79.65,
+   "for": [
+    "haworth",
+    "nobile_rim_2"
+   ],
+   "file": "earth_35.650_79.650.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4867.11,
+   "max_m": 6292.46,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m26.950_m69.350": {
+   "lat": -26.95,
+   "lon": -69.35,
+   "for": [
+    "haworth"
+   ],
+   "file": "earth_m26.950_m69.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 2931.06,
+   "max_m": 4531.6,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_37.650_73.050": {
+   "lat": 37.65,
+   "lon": 73.05,
+   "for": [
+    "haworth"
+   ],
+   "file": "earth_37.650_73.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3720.76,
+   "max_m": 4860.95,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_33.050_80.450": {
+   "lat": 33.05,
+   "lon": 80.45,
+   "for": [
+    "haworth"
+   ],
+   "file": "earth_33.050_80.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4311.47,
+   "max_m": 5606.12,
    "valid_fraction": 1.0,
    "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
   },
@@ -276,7 +916,8 @@
    "lat": 32.75,
    "lon": 79.15,
    "for": [
-    "malapert_massif"
+    "malapert_massif",
+    "de_gerlache_rim_2"
    ],
    "file": "earth_32.750_79.150.bin",
    "n": 200,
@@ -300,31 +941,267 @@
    "valid_fraction": 1.0,
    "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
   },
-  "earth_m26.350_m68.750": {
-   "lat": -26.35,
-   "lon": -68.75,
-   "for": [
-    "malapert_massif"
-   ],
-   "file": "earth_m26.350_m68.750.bin",
-   "n": 200,
-   "cell_m": 100.0,
-   "min_m": 4117.41,
-   "max_m": 5772.57,
-   "valid_fraction": 1.0,
-   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
-  },
   "earth_33.450_79.250": {
    "lat": 33.45,
    "lon": 79.25,
    "for": [
-    "malapert_massif"
+    "malapert_massif",
+    "de_gerlache_rim_2"
    ],
    "file": "earth_33.450_79.250.bin",
    "n": 200,
    "cell_m": 100.0,
    "min_m": 4322.93,
    "max_m": 6261.75,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m27.350_m68.750": {
+   "lat": -27.35,
+   "lon": -68.75,
+   "for": [
+    "malapert_massif",
+    "mons_mouton"
+   ],
+   "file": "earth_m27.350_m68.750.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4074.22,
+   "max_m": 6220.4,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.250_78.450": {
+   "lat": 36.25,
+   "lon": 78.45,
+   "for": [
+    "malapert_massif"
+   ],
+   "file": "earth_36.250_78.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3782.04,
+   "max_m": 6188.74,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.950_79.150": {
+   "lat": 35.95,
+   "lon": 79.15,
+   "for": [
+    "malapert_massif"
+   ],
+   "file": "earth_35.950_79.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4149.27,
+   "max_m": 6054.07,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_32.250_79.850": {
+   "lat": 32.25,
+   "lon": 79.85,
+   "for": [
+    "malapert_massif",
+    "de_gerlache_rim_2"
+   ],
+   "file": "earth_32.250_79.850.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4217.45,
+   "max_m": 6427.04,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m29.550_m69.450": {
+   "lat": -29.55,
+   "lon": -69.45,
+   "for": [
+    "malapert_massif"
+   ],
+   "file": "earth_m29.550_m69.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3292.96,
+   "max_m": 6089.43,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m25.250_m68.750": {
+   "lat": -25.25,
+   "lon": -68.75,
+   "for": [
+    "malapert_massif",
+    "mons_mouton"
+   ],
+   "file": "earth_m25.250_m68.750.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3523.42,
+   "max_m": 5176.09,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.250_77.550": {
+   "lat": 36.25,
+   "lon": 77.55,
+   "for": [
+    "malapert_massif",
+    "de_gerlache_rim_2"
+   ],
+   "file": "earth_36.250_77.550.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4098.4,
+   "max_m": 5886.67,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_34.050_80.250": {
+   "lat": 34.05,
+   "lon": 80.25,
+   "for": [
+    "malapert_massif",
+    "mons_mouton"
+   ],
+   "file": "earth_34.050_80.250.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4708.08,
+   "max_m": 6247.28,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.750_74.050": {
+   "lat": 38.75,
+   "lon": 74.05,
+   "for": [
+    "malapert_massif",
+    "mons_mouton"
+   ],
+   "file": "earth_38.750_74.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3933.65,
+   "max_m": 5432.89,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m30.650_m69.950": {
+   "lat": -30.65,
+   "lon": -69.95,
+   "for": [
+    "malapert_massif",
+    "nobile_rim_1"
+   ],
+   "file": "earth_m30.650_m69.950.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 2651.16,
+   "max_m": 5385.55,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.650_78.650": {
+   "lat": 35.65,
+   "lon": 78.65,
+   "for": [
+    "malapert_massif"
+   ],
+   "file": "earth_35.650_78.650.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4646.74,
+   "max_m": 6508.79,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_34.850_80.350": {
+   "lat": 34.85,
+   "lon": 80.35,
+   "for": [
+    "malapert_massif"
+   ],
+   "file": "earth_34.850_80.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4964.53,
+   "max_m": 6496.06,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_34.050_77.750": {
+   "lat": 34.05,
+   "lon": 77.75,
+   "for": [
+    "malapert_massif"
+   ],
+   "file": "earth_34.050_77.750.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3238.86,
+   "max_m": 5829.49,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_37.750_86.850": {
+   "lat": 37.75,
+   "lon": 86.85,
+   "for": [
+    "malapert_massif",
+    "nobile_rim_1"
+   ],
+   "file": "earth_37.750_86.850.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3082.8,
+   "max_m": 5792.27,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.750_80.850": {
+   "lat": 35.75,
+   "lon": 80.85,
+   "for": [
+    "malapert_massif",
+    "mons_mouton"
+   ],
+   "file": "earth_35.750_80.850.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3948.83,
+   "max_m": 6073.87,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m26.750_m68.650": {
+   "lat": -26.75,
+   "lon": -68.65,
+   "for": [
+    "malapert_massif",
+    "de_gerlache_rim_2"
+   ],
+   "file": "earth_m26.750_m68.650.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4205.11,
+   "max_m": 6128.32,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m28.750_m69.950": {
+   "lat": -28.75,
+   "lon": -69.95,
+   "for": [
+    "malapert_massif",
+    "mons_mouton"
+   ],
+   "file": "earth_m28.750_m69.950.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 2293.2,
+   "max_m": 4372.53,
    "valid_fraction": 1.0,
    "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
   },
@@ -374,7 +1251,8 @@
    "lat": 32.35,
    "lon": 81.45,
    "for": [
-    "mons_mouton_plateau"
+    "mons_mouton_plateau",
+    "slater_plain"
    ],
    "file": "earth_32.350_81.450.bin",
    "n": 200,
@@ -384,31 +1262,345 @@
    "valid_fraction": 1.0,
    "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
   },
-  "earth_36.450_84.450": {
-   "lat": 36.45,
-   "lon": 84.45,
+  "earth_m26.950_m68.350": {
+   "lat": -26.95,
+   "lon": -68.35,
    "for": [
     "mons_mouton_plateau"
    ],
-   "file": "earth_36.450_84.450.bin",
+   "file": "earth_m26.950_m68.350.bin",
    "n": 200,
    "cell_m": 100.0,
-   "min_m": 4266.49,
-   "max_m": 5496.94,
+   "min_m": 4301.15,
+   "max_m": 6589.45,
    "valid_fraction": 1.0,
    "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
   },
-  "earth_38.750_74.050": {
-   "lat": 38.75,
-   "lon": 74.05,
+  "earth_m27.050_m68.950": {
+   "lat": -27.05,
+   "lon": -68.95,
    "for": [
-    "mons_mouton"
+    "mons_mouton_plateau"
    ],
-   "file": "earth_38.750_74.050.bin",
+   "file": "earth_m27.050_m68.950.bin",
    "n": 200,
    "cell_m": 100.0,
-   "min_m": 3933.65,
-   "max_m": 5432.89,
+   "min_m": 3731.79,
+   "max_m": 5417.26,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_32.650_81.850": {
+   "lat": 32.65,
+   "lon": 81.85,
+   "for": [
+    "mons_mouton_plateau",
+    "slater_plain"
+   ],
+   "file": "earth_32.650_81.850.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4331.52,
+   "max_m": 5247.62,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.150_81.050": {
+   "lat": 35.15,
+   "lon": 81.05,
+   "for": [
+    "mons_mouton_plateau",
+    "slater_plain"
+   ],
+   "file": "earth_35.150_81.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 5025.41,
+   "max_m": 6181.02,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_34.350_82.250": {
+   "lat": 34.35,
+   "lon": 82.25,
+   "for": [
+    "mons_mouton_plateau"
+   ],
+   "file": "earth_34.350_82.250.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4899.18,
+   "max_m": 5639.78,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_33.850_82.550": {
+   "lat": 33.85,
+   "lon": 82.55,
+   "for": [
+    "mons_mouton_plateau",
+    "slater_plain"
+   ],
+   "file": "earth_33.850_82.550.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4923.0,
+   "max_m": 5883.71,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.150_82.350": {
+   "lat": 35.15,
+   "lon": 82.35,
+   "for": [
+    "mons_mouton_plateau"
+   ],
+   "file": "earth_35.150_82.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 5171.91,
+   "max_m": 6152.4,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.950_78.450": {
+   "lat": 35.95,
+   "lon": 78.45,
+   "for": [
+    "mons_mouton_plateau"
+   ],
+   "file": "earth_35.950_78.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4684.02,
+   "max_m": 5749.26,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_33.350_82.350": {
+   "lat": 33.35,
+   "lon": 82.35,
+   "for": [
+    "mons_mouton_plateau"
+   ],
+   "file": "earth_33.350_82.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4745.94,
+   "max_m": 5812.69,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.450_87.150": {
+   "lat": 36.45,
+   "lon": 87.15,
+   "for": [
+    "mons_mouton_plateau"
+   ],
+   "file": "earth_36.450_87.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4916.43,
+   "max_m": 6185.51,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.350_88.950": {
+   "lat": 38.35,
+   "lon": 88.95,
+   "for": [
+    "mons_mouton_plateau"
+   ],
+   "file": "earth_38.350_88.950.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3291.76,
+   "max_m": 4958.56,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_34.450_79.550": {
+   "lat": 34.45,
+   "lon": 79.55,
+   "for": [
+    "mons_mouton_plateau"
+   ],
+   "file": "earth_34.450_79.550.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 5231.18,
+   "max_m": 6311.3,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m22.650_m67.350": {
+   "lat": -22.65,
+   "lon": -67.35,
+   "for": [
+    "mons_mouton_plateau"
+   ],
+   "file": "earth_m22.650_m67.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4415.73,
+   "max_m": 5587.33,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_37.550_86.650": {
+   "lat": 37.55,
+   "lon": 86.65,
+   "for": [
+    "mons_mouton_plateau"
+   ],
+   "file": "earth_37.550_86.650.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3084.98,
+   "max_m": 4921.25,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m23.550_m69.050": {
+   "lat": -23.55,
+   "lon": -69.05,
+   "for": [
+    "mons_mouton_plateau"
+   ],
+   "file": "earth_m23.550_m69.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 2057.69,
+   "max_m": 2977.95,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_34.550_78.950": {
+   "lat": 34.55,
+   "lon": 78.95,
+   "for": [
+    "mons_mouton_plateau"
+   ],
+   "file": "earth_34.550_78.950.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4951.55,
+   "max_m": 5976.01,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.350_80.250": {
+   "lat": 35.35,
+   "lon": 80.25,
+   "for": [
+    "mons_mouton_plateau",
+    "slater_plain"
+   ],
+   "file": "earth_35.350_80.250.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4986.92,
+   "max_m": 5936.13,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_39.050_92.150": {
+   "lat": 39.05,
+   "lon": 92.15,
+   "for": [
+    "mons_mouton_plateau"
+   ],
+   "file": "earth_39.050_92.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 2619.89,
+   "max_m": 3867.62,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.250_83.150": {
+   "lat": 36.25,
+   "lon": 83.15,
+   "for": [
+    "mons_mouton_plateau",
+    "slater_plain"
+   ],
+   "file": "earth_36.250_83.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4406.71,
+   "max_m": 6273.39,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_33.750_81.950": {
+   "lat": 33.75,
+   "lon": 81.95,
+   "for": [
+    "mons_mouton_plateau"
+   ],
+   "file": "earth_33.750_81.950.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4804.15,
+   "max_m": 5829.05,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.350_81.850": {
+   "lat": 35.35,
+   "lon": 81.85,
+   "for": [
+    "mons_mouton_plateau"
+   ],
+   "file": "earth_35.350_81.850.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 5150.02,
+   "max_m": 6288.69,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m28.250_m69.250": {
+   "lat": -28.25,
+   "lon": -69.25,
+   "for": [
+    "mons_mouton_plateau"
+   ],
+   "file": "earth_m28.250_m69.250.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3720.78,
+   "max_m": 5007.81,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_32.350_80.450": {
+   "lat": 32.35,
+   "lon": 80.45,
+   "for": [
+    "mons_mouton_plateau",
+    "slater_plain"
+   ],
+   "file": "earth_32.350_80.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4466.89,
+   "max_m": 5443.28,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_45.850_91.450": {
+   "lat": 45.85,
+   "lon": 91.45,
+   "for": [
+    "mons_mouton_plateau"
+   ],
+   "file": "earth_45.850_91.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1015.84,
+   "max_m": 1865.17,
    "valid_fraction": 1.0,
    "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
   },
@@ -426,34 +1618,6 @@
    "valid_fraction": 1.0,
    "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
   },
-  "earth_m27.350_m68.750": {
-   "lat": -27.35,
-   "lon": -68.75,
-   "for": [
-    "mons_mouton"
-   ],
-   "file": "earth_m27.350_m68.750.bin",
-   "n": 200,
-   "cell_m": 100.0,
-   "min_m": 4074.22,
-   "max_m": 6220.4,
-   "valid_fraction": 1.0,
-   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
-  },
-  "earth_37.650_73.250": {
-   "lat": 37.65,
-   "lon": 73.25,
-   "for": [
-    "mons_mouton"
-   ],
-   "file": "earth_37.650_73.250.bin",
-   "n": 200,
-   "cell_m": 100.0,
-   "min_m": 3793.84,
-   "max_m": 5411.39,
-   "valid_fraction": 1.0,
-   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
-  },
   "earth_m27.050_m68.350": {
    "lat": -27.05,
    "lon": -68.35,
@@ -468,17 +1632,241 @@
    "valid_fraction": 1.0,
    "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
   },
-  "earth_39.150_95.550": {
-   "lat": 39.15,
-   "lon": 95.55,
+  "earth_37.250_86.650": {
+   "lat": 37.25,
+   "lon": 86.65,
    "for": [
-    "nobile_rim_1"
+    "mons_mouton"
    ],
-   "file": "earth_39.150_95.550.bin",
+   "file": "earth_37.250_86.650.bin",
    "n": 200,
    "cell_m": 100.0,
-   "min_m": 3143.82,
-   "max_m": 5536.02,
+   "min_m": 4033.75,
+   "max_m": 5582.38,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_32.950_80.850": {
+   "lat": 32.95,
+   "lon": 80.85,
+   "for": [
+    "mons_mouton"
+   ],
+   "file": "earth_32.950_80.850.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4361.13,
+   "max_m": 6069.43,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_32.050_80.150": {
+   "lat": 32.05,
+   "lon": 80.15,
+   "for": [
+    "mons_mouton"
+   ],
+   "file": "earth_32.050_80.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4224.43,
+   "max_m": 5799.72,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_37.950_75.050": {
+   "lat": 37.95,
+   "lon": 75.05,
+   "for": [
+    "mons_mouton"
+   ],
+   "file": "earth_37.950_75.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3061.77,
+   "max_m": 5293.47,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m30.050_m69.750": {
+   "lat": -30.05,
+   "lon": -69.75,
+   "for": [
+    "mons_mouton"
+   ],
+   "file": "earth_m30.050_m69.750.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3881.18,
+   "max_m": 5239.09,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_32.950_79.550": {
+   "lat": 32.95,
+   "lon": 79.55,
+   "for": [
+    "mons_mouton"
+   ],
+   "file": "earth_32.950_79.550.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4392.78,
+   "max_m": 6041.13,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.250_87.250": {
+   "lat": 38.25,
+   "lon": 87.25,
+   "for": [
+    "mons_mouton"
+   ],
+   "file": "earth_38.250_87.250.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1461.53,
+   "max_m": 3601.28,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_27.050_36.850": {
+   "lat": 27.05,
+   "lon": 36.85,
+   "for": [
+    "mons_mouton"
+   ],
+   "file": "earth_27.050_36.850.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 352.99,
+   "max_m": 1883.22,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m29.550_m69.650": {
+   "lat": -29.55,
+   "lon": -69.65,
+   "for": [
+    "mons_mouton"
+   ],
+   "file": "earth_m29.550_m69.650.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3309.24,
+   "max_m": 5193.11,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.850_79.350": {
+   "lat": 35.85,
+   "lon": 79.35,
+   "for": [
+    "mons_mouton"
+   ],
+   "file": "earth_35.850_79.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4253.88,
+   "max_m": 6574.18,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_33.150_78.350": {
+   "lat": 33.15,
+   "lon": 78.35,
+   "for": [
+    "mons_mouton"
+   ],
+   "file": "earth_33.150_78.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4374.67,
+   "max_m": 6508.8,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.150_78.450": {
+   "lat": 36.15,
+   "lon": 78.45,
+   "for": [
+    "mons_mouton"
+   ],
+   "file": "earth_36.150_78.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3831.87,
+   "max_m": 6156.62,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_31.050_82.550": {
+   "lat": 31.05,
+   "lon": 82.55,
+   "for": [
+    "mons_mouton"
+   ],
+   "file": "earth_31.050_82.550.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 5089.14,
+   "max_m": 6307.83,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.250_96.250": {
+   "lat": 36.25,
+   "lon": 96.25,
+   "for": [
+    "mons_mouton"
+   ],
+   "file": "earth_36.250_96.250.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 2790.25,
+   "max_m": 4877.2,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_32.050_81.350": {
+   "lat": 32.05,
+   "lon": 81.35,
+   "for": [
+    "mons_mouton"
+   ],
+   "file": "earth_32.050_81.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4586.3,
+   "max_m": 5855.54,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.550_88.150": {
+   "lat": 38.55,
+   "lon": 88.15,
+   "for": [
+    "mons_mouton"
+   ],
+   "file": "earth_38.550_88.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1455.06,
+   "max_m": 3487.06,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.450_73.050": {
+   "lat": 38.45,
+   "lon": 73.05,
+   "for": [
+    "mons_mouton"
+   ],
+   "file": "earth_38.450_73.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3579.77,
+   "max_m": 5766.04,
    "valid_fraction": 1.0,
    "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
   },
@@ -538,6 +1926,203 @@
    "valid_fraction": 1.0,
    "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
   },
+  "earth_m28.650_m69.850": {
+   "lat": -28.65,
+   "lon": -69.85,
+   "for": [
+    "nobile_rim_1"
+   ],
+   "file": "earth_m28.650_m69.850.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3026.34,
+   "max_m": 5595.1,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_33.450_79.150": {
+   "lat": 33.45,
+   "lon": 79.15,
+   "for": [
+    "nobile_rim_1"
+   ],
+   "file": "earth_33.450_79.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4293.11,
+   "max_m": 6142.62,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_37.350_86.550": {
+   "lat": 37.35,
+   "lon": 86.55,
+   "for": [
+    "nobile_rim_1"
+   ],
+   "file": "earth_37.350_86.550.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3834.62,
+   "max_m": 5677.25,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_39.350_73.650": {
+   "lat": 39.35,
+   "lon": 73.65,
+   "for": [
+    "nobile_rim_1"
+   ],
+   "file": "earth_39.350_73.650.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3511.38,
+   "max_m": 5960.77,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_34.050_78.150": {
+   "lat": 34.05,
+   "lon": 78.15,
+   "for": [
+    "nobile_rim_1"
+   ],
+   "file": "earth_34.050_78.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3581.95,
+   "max_m": 6099.09,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.850_79.050": {
+   "lat": 35.85,
+   "lon": 79.05,
+   "for": [
+    "nobile_rim_1"
+   ],
+   "file": "earth_35.850_79.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4291.31,
+   "max_m": 6191.31,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.350_74.650": {
+   "lat": 38.35,
+   "lon": 74.65,
+   "for": [
+    "nobile_rim_1",
+    "de_gerlache_rim_2"
+   ],
+   "file": "earth_38.350_74.650.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3869.45,
+   "max_m": 5210.13,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.250_77.650": {
+   "lat": 36.25,
+   "lon": 77.65,
+   "for": [
+    "nobile_rim_1"
+   ],
+   "file": "earth_36.250_77.650.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4156.9,
+   "max_m": 5776.95,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.650_78.550": {
+   "lat": 35.65,
+   "lon": 78.55,
+   "for": [
+    "nobile_rim_1"
+   ],
+   "file": "earth_35.650_78.550.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4646.51,
+   "max_m": 6340.54,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.950_88.750": {
+   "lat": 38.95,
+   "lon": 88.75,
+   "for": [
+    "nobile_rim_1"
+   ],
+   "file": "earth_38.950_88.750.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1000.67,
+   "max_m": 3913.06,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_44.950_92.450": {
+   "lat": 44.95,
+   "lon": 92.45,
+   "for": [
+    "nobile_rim_1"
+   ],
+   "file": "earth_44.950_92.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 502.12,
+   "max_m": 2903.0,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_32.850_80.450": {
+   "lat": 32.85,
+   "lon": 80.45,
+   "for": [
+    "nobile_rim_1"
+   ],
+   "file": "earth_32.850_80.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4444.84,
+   "max_m": 6131.87,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_32.250_80.050": {
+   "lat": 32.25,
+   "lon": 80.05,
+   "for": [
+    "nobile_rim_1"
+   ],
+   "file": "earth_32.250_80.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4218.14,
+   "max_m": 6094.91,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.550_87.950": {
+   "lat": 38.55,
+   "lon": 87.95,
+   "for": [
+    "nobile_rim_1"
+   ],
+   "file": "earth_38.550_87.950.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1243.52,
+   "max_m": 3563.52,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
   "earth_35.850_81.850": {
    "lat": 35.85,
    "lon": 81.85,
@@ -580,6 +2165,300 @@
    "valid_fraction": 1.0,
    "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
   },
+  "earth_32.150_81.350": {
+   "lat": 32.15,
+   "lon": 81.35,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_32.150_81.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4536.82,
+   "max_m": 5775.47,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_33.950_81.950": {
+   "lat": 33.95,
+   "lon": 81.95,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_33.950_81.950.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4789.91,
+   "max_m": 5907.03,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_32.650_81.650": {
+   "lat": 32.65,
+   "lon": 81.65,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_32.650_81.650.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4408.66,
+   "max_m": 5817.6,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m23.150_m67.450": {
+   "lat": -23.15,
+   "lon": -67.45,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_m23.150_m67.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4210.61,
+   "max_m": 5303.44,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.550_74.550": {
+   "lat": 38.55,
+   "lon": 74.55,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_38.550_74.550.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3817.99,
+   "max_m": 5230.71,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.950_78.750": {
+   "lat": 35.95,
+   "lon": 78.75,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_35.950_78.750.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4489.62,
+   "max_m": 6242.15,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_39.050_90.150": {
+   "lat": 39.05,
+   "lon": 90.15,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_39.050_90.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 2093.36,
+   "max_m": 3645.0,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m28.450_m69.250": {
+   "lat": -28.45,
+   "lon": -69.25,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_m28.450_m69.250.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3498.31,
+   "max_m": 4936.85,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_32.650_79.050": {
+   "lat": 32.65,
+   "lon": 79.05,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_32.650_79.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4270.85,
+   "max_m": 5986.46,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.950_92.050": {
+   "lat": 38.95,
+   "lon": 92.05,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_38.950_92.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 2916.45,
+   "max_m": 4047.24,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m21.650_m69.050": {
+   "lat": -21.65,
+   "lon": -69.05,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_m21.650_m69.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1827.71,
+   "max_m": 3566.03,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.150_77.850": {
+   "lat": 36.15,
+   "lon": 77.85,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_36.150_77.850.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4311.08,
+   "max_m": 5886.99,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_37.350_90.450": {
+   "lat": 37.35,
+   "lon": 90.45,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_37.350_90.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3881.91,
+   "max_m": 5542.96,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.550_84.650": {
+   "lat": 36.55,
+   "lon": 84.65,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_36.550_84.650.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4195.18,
+   "max_m": 5521.58,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_37.950_74.450": {
+   "lat": 37.95,
+   "lon": 74.45,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_37.950_74.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3702.95,
+   "max_m": 5048.95,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_33.550_83.150": {
+   "lat": 33.55,
+   "lon": 83.15,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_33.550_83.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 5029.62,
+   "max_m": 6160.84,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_33.450_82.150": {
+   "lat": 33.45,
+   "lon": 82.15,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_33.450_82.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4895.21,
+   "max_m": 6383.42,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.650_77.950": {
+   "lat": 35.65,
+   "lon": 77.95,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_35.650_77.950.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4925.12,
+   "max_m": 6340.67,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m27.350_m69.450": {
+   "lat": -27.35,
+   "lon": -69.45,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_m27.350_m69.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 2544.91,
+   "max_m": 4527.66,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.650_80.450": {
+   "lat": 35.65,
+   "lon": 80.45,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_35.650_80.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4530.58,
+   "max_m": 6506.45,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m26.650_m68.850": {
+   "lat": -26.65,
+   "lon": -68.85,
+   "for": [
+    "nobile_rim_2"
+   ],
+   "file": "earth_m26.650_m68.850.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3846.28,
+   "max_m": 5291.79,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
   "earth_35.950_81.950": {
    "lat": 35.95,
    "lon": 81.95,
@@ -591,20 +2470,6 @@
    "cell_m": 100.0,
    "min_m": 3528.9,
    "max_m": 6202.89,
-   "valid_fraction": 1.0,
-   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
-  },
-  "earth_32.250_79.850": {
-   "lat": 32.25,
-   "lon": 79.85,
-   "for": [
-    "de_gerlache_rim_2"
-   ],
-   "file": "earth_32.250_79.850.bin",
-   "n": 200,
-   "cell_m": 100.0,
-   "min_m": 4217.45,
-   "max_m": 6427.04,
    "valid_fraction": 1.0,
    "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
   },
@@ -636,17 +2501,185 @@
    "valid_fraction": 1.0,
    "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
   },
-  "earth_35.350_80.250": {
-   "lat": 35.35,
-   "lon": 80.25,
+  "earth_m29.650_m69.350": {
+   "lat": -29.65,
+   "lon": -69.35,
    "for": [
-    "slater_plain"
+    "de_gerlache_rim_2"
    ],
-   "file": "earth_35.350_80.250.bin",
+   "file": "earth_m29.650_m69.350.bin",
    "n": 200,
    "cell_m": 100.0,
-   "min_m": 4986.92,
-   "max_m": 5936.13,
+   "min_m": 2811.23,
+   "max_m": 6087.08,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m28.050_m69.350": {
+   "lat": -28.05,
+   "lon": -69.35,
+   "for": [
+    "de_gerlache_rim_2"
+   ],
+   "file": "earth_m28.050_m69.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3348.72,
+   "max_m": 4945.59,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.150_79.050": {
+   "lat": 36.15,
+   "lon": 79.05,
+   "for": [
+    "de_gerlache_rim_2"
+   ],
+   "file": "earth_36.150_79.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4078.97,
+   "max_m": 6275.74,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_34.250_78.850": {
+   "lat": 34.25,
+   "lon": 78.85,
+   "for": [
+    "de_gerlache_rim_2"
+   ],
+   "file": "earth_34.250_78.850.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4488.89,
+   "max_m": 6370.54,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.850_89.050": {
+   "lat": 38.85,
+   "lon": 89.05,
+   "for": [
+    "de_gerlache_rim_2"
+   ],
+   "file": "earth_38.850_89.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1999.6,
+   "max_m": 4479.07,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.150_87.350": {
+   "lat": 38.15,
+   "lon": 87.35,
+   "for": [
+    "de_gerlache_rim_2"
+   ],
+   "file": "earth_38.150_87.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1906.7,
+   "max_m": 4860.57,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.650_81.150": {
+   "lat": 35.65,
+   "lon": 81.15,
+   "for": [
+    "de_gerlache_rim_2"
+   ],
+   "file": "earth_35.650_81.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4204.9,
+   "max_m": 6422.48,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_33.750_79.850": {
+   "lat": 33.75,
+   "lon": 79.85,
+   "for": [
+    "de_gerlache_rim_2"
+   ],
+   "file": "earth_33.750_79.850.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4291.4,
+   "max_m": 6169.94,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.150_73.750": {
+   "lat": 38.15,
+   "lon": 73.75,
+   "for": [
+    "de_gerlache_rim_2"
+   ],
+   "file": "earth_38.150_73.750.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3528.48,
+   "max_m": 5493.47,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.750_74.250": {
+   "lat": 38.75,
+   "lon": 74.25,
+   "for": [
+    "de_gerlache_rim_2"
+   ],
+   "file": "earth_38.750_74.250.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3773.73,
+   "max_m": 5438.24,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.750_79.350": {
+   "lat": 35.75,
+   "lon": 79.35,
+   "for": [
+    "de_gerlache_rim_2"
+   ],
+   "file": "earth_35.750_79.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4654.36,
+   "max_m": 6070.48,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_37.950_86.450": {
+   "lat": 37.95,
+   "lon": 86.45,
+   "for": [
+    "de_gerlache_rim_2"
+   ],
+   "file": "earth_37.950_86.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1549.3,
+   "max_m": 4525.31,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_37.450_86.850": {
+   "lat": 37.45,
+   "lon": 86.85,
+   "for": [
+    "de_gerlache_rim_2"
+   ],
+   "file": "earth_37.450_86.850.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3408.05,
+   "max_m": 5521.59,
    "valid_fraction": 1.0,
    "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
   },
@@ -692,17 +2725,241 @@
    "valid_fraction": 1.0,
    "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
   },
-  "earth_36.250_83.150": {
-   "lat": 36.25,
-   "lon": 83.15,
+  "earth_36.050_78.050": {
+   "lat": 36.05,
+   "lon": 78.05,
    "for": [
     "slater_plain"
    ],
-   "file": "earth_36.250_83.150.bin",
+   "file": "earth_36.050_78.050.bin",
    "n": 200,
    "cell_m": 100.0,
-   "min_m": 4406.71,
-   "max_m": 6273.39,
+   "min_m": 4496.55,
+   "max_m": 6168.26,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_34.450_85.150": {
+   "lat": 34.45,
+   "lon": 85.15,
+   "for": [
+    "slater_plain"
+   ],
+   "file": "earth_34.450_85.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4870.5,
+   "max_m": 5858.12,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m29.850_m69.750": {
+   "lat": -29.85,
+   "lon": -69.75,
+   "for": [
+    "slater_plain"
+   ],
+   "file": "earth_m29.850_m69.750.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3637.42,
+   "max_m": 4987.65,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.050_79.750": {
+   "lat": 35.05,
+   "lon": 79.75,
+   "for": [
+    "slater_plain"
+   ],
+   "file": "earth_35.050_79.750.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4847.13,
+   "max_m": 5612.07,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_34.650_84.350": {
+   "lat": 34.65,
+   "lon": 84.35,
+   "for": [
+    "slater_plain"
+   ],
+   "file": "earth_34.650_84.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4824.06,
+   "max_m": 5665.85,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m27.950_m69.350": {
+   "lat": -27.95,
+   "lon": -69.35,
+   "for": [
+    "slater_plain"
+   ],
+   "file": "earth_m27.950_m69.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3041.67,
+   "max_m": 4890.11,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_31.850_80.250": {
+   "lat": 31.85,
+   "lon": 80.25,
+   "for": [
+    "slater_plain"
+   ],
+   "file": "earth_31.850_80.250.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4331.48,
+   "max_m": 5798.68,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m26.450_m69.250": {
+   "lat": -26.45,
+   "lon": -69.25,
+   "for": [
+    "slater_plain"
+   ],
+   "file": "earth_m26.450_m69.250.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 2709.04,
+   "max_m": 4390.91,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_37.250_86.950": {
+   "lat": 37.25,
+   "lon": 86.95,
+   "for": [
+    "slater_plain"
+   ],
+   "file": "earth_37.250_86.950.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4064.77,
+   "max_m": 5557.85,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_m23.050_m67.550": {
+   "lat": -23.05,
+   "lon": -67.55,
+   "for": [
+    "slater_plain"
+   ],
+   "file": "earth_m23.050_m67.550.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4288.17,
+   "max_m": 5479.24,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.550_89.050": {
+   "lat": 38.55,
+   "lon": 89.05,
+   "for": [
+    "slater_plain"
+   ],
+   "file": "earth_38.550_89.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 2864.19,
+   "max_m": 4155.84,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.150_88.150": {
+   "lat": 38.15,
+   "lon": 88.15,
+   "for": [
+    "slater_plain"
+   ],
+   "file": "earth_38.150_88.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3273.06,
+   "max_m": 4629.47,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.250_74.950": {
+   "lat": 38.25,
+   "lon": 74.95,
+   "for": [
+    "slater_plain"
+   ],
+   "file": "earth_38.250_74.950.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3690.44,
+   "max_m": 5966.16,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_34.050_80.450": {
+   "lat": 34.05,
+   "lon": 80.45,
+   "for": [
+    "slater_plain"
+   ],
+   "file": "earth_34.050_80.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4633.02,
+   "max_m": 5894.38,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_33.750_83.250": {
+   "lat": 33.75,
+   "lon": 83.25,
+   "for": [
+    "slater_plain"
+   ],
+   "file": "earth_33.750_83.250.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4979.57,
+   "max_m": 5855.64,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.450_84.350": {
+   "lat": 36.45,
+   "lon": 84.35,
+   "for": [
+    "slater_plain"
+   ],
+   "file": "earth_36.450_84.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4234.11,
+   "max_m": 5498.0,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_33.950_84.150": {
+   "lat": 33.95,
+   "lon": 84.15,
+   "for": [
+    "slater_plain"
+   ],
+   "file": "earth_33.950_84.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4718.28,
+   "max_m": 5967.32,
    "valid_fraction": 1.0,
    "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
   },
@@ -776,6 +3033,286 @@
    "valid_fraction": 1.0,
    "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
   },
+  "earth_37.050_85.950": {
+   "lat": 37.05,
+   "lon": 85.95,
+   "for": [
+    "jezero_crater"
+   ],
+   "file": "earth_37.050_85.950.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4741.81,
+   "max_m": 5576.16,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.350_85.050": {
+   "lat": 36.35,
+   "lon": 85.05,
+   "for": [
+    "jezero_crater"
+   ],
+   "file": "earth_36.350_85.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4644.85,
+   "max_m": 5356.42,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_41.350_88.550": {
+   "lat": 41.35,
+   "lon": 88.55,
+   "for": [
+    "jezero_crater"
+   ],
+   "file": "earth_41.350_88.550.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1242.66,
+   "max_m": 2244.28,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.850_87.450": {
+   "lat": 36.85,
+   "lon": 87.45,
+   "for": [
+    "jezero_crater"
+   ],
+   "file": "earth_36.850_87.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4418.52,
+   "max_m": 5082.8,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.350_82.450": {
+   "lat": 35.35,
+   "lon": 82.45,
+   "for": [
+    "jezero_crater"
+   ],
+   "file": "earth_35.350_82.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 5052.46,
+   "max_m": 5565.14,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.850_78.250": {
+   "lat": 35.85,
+   "lon": 78.25,
+   "for": [
+    "jezero_crater"
+   ],
+   "file": "earth_35.850_78.250.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4707.81,
+   "max_m": 5598.5,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.250_83.850": {
+   "lat": 36.25,
+   "lon": 83.85,
+   "for": [
+    "jezero_crater"
+   ],
+   "file": "earth_36.250_83.850.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4767.37,
+   "max_m": 5303.45,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_34.850_82.050": {
+   "lat": 34.85,
+   "lon": 82.05,
+   "for": [
+    "jezero_crater"
+   ],
+   "file": "earth_34.850_82.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 5019.23,
+   "max_m": 5385.78,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_34.950_83.950": {
+   "lat": 34.95,
+   "lon": 83.95,
+   "for": [
+    "jezero_crater"
+   ],
+   "file": "earth_34.950_83.950.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4912.0,
+   "max_m": 5551.89,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_37.850_87.950": {
+   "lat": 37.85,
+   "lon": 87.95,
+   "for": [
+    "jezero_crater"
+   ],
+   "file": "earth_37.850_87.950.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 3929.46,
+   "max_m": 4556.48,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.050_83.050": {
+   "lat": 36.05,
+   "lon": 83.05,
+   "for": [
+    "jezero_crater"
+   ],
+   "file": "earth_36.050_83.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4855.33,
+   "max_m": 5345.98,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_34.150_82.950": {
+   "lat": 34.15,
+   "lon": 82.95,
+   "for": [
+    "jezero_crater"
+   ],
+   "file": "earth_34.150_82.950.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4980.85,
+   "max_m": 5415.38,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_34.650_80.550": {
+   "lat": 34.65,
+   "lon": 80.55,
+   "for": [
+    "jezero_crater"
+   ],
+   "file": "earth_34.650_80.550.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4991.9,
+   "max_m": 5936.0,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_34.750_81.450": {
+   "lat": 34.75,
+   "lon": 81.45,
+   "for": [
+    "jezero_crater"
+   ],
+   "file": "earth_34.750_81.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4930.35,
+   "max_m": 5563.6,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_34.750_79.050": {
+   "lat": 34.75,
+   "lon": 79.05,
+   "for": [
+    "jezero_crater"
+   ],
+   "file": "earth_34.750_79.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 5187.36,
+   "max_m": 5810.65,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_41.350_96.250": {
+   "lat": 41.35,
+   "lon": 96.25,
+   "for": [
+    "jezero_crater"
+   ],
+   "file": "earth_41.350_96.250.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1956.18,
+   "max_m": 2492.45,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_34.150_81.550": {
+   "lat": 34.15,
+   "lon": 81.55,
+   "for": [
+    "jezero_crater"
+   ],
+   "file": "earth_34.150_81.550.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4804.85,
+   "max_m": 5810.91,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.750_81.650": {
+   "lat": 35.75,
+   "lon": 81.65,
+   "for": [
+    "jezero_crater"
+   ],
+   "file": "earth_35.750_81.650.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4670.82,
+   "max_m": 5624.52,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.250_87.450": {
+   "lat": 36.25,
+   "lon": 87.45,
+   "for": [
+    "jezero_crater"
+   ],
+   "file": "earth_36.250_87.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4987.72,
+   "max_m": 5937.27,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.550_85.050": {
+   "lat": 35.55,
+   "lon": 85.05,
+   "for": [
+    "jezero_crater"
+   ],
+   "file": "earth_35.550_85.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4799.66,
+   "max_m": 5131.59,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
   "earth_32.050_61.250": {
    "lat": 32.05,
    "lon": 61.25,
@@ -843,6 +3380,328 @@
    "cell_m": 100.0,
    "min_m": 1160.47,
    "max_m": 1229.01,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.650_86.050": {
+   "lat": 38.65,
+   "lon": 86.05,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_38.650_86.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1059.54,
+   "max_m": 1147.57,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_39.650_89.350": {
+   "lat": 39.65,
+   "lon": 89.35,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_39.650_89.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 763.62,
+   "max_m": 864.69,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_39.150_88.250": {
+   "lat": 39.15,
+   "lon": 88.25,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_39.150_88.250.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 784.83,
+   "max_m": 861.31,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_40.750_87.550": {
+   "lat": 40.75,
+   "lon": 87.55,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_40.750_87.550.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 813.14,
+   "max_m": 900.92,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.250_81.750": {
+   "lat": 38.25,
+   "lon": 81.75,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_38.250_81.750.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1159.6,
+   "max_m": 1252.15,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_36.950_82.150": {
+   "lat": 36.95,
+   "lon": 82.15,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_36.950_82.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1424.28,
+   "max_m": 1603.08,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_40.350_81.350": {
+   "lat": 40.35,
+   "lon": 81.35,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_40.350_81.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1001.32,
+   "max_m": 1037.59,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.950_77.950": {
+   "lat": 38.95,
+   "lon": 77.95,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_38.950_77.950.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1130.02,
+   "max_m": 1215.28,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_40.450_88.150": {
+   "lat": 40.45,
+   "lon": 88.15,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_40.450_88.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 790.65,
+   "max_m": 874.07,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.250_90.650": {
+   "lat": 38.25,
+   "lon": 90.65,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_38.250_90.650.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 2839.42,
+   "max_m": 3055.01,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_35.350_82.750": {
+   "lat": 35.35,
+   "lon": 82.75,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_35.350_82.750.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 4881.12,
+   "max_m": 5183.71,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_40.950_81.750": {
+   "lat": 40.95,
+   "lon": 81.75,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_40.950_81.750.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 973.52,
+   "max_m": 1003.76,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_38.250_77.650": {
+   "lat": 38.25,
+   "lon": 77.65,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_38.250_77.650.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1193.02,
+   "max_m": 1249.66,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_39.050_82.050": {
+   "lat": 39.05,
+   "lon": 82.05,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_39.050_82.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1094.16,
+   "max_m": 1189.07,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_39.250_78.450": {
+   "lat": 39.25,
+   "lon": 78.45,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_39.250_78.450.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1116.0,
+   "max_m": 1178.34,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_41.050_87.050": {
+   "lat": 41.05,
+   "lon": 87.05,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_41.050_87.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 806.54,
+   "max_m": 917.13,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_39.750_79.750": {
+   "lat": 39.75,
+   "lon": 79.75,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_39.750_79.750.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1059.27,
+   "max_m": 1155.26,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_40.750_90.350": {
+   "lat": 40.75,
+   "lon": 90.35,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_40.750_90.350.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 753.45,
+   "max_m": 852.53,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_39.550_79.150": {
+   "lat": 39.55,
+   "lon": 79.15,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_39.550_79.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1075.95,
+   "max_m": 1698.63,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_40.150_80.650": {
+   "lat": 40.15,
+   "lon": 80.65,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_40.150_80.650.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1019.01,
+   "max_m": 1085.69,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_40.950_90.650": {
+   "lat": 40.95,
+   "lon": 90.65,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_40.950_90.650.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 765.91,
+   "max_m": 921.48,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_37.350_80.050": {
+   "lat": 37.35,
+   "lon": 80.05,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_37.350_80.050.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1244.27,
+   "max_m": 1326.58,
+   "valid_fraction": 1.0,
+   "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
+  },
+  "earth_37.950_78.150": {
+   "lat": 37.95,
+   "lon": 78.15,
+   "for": [
+    "arcadia_planitia"
+   ],
+   "file": "earth_37.950_78.150.bin",
+   "n": 200,
+   "cell_m": 100.0,
+   "min_m": 1256.89,
+   "max_m": 1333.79,
    "valid_fraction": 1.0,
    "source": "ASTER GDEM v3 (ASTGTM.003), NASA/METI, LP DAAC"
   }

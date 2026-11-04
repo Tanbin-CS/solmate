@@ -12,19 +12,21 @@ sources and grid as the 100 m check (refine.py):
 Arcadia Planitia has no 100 m terrain model, so it has no 3D block.
 
 Each grid is n x n little-endian uint16: 0 means no data, 1..65535 map linearly onto
-[min_m, max_m]. At 200 x 200 a grid is 80 KB. Context only: never scored.
+[min_m, max_m], then gzip (mtime 0, so a re-run writes the same bytes). At 200 x 200 a grid
+is 80 KB raw and about half that gzipped. Context only: never scored.
 
 Outputs:
   frontend/public/data/v2/terrain3d/<id>.bin
   frontend/public/data/v2/terrain3d/index.json
 
-Run:  uv run python -m solmate.pipeline.terrain3d --top 5 --novel 5
+Run:  uv run python -m solmate.pipeline.terrain3d --top 25 --novel 25
 """
 
 from __future__ import annotations
 
 import argparse
 import datetime as dt
+import gzip
 import json
 import sys
 import time
@@ -57,9 +59,22 @@ def encode(z: np.ndarray) -> tuple[bytes, float, float]:
     return q.tobytes(), lo, hi
 
 
+GZIP_MAGIC = bytes((0x1F, 0x8B))
+
+
+def pack(raw: bytes) -> bytes:
+    """gzip with no timestamp or name, so the bytes depend only on the heights."""
+    return gzip.compress(raw, compresslevel=9, mtime=0)
+
+
+def unpack(buf: bytes) -> bytes:
+    """Raw uint16 bytes from a packed or (older) unpacked file."""
+    return gzip.decompress(buf) if buf[:2] == GZIP_MAGIC else buf
+
+
 def decode(buf: bytes, n: int, lo: float, hi: float) -> np.ndarray:
     """Inverse of encode (used by the tests and to check the web decoder)."""
-    q = np.frombuffer(buf, dtype="<u2").reshape(n, n).astype(np.float64)
+    q = np.frombuffer(unpack(buf), dtype="<u2").reshape(n, n).astype(np.float64)
     z = lo + (q - 1) / 65534 * (hi - lo if hi > lo else 1.0)
     z[q == 0] = np.nan
     return z
@@ -98,7 +113,7 @@ def target_grids() -> dict[str, tuple[np.ndarray, str]]:
 
 def write(path: Path, z: np.ndarray, body: str) -> dict:
     buf, lo, hi = encode(z)
-    path.write_bytes(buf)
+    path.write_bytes(pack(buf))
     return {
         "file": path.name,
         "n": int(z.shape[0]),
@@ -112,8 +127,8 @@ def write(path: Path, z: np.ndarray, body: str) -> dict:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--top", type=int, default=5, help="best stage-1 cells per target")
-    ap.add_argument("--novel", type=int, default=5, help="best novel leads per target")
+    ap.add_argument("--top", type=int, default=25, help="best stage-1 cells per target (the web list shows 25)")
+    ap.add_argument("--novel", type=int, default=25, help="best novel leads per target (the web list shows 25)")
     args = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     index_path = OUT / "index.json"
@@ -124,8 +139,10 @@ def main() -> None:
     token = None
     failed = []
     for n, (pid, p) in enumerate(places.items(), 1):
-        if pid in old["places"] and (OUT / f"{pid}.bin").exists():
+        f = OUT / f"{pid}.bin"
+        if pid in old["places"] and f.exists():
             p |= {k: v for k, v in old["places"][pid].items() if k not in ("for",)}
+            f.write_bytes(pack(unpack(f.read_bytes())))  # files from before gzip
             continue
         token = token or aster_gdem.earthdata_token()
         t0 = time.time()
@@ -146,7 +163,7 @@ def main() -> None:
         "version": 1,
         "generated_at": dt.datetime.now(dt.UTC).replace(microsecond=0).isoformat(),
         "window": {"size_m": SIZE_M, "cell_m": CELL_M},
-        "encoding": "n x n little-endian uint16; 0 = no data; 1..65535 linear on [min_m, max_m]",
+        "encoding": "gzip of n x n little-endian uint16; 0 = no data; 1..65535 linear on [min_m, max_m]",
         "use": "context only (3D view); never scored",
         "targets": targets,
         "places": places,

@@ -2,9 +2,11 @@
  * Height grids for the side-by-side 3D terrain view (analysis/src/solmate/pipeline/terrain3d.py).
  * 20 km blocks at 100 m from NASA ASTER GDEM (Earth), LRO LOLA (Moon) and the Mars 2020 CTX DTM.
  * Context only: nothing here feeds the Analog Index.
+ * Files are gzipped uint16 grids; one per target and one per listed Earth place (top 25 + novel 25).
  */
 import { z } from 'zod'
 import { asset } from '@/lib/asset'
+import { gunzip } from '@/science/v2/tiles'
 
 const GridMetaSchema = z.object({
   // plain file names only (no slashes), e.g. haworth.bin or earth_m27.450_m68.750.bin
@@ -76,10 +78,25 @@ export function decodeGrid(buf: ArrayBuffer, meta: GridMeta): Grid {
   return { n, cell: meta.cell_m, z }
 }
 
-export async function loadGrid(meta: GridMeta): Promise<Grid> {
-  const r = await fetch(asset(ROOT + meta.file))
-  if (!r.ok) throw new Error(`Could not load ${meta.file} (HTTP ${r.status})`)
-  return decodeGrid(await r.arrayBuffer(), meta)
+const grids = new Map<string, Promise<Grid>>()
+const MAX_GRIDS = 8 // ~2.5 MB decoded
+
+/** One block, fetched once and kept for the panel preview and the 3D view; failures are not kept. */
+export function loadGrid(meta: GridMeta): Promise<Grid> {
+  const hit = grids.get(meta.file)
+  if (hit) return hit
+  const p = fetch(asset(ROOT + meta.file))
+    .then((r) => {
+      if (!r.ok) throw new Error(`Could not load ${meta.file} (HTTP ${r.status})`)
+      return r.arrayBuffer()
+    })
+    // files are gzipped by the pipeline; gunzip passes raw bytes through unchanged
+    .then(gunzip)
+    .then((buf) => decodeGrid(buf, meta))
+  p.catch(() => grids.delete(meta.file))
+  grids.set(meta.file, p)
+  while (grids.size > MAX_GRIDS) grids.delete(grids.keys().next().value!)
+  return p
 }
 
 /** Slope in degrees per cell (Horn 1981), edges clamped; NaN where a neighbour has no data. */
