@@ -225,11 +225,6 @@ export function Hero({ data }: { data: HomeData | null }) {
               </Button>
             </Magnetic>
             <Magnetic>
-              <Button asChild size="lg" variant="outline" className="rounded-full border-slate-100/30 bg-ink-950/40 px-6 backdrop-blur hover:bg-ink-950/60">
-                <a href="#how">How it works</a>
-              </Button>
-            </Magnetic>
-            <Magnetic>
               <Button asChild size="lg" variant="outline" className="rounded-full border-data/50 bg-ink-950/40 px-6 text-data backdrop-blur hover:bg-ink-950/60 hover:text-data">
                 <a href="#twin-drive">
                   <Box /> Twin Drive in 3D
@@ -237,6 +232,12 @@ export function Hero({ data }: { data: HomeData | null }) {
               </Button>
             </Magnetic>
           </motion.div>
+          {/* a quiet link, not a third button: three buttons ran under the results dock on laptop screens */}
+          <motion.p variants={fadeUp(reduced)} className="pointer-events-auto mt-4 w-fit">
+            <a href="#how" className="text-sm text-slate-400 underline-offset-4 transition-colors hover:text-slate-100 hover:underline">
+              How it works ↓
+            </a>
+          </motion.p>
         </motion.div>
 
         {/* live analog links, synced with the 3D arcs. Landscape: a slim dock under the globe so Earth stays fully visible. */}
@@ -244,7 +245,7 @@ export function Hero({ data }: { data: HomeData | null }) {
           initial={{ opacity: 0, y: reduced ? 0 : 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: reduced ? 0 : 0.9, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="pointer-events-auto w-full max-w-sm self-start rounded-2xl border border-white/10 bg-ink-950/65 p-3 shadow-2xl backdrop-blur-md md:landscape:absolute md:landscape:bottom-7 md:landscape:right-[min(2rem,calc(2rem-(100vw-80rem)/2))] md:landscape:flex md:landscape:w-[min(860px,58vw)] md:landscape:max-w-none md:landscape:flex-wrap md:landscape:items-stretch md:landscape:gap-x-3 md:landscape:gap-y-1 md:landscape:self-auto md:landscape:p-2.5"
+          className="pointer-events-auto w-full max-w-sm self-start rounded-2xl border border-white/10 bg-ink-950/65 p-3 shadow-2xl backdrop-blur-md md:landscape:absolute md:landscape:bottom-7 md:landscape:right-[min(2rem,calc(2rem-(100vw-80rem)/2))] md:landscape:flex md:landscape:w-[min(860px,58vw,calc(100vw-30rem))] md:landscape:max-w-none md:landscape:flex-wrap md:landscape:items-stretch md:landscape:gap-x-3 md:landscape:gap-y-1 md:landscape:self-auto md:landscape:p-2.5"
           aria-label="Best Earth matches"
         >
           <div className="mb-2 flex items-center justify-between gap-3 border-b border-white/10 px-1.5 pb-2 md:landscape:mb-0 md:landscape:basis-full">
