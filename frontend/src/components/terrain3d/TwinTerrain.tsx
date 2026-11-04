@@ -3,12 +3,12 @@
  * same scale, same sun, same vertical exaggeration. Lazy-loaded (three.js) from the place panel.
  * Context only: what you see here never feeds the Analog Index.
  */
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { Canvas, useThree } from '@react-three/fiber'
 import { Line, OrbitControls } from '@react-three/drei'
 import { BufferAttribute, BufferGeometry, Color, Vector3 } from 'three'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Pause, Play } from 'lucide-react'
 import { Slider } from '@/components/ui/slider'
 import { poseAt, ROVER_SCALE, sunlit, traverse, type BodyId, type RoverPose } from '@/lib/rover'
 import { DriveCard, DriveNote, RoverModel, TiltChart } from './RoverDrive'
@@ -27,7 +27,7 @@ interface Props {
   earthLat: number
   /** home page: only the two drive scenes, the tilt chart and one line of readouts */
   compact?: boolean
-  /** stop the auto tour (off screen) */
+  /** hold the drive while the view is off screen (home page) */
   paused?: boolean
 }
 
@@ -209,7 +209,8 @@ function DriveScene({
   sunEl,
   sunAz,
   lowSun,
-  touring,
+  playing,
+  onToggle,
   zoom = true,
 }: {
   d: Loaded
@@ -221,7 +222,9 @@ function DriveScene({
   sunEl: number
   sunAz: number
   lowSun: boolean
-  touring: boolean | null
+  /** shows the play/pause control on this scene when set */
+  playing?: boolean
+  onToggle?: () => void
   /** off on the home page, so the mouse wheel scrolls the page instead of zooming */
   zoom?: boolean
 }) {
@@ -240,24 +243,38 @@ function DriveScene({
         <hemisphereLight args={['#9fb4cc', '#0a1019', lowSun ? 0.12 : 0.35]} />
         <Sun elevation={sunEl} azimuth={sunAz} reach={12} />
         <Block d={d} x={0} exag={exag} colour={colour} row={row} accent={BODY_COLOR[side.body]} rover={pose} />
-        <OrbitControls
-          makeDefault
-          enableDamping={false}
-          enableZoom={zoom}
-          maxPolarAngle={Math.PI / 2.05}
-          minDistance={0.6}
-          maxDistance={40}
-          target={start}
-        />
+        <OrbitControls makeDefault enableDamping={false} enableZoom={zoom} maxPolarAngle={Math.PI / 2.05} minDistance={0.6} maxDistance={40} target={start} />
         {Number.isFinite(at[1]) && <FollowRover to={at} />}
       </Canvas>
       <Tag side={side} className="left-3" />
-      {touring !== null && (
-        <span className="pointer-events-none absolute bottom-3 left-3 rounded bg-ink-900/85 px-2 py-0.5 font-mono text-[11px] text-slate-300">
-          {touring ? 'Auto tour · click or drag to drive yourself' : 'You are driving · the tour comes back after 25 s of quiet'}
-        </span>
+      {onToggle && (
+        <div className="absolute bottom-3 left-3 flex items-center gap-2">
+          <PlayButton playing={!!playing} onToggle={onToggle} overlay />
+          <span className="pointer-events-none rounded bg-ink-900/85 px-2 py-0.5 font-mono text-[11px] text-slate-300">
+            {playing ? 'Driving · drag to look around' : 'Paused · drag to look around'}
+          </span>
+        </div>
       )}
     </div>
+  )
+}
+
+/** Play / pause for the drive. Looking around (drag, zoom) never stops it; only this and the distance slider do. */
+function PlayButton({ playing, onToggle, overlay = false }: { playing: boolean; onToggle: () => void; overlay?: boolean }) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-pressed={playing}
+      aria-label={playing ? 'Pause the drive' : 'Play the drive'}
+      title={playing ? 'Pause the drive' : 'Play the drive'}
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[11px] transition-colors ${
+        overlay ? 'border-slate-100/20 bg-ink-900/90 text-slate-100 hover:bg-ink-700' : 'border-border text-slate-200 hover:bg-ink-700'
+      }`}
+    >
+      {playing ? <Pause className="size-3.5" aria-hidden /> : <Play className="size-3.5" aria-hidden />}
+      {playing ? 'Pause' : 'Play'}
+    </button>
   )
 }
 
@@ -385,13 +402,9 @@ export default function TwinTerrain({ earth, target, earthLat, compact = false, 
   const [mode, setMode] = useState<'drive' | 'terrain'>('drive')
   const [s, setS] = useState(0)
   const reduced = useReducedMotion() ?? false
-  // Auto tour: with no input the rover drives itself; any click or key hands control over, 25 s of quiet hands it back.
-  const lastInput = useRef(-Infinity)
-  const [touring, setTouring] = useState(true)
-  const touch = () => {
-    lastInput.current = performance.now()
-    setTouring(false)
-  }
+  // The rover drives itself from the start (paused for reduced motion). Play/Pause and the distance
+  // slider control it; dragging or zooming the view only moves the camera.
+  const [playing, setPlaying] = useState(!reduced)
 
   const trips = useMemo(() => {
     if (!data) return null
@@ -406,31 +419,38 @@ export default function TwinTerrain({ earth, target, earthLat, compact = false, 
   }, [data, row, s])
 
   useEffect(() => {
-    if (mode !== 'drive' || !data || reduced || paused) return
-    const speed = lengthKm / 28 // km per second of tour
+    if (mode !== 'drive' || !data || !playing || paused) return
+    const speed = lengthKm / 28 // km per second of driving
     let raf = 0
     let prev = performance.now()
     let hold = 0
     const tick = (now: number) => {
       const dt = Math.min(0.1, (now - prev) / 1000)
       prev = now
-      if (now - lastInput.current > 25_000) {
-        setTouring(true)
-        setS((v) => {
-          if (v >= lengthKm) {
-            hold += dt
-            if (hold < 2) return v
-            hold = 0
-            return 0
-          }
-          return Math.min(lengthKm, Math.round((v + speed * dt) * 200) / 200)
-        })
-      }
+      setS((v) => {
+        if (v >= lengthKm) {
+          // hold 2 s at the east edge, then drive the line again
+          hold += dt
+          if (hold < 2) return v
+          hold = 0
+          return 0
+        }
+        return Math.min(lengthKm, Math.round((v + speed * dt) * 200) / 200)
+      })
       raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [mode, data, reduced, lengthKm, paused])
+  }, [mode, data, lengthKm, playing, paused])
+  const toggle = () => {
+    if (!playing && s >= lengthKm) setS(0) // play at the end starts the line again
+    setPlaying((p) => !p)
+  }
+  /** dragging the distance slider takes the wheel: pause so the rover stays where it is put */
+  const scrub = (v: number | undefined) => {
+    setPlaying(false)
+    setS(v ?? s)
+  }
 
   useEffect(() => {
     let live = true
@@ -449,7 +469,7 @@ export default function TwinTerrain({ earth, target, earthLat, compact = false, 
   const targetBody: BodyId = target.body
   if (compact) {
     return (
-      <div className="space-y-3" onPointerDownCapture={touch} onKeyDownCapture={touch}>
+      <div className="space-y-3">
         {driving ? (
           <>
             <div className="grid gap-3 md:grid-cols-2">
@@ -465,7 +485,8 @@ export default function TwinTerrain({ earth, target, earthLat, compact = false, 
                   sunEl={sunEl}
                   sunAz={sunAz}
                   lowSun={lowSun}
-                  touring={k === 'a' && !reduced ? touring : null}
+                  playing={playing}
+                  onToggle={k === 'a' ? toggle : undefined}
                   zoom={false}
                 />
               ))}
@@ -477,7 +498,11 @@ export default function TwinTerrain({ earth, target, earthLat, compact = false, 
                 { trip: trips.b, color: BODY_COLOR[target.body], label: target.label },
               ]}
             />
-            <Slider aria-label="Distance driven" min={0} max={lengthKm} step={0.05} value={[s]} onValueChange={([v]) => setS(v ?? s)} />
+            <div className="flex items-center gap-3">
+              <PlayButton playing={playing} onToggle={toggle} />
+              <Slider aria-label="Distance driven" className="flex-1" min={0} max={lengthKm} step={0.05} value={[s]} onValueChange={([v]) => scrub(v)} />
+              <span className="w-16 text-right font-mono text-[11px] tabular text-slate-400">{s.toFixed(1)} km</span>
+            </div>
           </>
         ) : (
           <p className="flex h-72 items-center justify-center gap-2 rounded-lg border border-border text-sm text-slate-400" role={error ? 'alert' : undefined}>
@@ -493,7 +518,7 @@ export default function TwinTerrain({ earth, target, earthLat, compact = false, 
   }
 
   return (
-    <div className="space-y-4" onPointerDownCapture={touch} onKeyDownCapture={touch} onWheelCapture={touch}>
+    <div className="space-y-4">
       {driving ? (
         <div className="grid gap-3 md:grid-cols-2">
           <DriveScene
@@ -506,20 +531,10 @@ export default function TwinTerrain({ earth, target, earthLat, compact = false, 
             sunEl={sunEl}
             sunAz={sunAz}
             lowSun={lowSun}
-            touring={reduced ? null : touring}
+            playing={playing}
+            onToggle={toggle}
           />
-          <DriveScene
-            d={data.b}
-            side={target}
-            exag={exag}
-            colour={colour}
-            row={row}
-            pose={poses.b}
-            sunEl={sunEl}
-            sunAz={sunAz}
-            lowSun={lowSun}
-            touring={null}
-          />
+          <DriveScene d={data.b} side={target} exag={exag} colour={colour} row={row} pose={poses.b} sunEl={sunEl} sunAz={sunAz} lowSun={lowSun} />
         </div>
       ) : (
         <div className="relative h-[46vh] min-h-72 overflow-hidden rounded-lg border border-border bg-ink-950">
@@ -640,7 +655,10 @@ export default function TwinTerrain({ earth, target, earthLat, compact = false, 
               <p className="label-mono mb-1.5" id="drive-s">
                 Distance driven · {s.toFixed(1)} of {lengthKm.toFixed(0)} km
               </p>
-              <Slider aria-labelledby="drive-s" min={0} max={lengthKm} step={0.05} value={[s]} onValueChange={([v]) => setS(v ?? s)} />
+              <div className="flex items-center gap-3">
+                <PlayButton playing={playing} onToggle={toggle} />
+                <Slider aria-labelledby="drive-s" className="flex-1" min={0} max={lengthKm} step={0.05} value={[s]} onValueChange={([v]) => scrub(v)} />
+              </div>
             </div>
           ) : (
             data && <Profile a={{ d: data.a, side: earth }} b={{ d: data.b, side: target }} row={row} />

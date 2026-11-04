@@ -163,7 +163,7 @@ function Results({ data, between }: { data: HomeData; between?: ReactNode }) {
       <Section
         id="twin-drive"
         title={`Twin Drive: one rover on Earth and on ${flagship.target.body === 'moon' ? 'the Moon' : 'Mars'}.`}
-        intro="Two 20 km blocks of 100 m NASA terrain, side by side at the same scale. The same rover drives both, and tilt, sunlight and wheel load are read from the ground under it. Drag either view to take over."
+        intro="Two 20 km blocks of 100 m NASA terrain, side by side at the same scale. The same rover drives both, and tilt, sunlight and wheel load are read from the ground under it. Drag to look around; Pause, Play and the slider control the drive."
         aside={switcher('twin-drive')}
       >
         <TwinDriveShowcase key={flagship.target.id} flagship={flagship} />
