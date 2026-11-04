@@ -258,3 +258,34 @@ html.lenis body {
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
 }
+
+/* Explorer globe: numbered markers that match the list rows (MapView2) */
+.solmate-map2 .sm-pin {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  border: 1.5px solid var(--color-ink-950, #05080d);
+  background: #7fd8e6;
+  color: #05080d;
+  font: 600 10px/1 var(--font-mono, ui-monospace, monospace);
+  cursor: pointer;
+  transition:
+    width 150ms ease,
+    height 150ms ease,
+    box-shadow 150ms ease;
+}
+.solmate-map2 .sm-pin-novel {
+  background: #e7a1c9;
+}
+.solmate-map2 .sm-pin:hover,
+.solmate-map2 .sm-pin:focus-visible,
+.solmate-map2 .sm-pin-hot {
+  width: 28px;
+  height: 28px;
+  font-size: 12px;
+  z-index: 2;
+  outline: none;
+  box-shadow: 0 0 0 2px #fff2fa;
+}

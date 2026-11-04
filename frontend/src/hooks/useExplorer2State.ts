@@ -27,6 +27,19 @@ function parsePlace(raw: string | null): LatLon | null {
   return v.length === 2 && finite(v) && Math.abs(v[0]!) <= 90 && Math.abs(v[1]!) <= 180 ? { lat: v[0]!, lon: v[1]! } : null
 }
 
+export const MAX_PINS = 3
+
+/** Pinned places for the comparison: "lat,lon;lat,lon", at most MAX_PINS, invalid entries dropped. */
+export function parsePins(raw: string | null): LatLon[] {
+  return (raw ?? '')
+    .split(';')
+    .map((x) => parsePlace(x))
+    .filter((x): x is LatLon => x !== null)
+    .slice(0, MAX_PINS)
+}
+
+export const samePlace = (a: LatLon, b: LatLon) => Math.abs(a.lat - b.lat) < 0.051 && Math.abs(a.lon - b.lon) < 0.051
+
 function parseBox(raw: string | null): BoxSel | null {
   const v = raw?.split(',').map(Number) ?? []
   if (v.length !== 4 || !finite(v)) return null
@@ -37,6 +50,7 @@ function parseBox(raw: string | null): BoxSel | null {
 /**
  * Explorer v2 state lives in the URL so any view can be shared:
  *   /explorer?t=haworth&w=learned&p=36.45,84.45&tab=novel
+ * view=3d opens the Twin Drive 3D view of the place; cmp=lat,lon;lat,lon pins places to compare.
  */
 export function useExplorer2State() {
   const [params, setParams] = useSearchParams()
@@ -47,6 +61,8 @@ export function useExplorer2State() {
   const layer: Layer2 = params.get('layer') === 'terrain' ? 'terrain' : 'imagery'
   const place = useMemo(() => parsePlace(params.get('p')), [params])
   const box = useMemo(() => parseBox(params.get('box')), [params])
+  const view3d = params.get('view') === '3d' && !!place && !box
+  const pins = useMemo(() => parsePins(params.get('cmp')), [params])
 
   const update = useCallback(
     (patch: Record<string, string | null>) =>
@@ -72,14 +88,22 @@ export function useExplorer2State() {
     layer,
     place,
     box,
+    view3d,
+    pins,
     setTarget: (t: string) => update({ t: t === DEFAULT_TARGET ? null : t }),
     setPreset: (p: Preset) => update({ w: p === 'equal' ? null : p }),
     setTab: (t: ListTab) => update({ tab: t === 'top' ? null : t }),
     setLeaderDim: (d: string) => update({ dim: d === 'T' ? null : d }),
     setLayer: (l: Layer2) => update({ layer: l === 'imagery' ? null : l }),
-    pick: (p: LatLon | null) => update({ p: p ? `${r4(p.lat)},${r4(p.lon)}` : null, box: null }),
+    pick: (p: LatLon | null) => update({ p: p ? `${r4(p.lat)},${r4(p.lon)}` : null, box: null, view: null }),
+    setView3d: (on: boolean) => update({ view: on ? '3d' : null }),
+    togglePin: (p: LatLon) => {
+      const next = pins.some((x) => samePlace(x, p)) ? pins.filter((x) => !samePlace(x, p)) : [...pins, p].slice(-MAX_PINS)
+      update({ cmp: next.length ? next.map((x) => `${r4(x.lat)},${r4(x.lon)}`).join(';') : null })
+    },
+    clearPins: () => update({ cmp: null }),
     pickBox: (b: BoxSel) =>
-      update({ box: [b.south, b.west, b.north, b.east].map(r4).join(','), p: `${r4((b.south + b.north) / 2)},${r4((b.west + b.east) / 2)}` }),
-    clear: () => update({ p: null, box: null }),
+      update({ box: [b.south, b.west, b.north, b.east].map(r4).join(','), p: `${r4((b.south + b.north) / 2)},${r4((b.west + b.east) / 2)}`, view: null }),
+    clear: () => update({ p: null, box: null, view: null }),
   }
 }
