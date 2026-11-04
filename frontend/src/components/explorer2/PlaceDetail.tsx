@@ -1,6 +1,8 @@
 import { Link } from 'react-router'
+import type { ReactNode } from 'react'
 import { Loader2, Mountain, X } from 'lucide-react'
 import type { TerrainResult } from '@/api/client'
+import { Terrain3dButton } from '@/components/terrain3d/Terrain3dButton'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { Async } from '@/hooks/useV2'
@@ -88,7 +90,9 @@ export function PlaceDetail({ state, target, model, isBox, title, terrain, store
               </div>
             </div>
             <DimensionBars verdict={verdict} model={model} />
-            <TerrainCheck check={check} terrain={terrain} targetName={target.name} onRefine={onRefine} />
+            <TerrainCheck check={check} terrain={terrain} targetName={target.name} onRefine={onRefine}>
+              {!isBox && place && <Terrain3dButton lat={r.centre.lat} lon={r.centre.lon} placeName={place.name} target={target} />}
+            </TerrainCheck>
             <PlaceImages lat={r.centre.lat} lon={r.centre.lon} targetId={target.id} />
             <VerdictCard verdict={verdict} />
             <ExtraData layers={model.context_layers} values={r.values} />
@@ -135,7 +139,19 @@ function TerrainButton({ terrain, onRefine }: { terrain: Props['terrain']; onRef
 type Terrain100 = { score: number | null; indicators: Record<string, number | null> }
 
 /** The 100 m terrain score as its own check: measured on request, never folded into the Analog Index. */
-function TerrainCheck({ check, terrain, targetName, onRefine }: { check: Terrain100 | null; terrain: Props['terrain']; targetName: string; onRefine: () => void }) {
+function TerrainCheck({
+  check,
+  terrain,
+  targetName,
+  onRefine,
+  children,
+}: {
+  check: Terrain100 | null
+  terrain: Props['terrain']
+  targetName: string
+  onRefine: () => void
+  children?: ReactNode
+}) {
   const score = check?.score ?? null
   const pct = score === null ? null : Math.round(score * 100)
   const band = pct === null ? 'n/a' : pct >= 75 ? 'strong' : pct >= 40 ? 'partial' : 'weak'
@@ -175,6 +191,7 @@ function TerrainCheck({ check, terrain, targetName, onRefine }: { check: Terrain
           Why
         </Link>
       </p>
+      {children && <div className="mt-2.5">{children}</div>}
     </section>
   )
 }
