@@ -3,12 +3,15 @@
  * same scale, same sun, same vertical exaggeration. Lazy-loaded (three.js) from the place panel.
  * Context only: what you see here never feeds the Analog Index.
  */
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useReducedMotion } from 'motion/react'
 import { Canvas, useThree } from '@react-three/fiber'
 import { Line, OrbitControls } from '@react-three/drei'
 import { BufferAttribute, BufferGeometry, Color, Vector3 } from 'three'
 import { Loader2 } from 'lucide-react'
 import { Slider } from '@/components/ui/slider'
+import { poseAt, ROVER_SCALE, sunlit, traverse, type BodyId, type RoverPose } from '@/lib/rover'
+import { DriveCard, DriveNote, RoverModel, TiltChart } from './RoverDrive'
 import { loadGrid, rowProfile, SAFE_DEG, slopeDeg, slopeStats, type Grid, type GridMeta, type SlopeStats } from '@/lib/terrain3d'
 
 export interface TwinSide {
@@ -118,7 +121,23 @@ function buildGeometry(d: Loaded, exag: number, colour: Colour): BufferGeometry 
   return g
 }
 
-function Block({ d, x, exag, colour, row, accent }: { d: Loaded; x: number; exag: number; colour: Colour; row: number; accent: string }) {
+function Block({
+  d,
+  x,
+  exag,
+  colour,
+  row,
+  accent,
+  rover,
+}: {
+  d: Loaded
+  x: number
+  exag: number
+  colour: Colour
+  row: number
+  accent: string
+  rover?: RoverPose
+}) {
   const geom = useMemo(() => buildGeometry(d, exag, colour), [d, exag, colour])
   useEffect(() => () => geom.dispose(), [geom])
   const line = useMemo(() => {
@@ -137,11 +156,97 @@ function Block({ d, x, exag, colour, row, accent }: { d: Loaded; x: number; exag
         <meshStandardMaterial vertexColors roughness={0.95} metalness={0} />
       </mesh>
       <Line points={line} color={accent} lineWidth={2} />
+      {rover && Number.isFinite(rover.heightM) && <PlacedRover d={d} exag={exag} pose={rover} />}
     </group>
   )
 }
 
-function Sun({ elevation, azimuth }: { elevation: number; azimuth: number }) {
+/** Where the rover sits on the block as drawn (km, block frame). */
+function roverAt(d: Loaded, exag: number, pose: RoverPose): [number, number, number] {
+  const n = d.grid.n
+  return [(pose.col / (n - 1) - 0.5) * BLOCK_KM, ((pose.heightM - d.base) / 1000) * exag, (pose.row / (n - 1) - 0.5) * BLOCK_KM]
+}
+
+/** The rover on the block as drawn: same exaggeration, so it sits on the displayed slope. */
+function PlacedRover({ d, exag, pose }: { d: Loaded; exag: number; pose: RoverPose }) {
+  const rad = (deg: number) => Math.atan(exag * Math.tan((deg * Math.PI) / 180))
+  return (
+    <group position={roverAt(d, exag, pose)} rotation={[-rad(pose.rollDeg), 0, rad(pose.pitchDeg)]} scale={ROVER_SCALE / 1000}>
+      <RoverModel status={pose.status} />
+    </group>
+  )
+}
+
+/** Keeps the orbit target on the rover and carries the camera along, so a drag still orbits around it. */
+function FollowRover({ to }: { to: [number, number, number] }) {
+  const camera = useThree((st) => st.camera)
+  const controls = useThree((st) => st.controls) as unknown as { target: Vector3; update: () => void } | null
+  const invalidate = useThree((st) => st.invalidate)
+  const [x, y, z] = to
+  useEffect(() => {
+    if (!controls) return
+    const next = new Vector3(x, y, z)
+    camera.position.add(next.clone().sub(controls.target))
+    controls.target.copy(next)
+    controls.update()
+    invalidate()
+  }, [x, y, z, camera, controls, invalidate])
+  return null
+}
+
+/** One block with its own camera following its rover (drive view). */
+function DriveScene({
+  d,
+  side,
+  exag,
+  colour,
+  row,
+  pose,
+  sunEl,
+  sunAz,
+  lowSun,
+  touring,
+}: {
+  d: Loaded
+  side: TwinSide
+  exag: number
+  colour: Colour
+  row: number
+  pose: RoverPose
+  sunEl: number
+  sunAz: number
+  lowSun: boolean
+  touring: boolean | null
+}) {
+  const at = roverAt(d, exag, pose)
+  const start = Number.isFinite(at[1]) ? at : ([at[0], 0, at[2]] as [number, number, number])
+  return (
+    <div className="relative h-[46vh] min-h-72 overflow-hidden rounded-lg border border-border bg-ink-950">
+      <Canvas
+        shadows
+        frameloop="demand"
+        dpr={[1, 1.5]}
+        camera={{ position: [start[0] - 2.2, start[1] + 1.6, start[2] + 2.6], fov: 45, near: 0.02, far: 200 }}
+        aria-label={`${side.label}: the rover on its 20 km block`}
+      >
+        <color attach="background" args={['#05080d']} />
+        <hemisphereLight args={['#9fb4cc', '#0a1019', lowSun ? 0.12 : 0.35]} />
+        <Sun elevation={sunEl} azimuth={sunAz} reach={12} />
+        <Block d={d} x={0} exag={exag} colour={colour} row={row} accent={BODY_COLOR[side.body]} rover={pose} />
+        <OrbitControls makeDefault enableDamping={false} maxPolarAngle={Math.PI / 2.05} minDistance={0.6} maxDistance={40} target={start} />
+        {Number.isFinite(at[1]) && <FollowRover to={at} />}
+      </Canvas>
+      <Tag side={side} className="left-3" />
+      {touring !== null && (
+        <span className="pointer-events-none absolute bottom-3 left-3 rounded bg-ink-900/85 px-2 py-0.5 font-mono text-[11px] text-slate-300">
+          {touring ? 'Auto tour · click or drag to drive yourself' : 'You are driving · the tour comes back after 25 s of quiet'}
+        </span>
+      )}
+    </div>
+  )
+}
+
+function Sun({ elevation, azimuth, reach = 28 }: { elevation: number; azimuth: number; reach?: number }) {
   const invalidate = useThree((s) => s.invalidate)
   const el = (elevation * Math.PI) / 180
   const az = (azimuth * Math.PI) / 180
@@ -156,10 +261,10 @@ function Sun({ elevation, azimuth }: { elevation: number; azimuth: number }) {
       castShadow
       shadow-mapSize-width={2048}
       shadow-mapSize-height={2048}
-      shadow-camera-left={-28}
-      shadow-camera-right={28}
-      shadow-camera-top={16}
-      shadow-camera-bottom={-16}
+      shadow-camera-left={-reach}
+      shadow-camera-right={reach}
+      shadow-camera-top={Math.min(reach, 16)}
+      shadow-camera-bottom={-Math.min(reach, 16)}
       shadow-camera-near={1}
       shadow-camera-far={140}
       shadow-bias={-0.0004}
@@ -262,6 +367,55 @@ export default function TwinTerrain({ earth, target, earthLat }: Props) {
   const [sunAz, setSunAz] = useState(135)
   const [row, setRow] = useState(0.5)
   const noon = Math.round(90 - Math.abs(earthLat))
+  const [mode, setMode] = useState<'drive' | 'terrain'>('drive')
+  const [s, setS] = useState(0)
+  const reduced = useReducedMotion() ?? false
+  // Auto tour: with no input the rover drives itself; any click or key hands control over, 25 s of quiet hands it back.
+  const lastInput = useRef(-Infinity)
+  const [touring, setTouring] = useState(true)
+  const touch = () => {
+    lastInput.current = performance.now()
+    setTouring(false)
+  }
+
+  const trips = useMemo(() => {
+    if (!data) return null
+    const at = (d: Loaded) => traverse(d.grid, Math.round(row * (d.grid.n - 1)))
+    return { a: at(data.a), b: at(data.b) }
+  }, [data, row])
+  const lengthKm = trips?.a.lengthKm ?? BLOCK_KM
+  const poses = useMemo(() => {
+    if (!data) return null
+    const at = (d: Loaded) => poseAt(d.grid, Math.round(row * (d.grid.n - 1)), s)
+    return { a: at(data.a), b: at(data.b) }
+  }, [data, row, s])
+
+  useEffect(() => {
+    if (mode !== 'drive' || !data || reduced) return
+    const speed = lengthKm / 28 // km per second of tour
+    let raf = 0
+    let prev = performance.now()
+    let hold = 0
+    const tick = (now: number) => {
+      const dt = Math.min(0.1, (now - prev) / 1000)
+      prev = now
+      if (now - lastInput.current > 25_000) {
+        setTouring(true)
+        setS((v) => {
+          if (v >= lengthKm) {
+            hold += dt
+            if (hold < 2) return v
+            hold = 0
+            return 0
+          }
+          return Math.min(lengthKm, Math.round((v + speed * dt) * 200) / 200)
+        })
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [mode, data, reduced, lengthKm])
 
   useEffect(() => {
     let live = true
@@ -276,45 +430,87 @@ export default function TwinTerrain({ earth, target, earthLat }: Props) {
   const btn = (on: boolean) =>
     `rounded px-2 py-1 font-mono text-[11px] transition-colors ${on ? 'bg-ink-600 text-slate-100' : 'text-slate-400 hover:bg-ink-700 hover:text-slate-200'}`
 
+  const driving = mode === 'drive' && data && poses && trips
+  const targetBody: BodyId = target.body
   return (
-    <div className="space-y-4">
-      <div className="relative h-[46vh] min-h-72 overflow-hidden rounded-lg border border-border bg-ink-950">
-        {error && (
-          <p role="alert" className="p-4 text-sm text-negative">
-            {error}
-          </p>
-        )}
-        {!data && !error && (
-          <p className="flex h-full items-center justify-center gap-2 text-sm text-slate-400">
-            <Loader2 className="size-4 animate-spin" /> Loading NASA terrain…
-          </p>
-        )}
-        {data && (
-          <Canvas
-            shadows
-            frameloop="demand"
-            dpr={[1, 1.5]}
-            camera={{ position: [0, 17, 27], fov: 42, near: 0.1, far: 400 }}
-            aria-label={`3D terrain: ${earth.label} on the left, ${target.label} on the right, 20 km each`}
-          >
-            <color attach="background" args={['#05080d']} />
-            <hemisphereLight args={['#9fb4cc', '#0a1019', lowSun ? 0.12 : 0.35]} />
-            <Sun elevation={sunEl} azimuth={sunAz} />
-            <Block d={data.a} x={-OFFSET} exag={exag} colour={colour} row={row} accent={BODY_COLOR.earth} />
-            <Block d={data.b} x={OFFSET} exag={exag} colour={colour} row={row} accent={BODY_COLOR[target.body]} />
-            <OrbitControls makeDefault enableDamping={false} maxPolarAngle={Math.PI / 2.05} minDistance={8} maxDistance={90} target={[0, 0, 0]} />
-          </Canvas>
-        )}
-        {data && (
-          <>
-            <Tag side={earth} className="left-3" />
-            <Tag side={target} className="right-3" />
-          </>
-        )}
-      </div>
+    <div className="space-y-4" onPointerDownCapture={touch} onKeyDownCapture={touch} onWheelCapture={touch}>
+      {driving ? (
+        <div className="grid gap-3 md:grid-cols-2">
+          <DriveScene
+            d={data.a}
+            side={earth}
+            exag={exag}
+            colour={colour}
+            row={row}
+            pose={poses.a}
+            sunEl={sunEl}
+            sunAz={sunAz}
+            lowSun={lowSun}
+            touring={reduced ? null : touring}
+          />
+          <DriveScene
+            d={data.b}
+            side={target}
+            exag={exag}
+            colour={colour}
+            row={row}
+            pose={poses.b}
+            sunEl={sunEl}
+            sunAz={sunAz}
+            lowSun={lowSun}
+            touring={null}
+          />
+        </div>
+      ) : (
+        <div className="relative h-[46vh] min-h-72 overflow-hidden rounded-lg border border-border bg-ink-950">
+          {error && (
+            <p role="alert" className="p-4 text-sm text-negative">
+              {error}
+            </p>
+          )}
+          {!data && !error && (
+            <p className="flex h-full items-center justify-center gap-2 text-sm text-slate-400">
+              <Loader2 className="size-4 animate-spin" /> Loading NASA terrain…
+            </p>
+          )}
+          {data && (
+            <Canvas
+              shadows
+              frameloop="demand"
+              dpr={[1, 1.5]}
+              camera={{ position: [0, 17, 27], fov: 42, near: 0.1, far: 400 }}
+              aria-label={`3D terrain: ${earth.label} on the left, ${target.label} on the right, 20 km each`}
+            >
+              <color attach="background" args={['#05080d']} />
+              <hemisphereLight args={['#9fb4cc', '#0a1019', lowSun ? 0.12 : 0.35]} />
+              <Sun elevation={sunEl} azimuth={sunAz} />
+              <Block d={data.a} x={-OFFSET} exag={exag} colour={colour} row={row} accent={BODY_COLOR.earth} />
+              <Block d={data.b} x={OFFSET} exag={exag} colour={colour} row={row} accent={BODY_COLOR[target.body]} />
+              <OrbitControls makeDefault enableDamping={false} maxPolarAngle={Math.PI / 2.05} minDistance={8} maxDistance={90} target={[0, 0, 0]} />
+            </Canvas>
+          )}
+          {data && (
+            <>
+              <Tag side={earth} className="left-3" />
+              <Tag side={target} className="right-3" />
+            </>
+          )}
+        </div>
+      )}
 
       <div className="grid gap-4 md:grid-cols-[1fr_1fr_1.2fr]">
         <div className="space-y-3">
+          <div>
+            <p className="label-mono mb-1">View</p>
+            <div className="flex gap-1" role="group" aria-label="What to show">
+              <button type="button" className={btn(mode === 'drive')} aria-pressed={mode === 'drive'} onClick={() => setMode('drive')}>
+                rover drive
+              </button>
+              <button type="button" className={btn(mode === 'terrain')} aria-pressed={mode === 'terrain'} onClick={() => setMode('terrain')}>
+                terrain only
+              </button>
+            </div>
+          </div>
           <div>
             <p className="label-mono mb-1">Colour</p>
             <div className="flex gap-1" role="group" aria-label="Colour the ground by">
@@ -379,14 +575,54 @@ export default function TwinTerrain({ earth, target, earthLat }: Props) {
             Drive line · {Math.round((1 - row) * BLOCK_KM)} km from the south edge
           </p>
           <Slider aria-labelledby="drive-row" min={0} max={1} step={0.01} value={[row]} onValueChange={([v]) => setRow(v ?? row)} />
-          {data && <Profile a={{ d: data.a, side: earth }} b={{ d: data.b, side: target }} row={row} />}
+          {mode === 'drive' ? (
+            <div className="mt-3">
+              <p className="label-mono mb-1.5" id="drive-s">
+                Distance driven · {s.toFixed(1)} of {lengthKm.toFixed(0)} km
+              </p>
+              <Slider aria-labelledby="drive-s" min={0} max={lengthKm} step={0.05} value={[s]} onValueChange={([v]) => setS(v ?? s)} />
+            </div>
+          ) : (
+            data && <Profile a={{ d: data.a, side: earth }} b={{ d: data.b, side: target }} row={row} />
+          )}
         </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        <StatCard side={earth} d={data?.a ?? null} />
-        <StatCard side={target} d={data?.b ?? null} />
-      </div>
+      {driving ? (
+        <>
+          <TiltChart
+            s={s}
+            trips={[
+              { trip: trips.a, color: BODY_COLOR.earth, label: earth.label },
+              { trip: trips.b, color: BODY_COLOR[target.body], label: target.label },
+            ]}
+          />
+          <div className="grid gap-3 sm:grid-cols-2">
+            <DriveCard
+              label={earth.label}
+              body="earth"
+              color={BODY_COLOR.earth}
+              pose={poses.a}
+              trip={trips.a}
+              lit={sunlit(data.a.grid, poses.a.row, poses.a.col, sunEl, sunAz)}
+            />
+            <DriveCard
+              label={target.label}
+              body={targetBody}
+              color={BODY_COLOR[target.body]}
+              pose={poses.b}
+              trip={trips.b}
+              lit={sunlit(data.b.grid, poses.b.row, poses.b.col, sunEl, sunAz)}
+            />
+          </div>
+          <DriveNote s={s} onMoon={target.body === 'moon'} />
+        </>
+      ) : (
+        <div className="grid gap-3 sm:grid-cols-2">
+          <StatCard side={earth} d={data?.a ?? null} />
+          <StatCard side={target} d={data?.b ?? null} />
+        </div>
+      )}
     </div>
   )
 }
