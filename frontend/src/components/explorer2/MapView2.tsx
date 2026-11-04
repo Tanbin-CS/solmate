@@ -51,7 +51,6 @@ const STYLE: StyleSpecification = {
       encoding: 'terrarium',
       attribution: '3D extrusion: AWS Terrain Tiles (optional, not scored)',
     },
-    candidates: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
     selection: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
   },
   layers: [
@@ -74,18 +73,6 @@ const STYLE: StyleSpecification = {
       paint: { 'line-color': '#7fd8e6', 'line-width': 1.5, 'line-dasharray': [3, 2] },
     },
     {
-      id: 'candidates',
-      type: 'circle',
-      source: 'candidates',
-      paint: {
-        'circle-radius': ['interpolate', ['linear'], ['zoom'], 1, 3, 6, 6, 10, 9],
-        'circle-color': ['case', ['get', 'novel'], '#e7a1c9', '#7fd8e6'],
-        'circle-stroke-color': '#05080d',
-        'circle-stroke-width': 1,
-        'circle-opacity': ['interpolate', ['linear'], ['get', 'sai'], 50, 0.45, 90, 1],
-      },
-    },
-    {
       id: 'selected',
       type: 'circle',
       source: 'selection',
@@ -103,7 +90,10 @@ export interface MapCandidate {
 }
 
 interface Props {
+  /** the list on the left, in order; each gets a numbered marker matching its row */
   candidates: MapCandidate[]
+  /** list row under the pointer: its marker is lit */
+  hovered: number | null
   selected: LatLon | null
   box: BoxSel | null
   drawing: boolean
@@ -127,7 +117,21 @@ const toBox = (a: LatLon, b: LatLon): BoxSel => ({
 })
 
 /** Globe of NASA imagery: click anywhere to score it, or draw a box with two clicks. */
-export function MapView2({ candidates, selected, box, drawing, layer, onPick, onBox, reducedMotion, padding }: Props) {
+/** Numbered marker for list row i (DOM, so the number needs no map font). */
+function pinElement(c: MapCandidate, i: number, onPick: (p: LatLon) => void): HTMLButtonElement {
+  const el = document.createElement('button')
+  el.type = 'button'
+  el.className = `sm-pin${c.novel ? ' sm-pin-novel' : ''}`
+  el.textContent = String(i + 1)
+  el.setAttribute('aria-label', `Place ${i + 1} in the list, Analog Index ${Number.isFinite(c.sai) ? c.sai.toFixed(1) : 'not scored'}`)
+  el.addEventListener('click', (e) => {
+    e.stopPropagation()
+    onPick({ lat: c.lat, lon: c.lon })
+  })
+  return el
+}
+
+export function MapView2({ candidates, hovered, selected, box, drawing, layer, onPick, onBox, reducedMotion, padding }: Props) {
   const container = useRef<HTMLDivElement>(null)
   const map = useRef<maplibregl.Map | null>(null)
   const [loaded, setLoaded] = useState(false)
@@ -161,9 +165,8 @@ export function MapView2({ candidates, selected, box, drawing, layer, onPick, on
         }
         return
       }
-      const hit = m.queryRenderedFeatures(e.point, { layers: ['candidates'] })[0]
-      const coords = hit?.geometry.type === 'Point' ? (hit.geometry.coordinates as [number, number]) : null
-      props.current.onPick(coords ? { lat: coords[1], lon: coords[0] } : p)
+      if ((e.originalEvent.target as HTMLElement | null)?.closest?.('.sm-pin')) return // a numbered marker handles its own click
+      props.current.onPick(p)
     })
     m.on('mousemove', (e) => {
       if (!props.current.drawing || !corner.current) return
@@ -172,8 +175,6 @@ export function MapView2({ candidates, selected, box, drawing, layer, onPick, on
         features: [{ type: 'Feature', properties: {}, geometry: boxPolygon(toBox(corner.current, { lat: e.lngLat.lat, lon: e.lngLat.wrap().lng })) }],
       })
     })
-    m.on('mouseenter', 'candidates', () => (m.getCanvas().style.cursor = 'pointer'))
-    m.on('mouseleave', 'candidates', () => (m.getCanvas().style.cursor = ''))
     m.once('style.load', () => setLoaded(true))
     map.current = m
     return () => {
@@ -199,13 +200,22 @@ export function MapView2({ candidates, selected, box, drawing, layer, onPick, on
     if (!drawing) corner.current = null
   }, [drawing, loaded])
 
+  const pins = useRef<maplibregl.Marker[]>([])
   useEffect(() => {
-    if (!loaded) return
-    ;(map.current?.getSource('candidates') as GeoJSONSource | undefined)?.setData({
-      type: 'FeatureCollection',
-      features: candidates.map((c) => ({ type: 'Feature', properties: { sai: c.sai, novel: c.novel }, geometry: { type: 'Point', coordinates: [c.lon, c.lat] } })),
-    })
+    const m = map.current
+    if (!m || !loaded) return
+    // last rows first, so lower numbers sit on top where markers overlap
+    pins.current = candidates.map((c, i) => new maplibregl.Marker({ element: pinElement(c, i, (p) => props.current.onPick(p)) }).setLngLat([c.lon, c.lat]))
+    for (let i = pins.current.length - 1; i >= 0; i--) pins.current[i]!.addTo(m)
+    return () => {
+      for (const p of pins.current) p.remove()
+      pins.current = []
+    }
   }, [candidates, loaded])
+
+  useEffect(() => {
+    pins.current.forEach((p, i) => p.getElement().classList.toggle('sm-pin-hot', i === hovered))
+  }, [hovered, candidates, loaded])
 
   useEffect(() => {
     const m = map.current

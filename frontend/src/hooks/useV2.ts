@@ -47,8 +47,16 @@ export function presetWeights(model: Model, preset: string, body: Target['body']
 }
 
 /** Coarse score of a place or box from the browser worker; re-runs when inputs change. */
-export function usePlaceScore(place: LatLon | null, box: BoxSel | null, targetId: string, weights: Record<string, number> | null) {
-  const key = place && weights ? JSON.stringify([place, box, targetId, weights]) : ''
+export function usePlaceScore(
+  place: LatLon | null,
+  box: BoxSel | null,
+  targetId: string,
+  weights: Record<string, number> | null,
+): (Async<PlaceResult> & { retry: () => void }) | null {
+  // a failed fetch is not cached by the loaders, so bumping the attempt re-runs the score
+  const [attempt, setAttempt] = useState(0)
+  const retry = useCallback(() => setAttempt((a) => a + 1), [])
+  const key = place && weights ? JSON.stringify([place, box, targetId, weights, attempt]) : ''
   const [state, setState] = useState<{ key: string; value: Async<PlaceResult> } | null>(null)
   useEffect(() => {
     if (!key) return
@@ -64,7 +72,7 @@ export function usePlaceScore(place: LatLon | null, box: BoxSel | null, targetId
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key])
   if (!key) return null
-  return state?.key === key ? state.value : ({ status: 'loading' } as const)
+  return { ...(state?.key === key ? state.value : ({ status: 'loading' } as const)), retry }
 }
 
 /** 100 m ASTER GDEM terrain from the API, on request. Resets when the place or target changes. */

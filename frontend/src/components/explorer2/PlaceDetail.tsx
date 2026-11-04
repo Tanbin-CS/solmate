@@ -1,8 +1,8 @@
 import { Link } from 'react-router'
 import type { ReactNode } from 'react'
-import { Loader2, Mountain, X } from 'lucide-react'
+import { ChevronDown, ChevronUp, Loader2, Mountain, Pin, PinOff, RotateCw, X } from 'lucide-react'
 import type { TerrainResult } from '@/api/client'
-import { Terrain3dButton } from '@/components/terrain3d/Terrain3dButton'
+import { TwinDriveCard } from '@/components/terrain3d/TwinDrive'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { Async } from '@/hooks/useV2'
@@ -17,7 +17,7 @@ import { PlaceImages } from './PlaceImages'
 import { VerdictCard } from './VerdictCard'
 
 interface Props {
-  state: Async<PlaceResult>
+  state: Async<PlaceResult> & { retry: () => void }
   target: Target
   model: Model
   isBox: boolean
@@ -29,9 +29,23 @@ interface Props {
   onRefine: () => void
   onClose: () => void
   onTarget: (id: string) => void
+  /** position in the list on the left, when the place is one of its rows */
+  nav?: { index: number; total: number; onPrev: () => void; onNext: () => void } | null
+  pinned: boolean
+  canPin: boolean
+  onPin: () => void
+  view3d: boolean
+  onView3d: (open: boolean) => void
 }
 
-export function PlaceDetail({ state, target, model, isBox, title, terrain, stored100, onRefine, onClose, onTarget }: Props) {
+/** A network failure reads as a browser TypeError ("Failed to fetch"); say what it means instead. */
+function errorText(err: Error): string {
+  return err instanceof TypeError || /fetch|network|load failed/i.test(err.message)
+    ? 'Could not reach SolMate’s NASA data. Check your connection, then try again.'
+    : err.message
+}
+
+export function PlaceDetail({ state, target, model, isBox, title, terrain, stored100, onRefine, onClose, onTarget, nav, pinned, canPin, onPin, view3d, onView3d }: Props) {
   const r = state.status === 'ready' ? state.data : null
   const countries = useCountries()
   const auto = r ? placeLabel(r.centre.lat, r.centre.lon, countries) : null
@@ -58,13 +72,35 @@ export function PlaceDetail({ state, target, model, isBox, title, terrain, store
             </p>
           )}
         </div>
-        <button type="button" onClick={onClose} className="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-ink-700 hover:text-slate-100" aria-label="Close place details">
-          <X className="size-4" />
-        </button>
+        <div className="flex shrink-0 items-center gap-0.5">
+          {nav && (
+            <>
+              <span className="mr-1 font-mono text-[11px] tabular text-slate-400" aria-label={`Place ${nav.index + 1} of ${nav.total} in the list`}>
+                {nav.index + 1}/{nav.total}
+              </span>
+              <IconButton label="Previous place in the list (↑)" onClick={nav.onPrev} disabled={nav.index === 0}>
+                <ChevronUp className="size-4" />
+              </IconButton>
+              <IconButton label="Next place in the list (↓)" onClick={nav.onNext} disabled={nav.index === nav.total - 1}>
+                <ChevronDown className="size-4" />
+              </IconButton>
+            </>
+          )}
+          <IconButton label="Close place details" onClick={onClose}>
+            <X className="size-4" />
+          </IconButton>
+        </div>
       </header>
 
       <div className="flex-1 space-y-6 overflow-y-auto px-5 py-5">
-        {state.status === 'error' && <p role="alert" className="text-sm text-negative">{state.error.message}</p>}
+        {state.status === 'error' && (
+          <div role="alert" className="space-y-3">
+            <p className="text-sm text-negative">{errorText(state.error)}</p>
+            <Button size="sm" variant="outline" onClick={state.retry}>
+              <RotateCw /> Try again
+            </Button>
+          </div>
+        )}
         {state.status === 'loading' && !r && (
           <div className="space-y-3">
             <Skeleton className="h-16 w-40 bg-ink-700" />
@@ -77,7 +113,7 @@ export function PlaceDetail({ state, target, model, isBox, title, terrain, store
         {r && verdict && (
           <>
             <div className="flex items-end justify-between gap-4">
-              <div>
+              <div className="min-w-0">
                 <p className="label-mono">SolMate Analog Index</p>
                 <p className="mt-1 font-mono text-5xl font-medium tabular tracking-tight text-slate-100">
                   {shown === null ? '–' : shown.toFixed(1)}
@@ -88,11 +124,24 @@ export function PlaceDetail({ state, target, model, isBox, title, terrain, store
                   {verdict.insufficient && <span className="text-negative"> · low data coverage ({Math.round(verdict.coverage * 100)}%)</span>}
                 </p>
               </div>
+              {!isBox && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={onPin}
+                  disabled={!pinned && !canPin}
+                  aria-pressed={pinned}
+                  title={pinned ? 'Remove from the comparison' : canPin ? 'Add to the comparison (up to 3 places)' : 'The comparison holds 3 places; remove one first'}
+                >
+                  {pinned ? <PinOff /> : <Pin />} {pinned ? 'Comparing' : 'Compare'}
+                </Button>
+              )}
             </div>
+            {!isBox && place && (
+              <TwinDriveCard lat={r.centre.lat} lon={r.centre.lon} placeName={place.name} target={target} open={view3d} onOpenChange={onView3d} />
+            )}
             <DimensionBars verdict={verdict} model={model} />
-            <TerrainCheck check={check} terrain={terrain} targetName={target.name} onRefine={onRefine}>
-              {!isBox && place && <Terrain3dButton lat={r.centre.lat} lon={r.centre.lon} placeName={place.name} target={target} />}
-            </TerrainCheck>
+            <TerrainCheck check={check} terrain={terrain} targetName={target.name} onRefine={onRefine} />
             <PlaceImages lat={r.centre.lat} lon={r.centre.lon} targetId={target.id} />
             <VerdictCard verdict={verdict} />
             <ExtraData layers={model.context_layers} values={r.values} />
@@ -121,6 +170,21 @@ export function PlaceDetail({ state, target, model, isBox, title, terrain, store
   )
 }
 
+function IconButton({ label, onClick, disabled, children }: { label: string; onClick: () => void; disabled?: boolean; children: ReactNode }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      title={label}
+      aria-label={label}
+      className="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-ink-700 hover:text-slate-100 disabled:pointer-events-none disabled:opacity-35"
+    >
+      {children}
+    </button>
+  )
+}
+
 function TerrainButton({ terrain, onRefine }: { terrain: Props['terrain']; onRefine: () => void }) {
   if (terrain.status === 'loading')
     return (
@@ -144,13 +208,11 @@ function TerrainCheck({
   terrain,
   targetName,
   onRefine,
-  children,
 }: {
   check: Terrain100 | null
   terrain: Props['terrain']
   targetName: string
   onRefine: () => void
-  children?: ReactNode
 }) {
   const score = check?.score ?? null
   const pct = score === null ? null : Math.round(score * 100)
@@ -191,7 +253,6 @@ function TerrainCheck({
           Why
         </Link>
       </p>
-      {children && <div className="mt-2.5">{children}</div>}
     </section>
   )
 }

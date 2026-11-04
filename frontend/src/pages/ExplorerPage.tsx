@@ -1,20 +1,22 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { ListOrdered } from 'lucide-react'
 import { ErrorState, PanelSkeleton } from '@/components/common/States'
 import { CandidateList } from '@/components/explorer2/CandidateList'
+import { ComparePlaces } from '@/components/explorer2/ComparePlaces'
 import { DIM_ORDER, siteName } from '@/components/explorer2/labels'
 import { MapToolbar } from '@/components/explorer2/MapToolbar'
 import { MapView2, type MapCandidate } from '@/components/explorer2/MapView2'
 import { PlaceDetail } from '@/components/explorer2/PlaceDetail'
 import { PresetPicker } from '@/components/explorer2/PresetPicker'
 import { TargetPicker } from '@/components/explorer2/TargetPicker'
+import { twinGrids, useTerrain3dIndex } from '@/components/terrain3d/useTwin3d'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useExplorer2State, type ListTab } from '@/hooks/useExplorer2State'
+import { MAX_PINS, samePlace, useExplorer2State, type LatLon, type ListTab } from '@/hooks/useExplorer2State'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { presetWeights, useModel, usePlaceScore, useScreening, useTerrain100 } from '@/hooks/useV2'
 import type { Model, Target } from '@/science/v2/model'
@@ -59,6 +61,9 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
     ui.pick(p)
   }
   const [listOpen, setListOpen] = useState(false)
+  const [hovered, setHovered] = useState<number | null>(null)
+  const idx3d = useTerrain3dIndex()
+  const has3d = useCallback((lat: number, lon: number) => !!twinGrids(idx3d, lat, lon, target.id), [idx3d, target.id])
 
   const lists = useMemo(() => {
     if (!scr) return null
@@ -84,6 +89,45 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
     const hit = all.find((c) => Math.abs(c.lat - ui.place!.lat) < 0.05 && Math.abs(c.lon - ui.place!.lon) < 0.05)
     return hit?.terrain_100m ?? null
   }, [scr, ui.place])
+  // where the open place sits in the list on the left, for previous / next and the ↑ ↓ keys
+  const at = ui.place && !ui.box ? shown.findIndex((r) => samePlace(r.candidate, ui.place!)) : -1
+  const step = useCallback(
+    (d: 1 | -1) => {
+      const r = shown[at + d]
+      if (at >= 0 && r) ui.pick({ lat: r.candidate.lat, lon: r.candidate.lon })
+    },
+    [shown, at, ui],
+  )
+  useEffect(() => {
+    if (at < 0) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return
+      if (e.altKey || e.ctrlKey || e.metaKey || e.defaultPrevented) return
+      const el = e.target instanceof Element ? e.target : null
+      // leave arrows to form fields, sliders, menus, open dialogs and the map's own keyboard panning
+      if (el?.closest('input, textarea, select, [role="slider"], [role="menu"], [role="listbox"], [role="radiogroup"], [role="tablist"], [role="dialog"], .maplibregl-map')) return
+      if (document.querySelector('[role="dialog"]')) return
+      e.preventDefault()
+      step(e.key === 'ArrowDown' ? 1 : -1)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [at, step])
+  const facts = useCallback(
+    (p: LatLon) => {
+      if (!scr) return null
+      const all = [...scr.top, ...scr.novel_leads, ...Object.values(scr.dimension_leaders).flat()]
+      const hit = all.find((c) => samePlace(c, p))
+      if (!hit) return null
+      const s100 = hit.terrain_100m?.score
+      return {
+        t100: s100 !== null && s100 !== undefined && Number.isFinite(s100) ? s100 : null,
+        nearest: hit.nearest_known ? `${siteName(hit.nearest_known)}, ${Math.round(hit.nearest_known_km ?? 0)} km` : null,
+      }
+    },
+    [scr],
+  )
+  const pinned = !!ui.place && !ui.box && ui.pins.some((x) => samePlace(x, ui.place!))
   const leaderDims = DIM_ORDER.filter((d) => lists?.leaders[d]?.length)
 
   // place search: known analog sites by name, and a country goes to SolMate's best place in it
@@ -162,7 +206,15 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
         {screening.status === 'error' ? (
           <ErrorState title="Screening results could not be loaded." detail={screening.error.message} onRetry={screening.retry} />
         ) : (
-          <CandidateList label={`Earth analogs for ${target.name}`} items={shown} noveltyKm={scr?.novelty_km ?? 300} selected={ui.place} onPick={pick} />
+          <CandidateList
+            label={`Earth analogs for ${target.name}`}
+            items={shown}
+            noveltyKm={scr?.novelty_km ?? 300}
+            selected={ui.place}
+            onPick={pick}
+            has3d={has3d}
+            onHover={setHovered}
+          />
         )}
       </ScrollArea>
     </div>
@@ -181,6 +233,12 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
         onRefine={terrain.run}
         onClose={ui.clear}
         onTarget={ui.setTarget}
+        nav={at >= 0 ? { index: at, total: shown.length, onPrev: () => step(-1), onNext: () => step(1) } : null}
+        pinned={pinned}
+        canPin={ui.pins.length < MAX_PINS}
+        onPin={() => ui.place && ui.togglePin(ui.place)}
+        view3d={ui.view3d}
+        onView3d={ui.setView3d}
       />
     ) : null
 
@@ -214,6 +272,7 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
 
       <MapView2
         candidates={mapCandidates}
+        hovered={hovered}
         selected={ui.place}
         box={ui.box}
         drawing={drawing}
@@ -236,6 +295,24 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
         <div className="pointer-events-auto">
           <MapToolbar layer={ui.layer} onLayer={ui.setLayer} drawing={drawing} onDrawing={setDrawing} onGo={goTo} placeKey={placeKey} fromSearch={fromSearch} sites={sites} bestIn={bestIn} />
         </div>
+      </div>
+
+      <div
+        className={cn(
+          'pointer-events-none absolute z-10 flex justify-center transition-[right] duration-300',
+          isDesktop ? cn('bottom-14 left-[392px]', detail ? 'right-[452px]' : 'right-4') : 'inset-x-3 bottom-16',
+        )}
+      >
+        <ComparePlaces
+          pins={ui.pins}
+          target={target}
+          weights={weights}
+          facts={facts}
+          has3d={(p) => has3d(p.lat, p.lon)}
+          onShow={(p) => ui.pick(p)}
+          onRemove={ui.togglePin}
+          onClear={ui.clearPins}
+        />
       </div>
 
       {isDesktop ? (
