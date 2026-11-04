@@ -25,6 +25,10 @@ interface Props {
   target: TwinSide
   /** latitude of the Earth place, for its noon sun */
   earthLat: number
+  /** home page: only the two drive scenes, the tilt chart and one line of readouts */
+  compact?: boolean
+  /** stop the auto tour (off screen) */
+  paused?: boolean
 }
 
 const BODY_COLOR = {
@@ -206,6 +210,7 @@ function DriveScene({
   sunAz,
   lowSun,
   touring,
+  zoom = true,
 }: {
   d: Loaded
   side: TwinSide
@@ -217,6 +222,8 @@ function DriveScene({
   sunAz: number
   lowSun: boolean
   touring: boolean | null
+  /** off on the home page, so the mouse wheel scrolls the page instead of zooming */
+  zoom?: boolean
 }) {
   const at = roverAt(d, exag, pose)
   const start = Number.isFinite(at[1]) ? at : ([at[0], 0, at[2]] as [number, number, number])
@@ -233,7 +240,15 @@ function DriveScene({
         <hemisphereLight args={['#9fb4cc', '#0a1019', lowSun ? 0.12 : 0.35]} />
         <Sun elevation={sunEl} azimuth={sunAz} reach={12} />
         <Block d={d} x={0} exag={exag} colour={colour} row={row} accent={BODY_COLOR[side.body]} rover={pose} />
-        <OrbitControls makeDefault enableDamping={false} maxPolarAngle={Math.PI / 2.05} minDistance={0.6} maxDistance={40} target={start} />
+        <OrbitControls
+          makeDefault
+          enableDamping={false}
+          enableZoom={zoom}
+          maxPolarAngle={Math.PI / 2.05}
+          minDistance={0.6}
+          maxDistance={40}
+          target={start}
+        />
         {Number.isFinite(at[1]) && <FollowRover to={at} />}
       </Canvas>
       <Tag side={side} className="left-3" />
@@ -357,7 +372,7 @@ function Tag({ side, className }: { side: TwinSide; className: string }) {
 
 const EXAG = [1, 2, 4] as const
 
-export default function TwinTerrain({ earth, target, earthLat }: Props) {
+export default function TwinTerrain({ earth, target, earthLat, compact = false, paused = false }: Props) {
   const [data, setData] = useState<{ a: Loaded; b: Loaded } | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [exag, setExag] = useState<(typeof EXAG)[number]>(2)
@@ -391,7 +406,7 @@ export default function TwinTerrain({ earth, target, earthLat }: Props) {
   }, [data, row, s])
 
   useEffect(() => {
-    if (mode !== 'drive' || !data || reduced) return
+    if (mode !== 'drive' || !data || reduced || paused) return
     const speed = lengthKm / 28 // km per second of tour
     let raf = 0
     let prev = performance.now()
@@ -415,7 +430,7 @@ export default function TwinTerrain({ earth, target, earthLat }: Props) {
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [mode, data, reduced, lengthKm])
+  }, [mode, data, reduced, lengthKm, paused])
 
   useEffect(() => {
     let live = true
@@ -432,6 +447,51 @@ export default function TwinTerrain({ earth, target, earthLat }: Props) {
 
   const driving = mode === 'drive' && data && poses && trips
   const targetBody: BodyId = target.body
+  if (compact) {
+    return (
+      <div className="space-y-3" onPointerDownCapture={touch} onKeyDownCapture={touch}>
+        {driving ? (
+          <>
+            <div className="grid gap-3 md:grid-cols-2">
+              {(['a', 'b'] as const).map((k) => (
+                <DriveScene
+                  key={k}
+                  d={data[k]}
+                  side={k === 'a' ? earth : target}
+                  exag={exag}
+                  colour={colour}
+                  row={row}
+                  pose={poses[k]}
+                  sunEl={sunEl}
+                  sunAz={sunAz}
+                  lowSun={lowSun}
+                  touring={k === 'a' && !reduced ? touring : null}
+                  zoom={false}
+                />
+              ))}
+            </div>
+            <TiltChart
+              s={s}
+              trips={[
+                { trip: trips.a, color: BODY_COLOR.earth, label: earth.label },
+                { trip: trips.b, color: BODY_COLOR[target.body], label: target.label },
+              ]}
+            />
+            <Slider aria-label="Distance driven" min={0} max={lengthKm} step={0.05} value={[s]} onValueChange={([v]) => setS(v ?? s)} />
+          </>
+        ) : (
+          <p className="flex h-72 items-center justify-center gap-2 rounded-lg border border-border text-sm text-slate-400" role={error ? 'alert' : undefined}>
+            {error ?? (
+              <>
+                <Loader2 className="size-4 animate-spin" /> Loading NASA terrain…
+              </>
+            )}
+          </p>
+        )}
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-4" onPointerDownCapture={touch} onKeyDownCapture={touch} onWheelCapture={touch}>
       {driving ? (
