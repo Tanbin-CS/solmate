@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
-import { ArrowRight, ChevronDown, Hand } from 'lucide-react'
+import { ArrowRight, Box, ChevronDown, Hand } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { fadeUp, spring, stagger } from '@/design/motion'
 import { asset } from '@/lib/asset'
@@ -227,6 +227,13 @@ export function Hero({ data }: { data: HomeData | null }) {
             <Magnetic>
               <Button asChild size="lg" variant="outline" className="rounded-full border-slate-100/30 bg-ink-950/40 px-6 backdrop-blur hover:bg-ink-950/60">
                 <a href="#how">How it works</a>
+              </Button>
+            </Magnetic>
+            <Magnetic>
+              <Button asChild size="lg" variant="outline" className="rounded-full border-data/50 bg-ink-950/40 px-6 text-data backdrop-blur hover:bg-ink-950/60 hover:text-data">
+                <a href="#twin-drive">
+                  <Box /> Twin Drive in 3D
+                </a>
               </Button>
             </Magnetic>
           </motion.div>
