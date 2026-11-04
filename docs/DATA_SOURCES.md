@@ -10,7 +10,7 @@ Every input SolMate uses: what it is, who publishes it, how we use it and its te
 
 | Dataset | Agency / product | Version, period | Used for (dimension) | Terms |
 |---|---|---|---|---|
-| ASTER GDEM v3 | NASA/METI, LP DAAC `ASTGTM.003` | 1″ global DEM | 100 m terrain: stage 2 and the live API (T) | NASA open data; cite NASA/METI/AIST/Japan Spacesystems |
+| ASTER GDEM v3 | NASA/METI, LP DAAC `ASTGTM.003` | 1″ global DEM | 100 m terrain: stage 2 and the live API (T); 3D terrain view (context) | NASA open data; cite NASA/METI/AIST/Japan Spacesystems |
 | SRTMGL30 | NASA LP DAAC `SRTMGL30.002` | 30″ | ~1 km terrain stage 1: slope, relief (T, O) | NASA open data |
 | NASADEM | NASA LP DAAC `NASADEM_HGT.001` | 1″, 56°S–60°N | Terrain cross-check (validation) | NASA open data |
 | MODIS LST | NASA LP DAAC `MYD11C3.061` (Aqua) | monthly 0.05°, 2023–24 | Day/night surface temperature, diurnal range, coldest night (Th), land mask | NASA open data |
@@ -36,7 +36,7 @@ Explorer's place panel with their source.
 
 | Dataset | Agency / product | Used for | Terms |
 |---|---|---|---|
-| LRO LOLA LDEM_80S_20MPP_ADJ | NASA GSFC PGDA | Target terrain (stage 1 and 100 m) | NASA open data; cite Barker et al. |
+| LRO LOLA LDEM_80S_20MPP_ADJ | NASA GSFC PGDA | Target terrain (stage 1 and 100 m); 3D terrain view | NASA open data; cite Barker et al. |
 | LRO Diviner seasonal polar temperatures | NASA LRO Diviner (Williams et al. 2019, doi 10.1029/2019JE006028) | Per-region temperature range, minimum, mean; cold traps | NASA open data |
 | LRO illumination (sun visibility) | NASA GSFC PGDA (Mazarico et al.) | Illumination context | NASA open data |
 | Artemis III candidate regions | NASA release, 28 Oct 2024 | The 9 Moon targets | NASA public information |
@@ -48,7 +48,7 @@ Explorer's place panel with their source.
 | Dataset | Agency / product | Used for | Terms |
 |---|---|---|---|
 | MOLA MEGDR 64 px/deg | NASA MGS, PDS Geosciences | Target terrain stage 1 (Jezero, Arcadia) | NASA open data |
-| Mars 2020 CTX DTM, Jezero | USGS Astrogeology / NASA Mars 2020 (Fergason et al. 2020) | Target terrain at 100 m | Public domain |
+| Mars 2020 CTX DTM, Jezero | USGS Astrogeology / NASA Mars 2020 (Fergason et al. 2020) | Target terrain at 100 m; 3D terrain view | Public domain |
 | Mars 2020 MEDA | NASA Mars 2020 (Munguira et al. 2023 and others) | Jezero temperatures, wind, humidity, pressure | Citation |
 | MSL RAD | NASA MSL (Hassler et al. 2014) | Mars surface dose (breaks-down) | Citation |
 | SWIM | NASA / PSI Subsurface Water Ice Mapping | Arcadia Planitia target selection and ice | Citation |
