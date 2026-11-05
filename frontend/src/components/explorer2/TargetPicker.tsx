@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 import { BODY } from '@/components/explorer/roles'
 import { groupTargets } from './labels'
 
-/** Choose one of the 11 targets (9 Artemis III regions, Jezero, Arcadia Planitia). */
+/** Choose one of the 11 targets (9 lunar south-pole landing regions, Jezero, Arcadia Planitia). */
 export function TargetPicker({ targets, value, onChange }: { targets: Target[]; value: string; onChange: (id: string) => void }) {
   return (
     <div role="radiogroup" aria-label="Planetary target" className="space-y-2">

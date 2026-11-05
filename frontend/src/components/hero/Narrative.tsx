@@ -10,7 +10,7 @@ interface Props {
 
 const WHY: Record<Props['body'], string> = {
   mars: 'where NASA’s Perseverance rover landed',
-  moon: 'one of NASA’s nine Artemis III candidate base regions',
+  moon: 'one of NASA’s nine candidate landing regions near the lunar south pole',
 }
 
 /**

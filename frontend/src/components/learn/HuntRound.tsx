@@ -360,7 +360,7 @@ export function HuntRound({ round, data, onScored }: { round: { target: string }
                 </div>
               </div>
               <p className="mt-3 text-[14.5px] text-slate-300">
-                <span className="text-slate-100">{last.place}</span> is <CountUp to={Math.round(last.sai)} className="tabular font-semibold text-slate-100" /> out of 100 alike.
+                <span className="text-slate-100">{last.place}</span> scores <CountUp to={Math.round(last.sai)} className="tabular font-semibold text-slate-100" /> out of 100 on the SolMate Analog Index.
               </p>
               <div className="mt-2">
                 <HeatBar now={best ? last.sai / best.sai : 0} top={best && topTry ? topTry.sai / best.sai : 0} />

@@ -42,7 +42,7 @@ function Stats({ data }: { data: HomeData }) {
   const jezero = data.validation.targets.jezero_crater
   const moon = data.validation.summary.moon
   const items = [
-    { value: data.targets.length, label: 'NASA targets', sub: '9 Artemis III regions, 2 Mars sites' },
+    { value: data.targets.length, label: 'NASA targets', sub: '9 lunar south-pole regions, 2 Mars sites' },
     { value: facts.nasa_layers, label: 'NASA data layers', sub: 'MODIS, ASTER, MERRA-2, POWER, GLDAS, SRTM' },
     { value: 1.9, decimals: 1, suffix: ' M', label: 'land cells scored', sub: 'every 0.1° cell, 83° N to 83° S' },
     { value: jezero?.auc_equal ?? 0, decimals: 2, label: 'validation AUC, Jezero', sub: `Moon regions median ${moon?.auc_median.toFixed(2) ?? '–'} · 0.5 = chance` },
@@ -163,7 +163,7 @@ function Results({ data, between }: { data: HomeData; between?: ReactNode }) {
       <Section
         id="twin-drive"
         title={`Twin Drive: one rover on Earth and on ${flagship.target.body === 'moon' ? 'the Moon' : 'Mars'}.`}
-        intro="Two 20 km blocks of 100 m NASA terrain, side by side at the same scale. The same rover drives both, and tilt, sunlight and wheel load are read from the ground under it. Drag to look around; Pause, Play and the slider control the drive."
+        intro="Two 20 km blocks of 100 m NASA terrain, side by side at the same scale. The same rover drives both: tilt and shadow come from the terrain under it, and the weight per wheel shows the gravity difference. Drag to look around; Pause, Play and the slider control the drive."
         aside={switcher('twin-drive')}
       >
         <TwinDriveShowcase key={flagship.target.id} flagship={flagship} />

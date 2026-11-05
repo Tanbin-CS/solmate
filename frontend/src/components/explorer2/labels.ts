@@ -44,10 +44,10 @@ const SITE_NAMES: Readonly<Record<string, string>> = {
 export const siteName = (id: string): string =>
   SITE_NAMES[id] ?? id.split(/[-_]/).map((w) => (w ? w[0]!.toUpperCase() + w.slice(1) : w)).join(' ')
 
-/** Target groups for the picker: Artemis III candidate regions, then Mars. */
+/** Target groups for the picker: NASA's candidate landing regions near the lunar south pole, then Mars. */
 export function groupTargets<T extends { body: 'moon' | 'mars' }>(targets: readonly T[]): { label: string; items: T[] }[] {
   return [
-    { label: 'Moon · Artemis III base regions', items: targets.filter((t) => t.body === 'moon') },
+    { label: 'Moon · south-pole landing regions', items: targets.filter((t) => t.body === 'moon') },
     { label: 'Mars', items: targets.filter((t) => t.body === 'mars') },
   ]
 }

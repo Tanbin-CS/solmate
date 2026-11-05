@@ -41,7 +41,7 @@ function MarsSpot({ t, zoom = 3 }: { t: Target; zoom?: number }) {
   )
 }
 
-/** The Moon's south pole seen from below, with all nine Artemis III regions; one is highlighted. */
+/** The Moon's south pole seen from below, with all nine candidate landing regions; one is highlighted. */
 function MoonSpot({ t, all, labelled = false }: { t: Target; all: Target[]; labelled?: boolean }) {
   const disc = useId()
   return (

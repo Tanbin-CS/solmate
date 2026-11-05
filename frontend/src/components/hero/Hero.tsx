@@ -213,7 +213,7 @@ export function Hero({ data }: { data: HomeData | null }) {
             </span>
           </motion.h1>
           <motion.p variants={fadeUp(reduced)} className="mt-5 max-w-md text-pretty text-base leading-relaxed text-slate-300 md:text-lg">
-            We score every place on Earth against NASA’s Moon base regions and Mars sites, using {facts.nasa_layers} NASA data layers, to find where
+            We score every place on Earth against NASA’s candidate Moon landing regions and Mars sites, using {facts.nasa_layers} NASA data layers, to find where
             crews and rovers can rehearse.
           </motion.p>
           <motion.div variants={fadeUp(reduced)} className="pointer-events-auto mt-8 flex flex-wrap gap-3">

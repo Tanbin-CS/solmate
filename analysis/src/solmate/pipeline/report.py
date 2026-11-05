@@ -17,6 +17,8 @@ from urllib.parse import urlencode
 
 import yaml
 
+from solmate.compute import breakdown
+
 ANALYSIS = Path(__file__).resolve().parents[3]
 REPO = ANALYSIS.parent
 WEB = REPO / "frontend" / "public" / "data" / "v2"
@@ -28,6 +30,16 @@ REGIONS = [("Tibetan Plateau", 30, 38.1, 75, 95), ("Tarim Basin", 38.1, 42, 75, 
 DIM_NAMES = {"T": "Terrain", "C": "Climate & aridity", "Th": "Thermal", "S": "Surface & barrenness",
              "M": "Mineralogy", "I": "Ice & cold-trap", "D": "Dust & wind", "O": "Mission operations"}
 CASES = [("jezero_crater", "Mars"), ("mons_mouton", "Moon")]
+
+
+def refreshed(limit: dict) -> dict:
+    """Stored screening verdicts keep the wording of the run that made them; re-word the approach gaps
+    with today's text (breakdown.approach_text) so the report matches the live site."""
+    if limit.get("kind") != "earth_can_only_approach":
+        return limit
+    dims = yaml.safe_load(resources.files("solmate.config").joinpath("dimensions.yaml").read_text(encoding="utf-8"))
+    labels = breakdown.indicator_labels(dims["dimensions"])
+    return {**limit, "text": breakdown.approach_text(labels.get(limit["id"], limit["id"]), limit["target"], limit["gap"])}
 
 
 def region(lat: float, lon: float) -> str | None:
@@ -111,10 +123,12 @@ def build(d: dict) -> list[dict]:
     n_layers = d["n_layers"]
 
     b: list[dict] = [
-        {"type": "h1", "text": "SolMate findings: where Earth comes closest to NASA's Moon base regions and Mars sites"},
+        {"type": "h1",
+         "text": "SolMate findings: where Earth comes closest to NASA's candidate Moon landing regions and Mars sites"},
         {"type": "p", "text": (
             f"SolMate scored every land cell on Earth, about 1.9 million of them at 0.1°, against {len(targets)} NASA targets: "
-            "the nine Artemis III candidate base regions near the lunar south pole, Jezero Crater and Arcadia Planitia. "
+            "the nine candidate landing regions NASA named near the lunar south pole in 2024, "
+            "Jezero Crater and Arcadia Planitia. "
             "Each place gets a SolMate Analog Index (SAI, 0–100) built from seven characteristics measured with "
             f"{n_layers} NASA data layers, a statement of where the analogy breaks down, and what the place could be "
             "used for.")},
@@ -133,8 +147,8 @@ def build(d: dict) -> list[dict]:
              f"Plateau and {top5_regions.get('Puna de Atacama', 0)} in the Puna de Atacama, roughly 3,500–5,000 m high "
              "(judged from NASA POWER surface pressure)."),
             (f"{n_novel5} of those {n_top5} are more than {novelty_km} km from all {n_known} known analog sites "
-             "(NASA field sites, the Atacama, Antarctica, Iceland, Hawaiʻi, Devon Island and others): leads nobody has "
-             "tested, listed for expert and field review."),
+             "(NASA field sites, the Atacama, Antarctica, Iceland, Hawaiʻi, Devon Island and others): "
+             "leads outside our reference list, not yet reviewed, listed for literature checks and field review."),
             ("No place matches everything. Nowhere on Earth is as cold, as dry or as airless as the lunar south pole or Mars; "
              "those characteristics are ranked toward the target, and the gap is stated with every result."),
             ("Different places lead on different characteristics: the best terrain match is often not the best thermal or "
@@ -156,6 +170,7 @@ def build(d: dict) -> list[dict]:
     for tid, world, c in case_leads(d):
         t = next(x for x in targets if x["id"] == tid)
         ver = c["verdict"]
+        breaks = [refreshed(x) for x in ver["breaks_down"]]
         t100 = c.get("terrain_100m") or {}
         ti = (t100.get("indicators") or {})
         tt = d["stage2"].get(tid, {})
@@ -197,7 +212,7 @@ def build(d: dict) -> list[dict]:
                   {"type": "ul", "items": [h["text"] for h in ver["habitability"]]}]
         b += [
             {"type": "h3", "text": "Where the analogy breaks down"},
-            {"type": "ul", "items": [x["text"] for x in ver["breaks_down"]]},
+            {"type": "ul", "items": [x["text"] for x in breaks]},
             {"type": "h3", "text": "What it could be used for"},
             {"type": "ul", "items": [u["text"] for u in ver["use_it_for"]] or ["No use rule fired for this place."]},
             {"type": "p", "text": (

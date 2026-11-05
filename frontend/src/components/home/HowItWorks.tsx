@@ -15,7 +15,7 @@ const STEPS = [
   {
     icon: Mountain,
     title: 'Start from NASA’s own sites.',
-    body: 'The nine Artemis III candidate base regions near the lunar south pole, Jezero Crater where Perseverance landed, and Arcadia Planitia, NASA’s leading ice target for a human base on Mars.',
+    body: 'The nine candidate landing regions NASA named near the lunar south pole in 2024 (the first crewed landing is now planned for Artemis IV), Jezero Crater where Perseverance landed, and Arcadia Planitia, NASA’s leading ice target for a human base on Mars.',
     tone: 'var(--reference)',
   },
   {
@@ -38,8 +38,8 @@ const STEPS = [
   },
   {
     icon: Radar,
-    title: 'Find places nobody has tested.',
-    body: 'The best cells more than 300 km from every known analog site become novel leads. They get a 100 m NASA terrain check and are listed for expert and field review.',
+    title: 'Look beyond the usual sites.',
+    body: 'The best cells more than 300 km from every site in our reference list of known analogs become novel leads: unreviewed candidates, not proven ones. They get a 100 m NASA terrain check and are listed for literature checks and field review.',
     tone: 'var(--screen)',
   },
 ]
@@ -70,7 +70,7 @@ function TargetsVisual({ data }: { data: HomeData }) {
         ))}
       </div>
       <p className="text-xs text-slate-300">
-        <span className="tabular text-slate-100">{data.targets.length}</span> targets: {data.targets.length - mars.length} Artemis III regions, {mars.join(' and ')}.
+        <span className="tabular text-slate-100">{data.targets.length}</span> targets: {data.targets.length - mars.length} lunar south-pole regions, {mars.join(' and ')}.
       </p>
     </div>
   )
