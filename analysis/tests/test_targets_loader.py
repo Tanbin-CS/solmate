@@ -26,3 +26,7 @@ def test_diviner_thermal_replaces_lunar_proxies(tmp_path):
     v = t["haworth"]["indicators"]["lst_night_min_k"]
     assert v["value"] == 51.1 and v["method"] == "computed" and v["source"] == "Diviner test"
     assert t["jezero_crater"]["indicators"]["lst_night_min_k"]["method"] == "literature"
+    # the literature excerpt and DOI described the proxy that Diviner replaced, so they go
+    assert "excerpt" not in v and "doi" not in v
+    trap = t["haworth"]["indicators"]["snow_months_per_year"]
+    assert trap["method"] == "derived" and "cold trap" in trap["uncertainty"]

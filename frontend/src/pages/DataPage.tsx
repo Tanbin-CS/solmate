@@ -272,7 +272,7 @@ function TargetValues({ target, model }: { target: Target; model: Model }) {
         </thead>
         <tbody>
           {rows.map(({ k, v, kind }) => {
-            const e = (v ?? {}) as { value?: unknown; unit?: string; method?: string; source?: string; doi?: string; url?: string }
+            const e = (v ?? {}) as { value?: unknown; unit?: string; method?: string; uncertainty?: string; source?: string; doi?: string; url?: string }
             const value =
               k === 'mineral_class' && v && typeof v === 'object'
                 ? Object.entries(v as Record<string, unknown>)
@@ -290,7 +290,10 @@ function TargetValues({ target, model }: { target: Target; model: Model }) {
                   <span className="block font-mono text-xs text-slate-400">{kind}</span>
                 </td>
                 <td className="whitespace-nowrap px-4 py-2.5 text-right font-mono tabular text-slate-200">{value}</td>
-                <td className="px-4 py-2.5 text-xs text-slate-300">{e.method ?? '–'}</td>
+                <td className="px-4 py-2.5 text-xs text-slate-300">
+                  {e.method ?? '–'}
+                  {e.uncertainty && <span className="mt-1 block max-w-xs text-slate-400">{e.uncertainty}</span>}
+                </td>
                 <td className="px-4 py-2.5 text-xs text-slate-400">
                   {link ? (
                     <a href={link} target="_blank" rel="noreferrer" className="hover:text-data hover:underline">
