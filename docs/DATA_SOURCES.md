@@ -16,7 +16,7 @@ Every input SolMate uses: what it is, who publishes it, how we use it and its te
 | MODIS LST | NASA LP DAAC `MYD11C3.061` (Aqua) | monthly 0.05°, 2023–24 | Day/night surface temperature, diurnal range, coldest night (Th), land mask | NASA open data |
 | MODIS albedo | NASA LP DAAC `MCD43C3.061` | 0.05°, mid-month 2023–24 | White-sky shortwave albedo (S) | NASA open data |
 | MODIS land cover | NASA LP DAAC `MCD12C1.061` | 0.05°, 2023 | Barren, forest, vegetation, snow/ice, water % (S, context) | NASA open data |
-| MODIS snow | NASA NSIDC `MOD10CM.61` | monthly 0.05°, 2023–24 | Snow persistence (I) | NASA open data |
+| MODIS snow | NASA NSIDC `MOD10CM.61` | monthly 0.05°, 2023–24 | Snow persistence (I): months above 50 % snow among the months MOD10CM observed (cloud and polar night are not counted as snow-free), scaled to 12; cells with fewer than 6 observed months have no value | NASA open data |
 | ASTER GED | NASA LP DAAC `AG5KMMOH.041` | 5 km monthly, 2013–15 | TIR emissivity, Ninomiya quartz/carbonate/mafic indices (M) | NASA open data |
 | MERRA-2 aerosol | NASA GMAO / GES DISC `M2TMNXAER.5.12.4` | monthly, 2023–24 | Dust optical depth (D) | NASA open data |
 | NASA POWER | NASA LaRC POWER (MERRA-2 climatology, Zarr on AWS) | climatology | Temperature, precipitation, humidity, wind, pressure, frost days; Hargreaves PET and P/PET (C, Th, I, D) | NASA open data |
