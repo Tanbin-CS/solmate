@@ -27,7 +27,7 @@ export function NavBar({ overlay = false }: { overlay?: boolean }) {
   return (
     <header
       className={cn(
-        'z-40 flex h-16 items-center justify-between px-5 transition-[background-color,border-color,backdrop-filter] duration-500 md:px-8',
+        'z-40 flex h-16 items-center justify-between px-4 transition-[background-color,border-color,backdrop-filter] duration-500 sm:px-5 md:px-8',
         overlay ? 'fixed inset-x-0 top-0' : 'sticky top-0',
         glass ? 'border-b border-border bg-background/70 backdrop-blur-xl' : 'border-b border-transparent',
       )}
@@ -36,16 +36,17 @@ export function NavBar({ overlay = false }: { overlay?: boolean }) {
         <motion.div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px origin-left bg-gradient-to-r from-reference via-data to-screen" style={{ scaleX: progress }} />
       )}
       <Link to="/" className="mr-2 shrink-0 rounded-md text-slate-100" aria-label="SolMate home">
-        <BrandMark />
+        {/* On phones the word gives way so every page link fits without sideways scrolling. */}
+        <BrandMark wordClassName="max-sm:sr-only" />
       </Link>
-      <nav aria-label="Primary" className="-mr-2 flex min-w-0 items-center overflow-x-auto [mask-image:linear-gradient(to_right,black_85%,transparent)] [scrollbar-width:none] sm:mr-0 sm:gap-1 sm:[mask-image:none]">
+      <nav aria-label="Primary" className="-mr-1.5 flex min-w-0 items-center overflow-x-auto [scrollbar-width:none] sm:mr-0 sm:gap-1">
         {LINKS.map((l) => (
           <NavLink
             key={l.to}
             to={l.to}
             className={({ isActive }) =>
               cn(
-                'relative shrink-0 rounded-md px-2 py-2 text-sm whitespace-nowrap transition-colors sm:px-3',
+                'relative shrink-0 rounded-md px-1.5 py-2 text-[13px] whitespace-nowrap transition-colors sm:px-3 sm:text-sm',
                 isActive ? 'text-slate-100' : 'text-slate-300 hover:text-slate-100',
               )
             }
