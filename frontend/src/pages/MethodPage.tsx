@@ -83,7 +83,7 @@ function MethodBody({ data }: { data: HomeData }) {
     <div className="mx-auto w-full max-w-4xl px-6 pb-24">
       <Block title="Seven characteristics, not a claim of sameness.">
         <p>
-          The question is narrow: which places on Earth come closest to a Moon base region or a Mars site in the conditions a crew, a rover or an instrument would meet there?
+          The question is narrow: which places on Earth come closest to a candidate Moon landing region or a Mars site in the conditions a crew, a rover or an instrument would meet there?
           No place on Earth matches another world in everything, so each characteristic is scored on its own, and the index says how many of them line up at once.
         </p>
         <p>
@@ -95,7 +95,7 @@ function MethodBody({ data }: { data: HomeData }) {
       <Block title="Targets from NASA, Earth from NASA data.">
         <ul className="list-disc space-y-2 pl-5 marker:text-slate-400">
           <li>
-            <strong className="text-slate-100">Moon:</strong> all {moon.length} Artemis III candidate regions NASA named on 28 October 2024, located at the centroid of the
+            <strong className="text-slate-100">Moon:</strong> all {moon.length} candidate landing regions near the lunar south pole that NASA named on 28 October 2024 (announced for Artemis III; NASA now plans the first crewed landing for Artemis IV), located at the centroid of the
             published candidate landing sites (Wueller et al. 2026). Terrain from LRO LOLA, temperatures from LRO Diviner.
           </li>
           <li>
@@ -225,7 +225,7 @@ function MethodBody({ data }: { data: HomeData }) {
         </p>
         <div className="grid gap-3 sm:grid-cols-3">
           <Stat label="Jezero Crater" value={jez.auc_equal.toFixed(2)} note={`95% CI ${jez.auc_ci95[0].toFixed(2)}–${jez.auc_ci95[1].toFixed(2)} · ${jez.n_positives} analogs vs ${jez.n_controls} controls`} tone="text-positive" />
-          <Stat label="Artemis III regions, median" value={v.summary.moon!.auc_median.toFixed(2)} note={`${moon.length} regions · ${v.targets[moon[0]!.id]!.n_positives} analogs each, so intervals are wide`} />
+          <Stat label="Lunar regions, median" value={v.summary.moon!.auc_median.toFixed(2)} note={`${moon.length} regions · ${v.targets[moon[0]!.id]!.n_positives} analogs each, so intervals are wide`} />
           <Stat label="Arcadia Planitia" value={arc.auc_equal.toFixed(2)} note={`95% CI ${arc.auc_ci95[0].toFixed(2)}–${arc.auc_ci95[1].toFixed(2)} · not better than chance`} tone="text-negative" />
         </div>
 

@@ -13,7 +13,7 @@ export type Visual =
   | { kind: 'grid' } // Earth cut into 0.1 degree squares
   | { kind: 'bars'; lat: number; lon: number; target: string; caption: string } // a real score taken apart
   | { kind: 'sun'; target: string } // Sun height at a Moon region against a place on Earth
-  | { kind: 'regions' } // the nine Artemis III regions
+  | { kind: 'regions' } // the nine lunar south-pole landing regions
   | { kind: 'gravity' }
   | { kind: 'pressure' }
   | { kind: 'radiation' }
@@ -84,7 +84,7 @@ export const LEVELS: Level[] = [
     cards: [
       {
         title: 'People are going back to the Moon',
-        body: 'NASA’s Artemis program plans to land astronauts near the Moon’s south pole. NASA has named nine candidate regions there for the Artemis III landing.',
+        body: 'NASA’s Artemis program plans to land astronauts near the Moon’s south pole, starting with Artemis IV. NASA has named nine candidate regions there.',
         visual: { kind: 'south-pole' },
       },
       {
@@ -118,7 +118,7 @@ export const LEVELS: Level[] = [
         explain: 'A problem found in a desert on Earth costs far less than one found on the Moon.',
       },
       {
-        q: 'Where does NASA plan to land the Artemis III astronauts?',
+        q: 'Where does NASA plan to land the first Artemis astronauts on the Moon?',
         options: ['On the Moon’s equator', 'In the middle of the far side', 'Near the Moon’s south pole', 'Near the Moon’s north pole'],
         answer: 2,
         explain: 'All nine candidate regions are near the south pole, where some craters may hold water ice.',
@@ -203,7 +203,7 @@ export const LEVELS: Level[] = [
       },
       {
         title: 'Nine places to land',
-        body: 'NASA picked nine candidate regions for Artemis III. They differ: one is the flattest, one has the smallest landing area, one is closest to the pole.',
+        body: 'NASA picked nine candidate regions for the first Artemis landings. They differ: one is the flattest, one has the smallest landing area, one is closest to the pole.',
         visual: { kind: 'regions' },
       },
       {

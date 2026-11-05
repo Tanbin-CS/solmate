@@ -1,6 +1,6 @@
-# SolMate findings: where Earth comes closest to NASA's Moon base regions and Mars sites
+# SolMate findings: where Earth comes closest to NASA's candidate Moon landing regions and Mars sites
 
-SolMate scored every land cell on Earth, about 1.9 million of them at 0.1°, against 11 NASA targets: the nine Artemis III candidate base regions near the lunar south pole, Jezero Crater and Arcadia Planitia. Each place gets a SolMate Analog Index (SAI, 0–100) built from seven characteristics measured with 42 NASA data layers, a statement of where the analogy breaks down, and what the place could be used for.
+SolMate scored every land cell on Earth, about 1.9 million of them at 0.1°, against 11 NASA targets: the nine candidate landing regions NASA named near the lunar south pole in 2024, Jezero Crater and Arcadia Planitia. Each place gets a SolMate Analog Index (SAI, 0–100) built from seven characteristics measured with 42 NASA data layers, a statement of where the analogy breaks down, and what the place could be used for.
 
 The method was checked against sites NASA has already used as analogs, with a test written down before the results: for Jezero, documented Mars analog sites outscore controls with an AUC of 0.84 (95% CI 0.69–0.96); the Moon regions reach a median of 0.75, and Arcadia Planitia 0.58, which is reported as a weak result.
 
@@ -9,7 +9,7 @@ Interactive version: https://solmate-analog.web.app/findings · Explorer: https:
 ## Headline findings
 
 - High, cold, barren plateaus are Earth's closest match to both worlds. Of the top five places for each of the 11 targets (55 in all), 35 lie on the Tibetan Plateau and 12 in the Puna de Atacama, roughly 3,500–5,000 m high (judged from NASA POWER surface pressure).
-- 53 of those 55 are more than 300 km from all 31 known analog sites (NASA field sites, the Atacama, Antarctica, Iceland, Hawaiʻi, Devon Island and others): leads nobody has tested, listed for expert and field review.
+- 53 of those 55 are more than 300 km from all 31 known analog sites (NASA field sites, the Atacama, Antarctica, Iceland, Hawaiʻi, Devon Island and others): leads outside our reference list, not yet reviewed, listed for literature checks and field review.
 - No place matches everything. Nowhere on Earth is as cold, as dry or as airless as the lunar south pole or Mars; those characteristics are ranked toward the target, and the gap is stated with every result.
 - Different places lead on different characteristics: the best terrain match is often not the best thermal or mineral match, which is why every result shows all seven dimensions.
 
@@ -75,11 +75,11 @@ The best novel lead for Jezero Crater is the cell at 34.95°N 83.35°E, 853 km f
 - Surface pressure is 0.01x this place: no Earth site reproduces vacuum or the thin Martian air (heat transfer, dust lofting, boiling).
 - Surface radiation dose is 97.4x Earth: Earth's atmosphere and magnetic field shield every analog site.
 - Caves, lava tubes and other underground environments are not assessed: satellite data see only the surface. Documented cave and mine analogs are listed in the findings.
-- Air humidity: the target value (5) lies beyond every place on Earth; this place gets 44% of the way from Earth's typical value.
-- Day-night surface temperature swing: the target value (90) lies beyond every place on Earth; this place gets 16% of the way from Earth's typical value.
-- Coldest night surface temperature: the target value (190) lies beyond every place on Earth; this place gets 32% of the way from Earth's typical value.
-- Mean temperature: the target value (-53) lies beyond every place on Earth; this place gets 32% of the way from Earth's typical value.
-- Atmospheric dust: the target value (0.5) lies beyond every place on Earth; this place gets 6% of the way from Earth's typical value.
+- Air humidity: the target value (5) is outside the middle 98% of Earth's sampled values; this place gets 44% of the way from Earth's typical value.
+- Day-night surface temperature swing: the target value (90) is outside the middle 98% of Earth's sampled values; this place gets 16% of the way from Earth's typical value.
+- Coldest night surface temperature: the target value (190) is outside the middle 98% of Earth's sampled values; this place gets 32% of the way from Earth's typical value.
+- Mean temperature: the target value (-53) is outside the middle 98% of Earth's sampled values; this place gets 32% of the way from Earth's typical value.
+- Atmospheric dust: the target value (0.5) is outside the middle 98% of Earth's sampled values; this place gets 6% of the way from Earth's typical value.
 
 ### What it could be used for
 
@@ -126,11 +126,11 @@ The best novel lead for Mons Mouton is the cell at 38.75°N 74.05°E, 1550 km fr
 - Surface radiation dose is 208.3x Earth: Earth's atmosphere and magnetic field shield every analog site.
 - Sunlight: in this region the Sun never rises more than 6° above the horizon, so long shadows and low light shape every operation. At this place on Earth the midsummer noon Sun reaches 75°.
 - Caves, lava tubes and other underground environments are not assessed: satellite data see only the surface. Documented cave and mine analogs are listed in the findings.
-- Air humidity: the target value (0) lies beyond every place on Earth; this place gets 28% of the way from Earth's typical value.
-- Day-night surface temperature swing: the target value (177.2) lies beyond every place on Earth; this place gets 7% of the way from Earth's typical value.
-- Coldest night surface temperature: the target value (58.5) lies beyond every place on Earth; this place gets 13% of the way from Earth's typical value.
-- Mean temperature: the target value (-147.3) lies beyond every place on Earth; this place gets 13% of the way from Earth's typical value.
-- Coldest-season temperature: the target value (-161.9) lies beyond every place on Earth; this place gets 14% of the way from Earth's typical value.
+- Air humidity: the target value (0) is outside the middle 98% of Earth's sampled values; this place gets 28% of the way from Earth's typical value.
+- Day-night surface temperature swing: the target value (177.2) is outside the middle 98% of Earth's sampled values; this place gets 7% of the way from Earth's typical value.
+- Coldest night surface temperature: the target value (58.5) is outside the middle 98% of Earth's sampled values; this place gets 13% of the way from Earth's typical value.
+- Mean temperature: the target value (-147.3) is outside the middle 98% of Earth's sampled values; this place gets 13% of the way from Earth's typical value.
+- Coldest-season temperature: the target value (-161.9) is outside the middle 98% of Earth's sampled values; this place gets 15% of the way from Earth's typical value.
 
 ### What it could be used for
 

@@ -388,7 +388,7 @@ function Stage({ i, p, nums, sites, split, onSplit }: { i: number; p: number; nu
             })}
           </div>
           <Label className="left-1/2 top-[8%] -translate-x-1/2 text-reference" style={{ opacity: span(p, 0.55, 0.75) }}>
-            Nine Artemis III regions around the south pole
+            Nine candidate landing regions around the south pole
           </Label>
         </div>
       )

@@ -39,7 +39,7 @@ Explorer's place panel with their source.
 | LRO LOLA LDEM_80S_20MPP_ADJ | NASA GSFC PGDA | Target terrain (stage 1 and 100 m); 3D terrain view | NASA open data; cite Barker et al. |
 | LRO Diviner seasonal polar temperatures | NASA LRO Diviner (Williams et al. 2019, doi 10.1029/2019JE006028) | Per-region temperature range, minimum, mean; cold traps | NASA open data |
 | LRO illumination (sun visibility) | NASA GSFC PGDA (Mazarico et al.) | Illumination context | NASA open data |
-| Artemis III candidate regions | NASA release, 28 Oct 2024 | The 9 Moon targets | NASA public information |
+| Candidate landing regions near the lunar south pole (named for Artemis III; NASA now plans the first crewed landing for Artemis IV) | NASA release, 28 Oct 2024 | The 9 Moon targets | NASA public information |
 | Region centroids | Wueller et al. 2026, doi 10.1029/2025JE009434 | Coordinates of the candidate landing sites | Citation |
 | Lunar mineralogy, albedo, CRaTER dose | Peer-reviewed literature (see `targets.yaml`) | Cited constants | Citation |
 

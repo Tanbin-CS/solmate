@@ -381,7 +381,7 @@ function SunArc({ angle, label, tone }: { angle: number | null; label: string; t
 function Regions({ data }: { data: LearnData | null }) {
   const moon = (data?.targets ?? []).filter((t) => t.body === 'moon')
   return (
-    <Panel credit="NASA Artemis III candidate regions (28 Oct 2024); highest Sun from each region's latitude">
+    <Panel credit="NASA candidate landing regions (28 Oct 2024); highest Sun from each region's latitude">
       <ul className="grid gap-x-5 gap-y-1.5 text-[13px] sm:grid-cols-2">
         {moon.map((t) => {
           const lat = (t as { centroid?: { lat?: number } }).centroid?.lat

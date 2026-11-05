@@ -121,7 +121,7 @@ function PickRound({ round, data, onScored }: { round: Extract<Round, { kind: 'p
   return (
     <div>
       <p className="text-[15px] text-slate-300" aria-live="polite">
-        {choice === null ? 'Tap the place you think is the best training ground.' : stars === null ? 'Checking all three with NASA data…' : 'Here is how alike each place is, out of 100:'}
+        {choice === null ? 'Tap the place you think is the best training ground.' : stars === null ? 'Checking all three with NASA data…' : 'Here is each place’s analog score out of 100 (higher means a closer match):'}
       </p>
       <div className="mt-4 grid gap-3 sm:grid-cols-3">
         {round.options.map((o: Place, n) => {

@@ -20,7 +20,9 @@ import { MAX_PINS, samePlace, useExplorer2State, type LatLon, type ListTab } fro
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { presetWeights, useModel, usePlaceScore, useScreening, useTerrain100 } from '@/hooks/useV2'
 import type { Model, Target } from '@/science/v2/model'
+import { loadValidation } from '@/science/v2/data'
 import { rank } from '@/science/v2/screening'
+import type { TargetValidation } from '@/science/v2/validation'
 import { DIMENSION_NAMES } from '@/science/v2/verdict'
 import { countryAt, useCountries } from '@/lib/countries'
 import { cn } from '@/lib/utils'
@@ -61,6 +63,18 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
     ui.pick(p)
   }
   const [listOpen, setListOpen] = useState(false)
+  const [checks, setChecks] = useState<Record<string, TargetValidation> | null>(null)
+  useEffect(() => {
+    let live = true
+    loadValidation().then(
+      (v) => live && setChecks(v.targets),
+      () => undefined,
+    )
+    return () => {
+      live = false
+    }
+  }, [])
+  const check = checks?.[target.id] ?? null
   const [hovered, setHovered] = useState<number | null>(null)
   const idx3d = useTerrain3dIndex()
   const has3d = useCallback((lat: number, lon: number) => !!twinGrids(idx3d, lat, lon, target.id), [idx3d, target.id])
@@ -160,7 +174,10 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
         <TargetPicker targets={targets} value={target.id} onChange={ui.setTarget} />
         <PresetPicker value={ui.preset === 'lunar_ops' && target.body !== 'moon' ? 'equal' : ui.preset} onChange={ui.setPreset} body={target.body} />
         <Link to="/method#validation" className="block rounded-lg border border-border bg-ink-850 px-3 py-2 text-[12px] leading-snug text-slate-300 transition-colors hover:border-slate-300/30">
-          <span className="font-medium text-slate-100">How good is this score?</span> We tested it on NASA analog sites like Death Valley and Kīlauea. They beat ordinary land 7 times out of 10 or more.{' '}
+          <span className="font-medium text-slate-100">How good is this score?</span>{' '}
+          {check
+            ? `For ${target.name}, a documented NASA analog site outscored a comparison site ${Math.round(check.auc_equal * 100)}% of the time (50% is chance; ${check.n_positives} sites, ${check.n_controls} controls). A high score marks a candidate, not a proven analog.`
+            : 'We tested it on documented NASA analog sites against comparison sites. A high score marks a candidate, not a proven analog.'}{' '}
           <span className="text-data">See the test →</span>
         </Link>
       </div>
@@ -196,7 +213,7 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
         )}
         <p className="mt-2 text-xs leading-relaxed text-slate-400">
           {ui.tab === 'novel'
-            ? `Best places more than ${scr?.novelty_km ?? 300} km from every known analog site: candidates nobody has tested yet.`
+            ? `Best places more than ${scr?.novelty_km ?? 300} km from every site in our reference list of known analogs: unreviewed candidates for literature checks and field review.`
             : ui.tab === 'leaders'
               ? 'Different places lead on different characteristics. Ranked by the full SAI among each dimension’s top cells.'
               : `Best of ${'1.9 million'} land cells screened at 0.1°, at least 50 km apart.`}
