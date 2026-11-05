@@ -70,6 +70,23 @@ def thermal_layers(files: list[Path]) -> dict[str, np.ndarray]:
         }
 
 
+SNOW_MIN_VALID_MONTHS = 6  # of the 24 monthly composites; fewer and the cell has no snow value
+
+
+def snow_months(months: np.ndarray, min_valid: int = SNOW_MIN_VALID_MONTHS) -> np.ndarray:
+    """Months per year with more than 50 % snow cover, from the months MOD10CM actually observed.
+
+    Cloud, polar night and other non-snow codes are NaN. A missing month is not a snow-free month:
+    the snowy share of the observed months is scaled to 12, and a cell with fewer than `min_valid`
+    observed months gets NaN (no data) instead of 0.
+    """
+    valid = np.isfinite(months).sum(axis=0)
+    snowy = (np.nan_to_num(months, nan=0.0) > 50).sum(axis=0)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        out = np.where(valid >= min_valid, snowy / np.maximum(valid, 1) * 12.0, np.nan)
+    return out.astype(np.float32)
+
+
 def snow_layers(files: list[Path]) -> dict[str, np.ndarray]:
     """MOD10CM: mean monthly snow cover and number of months (per year) above 50 %."""
     months = np.stack([grid.block_reduce(nasa.modis_snow_percent(f), 2) for f in files])
@@ -77,10 +94,9 @@ def snow_layers(files: list[Path]) -> dict[str, np.ndarray]:
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", RuntimeWarning)
-        years = len(files) / 12
         return {
             "snow_cover_mean_pct": np.nanmean(months, axis=0),
-            "snow_months_per_year": (np.nansum(months > 50, axis=0) / years).astype(np.float32),
+            "snow_months_per_year": snow_months(months),
         }
 
 
