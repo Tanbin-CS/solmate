@@ -268,7 +268,7 @@ export interface Verdict {
   sai: number | null
   coverage: number
   insufficient: boolean
-  dimensions: { id: string; name: string; score: number | null; band: Band; contribution: number }[]
+  dimensions: { id: string; name: string; score: number | null; band: Band; contribution: number; coverage: number }[]
   matches: { id: string; text: string }[]
   differs: Limit[]
   breaks_down: Limit[]
@@ -294,13 +294,16 @@ export function explain(
     .filter(([k, d]) => d.applies_to.includes(target.body) && (weights[k] ?? 0) > 0)
     .map(([k]) => k)
   const dimScores: Record<string, number> = {}
+  const dimCoverage: Record<string, number> = {}
   const allPlans: IndicatorPlan[] = []
   for (const k of applicable) {
     const plans = planDimension(model.dimensions[k]!, target.indicators, stats)
     allPlans.push(...plans)
-    dimScores[k] = dimensionScore(values, plans, stats).score
+    const d = dimensionScore(values, plans, stats)
+    dimScores[k] = d.score
+    dimCoverage[k] = d.share
   }
-  const result = sai(dimScores, Object.fromEntries(applicable.map((k) => [k, weights[k]!])))
+  const result = sai(dimScores, Object.fromEntries(applicable.map((k) => [k, weights[k]!])), dimCoverage)
   const strong = result.dimensions.filter((d) => d.band === 'strong').sort((a, b) => b.score - a.score)
   return {
     target: target.id,
@@ -313,6 +316,7 @@ export function explain(
       score: Number.isFinite(d.score) ? pyRound(d.score, 4) : null,
       band: d.band,
       contribution: pyRound(d.contribution, 4),
+      coverage: pyRound(d.coverage, 3),
     })),
     matches: strong.map((d) => ({ id: d.id, text: `${DIMENSION_NAMES[d.id] ?? d.id} matches (score ${d.score.toFixed(2)}).` })),
     differs: dimensionLimits(dimScores, applicable),

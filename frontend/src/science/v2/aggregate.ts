@@ -36,6 +36,8 @@ export interface DimensionResult {
   score: number
   weight: number
   contribution: number
+  /** share of the dimension's indicator weight with data (1 without dimCoverage) */
+  coverage: number
   band: Band
 }
 
@@ -46,15 +48,29 @@ export interface SAIResult {
   dimensions: DimensionResult[]
 }
 
-/** dimScores: NaN (or missing) = no data. dimWeights: 0 = dimension off. */
-export function sai(dimScores: Readonly<Record<string, number | null | undefined>>, dimWeights: Readonly<Record<string, number>>): SAIResult {
+/**
+ * dimScores: NaN (or missing) = no data. dimWeights: 0 = dimension off.
+ * dimCoverage (optional): share of each dimension's indicator weight with data; then coverage is
+ * indicator-level, so a dimension with half its indicators counts half (mirrors aggregate.py).
+ */
+export function sai(
+  dimScores: Readonly<Record<string, number | null | undefined>>,
+  dimWeights: Readonly<Record<string, number>>,
+  dimCoverage?: Readonly<Record<string, number>>,
+): SAIResult {
   const ids = Object.keys(dimWeights).filter((k) => (dimWeights[k] ?? 0) > 0)
   const scores = ids.map((k) => {
     const s = dimScores[k]
     return s === null || s === undefined ? Number.NaN : s
   })
   const weights = ids.map((k) => dimWeights[k]!)
-  const { mean, share } = weightedMean(scores, weights)
+  const { mean, share: dimShare } = weightedMean(scores, weights)
+  const wsum = weights.reduce((a, w) => a + w, 0)
+  const share = dimCoverage
+    ? wsum > 0
+      ? weights.reduce((a, w, i) => (Number.isFinite(scores[i]!) ? a + w * (dimCoverage[ids[i]!] ?? 1) : a), 0) / wsum
+      : 0
+    : dimShare
   const wok = weights.reduce((a, w, i) => (Number.isFinite(scores[i]!) ? a + w : a), 0)
   const dimensions = ids.map((id, i): DimensionResult => {
     const s = scores[i]!
@@ -64,6 +80,7 @@ export function sai(dimScores: Readonly<Record<string, number | null | undefined
       score: s,
       weight: w,
       contribution: Number.isFinite(s) && wok > 0 ? (w * s) / wok : 0,
+      coverage: dimCoverage?.[id] ?? (Number.isFinite(s) ? 1 : 0),
       band: Number.isFinite(s) ? band(s) : 'n/a',
     }
   })

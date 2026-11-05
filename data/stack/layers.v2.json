@@ -1,6 +1,6 @@
 {
  "version": 2,
- "generated_at": "2026-11-02T21:54:42+00:00",
+ "generated_at": "2026-11-05T19:10:17+00:00",
  "grid": {
   "res_deg": 0.1,
   "rows": 1800,
@@ -8,7 +8,7 @@
   "origin": "row 0 = 89.95N, col 0 = 179.95W (MODIS CMG orientation)"
  },
  "file": "cache/stack/stack_v2.npz",
- "sha256": "42aa08e7b0d99a41c125aed01d225981cdd61531c966571c4d5715a664b57bd4",
+ "sha256": "4da40d26593075dd40a6adf2dce1f3bd11b2f52098030cbe8307e66c6c0b26a2",
  "layers": {
   "albedo_wsa_sw": {
    "units": "fraction",
@@ -333,10 +333,10 @@
   "snow_months_per_year": {
    "units": "months",
    "source": "MOD10CM v61, 2023-24",
-   "land_coverage": 1.0,
+   "land_coverage": 0.9843995026142272,
    "land_p1_p50_p99": [
     0.0,
-    5.0,
+    5.5,
     12.0
    ]
   },

@@ -1,6 +1,6 @@
 {
  "version": 3,
- "generated_at": "2026-11-03T19:04:36+00:00",
+ "generated_at": "2026-11-05T19:13:59+00:00",
  "sample": "500 random land 100 m ASTER GDEM windows (random land cells, MODIS land fraction > 0.5, |lat| <= 83, cos(lat) area weights, seed 2026)",
  "indicators": {
   "slope_median": {

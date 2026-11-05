@@ -27,17 +27,18 @@ def explain(values: dict[str, float], target: dict, dims_config: dict, stats: di
         weights = {k: 1.0 for k in dims_config if k != "O"}
     applicable = [k for k, d in dims_config.items() if body in d["applies_to"] and weights.get(k, 0.0) > 0]
     dim_scores: dict[str, float] = {}
+    dim_cov: dict[str, float] = {}
     all_plans = []
     for k in applicable:
         plans = score.plan_dimension(dims_config[k], target["indicators"], stats)
         all_plans += plans
         if not plans:
-            dim_scores[k] = math.nan
+            dim_scores[k], dim_cov[k] = math.nan, 0.0
             continue
         layer = {p.name: np.array([values.get(p.name, math.nan)], dtype=float) for p in plans}
-        d, _ = score.dimension_scores(layer, plans, stats)
-        dim_scores[k] = float(d[0])
-    result = aggregate.sai(dim_scores, {k: float(weights[k]) for k in applicable})
+        d, c = score.dimension_scores(layer, plans, stats)
+        dim_scores[k], dim_cov[k] = float(d[0]), float(c[0])
+    result = aggregate.sai(dim_scores, {k: float(weights[k]) for k in applicable}, dim_cov)
     strong = sorted((d for d in result.dimensions if d.band == "strong"), key=lambda d: -d.score)
     limits = (breakdown.environment_limits(target.get("breaks_down", {}), values.get("surface_pressure_hpa", math.nan))
               + breakdown.illumination_limit(body, (target.get("centroid") or {}).get("lat"), lat)
@@ -51,7 +52,8 @@ def explain(values: dict[str, float], target: dict, dims_config: dict, stats: di
         "insufficient": result.insufficient,
         "dimensions": [{"id": d.id, "name": breakdown.DIMENSION_NAMES.get(d.id, d.id),
                         "score": None if not math.isfinite(d.score) else round(d.score, 4),
-                        "band": d.band, "contribution": round(d.contribution, 4)} for d in result.dimensions],
+                        "band": d.band, "contribution": round(d.contribution, 4),
+                        "coverage": round(d.coverage, 3)} for d in result.dimensions],
         "matches": [{"id": d.id, "text": f"{breakdown.DIMENSION_NAMES.get(d.id, d.id)} matches (score {d.score:.2f})."}
                     for d in strong],
         "differs": breakdown.dimension_limits(dim_scores, applicable),

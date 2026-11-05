@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generated_at": "2026-11-02T13:57:28+00:00",
+ "generated_at": "2026-11-05T19:18:36+00:00",
  "plan": "docs/VALIDATION.md#addendum-1-regional-validation-and-lunar-ops-weights-pre-registered-2-nov-2026",
  "seed": 2026,
  "region_km": 500.0,
@@ -145,8 +145,8 @@
  "summary": {
   "moon": {
    "equal": {
-    "auc_median": 0.75,
-    "auc_region_weighted_median": 0.696
+    "auc_median": 0.755,
+    "auc_region_weighted_median": 0.705
    },
    "lunar_ops": {
     "auc_median": 0.59,
@@ -161,18 +161,18 @@
    "n_positive_regions": 7,
    "n_control_regions": 16,
    "equal": {
-    "auc": 0.775,
+    "auc": 0.77,
     "auc_ci95_sites": [
      0.54,
-     0.95
+     0.945
     ],
-    "auc_region_weighted": 0.723,
+    "auc_region_weighted": 0.719,
     "auc_ci95_regions": [
-     0.547,
+     0.539,
      0.942
     ]
    },
-   "learned_loro_auc": 0.71,
+   "learned_loro_auc": 0.715,
    "lunar_ops": {
     "auc": 0.79,
     "auc_ci95_sites": [
@@ -202,7 +202,7 @@
      0.94
     ]
    },
-   "learned_loro_auc": 0.685,
+   "learned_loro_auc": 0.69,
    "lunar_ops": {
     "auc": 0.495,
     "auc_ci95_sites": [
@@ -221,14 +221,14 @@
    "n_positive_regions": 7,
    "n_control_regions": 16,
    "equal": {
-    "auc": 0.78,
+    "auc": 0.775,
     "auc_ci95_sites": [
-     0.545,
-     0.955
+     0.54,
+     0.95
     ],
-    "auc_region_weighted": 0.725,
+    "auc_region_weighted": 0.721,
     "auc_ci95_regions": [
-     0.551,
+     0.542,
      0.943
     ]
    },
@@ -251,14 +251,14 @@
    "n_positive_regions": 7,
    "n_control_regions": 16,
    "equal": {
-    "auc": 0.765,
+    "auc": 0.77,
     "auc_ci95_sites": [
-     0.55,
-     0.945
+     0.555,
+     0.95
     ],
-    "auc_region_weighted": 0.74,
+    "auc_region_weighted": 0.749,
     "auc_ci95_regions": [
-     0.505,
+     0.511,
      0.971
     ]
    },
@@ -292,7 +292,7 @@
      0.942
     ]
    },
-   "learned_loro_auc": 0.685,
+   "learned_loro_auc": 0.69,
    "lunar_ops": {
     "auc": 0.515,
     "auc_ci95_sites": [
@@ -311,28 +311,28 @@
    "n_positive_regions": 7,
    "n_control_regions": 16,
    "equal": {
-    "auc": 0.75,
+    "auc": 0.755,
     "auc_ci95_sites": [
-     0.485,
-     0.93
+     0.505,
+     0.935
     ],
-    "auc_region_weighted": 0.696,
+    "auc_region_weighted": 0.705,
     "auc_ci95_regions": [
-     0.475,
-     0.944
+     0.489,
+     0.95
     ]
    },
    "learned_loro_auc": 0.7,
    "lunar_ops": {
-    "auc": 0.69,
+    "auc": 0.685,
     "auc_ci95_sites": [
-     0.44,
+     0.43,
      0.895
     ],
-    "auc_region_weighted": 0.663,
+    "auc_region_weighted": 0.654,
     "auc_ci95_regions": [
-     0.414,
-     0.927
+     0.403,
+     0.925
     ]
    }
   },
@@ -352,7 +352,7 @@
      0.94
     ]
    },
-   "learned_loro_auc": 0.685,
+   "learned_loro_auc": 0.69,
    "lunar_ops": {
     "auc": 0.49,
     "auc_ci95_sites": [
@@ -371,28 +371,28 @@
    "n_positive_regions": 7,
    "n_control_regions": 16,
    "equal": {
-    "auc": 0.76,
+    "auc": 0.765,
     "auc_ci95_sites": [
      0.535,
      0.94
     ],
-    "auc_region_weighted": 0.701,
+    "auc_region_weighted": 0.71,
     "auc_ci95_regions": [
-     0.494,
-     0.947
+     0.505,
+     0.951
     ]
    },
    "learned_loro_auc": 0.7,
    "lunar_ops": {
-    "auc": 0.72,
+    "auc": 0.715,
     "auc_ci95_sites": [
-     0.465,
+     0.46,
      0.925
     ],
-    "auc_region_weighted": 0.672,
+    "auc_region_weighted": 0.663,
     "auc_ci95_regions": [
-     0.43,
-     0.947
+     0.414,
+     0.945
     ]
    }
   },
@@ -412,7 +412,7 @@
      0.936
     ]
    },
-   "learned_loro_auc": 0.665,
+   "learned_loro_auc": 0.67,
    "lunar_ops": {
     "auc": 0.59,
     "auc_ci95_sites": [
@@ -431,36 +431,36 @@
    "n_positive_regions": 14,
    "n_control_regions": 16,
    "equal": {
-    "auc": 0.844,
+    "auc": 0.841,
     "auc_ci95_sites": [
-     0.694,
+     0.691,
      0.962
     ],
-    "auc_region_weighted": 0.802,
+    "auc_region_weighted": 0.8,
     "auc_ci95_regions": [
-     0.671,
-     0.958
+     0.665,
+     0.957
     ]
    },
-   "learned_loro_auc": 0.824
+   "learned_loro_auc": 0.821
   },
   "arcadia_planitia": {
    "body": "mars",
    "n_positive_regions": 14,
    "n_control_regions": 16,
    "equal": {
-    "auc": 0.582,
+    "auc": 0.576,
     "auc_ci95_sites": [
-     0.382,
-     0.768
+     0.374,
+     0.762
     ],
-    "auc_region_weighted": 0.515,
+    "auc_region_weighted": 0.509,
     "auc_ci95_regions": [
-     0.367,
-     0.746
+     0.364,
+     0.739
     ]
    },
-   "learned_loro_auc": 0.847
+   "learned_loro_auc": 0.844
   }
  }
 }

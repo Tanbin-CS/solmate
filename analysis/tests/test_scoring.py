@@ -90,3 +90,15 @@ def test_sai_flags_low_coverage():
 
 def test_sai_with_no_data_is_nan():
     assert np.isnan(agg.sai({}, {"T": 1.0}).sai)
+
+
+def test_indicator_coverage_counts_a_half_empty_dimension_as_half():
+    scores = {"A": 0.8, "B": 0.6, "C": float("nan")}
+    weights = {"A": 1.0, "B": 1.0, "C": 1.0}
+    dimension_level = agg.sai(scores, weights)
+    assert dimension_level.coverage == pytest.approx(2 / 3)
+    indicator_level = agg.sai(scores, weights, {"A": 1.0, "B": 0.5, "C": 0.0})
+    assert indicator_level.coverage == pytest.approx(1.5 / 3)
+    assert indicator_level.sai == pytest.approx(dimension_level.sai)  # coverage never changes the score
+    assert indicator_level.insufficient and not dimension_level.insufficient
+    assert [d.coverage for d in indicator_level.dimensions] == [1.0, 0.5, 0.0]

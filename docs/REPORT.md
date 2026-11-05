@@ -2,7 +2,7 @@
 
 SolMate scored every land cell on Earth, about 1.9 million of them at 0.1°, against 11 NASA targets: the nine candidate landing regions NASA named near the lunar south pole in 2024, Jezero Crater and Arcadia Planitia. Each place gets a SolMate Analog Index (SAI, 0–100) built from seven characteristics measured with 42 NASA data layers, a statement of where the analogy breaks down, and what the place could be used for.
 
-The method was checked against sites NASA has already used as analogs, with a test written down before the results: for Jezero, documented Mars analog sites outscore controls with an AUC of 0.84 (95% CI 0.69–0.96); the Moon regions reach a median of 0.75, and Arcadia Planitia 0.58, which is reported as a weak result.
+The method was checked against sites NASA has already used as analogs, with a test written down before the results: for Jezero, documented Mars analog sites outscore controls with an AUC of 0.84 (95% CI 0.69–0.96); the Moon regions reach a median of 0.76, and Arcadia Planitia 0.58, which is reported as a weak result.
 
 Interactive version: https://solmate-analog.web.app/findings · Explorer: https://solmate-analog.web.app/explorer · Method: https://solmate-analog.web.app/method
 
@@ -22,14 +22,14 @@ SAI with equal weights, from the seven ~1 km dimensions. A novel lead is more th
 | Peak near Cabeus B | Tibetan Plateau (35.95°N 81.75°E) | 87.4 | Tibetan Plateau (35.95°N 81.75°E) | 87.4 | 939 km from Qaidam Basin (Dalangtan) |
 | Haworth | Puna de Atacama (27.45°S 68.75°W) | 89.0 | Puna de Atacama (27.45°S 68.75°W) | 89.0 | 395 km from Atacama (Yungay) |
 | Malapert Massif | Puna de Atacama (27.85°S 69.15°W) | 88.5 | Puna de Atacama (27.85°S 69.15°W) | 88.5 | 428 km from Atacama (Yungay) |
-| Mons Mouton Plateau | Puna de Atacama (27.95°S 68.85°W) | 81.6 | Puna de Atacama (27.95°S 68.85°W) | 81.6 | 446 km from Atacama (Yungay) |
+| Mons Mouton Plateau | Puna de Atacama (27.95°S 68.85°W) | 81.8 | Puna de Atacama (27.95°S 68.85°W) | 81.8 | 446 km from Atacama (Yungay) |
 | Mons Mouton | 38.75°N 74.05°E | 85.3 | 38.75°N 74.05°E | 85.3 | 1550 km from Qaidam Basin (Dalangtan) |
 | Nobile Rim 1 | 39.15°N 95.55°E | 84.0 | Tibetan Plateau (35.85°N 81.95°E) | 83.9 | 926 km from Qaidam Basin (Dalangtan) |
-| Nobile Rim 2 | Tibetan Plateau (35.85°N 81.85°E) | 86.0 | Tibetan Plateau (35.85°N 81.85°E) | 86.0 | 934 km from Qaidam Basin (Dalangtan) |
+| Nobile Rim 2 | 38.75°N 73.65°E | 86.0 | 38.75°N 73.65°E | 86.0 | 1584 km from Qaidam Basin (Dalangtan) |
 | de Gerlache Rim 2 | Tibetan Plateau (35.95°N 81.95°E) | 87.7 | Tibetan Plateau (35.95°N 81.95°E) | 87.7 | 922 km from Qaidam Basin (Dalangtan) |
 | Slater Plain | Tibetan Plateau (35.35°N 80.25°E) | 87.5 | Tibetan Plateau (35.35°N 80.25°E) | 87.5 | 1089 km from Qaidam Basin (Dalangtan) |
 | Jezero Crater | Tibetan Plateau (34.95°N 83.35°E) | 84.8 | Tibetan Plateau (34.95°N 83.35°E) | 84.8 | 853 km from Qaidam Basin (Dalangtan) |
-| Arcadia Planitia (site AP-1) | Sistan Basin (32.05°N 61.25°E) | 79.5 | Sistan Basin (32.05°N 61.25°E) | 79.5 | 2027 km from Lonar |
+| Arcadia Planitia (site AP-1) | Sistan Basin (32.05°N 61.25°E) | 79.6 | Sistan Basin (32.05°N 61.25°E) | 79.6 | 2027 km from Lonar |
 
 ## Case study: Jezero Crater (Mars) and the Tibetan Plateau
 
@@ -164,20 +164,20 @@ Well-known analog sites are rarely measured against a target in the same terms. 
 | Qaidam Basin (Dalangtan) | 68.5 | 99.6% |
 | Río Tinto | 58.2 | 95.3% |
 | MDRS (Utah) | 58.0 | 95.1% |
-| Arkaroola | 57.9 | 95.0% |
+| Arkaroola | 57.9 | 94.9% |
 | Atacama (Yungay) | 57.6 | 94.7% |
-| Haughton Crater (Devon Island) | 55.8 | 91.9% |
+| Haughton Crater (Devon Island) | 54.9 | 89.6% |
 | Verde Valley | 52.9 | 84.1% |
 | Lonar | 52.0 | 81.3% |
 | Licancabur (High Lakes) | 51.4 | 79.2% |
 | Teide (Tenerife) | 51.4 | 78.9% |
-| Death Valley | 50.8 | 76.0% |
-| Pilot Valley | 48.5 | 62.0% |
-| Lake Salda | 48.0 | 60.0% |
-| McMurdo Dry Valleys | 45.6 | 49.0% |
-| Vikursundar | 44.2 | 41.2% |
-| Bockfjorden (Svalbard) | 37.7 | 13.2% |
-| Pavilion Lake | 34.2 | 7.5% |
+| Death Valley | 50.8 | 76.1% |
+| Pilot Valley | 48.5 | 62.3% |
+| Lake Salda | 48.0 | 60.3% |
+| McMurdo Dry Valleys | 45.6 | 49.6% |
+| Vikursundar | 44.1 | 41.0% |
+| Bockfjorden (Svalbard) | 36.2 | 10.6% |
+| Pavilion Lake | 34.4 | 7.9% |
 
 The best place for a single characteristic can fail the others: a strong mineral or terrain match may sit in a humid lowland or a hot desert. That is why the index combines all of them, and why the Explorer shows every dimension for every place.
 
@@ -190,7 +190,7 @@ The best place for a single characteristic can fail the others: a strong mineral
 | Thermal | Tibetan Plateau (35.15°N 78.65°E) | 0.91 |
 | Surface & barrenness | 26.25°N 64.45°E | 1.00 |
 | Mineralogy | 6.85°S 138.95°E | 0.99 |
-| Ice & cold-trap | 79.95°S 65.45°W | 0.97 |
+| Ice & cold-trap | 79.95°S 65.45°W | 0.94 |
 | Dust & wind | 17.05°N 15.15°E | 1.00 |
 
 ### Different places for different characteristics: Mons Mouton Plateau
@@ -210,17 +210,17 @@ AUC is the chance that a site NASA has used as an analog outscores a control (fa
 
 | Target | AUC | 95% CI | Each region once |
 |---|---|---|---|
-| Peak near Cabeus B | 0.78 | 0.54–0.95 | 0.72 |
+| Peak near Cabeus B | 0.77 | 0.54–0.94 | 0.72 |
 | Haworth | 0.71 | 0.47–0.92 | 0.65 |
-| Malapert Massif | 0.78 | 0.55–0.95 | 0.72 |
-| Mons Mouton Plateau | 0.77 | 0.55–0.94 | 0.74 |
+| Malapert Massif | 0.78 | 0.54–0.95 | 0.72 |
+| Mons Mouton Plateau | 0.77 | 0.56–0.95 | 0.75 |
 | Mons Mouton | 0.72 | 0.48–0.92 | 0.67 |
-| Nobile Rim 1 | 0.75 | 0.48–0.93 | 0.70 |
+| Nobile Rim 1 | 0.76 | 0.51–0.94 | 0.70 |
 | Nobile Rim 2 | 0.71 | 0.47–0.92 | 0.66 |
-| de Gerlache Rim 2 | 0.76 | 0.54–0.94 | 0.70 |
+| de Gerlache Rim 2 | 0.77 | 0.54–0.94 | 0.71 |
 | Slater Plain | 0.73 | 0.49–0.93 | 0.68 |
 | Jezero Crater | 0.84 | 0.69–0.96 | 0.80 |
-| Arcadia Planitia (site AP-1) | 0.58 | 0.38–0.77 | 0.52 |
+| Arcadia Planitia (site AP-1) | 0.58 | 0.37–0.76 | 0.51 |
 
 - Jezero is the strongest result; the Moon targets have only 10 analog sites each, so their intervals are wide.
 - Arcadia Planitia is weak with equal weights and is reported rather than hidden.
@@ -238,4 +238,4 @@ AUC is the chance that a site NASA has used as an analog outscores a control (fa
 
 ## Data and reproducibility
 
-All scored inputs are NASA data: MODIS (MYD11C3, MOD10CM, MCD43C3, MCD12C1), ASTER GED and GDEM v3, MERRA-2, NASA POWER and SRTMGL30 on Earth; LRO LOLA and Diviner on the Moon; MOLA, CTX and Mars 2020 results on Mars. Sources, licences and checksums: https://solmate-analog.web.app/provenance. Code: https://github.com/Tanbin-CS/solmate (results version 687e6cf45278).
+All scored inputs are NASA data: MODIS (MYD11C3, MOD10CM, MCD43C3, MCD12C1), ASTER GED and GDEM v3, MERRA-2, NASA POWER and SRTMGL30 on Earth; LRO LOLA and Diviner on the Moon; MOLA, CTX and Mars 2020 results on Mars. Sources, licences and checksums: https://solmate-analog.web.app/provenance. Code: https://github.com/Tanbin-CS/solmate (results version 09ddf6ffce73).
