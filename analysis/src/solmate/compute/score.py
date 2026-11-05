@@ -66,8 +66,13 @@ def dimension_scores(layers: dict[str, np.ndarray], plans: list[IndicatorPlan],
     return aggregate.weighted_mean(sims, w)
 
 
-def sai_grid(dim_scores: dict[str, np.ndarray], dim_weights: dict[str, float]) -> tuple[np.ndarray, np.ndarray]:
-    """Vectorised SAI (0-100) and coverage over arrays of dimension scores."""
+def sai_grid(dim_scores: dict[str, np.ndarray], dim_weights: dict[str, float],
+             dim_coverage: dict[str, np.ndarray] | None = None) -> tuple[np.ndarray, np.ndarray]:
+    """Vectorised SAI (0-100) and coverage over arrays of dimension scores.
+
+    With dim_coverage (share of each dimension's indicator weight with data), coverage is
+    indicator-level, as in aggregate.sai.
+    """
     ids = [k for k, w in dim_weights.items() if w > 0 and k in dim_scores]
     if not ids:
         raise ValueError("no weighted dimension has scores")
@@ -75,4 +80,6 @@ def sai_grid(dim_scores: dict[str, np.ndarray], dim_weights: dict[str, float]) -
     mean, cov = aggregate.weighted_mean(stack, np.array([dim_weights[k] for k in ids]))
     applicable = sum(w for w in dim_weights.values() if w > 0)
     cov = cov * sum(dim_weights[k] for k in ids) / applicable  # dimensions without plans count as missing
+    if dim_coverage is not None:
+        cov = sum(dim_weights[k] * np.where(np.isfinite(dim_scores[k]), dim_coverage[k], 0.0) for k in ids) / applicable
     return mean * 100.0, cov

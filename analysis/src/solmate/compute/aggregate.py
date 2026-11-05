@@ -2,7 +2,8 @@
 
 D_k  = weighted mean of the available indicator similarities in dimension k
 SAI  = 100 * sum(W_k D_k) / sum(W_k) over dimensions that apply to the target and have data
-coverage = sum(W_k available) / sum(W_k applicable); below MIN_COVERAGE the score is flagged
+coverage = sum(W_k c_k) / sum(W_k applicable), where c_k is the share of dimension k's indicator weight
+           with data (0 when the dimension has none); below MIN_COVERAGE the score is flagged
 contribution_k = W_k D_k / sum(W_k)  (share of the SAI each dimension carries)
 """
 
@@ -63,6 +64,9 @@ def sai(dim_scores: dict[str, float], dim_weights: dict[str, float],
     weights = np.array([dim_weights[k] for k in ids], dtype=float)
     mean, cov = weighted_mean(scores, weights)
     ok = np.isfinite(scores)
+    if dim_coverage is not None:  # indicator-level: a dimension with half its indicators counts half
+        cov = sum(w * float(dim_coverage.get(k, 1.0)) for k, s, w in zip(ids, scores, weights, strict=True)
+                  if np.isfinite(s)) / weights.sum() if weights.sum() > 0 else 0.0
     wok = weights[ok].sum()
     dims = []
     for k, s, w in zip(ids, scores, weights, strict=True):

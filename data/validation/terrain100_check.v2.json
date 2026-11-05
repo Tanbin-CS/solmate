@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generated_at": "2026-11-03T19:06:04+00:00",
+ "generated_at": "2026-11-05T19:15:17+00:00",
  "test": "terrain alone, pre-registered positives vs controls (validation_sites.yaml), plain AUC",
  "targets": {
   "peak_near_cabeus_b": {

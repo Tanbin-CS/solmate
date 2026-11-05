@@ -16,7 +16,14 @@ export function DimensionBars({ verdict, model }: { verdict: Verdict; model: Mod
         return (
           <li key={d.id} title={dim?.description}>
             <div className="flex items-baseline justify-between gap-2 text-[12.5px]">
-              <span className="text-slate-200">{d.name}</span>
+              <span className="text-slate-200">
+                {d.name}
+                {d.score !== null && d.coverage < 0.999 && (
+                  <span className="ml-1.5 font-mono text-[10.5px] text-derived" title="Share of this dimension's NASA indicators with data at this place">
+                    {Math.round(d.coverage * 100)}% data
+                  </span>
+                )}
+              </span>
               <span className="font-mono text-[11px] tabular">
                 <span className="text-slate-100">{s === null ? '–' : Math.round(s * 100)}</span>
                 <span className={cn('ml-2', BAND_STYLE[band].className)}>{BAND_STYLE[band].label}</span>

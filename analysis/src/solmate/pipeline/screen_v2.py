@@ -104,7 +104,7 @@ def main() -> None:
                              "target": p.target, "weight": p.weight} for p in plans]
             if plans:
                 dim_scores[k], dim_cov[k] = score.dimension_scores(layers, plans, stats)
-        sai, cov = score.sai_grid(dim_scores, weights)
+        sai, cov = score.sai_grid(dim_scores, weights, dim_cov)
         np.savez_compressed(OUT_DIR / f"{t['id']}.npz", rows=rows.astype(np.int16), cols=cols.astype(np.int16),
                             sai=sai.astype(np.float32), coverage=cov.astype(np.float32),
                             **{f"dim_{k}": v.astype(np.float32) for k, v in dim_scores.items()})

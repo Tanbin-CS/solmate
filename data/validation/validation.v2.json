@@ -1,32 +1,32 @@
 {
  "version": 2,
- "generated_at": "2026-10-31T06:22:06+00:00",
+ "generated_at": "2026-11-05T19:16:41+00:00",
  "plan": "docs/VALIDATION.md",
  "seed": 2026,
  "summary": {
   "moon": {
-   "auc_median": 0.75,
-   "positives_median_land_percentile": 55.8,
+   "auc_median": 0.755,
+   "positives_median_land_percentile": 56.0,
    "learned_preset": {
-    "C": 1.509,
-    "I": 0.338,
+    "C": 1.514,
+    "I": 0.321,
     "M": 0.0,
-    "S": 1.422,
-    "T": 0.597,
-    "Th": 2.135
+    "S": 1.426,
+    "T": 0.599,
+    "Th": 2.141
    }
   },
   "mars": {
-   "auc_median": 0.713,
-   "positives_median_land_percentile": 63.9,
+   "auc_median": 0.708,
+   "positives_median_land_percentile": 64.3,
    "learned_preset": {
-    "C": 2.64,
-    "D": 0.016,
-    "I": 0.378,
+    "C": 2.693,
+    "D": 0.017,
+    "I": 0.243,
     "M": 0.0,
-    "S": 2.091,
-    "T": 0.193,
-    "Th": 1.682
+    "S": 2.135,
+    "T": 0.196,
+    "Th": 1.716
    }
   }
  },
@@ -35,23 +35,23 @@
    "body": "moon",
    "n_positives": 10,
    "n_controls": 20,
-   "auc_equal": 0.775,
+   "auc_equal": 0.77,
    "auc_ci95": [
     0.54,
-    0.95
+    0.945
    ],
    "positives_median_land_percentile": 70.8,
    "positives": {
     "askja": {
-     "sai": 38.28,
-     "land_percentile": 24.4
+     "sai": 38.24,
+     "land_percentile": 24.9
     },
     "kilauea": {
      "sai": 33.92,
-     "land_percentile": 10.7
+     "land_percentile": 11.2
     },
     "lava-beds": {
-     "sai": 52.87,
+     "sai": 52.88,
      "land_percentile": 84.5
     },
     "sf-volcanic-field": {
@@ -68,15 +68,15 @@
     },
     "mauna-kea-hi-seas": {
      "sai": 45.34,
-     "land_percentile": 57.0
+     "land_percentile": 57.2
     },
     "sudbury": {
-     "sai": 38.39,
-     "land_percentile": 24.8
+     "sai": 38.61,
+     "land_percentile": 26.4
     },
     "ries-crater": {
-     "sai": 41.72,
-     "land_percentile": 40.2
+     "sai": 41.73,
+     "land_percentile": 40.7
     },
     "lanzarote": {
      "sai": 56.6,
@@ -97,7 +97,7 @@
      "biome": "tropical forest"
     },
     "black-forest": {
-     "sai": 37.86,
+     "sai": 37.98,
      "biome": "temperate forest"
     },
     "appalachian-forest": {
@@ -105,19 +105,19 @@
      "biome": "temperate forest"
     },
     "siberian-taiga": {
-     "sai": 36.63,
+     "sai": 36.84,
      "biome": "taiga"
     },
     "canadian-boreal": {
-     "sai": 39.53,
+     "sai": 39.78,
      "biome": "taiga"
     },
     "flevoland": {
-     "sai": 35.93,
+     "sai": 35.94,
      "biome": "cropland"
     },
     "iowa": {
-     "sai": 45.32,
+     "sai": 45.37,
      "biome": "cropland"
     },
     "ganges-plain": {
@@ -129,7 +129,7 @@
      "biome": "cropland"
     },
     "kazakh-steppe": {
-     "sai": 44.63,
+     "sai": 44.87,
      "biome": "grassland"
     },
     "pampas": {
@@ -153,7 +153,7 @@
      "biome": "wetland"
     },
     "aletsch": {
-     "sai": 43.44,
+     "sai": 43.56,
      "biome": "glacier (wet"
     },
     "dhaka": {
@@ -161,31 +161,31 @@
      "biome": "urban"
     },
     "ruhr": {
-     "sai": 42.87,
+     "sai": 42.89,
      "biome": "urban"
     }
    },
    "ablation_delta_auc": {
-    "C": 0.075,
-    "I": 0.025,
-    "M": 0.025,
-    "S": -0.005,
-    "T": -0.045,
-    "Th": -0.025
+    "C": 0.07,
+    "I": 0.03,
+    "M": 0.03,
+    "S": 0.0,
+    "T": -0.04,
+    "Th": -0.03
    },
    "learned": {
     "weights": {
-     "C": 1.232,
-     "I": 0.278,
+     "C": 1.236,
+     "I": 0.259,
      "M": 0.0,
-     "S": 1.158,
-     "T": 1.596,
-     "Th": 1.736
+     "S": 1.162,
+     "T": 1.601,
+     "Th": 1.742
     },
-    "cv_auc_median": 0.75,
+    "cv_auc_median": 0.752,
     "cv_auc_p5_p95": [
-     0.697,
-     0.798
+     0.694,
+     0.795
     ]
    },
    "random_weights_auc_p5_p50_p95": [
@@ -203,15 +203,15 @@
     0.465,
     0.92
    ],
-   "positives_median_land_percentile": 54.6,
+   "positives_median_land_percentile": 54.9,
    "positives": {
     "askja": {
-     "sai": 29.85,
-     "land_percentile": 13.0
+     "sai": 29.81,
+     "land_percentile": 13.5
     },
     "kilauea": {
      "sai": 24.93,
-     "land_percentile": 3.8
+     "land_percentile": 4.0
     },
     "lava-beds": {
      "sai": 44.13,
@@ -219,11 +219,11 @@
     },
     "sf-volcanic-field": {
      "sai": 49.96,
-     "land_percentile": 77.1
+     "land_percentile": 77.0
     },
     "meteor-crater": {
      "sai": 50.13,
-     "land_percentile": 78.1
+     "land_percentile": 77.9
     },
     "black-point-lava-flow": {
      "sai": 47.48,
@@ -231,15 +231,15 @@
     },
     "mauna-kea-hi-seas": {
      "sai": 36.3,
-     "land_percentile": 38.0
+     "land_percentile": 38.7
     },
     "sudbury": {
-     "sai": 31.13,
-     "land_percentile": 17.1
+     "sai": 31.34,
+     "land_percentile": 18.7
     },
     "ries-crater": {
      "sai": 38.34,
-     "land_percentile": 46.2
+     "land_percentile": 46.7
     },
     "lanzarote": {
      "sai": 47.64,
@@ -260,7 +260,7 @@
      "biome": "tropical forest"
     },
     "black-forest": {
-     "sai": 29.46,
+     "sai": 29.58,
      "biome": "temperate forest"
     },
     "appalachian-forest": {
@@ -268,19 +268,19 @@
      "biome": "temperate forest"
     },
     "siberian-taiga": {
-     "sai": 31.03,
+     "sai": 31.24,
      "biome": "taiga"
     },
     "canadian-boreal": {
-     "sai": 36.79,
+     "sai": 37.04,
      "biome": "taiga"
     },
     "flevoland": {
-     "sai": 35.33,
+     "sai": 35.34,
      "biome": "cropland"
     },
     "iowa": {
-     "sai": 41.24,
+     "sai": 41.29,
      "biome": "cropland"
     },
     "ganges-plain": {
@@ -292,7 +292,7 @@
      "biome": "cropland"
     },
     "kazakh-steppe": {
-     "sai": 41.37,
+     "sai": 41.61,
      "biome": "grassland"
     },
     "pampas": {
@@ -316,7 +316,7 @@
      "biome": "wetland"
     },
     "aletsch": {
-     "sai": 26.98,
+     "sai": 27.1,
      "biome": "glacier (wet"
     },
     "dhaka": {
@@ -324,7 +324,7 @@
      "biome": "urban"
     },
     "ruhr": {
-     "sai": 36.77,
+     "sai": 36.79,
      "biome": "urban"
     }
    },
@@ -334,16 +334,16 @@
     "M": 0.0,
     "S": -0.04,
     "T": 0.015,
-    "Th": -0.085
+    "Th": -0.09
    },
    "learned": {
     "weights": {
-     "C": 1.675,
-     "I": 0.375,
+     "C": 1.682,
+     "I": 0.35,
      "M": 0.0,
-     "S": 1.579,
+     "S": 1.586,
      "T": 0.0,
-     "Th": 2.371
+     "Th": 2.382
     },
     "cv_auc_median": 0.695,
     "cv_auc_p5_p95": [
@@ -361,23 +361,23 @@
    "body": "moon",
    "n_positives": 10,
    "n_controls": 20,
-   "auc_equal": 0.78,
+   "auc_equal": 0.775,
    "auc_ci95": [
-    0.545,
-    0.955
+    0.54,
+    0.95
    ],
-   "positives_median_land_percentile": 70.6,
+   "positives_median_land_percentile": 70.7,
    "positives": {
     "askja": {
-     "sai": 38.28,
-     "land_percentile": 24.2
+     "sai": 38.24,
+     "land_percentile": 24.7
     },
     "kilauea": {
      "sai": 33.92,
-     "land_percentile": 10.7
+     "land_percentile": 11.2
     },
     "lava-beds": {
-     "sai": 52.87,
+     "sai": 52.88,
      "land_percentile": 84.4
     },
     "sf-volcanic-field": {
@@ -394,15 +394,15 @@
     },
     "mauna-kea-hi-seas": {
      "sai": 45.34,
-     "land_percentile": 56.8
+     "land_percentile": 57.0
     },
     "sudbury": {
-     "sai": 38.39,
-     "land_percentile": 24.6
+     "sai": 38.61,
+     "land_percentile": 26.2
     },
     "ries-crater": {
-     "sai": 41.72,
-     "land_percentile": 39.9
+     "sai": 41.73,
+     "land_percentile": 40.4
     },
     "lanzarote": {
      "sai": 56.6,
@@ -423,7 +423,7 @@
      "biome": "tropical forest"
     },
     "black-forest": {
-     "sai": 37.86,
+     "sai": 37.98,
      "biome": "temperate forest"
     },
     "appalachian-forest": {
@@ -431,19 +431,19 @@
      "biome": "temperate forest"
     },
     "siberian-taiga": {
-     "sai": 36.63,
+     "sai": 36.84,
      "biome": "taiga"
     },
     "canadian-boreal": {
-     "sai": 39.53,
+     "sai": 39.78,
      "biome": "taiga"
     },
     "flevoland": {
-     "sai": 35.93,
+     "sai": 35.94,
      "biome": "cropland"
     },
     "iowa": {
-     "sai": 45.32,
+     "sai": 45.37,
      "biome": "cropland"
     },
     "ganges-plain": {
@@ -455,7 +455,7 @@
      "biome": "cropland"
     },
     "kazakh-steppe": {
-     "sai": 44.63,
+     "sai": 44.87,
      "biome": "grassland"
     },
     "pampas": {
@@ -479,7 +479,7 @@
      "biome": "wetland"
     },
     "aletsch": {
-     "sai": 40.38,
+     "sai": 40.49,
      "biome": "glacier (wet"
     },
     "dhaka": {
@@ -487,26 +487,26 @@
      "biome": "urban"
     },
     "ruhr": {
-     "sai": 42.87,
+     "sai": 42.89,
      "biome": "urban"
     }
    },
    "ablation_delta_auc": {
     "C": 0.07,
-    "I": 0.02,
-    "M": 0.025,
-    "S": 0.0,
-    "T": -0.05,
-    "Th": -0.025
+    "I": 0.025,
+    "M": 0.03,
+    "S": 0.005,
+    "T": -0.045,
+    "Th": -0.03
    },
    "learned": {
     "weights": {
-     "C": 1.213,
-     "I": 0.273,
+     "C": 1.217,
+     "I": 0.255,
      "M": 0.0,
-     "S": 1.14,
-     "T": 1.665,
-     "Th": 1.709
+     "S": 1.144,
+     "T": 1.67,
+     "Th": 1.715
     },
     "cv_auc_median": 0.758,
     "cv_auc_p5_p95": [
@@ -524,162 +524,162 @@
    "body": "moon",
    "n_positives": 10,
    "n_controls": 20,
-   "auc_equal": 0.765,
+   "auc_equal": 0.77,
    "auc_ci95": [
-    0.55,
-    0.945
+    0.555,
+    0.95
    ],
-   "positives_median_land_percentile": 53.3,
+   "positives_median_land_percentile": 52.7,
    "positives": {
     "askja": {
-     "sai": 39.96,
-     "land_percentile": 56.5
+     "sai": 40.6,
+     "land_percentile": 56.9
     },
     "kilauea": {
-     "sai": 19.3,
+     "sai": 19.33,
      "land_percentile": 3.8
     },
     "lava-beds": {
-     "sai": 37.91,
-     "land_percentile": 50.0
+     "sai": 37.95,
+     "land_percentile": 48.5
     },
     "sf-volcanic-field": {
-     "sai": 43.34,
-     "land_percentile": 66.0
+     "sai": 43.37,
+     "land_percentile": 64.2
     },
     "meteor-crater": {
-     "sai": 43.5,
-     "land_percentile": 66.3
+     "sai": 43.52,
+     "land_percentile": 64.6
     },
     "black-point-lava-flow": {
-     "sai": 40.85,
-     "land_percentile": 59.5
+     "sai": 40.87,
+     "land_percentile": 57.6
     },
     "mauna-kea-hi-seas": {
-     "sai": 32.44,
-     "land_percentile": 30.1
+     "sai": 32.46,
+     "land_percentile": 28.4
     },
     "sudbury": {
-     "sai": 28.08,
-     "land_percentile": 15.7
+     "sai": 28.25,
+     "land_percentile": 15.5
     },
     "ries-crater": {
-     "sai": 31.79,
-     "land_percentile": 27.7
+     "sai": 31.82,
+     "land_percentile": 26.1
     },
     "lanzarote": {
-     "sai": 42.52,
-     "land_percentile": 64.5
+     "sai": 42.54,
+     "land_percentile": 62.0
     }
    },
    "controls": {
     "amazon-forest": {
-     "sai": 15.41,
+     "sai": 15.43,
      "biome": "tropical forest"
     },
     "congo-forest": {
-     "sai": 19.04,
+     "sai": 19.07,
      "biome": "tropical forest"
     },
     "borneo-forest": {
-     "sai": 23.18,
+     "sai": 23.2,
      "biome": "tropical forest"
     },
     "black-forest": {
-     "sai": 32.55,
+     "sai": 32.65,
      "biome": "temperate forest"
     },
     "appalachian-forest": {
-     "sai": 33.81,
+     "sai": 33.83,
      "biome": "temperate forest"
     },
     "siberian-taiga": {
-     "sai": 32.6,
+     "sai": 32.85,
      "biome": "taiga"
     },
     "canadian-boreal": {
-     "sai": 36.01,
+     "sai": 36.24,
      "biome": "taiga"
     },
     "flevoland": {
-     "sai": 28.78,
+     "sai": 28.81,
      "biome": "cropland"
     },
     "iowa": {
-     "sai": 35.23,
+     "sai": 35.28,
      "biome": "cropland"
     },
     "ganges-plain": {
-     "sai": 30.66,
+     "sai": 30.68,
      "biome": "cropland"
     },
     "punjab": {
-     "sai": 36.6,
+     "sai": 36.63,
      "biome": "cropland"
     },
     "kazakh-steppe": {
-     "sai": 39.04,
+     "sai": 39.23,
      "biome": "grassland"
     },
     "pampas": {
-     "sai": 32.32,
+     "sai": 32.34,
      "biome": "grassland"
     },
     "serengeti": {
-     "sai": 31.6,
+     "sai": 31.63,
      "biome": "savanna"
     },
     "cerrado": {
-     "sai": 25.87,
+     "sai": 25.89,
      "biome": "savanna"
     },
     "pantanal": {
-     "sai": 28.11,
+     "sai": 28.13,
      "biome": "wetland"
     },
     "sundarbans": {
-     "sai": 18.05,
+     "sai": 18.07,
      "biome": "wetland"
     },
     "aletsch": {
-     "sai": 31.42,
+     "sai": 31.58,
      "biome": "glacier (wet"
     },
     "dhaka": {
-     "sai": 20.85,
+     "sai": 20.88,
      "biome": "urban"
     },
     "ruhr": {
-     "sai": 30.43,
+     "sai": 30.48,
      "biome": "urban"
     }
    },
    "ablation_delta_auc": {
     "C": 0.0,
-    "I": -0.015,
-    "M": 0.01,
-    "S": -0.01,
-    "T": -0.02,
-    "Th": -0.055
+    "I": -0.02,
+    "M": 0.005,
+    "S": -0.005,
+    "T": -0.015,
+    "Th": -0.065
    },
    "learned": {
     "weights": {
-     "C": 1.667,
-     "I": 0.365,
+     "C": 1.659,
+     "I": 0.392,
      "M": 0.0,
-     "S": 1.57,
+     "S": 1.563,
      "T": 0.04,
-     "Th": 2.358
+     "Th": 2.347
     },
-    "cv_auc_median": 0.715,
+    "cv_auc_median": 0.718,
     "cv_auc_p5_p95": [
      0.677,
      0.745
     ]
    },
    "random_weights_auc_p5_p50_p95": [
-    0.63,
-    0.725,
+    0.625,
+    0.722,
     0.795
    ]
   },
@@ -692,27 +692,27 @@
     0.48,
     0.92
    ],
-   "positives_median_land_percentile": 55.6,
+   "positives_median_land_percentile": 55.9,
    "positives": {
     "askja": {
-     "sai": 29.57,
-     "land_percentile": 13.1
+     "sai": 29.53,
+     "land_percentile": 13.6
     },
     "kilauea": {
      "sai": 24.93,
-     "land_percentile": 4.0
+     "land_percentile": 4.2
     },
     "lava-beds": {
      "sai": 44.13,
-     "land_percentile": 63.8
+     "land_percentile": 63.7
     },
     "sf-volcanic-field": {
      "sai": 49.96,
-     "land_percentile": 77.6
+     "land_percentile": 77.5
     },
     "meteor-crater": {
      "sai": 50.13,
-     "land_percentile": 78.5
+     "land_percentile": 78.4
     },
     "black-point-lava-flow": {
      "sai": 47.48,
@@ -720,19 +720,19 @@
     },
     "mauna-kea-hi-seas": {
      "sai": 36.2,
-     "land_percentile": 39.2
+     "land_percentile": 39.8
     },
     "sudbury": {
-     "sai": 31.13,
-     "land_percentile": 18.3
+     "sai": 31.34,
+     "land_percentile": 20.0
     },
     "ries-crater": {
      "sai": 38.34,
-     "land_percentile": 47.5
+     "land_percentile": 48.0
     },
     "lanzarote": {
      "sai": 47.61,
-     "land_percentile": 72.7
+     "land_percentile": 72.6
     }
    },
    "controls": {
@@ -749,7 +749,7 @@
      "biome": "tropical forest"
     },
     "black-forest": {
-     "sai": 28.28,
+     "sai": 28.4,
      "biome": "temperate forest"
     },
     "appalachian-forest": {
@@ -757,19 +757,19 @@
      "biome": "temperate forest"
     },
     "siberian-taiga": {
-     "sai": 31.03,
+     "sai": 31.24,
      "biome": "taiga"
     },
     "canadian-boreal": {
-     "sai": 36.79,
+     "sai": 37.04,
      "biome": "taiga"
     },
     "flevoland": {
-     "sai": 35.33,
+     "sai": 35.34,
      "biome": "cropland"
     },
     "iowa": {
-     "sai": 41.24,
+     "sai": 41.29,
      "biome": "cropland"
     },
     "ganges-plain": {
@@ -781,7 +781,7 @@
      "biome": "cropland"
     },
     "kazakh-steppe": {
-     "sai": 41.37,
+     "sai": 41.61,
      "biome": "grassland"
     },
     "pampas": {
@@ -805,7 +805,7 @@
      "biome": "wetland"
     },
     "aletsch": {
-     "sai": 29.72,
+     "sai": 29.84,
      "biome": "glacier (wet"
     },
     "dhaka": {
@@ -813,12 +813,12 @@
      "biome": "urban"
     },
     "ruhr": {
-     "sai": 36.77,
+     "sai": 36.79,
      "biome": "urban"
     }
    },
    "ablation_delta_auc": {
-    "C": 0.06,
+    "C": 0.055,
     "I": -0.01,
     "M": -0.01,
     "S": -0.035,
@@ -827,12 +827,12 @@
    },
    "learned": {
     "weights": {
-     "C": 1.675,
-     "I": 0.375,
+     "C": 1.682,
+     "I": 0.35,
      "M": 0.0,
-     "S": 1.579,
+     "S": 1.586,
      "T": 0.0,
-     "Th": 2.371
+     "Th": 2.382
     },
     "cv_auc_median": 0.695,
     "cv_auc_p5_p95": [
@@ -850,23 +850,23 @@
    "body": "moon",
    "n_positives": 10,
    "n_controls": 20,
-   "auc_equal": 0.75,
+   "auc_equal": 0.755,
    "auc_ci95": [
-    0.485,
-    0.93
+    0.505,
+    0.935
    ],
-   "positives_median_land_percentile": 59.7,
+   "positives_median_land_percentile": 59.9,
    "positives": {
     "askja": {
-     "sai": 33.79,
-     "land_percentile": 18.1
+     "sai": 33.74,
+     "land_percentile": 18.7
     },
     "kilauea": {
      "sai": 29.48,
-     "land_percentile": 6.8
+     "land_percentile": 7.2
     },
     "lava-beds": {
-     "sai": 48.64,
+     "sai": 48.65,
      "land_percentile": 71.0
     },
     "sf-volcanic-field": {
@@ -879,23 +879,23 @@
     },
     "black-point-lava-flow": {
      "sai": 50.35,
-     "land_percentile": 76.9
+     "land_percentile": 76.8
     },
     "mauna-kea-hi-seas": {
      "sai": 40.97,
-     "land_percentile": 48.5
+     "land_percentile": 48.8
     },
     "sudbury": {
-     "sai": 34.88,
-     "land_percentile": 22.3
+     "sai": 35.09,
+     "land_percentile": 24.0
     },
     "ries-crater": {
      "sai": 40.28,
-     "land_percentile": 45.9
+     "land_percentile": 46.3
     },
     "lanzarote": {
      "sai": 52.3,
-     "land_percentile": 86.3
+     "land_percentile": 86.2
     }
    },
    "controls": {
@@ -912,7 +912,7 @@
      "biome": "tropical forest"
     },
     "black-forest": {
-     "sai": 33.04,
+     "sai": 33.16,
      "biome": "temperate forest"
     },
     "appalachian-forest": {
@@ -920,19 +920,19 @@
      "biome": "temperate forest"
     },
     "siberian-taiga": {
-     "sai": 33.42,
+     "sai": 33.63,
      "biome": "taiga"
     },
     "canadian-boreal": {
-     "sai": 37.91,
+     "sai": 38.16,
      "biome": "taiga"
     },
     "flevoland": {
-     "sai": 35.64,
+     "sai": 35.65,
      "biome": "cropland"
     },
     "iowa": {
-     "sai": 43.68,
+     "sai": 43.72,
      "biome": "cropland"
     },
     "ganges-plain": {
@@ -944,7 +944,7 @@
      "biome": "cropland"
     },
     "kazakh-steppe": {
-     "sai": 42.79,
+     "sai": 43.02,
      "biome": "grassland"
     },
     "pampas": {
@@ -968,7 +968,7 @@
      "biome": "wetland"
     },
     "aletsch": {
-     "sai": 37.45,
+     "sai": 37.57,
      "biome": "glacier (wet"
     },
     "dhaka": {
@@ -976,26 +976,26 @@
      "biome": "urban"
     },
     "ruhr": {
-     "sai": 39.71,
+     "sai": 39.74,
      "biome": "urban"
     }
    },
    "ablation_delta_auc": {
-    "C": 0.06,
-    "I": 0.015,
-    "M": 0.02,
-    "S": -0.01,
-    "T": -0.02,
+    "C": 0.05,
+    "I": 0.01,
+    "M": 0.015,
+    "S": -0.015,
+    "T": -0.025,
     "Th": -0.045
    },
    "learned": {
     "weights": {
-     "C": 1.42,
-     "I": 0.319,
+     "C": 1.426,
+     "I": 0.297,
      "M": 0.0,
-     "S": 1.337,
-     "T": 0.916,
-     "Th": 2.008
+     "S": 1.342,
+     "T": 0.919,
+     "Th": 2.016
     },
     "cv_auc_median": 0.715,
     "cv_auc_p5_p95": [
@@ -1018,15 +1018,15 @@
     0.465,
     0.92
    ],
-   "positives_median_land_percentile": 54.5,
+   "positives_median_land_percentile": 54.7,
    "positives": {
     "askja": {
-     "sai": 32.14,
-     "land_percentile": 20.8
+     "sai": 32.1,
+     "land_percentile": 21.5
     },
     "kilauea": {
      "sai": 24.93,
-     "land_percentile": 3.8
+     "land_percentile": 4.0
     },
     "lava-beds": {
      "sai": 44.13,
@@ -1034,11 +1034,11 @@
     },
     "sf-volcanic-field": {
      "sai": 49.96,
-     "land_percentile": 77.1
+     "land_percentile": 76.9
     },
     "meteor-crater": {
      "sai": 50.13,
-     "land_percentile": 78.0
+     "land_percentile": 77.9
     },
     "black-point-lava-flow": {
      "sai": 47.48,
@@ -1046,15 +1046,15 @@
     },
     "mauna-kea-hi-seas": {
      "sai": 36.2,
-     "land_percentile": 37.4
+     "land_percentile": 38.0
     },
     "sudbury": {
-     "sai": 31.13,
-     "land_percentile": 16.9
+     "sai": 31.34,
+     "land_percentile": 18.5
     },
     "ries-crater": {
      "sai": 38.34,
-     "land_percentile": 46.0
+     "land_percentile": 46.5
     },
     "lanzarote": {
      "sai": 47.61,
@@ -1075,7 +1075,7 @@
      "biome": "tropical forest"
     },
     "black-forest": {
-     "sai": 32.89,
+     "sai": 33.01,
      "biome": "temperate forest"
     },
     "appalachian-forest": {
@@ -1083,19 +1083,19 @@
      "biome": "temperate forest"
     },
     "siberian-taiga": {
-     "sai": 31.03,
+     "sai": 31.24,
      "biome": "taiga"
     },
     "canadian-boreal": {
-     "sai": 36.79,
+     "sai": 37.04,
      "biome": "taiga"
     },
     "flevoland": {
-     "sai": 35.33,
+     "sai": 35.34,
      "biome": "cropland"
     },
     "iowa": {
-     "sai": 41.24,
+     "sai": 41.29,
      "biome": "cropland"
     },
     "ganges-plain": {
@@ -1107,7 +1107,7 @@
      "biome": "cropland"
     },
     "kazakh-steppe": {
-     "sai": 41.37,
+     "sai": 41.61,
      "biome": "grassland"
     },
     "pampas": {
@@ -1131,7 +1131,7 @@
      "biome": "wetland"
     },
     "aletsch": {
-     "sai": 26.97,
+     "sai": 27.08,
      "biome": "glacier (wet"
     },
     "dhaka": {
@@ -1139,12 +1139,12 @@
      "biome": "urban"
     },
     "ruhr": {
-     "sai": 36.77,
+     "sai": 36.79,
      "biome": "urban"
     }
    },
    "ablation_delta_auc": {
-    "C": 0.05,
+    "C": 0.045,
     "I": 0.025,
     "M": 0.01,
     "S": -0.035,
@@ -1153,22 +1153,22 @@
    },
    "learned": {
     "weights": {
-     "C": 1.675,
-     "I": 0.375,
+     "C": 1.682,
+     "I": 0.35,
      "M": 0.0,
-     "S": 1.579,
+     "S": 1.586,
      "T": 0.0,
-     "Th": 2.371
+     "Th": 2.382
     },
     "cv_auc_median": 0.695,
     "cv_auc_p5_p95": [
      0.675,
-     0.708
+     0.71
     ]
    },
    "random_weights_auc_p5_p50_p95": [
     0.605,
-    0.7,
+    0.695,
     0.785
    ]
   },
@@ -1176,23 +1176,23 @@
    "body": "moon",
    "n_positives": 10,
    "n_controls": 20,
-   "auc_equal": 0.76,
+   "auc_equal": 0.765,
    "auc_ci95": [
     0.535,
     0.94
    ],
-   "positives_median_land_percentile": 59.5,
+   "positives_median_land_percentile": 59.6,
    "positives": {
     "askja": {
-     "sai": 33.81,
-     "land_percentile": 17.8
+     "sai": 33.76,
+     "land_percentile": 18.4
     },
     "kilauea": {
      "sai": 29.48,
-     "land_percentile": 6.7
+     "land_percentile": 7.1
     },
     "lava-beds": {
-     "sai": 48.64,
+     "sai": 48.65,
      "land_percentile": 70.8
     },
     "sf-volcanic-field": {
@@ -1205,23 +1205,23 @@
     },
     "black-point-lava-flow": {
      "sai": 50.35,
-     "land_percentile": 76.8
+     "land_percentile": 76.7
     },
     "mauna-kea-hi-seas": {
      "sai": 40.97,
-     "land_percentile": 48.2
+     "land_percentile": 48.5
     },
     "sudbury": {
-     "sai": 34.88,
-     "land_percentile": 21.8
+     "sai": 35.09,
+     "land_percentile": 23.5
     },
     "ries-crater": {
      "sai": 40.28,
-     "land_percentile": 45.6
+     "land_percentile": 46.0
     },
     "lanzarote": {
      "sai": 52.3,
-     "land_percentile": 86.2
+     "land_percentile": 86.1
     }
    },
    "controls": {
@@ -1238,7 +1238,7 @@
      "biome": "tropical forest"
     },
     "black-forest": {
-     "sai": 33.18,
+     "sai": 33.3,
      "biome": "temperate forest"
     },
     "appalachian-forest": {
@@ -1246,19 +1246,19 @@
      "biome": "temperate forest"
     },
     "siberian-taiga": {
-     "sai": 33.42,
+     "sai": 33.63,
      "biome": "taiga"
     },
     "canadian-boreal": {
-     "sai": 37.91,
+     "sai": 38.16,
      "biome": "taiga"
     },
     "flevoland": {
-     "sai": 35.64,
+     "sai": 35.65,
      "biome": "cropland"
     },
     "iowa": {
-     "sai": 43.68,
+     "sai": 43.72,
      "biome": "cropland"
     },
     "ganges-plain": {
@@ -1270,7 +1270,7 @@
      "biome": "cropland"
     },
     "kazakh-steppe": {
-     "sai": 42.79,
+     "sai": 43.02,
      "biome": "grassland"
     },
     "pampas": {
@@ -1294,7 +1294,7 @@
      "biome": "wetland"
     },
     "aletsch": {
-     "sai": 32.69,
+     "sai": 32.81,
      "biome": "glacier (wet"
     },
     "dhaka": {
@@ -1302,31 +1302,31 @@
      "biome": "urban"
     },
     "ruhr": {
-     "sai": 39.71,
+     "sai": 39.74,
      "biome": "urban"
     }
    },
    "ablation_delta_auc": {
-    "C": 0.06,
-    "I": 0.02,
-    "M": 0.025,
-    "S": -0.015,
-    "T": -0.03,
-    "Th": -0.04
+    "C": 0.05,
+    "I": 0.015,
+    "M": 0.02,
+    "S": -0.02,
+    "T": -0.035,
+    "Th": -0.05
    },
    "learned": {
     "weights": {
-     "C": 1.382,
-     "I": 0.31,
+     "C": 1.387,
+     "I": 0.289,
      "M": 0.0,
-     "S": 1.302,
-     "T": 1.052,
-     "Th": 1.955
+     "S": 1.307,
+     "T": 1.056,
+     "Th": 1.962
     },
     "cv_auc_median": 0.73,
     "cv_auc_p5_p95": [
-     0.69,
-     0.75
+     0.687,
+     0.755
     ]
    },
    "random_weights_auc_p5_p50_p95": [
@@ -1344,27 +1344,27 @@
     0.495,
     0.925
    ],
-   "positives_median_land_percentile": 55.8,
+   "positives_median_land_percentile": 56.0,
    "positives": {
     "askja": {
-     "sai": 33.02,
-     "land_percentile": 22.5
+     "sai": 32.97,
+     "land_percentile": 23.2
     },
     "kilauea": {
      "sai": 25.52,
-     "land_percentile": 4.3
+     "land_percentile": 4.5
     },
     "lava-beds": {
-     "sai": 44.54,
+     "sai": 44.55,
      "land_percentile": 63.5
     },
     "sf-volcanic-field": {
      "sai": 49.98,
-     "land_percentile": 76.5
+     "land_percentile": 76.3
     },
     "meteor-crater": {
      "sai": 50.13,
-     "land_percentile": 77.3
+     "land_percentile": 77.1
     },
     "black-point-lava-flow": {
      "sai": 47.48,
@@ -1372,15 +1372,15 @@
     },
     "mauna-kea-hi-seas": {
      "sai": 39.56,
-     "land_percentile": 48.2
+     "land_percentile": 48.4
     },
     "sudbury": {
-     "sai": 31.17,
-     "land_percentile": 15.7
+     "sai": 31.39,
+     "land_percentile": 17.2
     },
     "ries-crater": {
-     "sai": 38.34,
-     "land_percentile": 43.8
+     "sai": 38.35,
+     "land_percentile": 44.4
     },
     "lanzarote": {
      "sai": 49.56,
@@ -1401,7 +1401,7 @@
      "biome": "tropical forest"
     },
     "black-forest": {
-     "sai": 35.05,
+     "sai": 35.16,
      "biome": "temperate forest"
     },
     "appalachian-forest": {
@@ -1409,19 +1409,19 @@
      "biome": "temperate forest"
     },
     "siberian-taiga": {
-     "sai": 31.04,
+     "sai": 31.26,
      "biome": "taiga"
     },
     "canadian-boreal": {
-     "sai": 36.79,
+     "sai": 37.04,
      "biome": "taiga"
     },
     "flevoland": {
-     "sai": 35.33,
+     "sai": 35.34,
      "biome": "cropland"
     },
     "iowa": {
-     "sai": 41.25,
+     "sai": 41.3,
      "biome": "cropland"
     },
     "ganges-plain": {
@@ -1433,7 +1433,7 @@
      "biome": "cropland"
     },
     "kazakh-steppe": {
-     "sai": 41.37,
+     "sai": 41.61,
      "biome": "grassland"
     },
     "pampas": {
@@ -1457,7 +1457,7 @@
      "biome": "wetland"
     },
     "aletsch": {
-     "sai": 26.97,
+     "sai": 27.08,
      "biome": "glacier (wet"
     },
     "dhaka": {
@@ -1465,12 +1465,12 @@
      "biome": "urban"
     },
     "ruhr": {
-     "sai": 36.78,
+     "sai": 36.8,
      "biome": "urban"
     }
    },
    "ablation_delta_auc": {
-    "C": 0.055,
+    "C": 0.06,
     "I": 0.02,
     "M": 0.02,
     "S": -0.02,
@@ -1479,12 +1479,12 @@
    },
    "learned": {
     "weights": {
-     "C": 1.647,
-     "I": 0.369,
+     "C": 1.654,
+     "I": 0.344,
      "M": 0.0,
-     "S": 1.552,
+     "S": 1.559,
      "T": 0.101,
-     "Th": 2.332
+     "Th": 2.342
     },
     "cv_auc_median": 0.698,
     "cv_auc_p5_p95": [
@@ -1502,40 +1502,40 @@
    "body": "mars",
    "n_positives": 17,
    "n_controls": 20,
-   "auc_equal": 0.844,
+   "auc_equal": 0.841,
    "auc_ci95": [
-    0.694,
+    0.691,
     0.962
    ],
    "positives_median_land_percentile": 79.2,
    "positives": {
     "lake-salda": {
      "sai": 48.03,
-     "land_percentile": 60.0
+     "land_percentile": 60.3
     },
     "death-valley": {
      "sai": 50.78,
-     "land_percentile": 76.0
+     "land_percentile": 76.1
     },
     "atacama-yungay": {
      "sai": 57.64,
      "land_percentile": 94.7
     },
     "pilot-valley": {
-     "sai": 48.49,
-     "land_percentile": 62.0
+     "sai": 48.51,
+     "land_percentile": 62.3
     },
     "verde-valley": {
      "sai": 52.92,
      "land_percentile": 84.1
     },
     "vikursundar": {
-     "sai": 44.24,
-     "land_percentile": 41.2
+     "sai": 44.12,
+     "land_percentile": 41.0
     },
     "haughton-devon-island": {
-     "sai": 55.81,
-     "land_percentile": 91.9
+     "sai": 54.88,
+     "land_percentile": 89.6
     },
     "mdrs-utah": {
      "sai": 58.0,
@@ -1546,12 +1546,12 @@
      "land_percentile": 95.3
     },
     "svalbard-bockfjorden": {
-     "sai": 37.69,
-     "land_percentile": 13.2
+     "sai": 36.24,
+     "land_percentile": 10.6
     },
     "pavilion-lake": {
-     "sai": 34.18,
-     "land_percentile": 7.5
+     "sai": 34.4,
+     "land_percentile": 7.9
     },
     "teide-tenerife": {
      "sai": 51.35,
@@ -1559,7 +1559,7 @@
     },
     "arkaroola": {
      "sai": 57.89,
-     "land_percentile": 95.0
+     "land_percentile": 94.9
     },
     "qaidam-dalangtan": {
      "sai": 68.51,
@@ -1570,8 +1570,8 @@
      "land_percentile": 79.2
     },
     "antarctica-dry-valleys": {
-     "sai": 45.61,
-     "land_percentile": 49.0
+     "sai": 45.63,
+     "land_percentile": 49.6
     },
     "lonar": {
      "sai": 51.99,
@@ -1592,7 +1592,7 @@
      "biome": "tropical forest"
     },
     "black-forest": {
-     "sai": 36.11,
+     "sai": 36.22,
      "biome": "temperate forest"
     },
     "appalachian-forest": {
@@ -1600,19 +1600,19 @@
      "biome": "temperate forest"
     },
     "siberian-taiga": {
-     "sai": 46.13,
+     "sai": 46.31,
      "biome": "taiga"
     },
     "canadian-boreal": {
-     "sai": 43.7,
+     "sai": 43.92,
      "biome": "taiga"
     },
     "flevoland": {
-     "sai": 40.34,
+     "sai": 40.35,
      "biome": "cropland"
     },
     "iowa": {
-     "sai": 45.52,
+     "sai": 45.56,
      "biome": "cropland"
     },
     "ganges-plain": {
@@ -1624,7 +1624,7 @@
      "biome": "cropland"
     },
     "kazakh-steppe": {
-     "sai": 47.82,
+     "sai": 48.02,
      "biome": "grassland"
     },
     "pampas": {
@@ -1648,7 +1648,7 @@
      "biome": "wetland"
     },
     "aletsch": {
-     "sai": 31.23,
+     "sai": 31.32,
      "biome": "glacier (wet"
     },
     "dhaka": {
@@ -1656,132 +1656,132 @@
      "biome": "urban"
     },
     "ruhr": {
-     "sai": 47.45,
+     "sai": 47.47,
      "biome": "urban"
     }
    },
    "ablation_delta_auc": {
     "C": -0.065,
-    "D": 0.012,
-    "I": 0.0,
-    "M": -0.018,
-    "S": -0.062,
+    "D": 0.009,
+    "I": 0.003,
+    "M": -0.015,
+    "S": -0.059,
     "T": 0.012,
-    "Th": -0.035
+    "Th": -0.038
    },
    "learned": {
     "weights": {
-     "C": 2.707,
-     "D": 0.032,
-     "I": 0.288,
+     "C": 2.753,
+     "D": 0.033,
+     "I": 0.175,
      "M": 0.0,
-     "S": 1.861,
-     "T": 0.386,
-     "Th": 1.726
+     "S": 1.892,
+     "T": 0.393,
+     "Th": 1.755
     },
-    "cv_auc_median": 0.821,
+    "cv_auc_median": 0.822,
     "cv_auc_p5_p95": [
-     0.803,
-     0.833
+     0.8,
+     0.83
     ]
    },
    "random_weights_auc_p5_p50_p95": [
-    0.612,
-    0.8,
-    0.874
+    0.606,
+    0.794,
+    0.868
    ]
   },
   "arcadia_planitia": {
    "body": "mars",
    "n_positives": 17,
    "n_controls": 20,
-   "auc_equal": 0.582,
+   "auc_equal": 0.576,
    "auc_ci95": [
-    0.382,
-    0.768
+    0.374,
+    0.762
    ],
-   "positives_median_land_percentile": 48.6,
+   "positives_median_land_percentile": 49.5,
    "positives": {
     "lake-salda": {
-     "sai": 44.0,
-     "land_percentile": 37.1
+     "sai": 44.04,
+     "land_percentile": 37.6
     },
     "death-valley": {
-     "sai": 52.77,
-     "land_percentile": 77.3
+     "sai": 52.84,
+     "land_percentile": 78.1
     },
     "atacama-yungay": {
-     "sai": 55.11,
-     "land_percentile": 83.6
+     "sai": 55.18,
+     "land_percentile": 84.0
     },
     "pilot-valley": {
-     "sai": 46.49,
-     "land_percentile": 48.6
+     "sai": 46.51,
+     "land_percentile": 49.3
     },
     "verde-valley": {
-     "sai": 44.33,
-     "land_percentile": 38.2
+     "sai": 44.4,
+     "land_percentile": 38.9
     },
     "vikursundar": {
-     "sai": 39.77,
-     "land_percentile": 23.9
+     "sai": 39.48,
+     "land_percentile": 23.3
     },
     "haughton-devon-island": {
-     "sai": 44.86,
-     "land_percentile": 40.3
+     "sai": 43.45,
+     "land_percentile": 35.7
     },
     "mdrs-utah": {
-     "sai": 58.57,
+     "sai": 58.64,
      "land_percentile": 89.6
     },
     "rio-tinto": {
-     "sai": 48.19,
-     "land_percentile": 56.8
+     "sai": 48.26,
+     "land_percentile": 57.7
     },
     "svalbard-bockfjorden": {
-     "sai": 33.28,
-     "land_percentile": 8.1
+     "sai": 30.87,
+     "land_percentile": 4.5
     },
     "pavilion-lake": {
-     "sai": 33.54,
-     "land_percentile": 8.6
+     "sai": 33.7,
+     "land_percentile": 9.5
     },
     "teide-tenerife": {
-     "sai": 51.49,
-     "land_percentile": 72.7
+     "sai": 51.56,
+     "land_percentile": 73.4
     },
     "arkaroola": {
-     "sai": 45.21,
-     "land_percentile": 41.9
+     "sai": 45.28,
+     "land_percentile": 42.7
     },
     "qaidam-dalangtan": {
-     "sai": 72.58,
+     "sai": 72.65,
      "land_percentile": 99.7
     },
     "licancabur-high-lakes": {
-     "sai": 49.5,
-     "land_percentile": 63.2
+     "sai": 49.57,
+     "land_percentile": 64.0
     },
     "antarctica-dry-valleys": {
-     "sai": 46.48,
-     "land_percentile": 48.5
+     "sai": 46.55,
+     "land_percentile": 49.5
     },
     "lonar": {
-     "sai": 51.9,
-     "land_percentile": 74.4
+     "sai": 51.97,
+     "land_percentile": 75.2
     }
    },
    "controls": {
     "amazon-forest": {
-     "sai": 35.43,
+     "sai": 35.5,
      "biome": "tropical forest"
     },
     "congo-forest": {
-     "sai": 42.62,
+     "sai": 42.69,
      "biome": "tropical forest"
     },
     "borneo-forest": {
-     "sai": 19.18,
+     "sai": 19.25,
      "biome": "tropical forest"
     },
     "black-forest": {
@@ -1789,99 +1789,99 @@
      "biome": "temperate forest"
     },
     "appalachian-forest": {
-     "sai": 33.81,
+     "sai": 33.88,
      "biome": "temperate forest"
     },
     "siberian-taiga": {
-     "sai": 46.67,
+     "sai": 46.88,
      "biome": "taiga"
     },
     "canadian-boreal": {
-     "sai": 53.63,
+     "sai": 53.79,
      "biome": "taiga"
     },
     "flevoland": {
-     "sai": 48.47,
+     "sai": 48.51,
      "biome": "cropland"
     },
     "iowa": {
-     "sai": 52.2,
+     "sai": 52.21,
      "biome": "cropland"
     },
     "ganges-plain": {
-     "sai": 51.88,
+     "sai": 51.95,
      "biome": "cropland"
     },
     "punjab": {
-     "sai": 57.91,
+     "sai": 57.98,
      "biome": "cropland"
     },
     "kazakh-steppe": {
-     "sai": 56.22,
+     "sai": 56.32,
      "biome": "grassland"
     },
     "pampas": {
-     "sai": 53.32,
+     "sai": 53.39,
      "biome": "grassland"
     },
     "serengeti": {
-     "sai": 44.18,
+     "sai": 44.25,
      "biome": "savanna"
     },
     "cerrado": {
-     "sai": 37.38,
+     "sai": 37.45,
      "biome": "savanna"
     },
     "pantanal": {
-     "sai": 49.99,
+     "sai": 50.06,
      "biome": "wetland"
     },
     "sundarbans": {
-     "sai": 43.06,
+     "sai": 43.13,
      "biome": "wetland"
     },
     "aletsch": {
-     "sai": 28.84,
+     "sai": 29.02,
      "biome": "glacier (wet"
     },
     "dhaka": {
-     "sai": 44.1,
+     "sai": 44.17,
      "biome": "urban"
     },
     "ruhr": {
-     "sai": 45.97,
+     "sai": 45.99,
      "biome": "urban"
     }
    },
    "ablation_delta_auc": {
     "C": -0.159,
-    "D": 0.032,
-    "I": -0.018,
-    "M": 0.009,
-    "S": -0.129,
+    "D": 0.021,
+    "I": -0.012,
+    "M": 0.006,
+    "S": -0.126,
     "T": 0.285,
     "Th": -0.097
    },
    "learned": {
     "weights": {
-     "C": 2.572,
+     "C": 2.634,
      "D": 0.0,
-     "I": 0.468,
+     "I": 0.311,
      "M": 0.0,
-     "S": 2.322,
+     "S": 2.378,
      "T": 0.0,
-     "Th": 1.637
+     "Th": 1.677
     },
-    "cv_auc_median": 0.843,
+    "cv_auc_median": 0.84,
     "cv_auc_p5_p95": [
-     0.837,
-     0.853
+     0.835,
+     0.849
     ]
    },
    "random_weights_auc_p5_p50_p95": [
-    0.282,
-    0.619,
-    0.838
+    0.279,
+    0.613,
+    0.832
    ]
   }
  }
