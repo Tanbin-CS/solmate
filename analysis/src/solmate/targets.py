@@ -15,6 +15,8 @@ DATA = Path(__file__).resolve().parents[3] / "data" / "targets"
 TERRAIN = DATA / "terrain.v2.json"
 THERMAL = DATA / "thermal.v2.json"
 COMPUTED_KEYS = ("slope_median_deg", "slope_p90_proxy_deg", "elev_std_m")
+COLD_TRAP_RULE = ("Derived class, not a snow observation: 12 if the warmest Diviner temperature within 2 km "
+                  "stays below 110 K all year (a perennial cold trap), 6 if below 125 K, else 0.")
 THERMAL_KEYS = ("lst_diurnal_range_k", "lst_night_min_k", "t2m_mean_c", "t2m_coldest_month_c", "snow_months_per_year")
 
 
@@ -38,8 +40,17 @@ def load_targets(terrain_path: Path = TERRAIN, thermal_path: Path = THERMAL) -> 
                 entry["source"] = values.get("source", entry.get("source"))
         for key, v in thermal.get(t["id"], {}).items():
             if key in THERMAL_KEYS and key in t["indicators"]:
-                entry = t["indicators"][key]
-                entry.update(value=v, method="computed", source=thermal[t["id"]]["source"])
+                old = t["indicators"][key]
+                # The literature excerpt, DOI and uncertainty described the proxy this value replaces; drop them.
+                entry = {"value": v, "unit": old.get("unit"), "source": thermal[t["id"]]["source"]}
+                if key == "snow_months_per_year":
+                    entry |= {"method": "derived",
+                              "uncertainty": COLD_TRAP_RULE}
+                else:
+                    entry |= {"method": "computed",
+                              "uncertainty": "Median over a 12 x 926 m window around the region centroid; Diviner "
+                                             "seasonal maps measure surface (not air) temperature."}
+                t["indicators"][key] = entry
     for t in targets:  # event-day datasets: cited values and computed samples (config/event_layers.yaml)
         t["indicators"].update(event_values.get(t["id"], {}))
     return targets
