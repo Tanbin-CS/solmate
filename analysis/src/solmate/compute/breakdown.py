@@ -107,9 +107,15 @@ def indicator_labels(dims_config: dict) -> dict[str, str]:
     return {**INDICATOR_LABELS, **extra}
 
 
+def approach_text(label: str, target: float, gap: float) -> str:
+    """Wording for a target outside Earth's 1st-99th percentile (mirrored in science/v2/verdict.ts)."""
+    return (f"{label}: the target value ({target:g}) is outside the middle 98% of Earth's sampled values; "
+            f"this place gets {(1 - gap) * 100:.0f}% of the way from Earth's typical value.")
+
+
 def toward_gaps(values: dict[str, float], plans: list, stats: dict[str, modes.EarthStats],
                 labels: dict[str, str] | None = None) -> list[dict]:
-    """Indicators where the target lies beyond anything on Earth and this place is far from it."""
+    """Indicators where the target is outside Earth's 1st-99th percentile and this place is far from it."""
     labels = INDICATOR_LABELS if labels is None else labels
     out = []
     for p in plans:
@@ -121,10 +127,7 @@ def toward_gaps(values: dict[str, float], plans: list, stats: dict[str, modes.Ea
         gap = modes.toward_gap(x, p.target, stats[p.name])
         if gap > GAP_LIMIT:
             out.append({"kind": "earth_can_only_approach", "id": p.name, "earth": round(x, 3), "target": p.target,
-                        "gap": round(gap, 3),
-                        "text": f"{labels.get(p.name, p.name)}: the target value ({p.target:g}) lies beyond "
-                                f"every place on Earth; this place gets {(1 - gap) * 100:.0f}% of the way from "
-                                "Earth's typical value."})
+                        "gap": round(gap, 3), "text": approach_text(labels.get(p.name, p.name), p.target, gap)})
     return out
 
 
