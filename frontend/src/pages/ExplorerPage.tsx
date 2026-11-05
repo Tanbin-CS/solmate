@@ -222,6 +222,10 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
       <ScrollArea className="min-h-0 flex-1 px-2 pb-3">
         {screening.status === 'error' ? (
           <ErrorState title="Screening results could not be loaded." detail={screening.error.message} onRetry={screening.retry} />
+        ) : screening.status === 'loading' ? (
+          <p role="status" className="px-3 py-6 text-center text-sm text-slate-400">
+            Loading Earth analogs for {target.name}…
+          </p>
         ) : (
           <CandidateList
             label={`Earth analogs for ${target.name}`}

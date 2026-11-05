@@ -10,14 +10,16 @@ import type { BoxSel, LatLon } from './useExplorer2State'
 export type Async<T> = { status: 'loading' } | { status: 'error'; error: Error } | { status: 'ready'; data: T }
 
 function useAsync<T>(load: () => Promise<T>, key: string): Async<T> & { retry: () => void } {
-  const [state, setState] = useState<Async<T>>({ status: 'loading' })
+  // Results carry the key they were loaded for, so data for an old key (another target) is never
+  // returned as if it belonged to the new one: the caller sees "loading" until the match arrives.
+  const [state, setState] = useState<{ key: string; value: Async<T> } | null>(null)
   const [attempt, setAttempt] = useState(0)
   useEffect(() => {
     let alive = true
-    setState((s) => (s.status === 'ready' ? s : { status: 'loading' })) // keep old data visible while the next loads
+    setState((s) => (s && s.key === key && s.value.status === 'ready' ? s : null))
     load().then(
-      (data) => alive && setState({ status: 'ready', data }),
-      (error: unknown) => alive && setState({ status: 'error', error: error instanceof Error ? error : new Error(String(error)) }),
+      (data) => alive && setState({ key, value: { status: 'ready', data } }),
+      (error: unknown) => alive && setState({ key, value: { status: 'error', error: error instanceof Error ? error : new Error(String(error)) } }),
     )
     return () => {
       alive = false
@@ -25,7 +27,7 @@ function useAsync<T>(load: () => Promise<T>, key: string): Async<T> & { retry: (
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key, attempt])
   const retry = useCallback(() => setAttempt((a) => a + 1), [])
-  return { ...state, retry }
+  return { ...(state?.key === key ? state.value : ({ status: 'loading' } as const)), retry }
 }
 
 export function useModel() {
