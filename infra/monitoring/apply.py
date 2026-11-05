@@ -35,7 +35,7 @@ def names(path: str, key: str) -> set[str]:
 def main() -> None:
     email = sys.argv[1]
     have = names("uptimeCheckConfigs", "uptimeCheckConfigs")
-    for f in ("uptime-site.json", "uptime-api.json"):
+    for f in ("uptime-site.json", "uptime-api.json", "uptime-data.json"):
         cfg = json.loads((HERE / f).read_text(encoding="utf-8"))
         print("exists:" if cfg["displayName"] in have else "created:",
               cfg["displayName"] if cfg["displayName"] in have else call("POST", "uptimeCheckConfigs", cfg)["name"])

@@ -150,6 +150,20 @@ jobs:
           echo "$h" | grep -qi '^strict-transport-security:'
           echo "$h" | grep -qi '^cache-control: no-cache'
           test "$(curl -s -o /dev/null -w '%{http_code}' "$OLD_SITE/method")" = "301"
+          # Only app routes (no file extension) fall back to the app shell: a missing data file is a 404,
+          # so a broken release cannot pass as "200" with index.html in place of its data.
+          test "$(curl -s -o /dev/null -w '%{http_code}' "$SITE/data/v2/smoke-missing.json")" = "404"
+          # Every data file the app loads parses as JSON, for every target.
+          screens=$(curl -fsS "$SITE/data/v2/targets.json" | jq -r '.targets[].id | "screening/\(.).json"')
+          for p in model.json targets.json validation.json report.json provenance.json terrain3d/index.json $screens; do
+            curl -fsS "$SITE/data/v2/$p" | jq -e 'type == "object"' > /dev/null || { echo "::error::$p is not JSON"; exit 1; }
+          done
+          # Tiles are the gzip files model.json lists, not a page: check the gzip magic of the first and last.
+          for t in $(curl -fsS "$SITE/data/v2/model.json" | jq -r '.tiles.available | first, last'); do
+            curl -fsS -o "$RUNNER_TEMP/tile" "$SITE/data/v2/tiles/$t.bin.gz"
+            magic=$(od -An -N2 -tx1 "$RUNNER_TEMP/tile" | tr -d ' \n')
+            test "$magic" = "1f8b" || { echo "::error::tile $t is not gzip ($magic)"; exit 1; }
+          done
           # The browser and the terrain API must report the same results version.
           web=$(curl -fsS "$SITE/data/v2/model.json" | jq -r .model_version)
           api=$(curl -fsS "$SITE/api/v1/version" | jq -r .model_version)
