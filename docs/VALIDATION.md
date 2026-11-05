@@ -264,3 +264,51 @@ either scale carries no signal on its own (the SAI's strength there is climate a
   Tibetan Plateau, the Puna de Atacama, the Sistan Basin); exact cells and scores move by a
   few points. The Jezero case study moves from 37.05°N 86.75°E to 34.95°N 83.35°E, both on the
   Tibetan Plateau.
+
+## Addendum 4: missing snow months and data coverage (found and changed 6 Nov 2026, not pre-registered)
+
+An independent review of the code found two data-handling problems. Like addendum 3, this
+records what was wrong, the change and the effect, unedited.
+
+### What was wrong
+1. **Missing snow months counted as snow-free.** `snow_months_per_year` counted months with
+   more than 50 % snow by testing `months > 50` before adding up. MOD10CM marks cloud, polar
+   night and other no-observation months as missing, and a missing value fails that test, so
+   every missing month counted as a snow-free month. 33,759 land cells with no observed month
+   at all got 0 instead of "no data", and 342,928 cells had their value pulled down (on
+   average by 1.6 months per year, at most by 9), mostly at high latitudes.
+2. **Coverage ignored missing indicators inside a dimension.** A dimension counted as fully
+   available when any one of its indicators had data, so the "low data coverage" flag and
+   the 60 % screening threshold could miss places where half a dimension was empty.
+3. **Lunar cold-trap class labelled as computed.** The Moon targets' `snow_months_per_year`
+   (0, 6 or 12) is a class derived from Diviner temperatures, not a snow measurement, but it
+   was labelled `computed` and kept the excerpt, DOI and uncertainty of the literature proxy
+   it replaced. The same stale fields stayed on the other Diviner thermal values.
+
+### Change
+- Snow months are now the snowy share of the months MOD10CM observed, scaled to 12; a cell
+  with fewer than 6 observed months of the 24 has no value (`build_stack.snow_months`).
+  This assumes unobserved months behave like observed ones; at high latitudes, where the dark
+  winter months are missing, it is still likely to undercount.
+- Coverage is now indicator-level: each dimension counts by the share of its indicator weight
+  with data (`aggregate.sai`, `score.sai_grid`, mirrored in TypeScript). The Explorer shows
+  "N% data" next to any dimension that is incomplete. Coverage never changes a score, only
+  the flag and the screening threshold.
+- Diviner values carry only their own source and a stated uncertainty; the cold-trap class
+  is labelled `derived` with its rule (12 if the warmest temperature within 2 km stays below
+  110 K, 6 if below 125 K, else 0).
+
+### Effect (same sites, controls, seed and weights; `model_version` 687e6cf45278 → 09ddf6ffce73)
+
+| Target | AUC before | AUC after |
+|---|---|---|
+| Jezero Crater | 0.844 | 0.841 |
+| Arcadia Planitia | 0.582 | 0.576 |
+| Moon targets (9), median | 0.750 | 0.755 |
+| Moon targets, region-weighted median | 0.696 | 0.705 |
+
+The 25 top cells and 25 novel leads are unchanged for 8 of the 11 targets; for Malapert Massif
+and Mons Mouton Plateau one place of 25 changed. Nobile Rim 2's first place changed between two
+cells 0.01 points apart. The case studies are unchanged. The main tables above keep the
+numbers as first computed; the live site and `data/validation/validation.v2.json` carry the
+new ones.
