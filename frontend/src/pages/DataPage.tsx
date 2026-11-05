@@ -79,26 +79,26 @@ function DataBody({ data }: { data: DataDoc }) {
                   {p.datasets
                     .filter((d) => d.section === sec)
                     .map((d) => (
-                      <article key={`${sec}-${d.name}`} className="rounded-xl border border-border bg-card p-5">
+                      <article key={`${sec}-${d.name}`} className="min-w-0 rounded-xl border border-border bg-card p-5">
                         <h4 className="font-semibold leading-snug text-slate-100">{d.name}</h4>
                         {d.agency && <p className="mt-1 text-xs text-slate-400">{d.agency}</p>}
                         <dl className="mt-3 space-y-1.5 text-sm">
                           {d.detail && (
                             <div className="flex gap-2">
                               <dt className="w-16 shrink-0 text-slate-400">Detail</dt>
-                              <dd className="text-slate-300">{d.detail}</dd>
+                              <dd className="min-w-0 break-words text-slate-300">{d.detail}</dd>
                             </div>
                           )}
                           {d.use && (
                             <div className="flex gap-2">
                               <dt className="w-16 shrink-0 text-slate-400">Used for</dt>
-                              <dd className="text-slate-200">{d.use}</dd>
+                              <dd className="min-w-0 break-words text-slate-200">{d.use}</dd>
                             </div>
                           )}
                           {d.terms && (
                             <div className="flex gap-2">
                               <dt className="w-16 shrink-0 text-slate-400">Terms</dt>
-                              <dd className="text-slate-300">{d.terms}</dd>
+                              <dd className="min-w-0 break-words text-slate-300">{d.terms}</dd>
                             </div>
                           )}
                         </dl>
@@ -219,7 +219,7 @@ function DataBody({ data }: { data: DataDoc }) {
       </section>
 
       <section aria-labelledby="reproduce" className="grid gap-6 md:grid-cols-2">
-        <div>
+        <div className="min-w-0">
           <H2 id="reproduce">Reproduce</H2>
           <pre className="overflow-x-auto rounded-xl border border-border bg-ink-950 p-5 font-mono text-xs leading-relaxed text-slate-300">
             {`git clone ${REPO}
@@ -238,7 +238,7 @@ uv run python -m solmate.pipeline.validate_v2
 uv run python -m solmate.pipeline.export_web --tiles`}
           </pre>
         </div>
-        <div className="space-y-3 text-sm text-slate-300 md:pt-14">
+        <div className="min-w-0 space-y-3 break-words text-sm text-slate-300 md:pt-14">
           <p>
             Results version <span className="font-mono text-slate-100">{model.model_version}</span>: a short code computed from the settings behind every score (weights,
             Earth statistics and rules). It changes whenever any setting changes, so two results with the same code came from exactly the same settings.
