@@ -1,6 +1,8 @@
 import { Outlet, useLocation } from 'react-router'
 import { Suspense, useEffect } from 'react'
-import { PageSkeleton } from '@/components/common/States'
+import { ErrorState, PageSkeleton } from '@/components/common/States'
+import { ErrorBoundary } from '@/components/common/ErrorBoundary'
+import { isStaleChunk } from '@/lib/errors'
 import { NavBar } from './NavBar'
 import { Footer } from './Footer'
 import { scrollToTarget, useSmoothScroll } from '@/hooks/useSmoothScroll'
@@ -28,9 +30,21 @@ export function AppShell() {
       <NavBar overlay={isHome} />
       <main id="main" className="flex flex-1 flex-col">
         {/* Inside the frame, so the nav stays up while a page's code loads instead of a blank screen. */}
-        <Suspense fallback={<PageSkeleton workspace={isWorkspace} />}>
-          <Outlet />
-        </Suspense>
+        {/* A page that fails to render shows a message and keeps the nav; moving to another page clears it. */}
+        <ErrorBoundary
+          resetKey={pathname}
+          fallback={(error, reset) =>
+            isStaleChunk(error) ? (
+              <ErrorState title="SolMate was updated since this page opened." detail="Reload to get the new version." onRetry={() => window.location.reload()} />
+            ) : (
+              <ErrorState title="This page could not be shown." detail={error.message} onRetry={reset} />
+            )
+          }
+        >
+          <Suspense fallback={<PageSkeleton workspace={isWorkspace} />}>
+            <Outlet />
+          </Suspense>
+        </ErrorBoundary>
       </main>
       {!isWorkspace && <Footer />}
     </div>

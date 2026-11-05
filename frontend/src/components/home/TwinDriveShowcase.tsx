@@ -7,7 +7,10 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { Box, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { twinGrids, useTerrain3dIndex, webglAvailable } from '@/components/terrain3d/useTwin3d'
+import { twinGrids, useTerrain3dIndexState, webglAvailable } from '@/components/terrain3d/useTwin3d'
+import { ThreeDUnavailable } from '@/components/terrain3d/TwinDrive'
+import { threeDFailure } from '@/lib/errors'
+import { ErrorBoundary } from '@/components/common/ErrorBoundary'
 import type { Flagship } from '@/hooks/useHomeData'
 import { useCountries } from '@/lib/countries'
 import { placeLabel } from '@/lib/places'
@@ -35,7 +38,7 @@ function useInView<T extends Element>() {
 }
 
 export function TwinDriveShowcase({ flagship }: { flagship: Flagship }) {
-  const idx = useTerrain3dIndex()
+  const { idx, failed, retry } = useTerrain3dIndexState()
   const countries = useCountries()
   const [ref, view] = useInView<HTMLDivElement>()
   const best = flagship.top[0]?.candidate
@@ -48,23 +51,27 @@ export function TwinDriveShowcase({ flagship }: { flagship: Flagship }) {
   return (
     <div ref={ref} className="space-y-4">
       {!gl ? (
-        <p className="rounded-lg border border-border p-6 text-sm text-slate-400">This browser has no WebGL, so the 3D drive cannot run here.</p>
+        <ThreeDUnavailable className="h-72" reason="This browser has no WebGL, so the 3D drive cannot run here. The Explorer and every score still work." />
+      ) : failed ? (
+        <ThreeDUnavailable className="h-72" reason="The 3D terrain index could not load. Check the connection and try again." onRetry={retry} />
       ) : grids && place && view.near ? (
-        <Suspense
-          fallback={
-            <p className="flex h-72 items-center justify-center gap-2 rounded-lg border border-border text-sm text-slate-400">
-              <Loader2 className="size-4 animate-spin" /> Loading 3D…
-            </p>
-          }
-        >
-          <TwinTerrain
-            compact
-            paused={!view.visible}
-            earthLat={best!.lat}
-            earth={{ meta: grids.earth, label: `Earth · ${place.name}`, body: 'earth' }}
-            target={{ meta: grids.target, label: `${body === 'moon' ? 'Moon' : 'Mars'} · ${flagship.short}`, body }}
-          />
-        </Suspense>
+        <ErrorBoundary fallback={(error, reset) => <ThreeDUnavailable className="h-72" reason={threeDFailure(error)} onRetry={reset} />}>
+          <Suspense
+            fallback={
+              <p className="flex h-72 items-center justify-center gap-2 rounded-lg border border-border text-sm text-slate-400">
+                <Loader2 className="size-4 animate-spin" /> Loading 3D…
+              </p>
+            }
+          >
+            <TwinTerrain
+              compact
+              paused={!view.visible}
+              earthLat={best!.lat}
+              earth={{ meta: grids.earth, label: `Earth · ${place.name}`, body: 'earth' }}
+              target={{ meta: grids.target, label: `${body === 'moon' ? 'Moon' : 'Mars'} · ${flagship.short}`, body }}
+            />
+          </Suspense>
+        </ErrorBoundary>
       ) : (
         <div className="h-72 animate-pulse rounded-lg border border-border bg-ink-900" aria-hidden />
       )}

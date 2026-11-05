@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { findPlace, loadTerrain3dIndex, type GridMeta, type Terrain3dIndex } from '@/lib/terrain3d'
 
 export interface TwinGrids {
@@ -6,20 +6,31 @@ export interface TwinGrids {
   target: GridMeta
 }
 
-/** The 3D block index, or null until it loads (or when it fails: the 3D view is optional). */
-export function useTerrain3dIndex(): Terrain3dIndex | null {
-  const [idx, setIdx] = useState<Terrain3dIndex | null>(null)
+/** The 3D block index (null until it loads), whether loading failed, and a retry. */
+export function useTerrain3dIndexState(): { idx: Terrain3dIndex | null; failed: boolean; retry: () => void } {
+  const [state, setState] = useState<{ idx: Terrain3dIndex | null; failed: boolean }>({ idx: null, failed: false })
+  const [attempt, setAttempt] = useState(0)
   useEffect(() => {
     let live = true
+    // a failed load is not cached by loadTerrain3dIndex, so a retry fetches again
     loadTerrain3dIndex().then(
-      (i) => live && setIdx(i),
-      () => undefined,
+      (idx) => live && setState({ idx, failed: false }),
+      () => live && setState({ idx: null, failed: true }),
     )
     return () => {
       live = false
     }
+  }, [attempt])
+  const retry = useCallback(() => {
+    setState({ idx: null, failed: false })
+    setAttempt((a) => a + 1)
   }, [])
-  return idx
+  return { ...state, retry }
+}
+
+/** The 3D block index, or null until it loads (or when it fails: the 3D view is optional). */
+export function useTerrain3dIndex(): Terrain3dIndex | null {
+  return useTerrain3dIndexState().idx
 }
 
 /** Both blocks for a place and target, when the place is one of the baked leading places. */
