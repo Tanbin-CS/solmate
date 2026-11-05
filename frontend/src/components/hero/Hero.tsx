@@ -16,6 +16,7 @@ import { Magnetic } from './Magnetic'
 import { Narrative } from './Narrative'
 import { HERO_TEXTURES } from './textures'
 import facts from '@/data/site_facts.json'
+import { ErrorBoundary } from '@/components/common/ErrorBoundary'
 
 const loadScene = () => import('./HeroScene')
 const HeroScene = lazy(loadScene)
@@ -161,7 +162,8 @@ export function Hero({ data }: { data: HomeData | null }) {
 
       <motion.div style={{ y: sceneY, opacity: sceneFade, scale: sceneScale }} className="absolute inset-0 -z-10 origin-[70%_40%]">
         {gl ? (
-          (
+          // If the 3D globe cannot start (lost WebGL context, missing chunk), the still poster takes its place.
+          <ErrorBoundary fallback={() => <img src={asset('media/poster.jpg')} alt="" className="h-full w-full object-cover opacity-60" />}>
             <Suspense fallback={null}>
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: sceneReady ? 1 : 0 }} transition={{ duration: 0.5 }} className="absolute inset-0">
                 <HeroScene
@@ -180,7 +182,7 @@ export function Hero({ data }: { data: HomeData | null }) {
                 />
               </motion.div>
             </Suspense>
-          )
+          </ErrorBoundary>
         ) : (
           <img src={asset('media/poster.jpg')} alt="" className="h-full w-full object-cover opacity-60" />
         )}

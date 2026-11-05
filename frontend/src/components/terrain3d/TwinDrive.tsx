@@ -4,11 +4,14 @@
  * opens the full 3D rover drive. Context only: nothing here feeds the Analog Index.
  */
 import { lazy, Suspense, useEffect, useState } from 'react'
-import { Box, Loader2 } from 'lucide-react'
+import { Box, Loader2, RotateCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import { loadGrid, type Grid } from '@/lib/terrain3d'
-import { twinGrids, useTerrain3dIndex, webglAvailable, type TwinGrids } from './useTwin3d'
+import { twinGrids, useTerrain3dIndexState, webglAvailable, type TwinGrids } from './useTwin3d'
+import { ErrorBoundary } from '@/components/common/ErrorBoundary'
+import { threeDFailure } from '@/lib/errors'
 
 const TwinTerrain = lazy(() => import('./TwinTerrain'))
 
@@ -78,11 +81,28 @@ function Preview({ grids, body }: { grids: TwinGrids; body: Target['body'] }) {
   )
 }
 
+/** Shown in place of the 3D view when it cannot start, with a way to try again. */
+export function ThreeDUnavailable({ reason, onRetry, className }: { reason: string; onRetry?: () => void; className?: string }) {
+  return (
+    <div role="status" className={cn('flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border p-6 text-center text-sm text-slate-400', className)}>
+      <Box className="size-5" aria-hidden />
+      <p className="max-w-sm">{reason}</p>
+      {onRetry && (
+        <Button size="sm" variant="outline" onClick={onRetry}>
+          <RotateCw /> Try again
+        </Button>
+      )}
+    </div>
+  )
+}
+
 /** The Twin Drive card for the place panel, or a short note when this place has no 3D block. */
 export function TwinDriveCard({ lat, lon, placeName, target, open, onOpenChange }: Props) {
-  const idx = useTerrain3dIndex()
+  const { idx, failed, retry } = useTerrain3dIndexState()
   const grids = twinGrids(idx, lat, lon, target.id)
-  if (!idx || !webglAvailable()) return null
+  if (!webglAvailable()) return null
+  if (failed) return <ThreeDUnavailable className="p-4 text-[12px]" reason={`The ${TWIN_DRIVE} 3D index could not load. Check the connection and try again.`} onRetry={retry} />
+  if (!idx) return null
   if (!grids) {
     return (
       <p className="flex gap-2 rounded-lg border border-dashed border-border px-3 py-2.5 text-[11.5px] leading-relaxed text-slate-400">
@@ -152,19 +172,21 @@ export function TwinDriveDialog({
           </DialogDescription>
         </div>
         {open && (
-          <Suspense
-            fallback={
-              <p className="flex h-72 items-center justify-center gap-2 text-sm text-slate-400">
-                <Loader2 className="size-4 animate-spin" /> Loading 3D…
-              </p>
-            }
-          >
-            <TwinTerrain
-              earthLat={lat}
-              earth={{ meta: grids.earth, label: `Earth · ${placeName}`, body: 'earth' }}
-              target={{ meta: grids.target, label: `${body} · ${target.name}`, body: target.body }}
-            />
-          </Suspense>
+          <ErrorBoundary fallback={(error, reset) => <ThreeDUnavailable className="h-72" reason={threeDFailure(error)} onRetry={reset} />}>
+            <Suspense
+              fallback={
+                <p className="flex h-72 items-center justify-center gap-2 text-sm text-slate-400">
+                  <Loader2 className="size-4 animate-spin" /> Loading 3D…
+                </p>
+              }
+            >
+              <TwinTerrain
+                earthLat={lat}
+                earth={{ meta: grids.earth, label: `Earth · ${placeName}`, body: 'earth' }}
+                target={{ meta: grids.target, label: `${body} · ${target.name}`, body: target.body }}
+              />
+            </Suspense>
+          </ErrorBoundary>
         )}
       </DialogContent>
     </Dialog>
