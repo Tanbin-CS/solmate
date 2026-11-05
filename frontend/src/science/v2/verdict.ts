@@ -184,8 +184,8 @@ export function towardGaps(
       out.push({
         kind: 'earth_can_only_approach', id: p.name, earth: pyRound(x, 3), target: p.target, gap: pyRound(gap, 3),
         text:
-          `${labels[p.name] ?? p.name}: the target value (${pyG(p.target)}) lies beyond ` +
-          `every place on Earth; this place gets ${((1 - gap) * 100).toFixed(0)}% of the way from ` +
+          `${labels[p.name] ?? p.name}: the target value (${pyG(p.target)}) is outside the middle 98% of ` +
+          `Earth's sampled values; this place gets ${((1 - gap) * 100).toFixed(0)}% of the way from ` +
           "Earth's typical value.",
       })
   }
