@@ -277,7 +277,7 @@ function TargetValues({ target, model }: { target: Target; model: Model }) {
               k === 'mineral_class' && v && typeof v === 'object'
                 ? Object.entries(v as Record<string, unknown>)
                     .filter(([key]) => !['source', 'doi', 'url', 'method', 'excerpt'].includes(key))
-                    .map(([key, on]) => `${key.replace(/_/g, ' ')}: ${on ? 'yes' : 'no'}`)
+                    .map(([key, on]) => `${key.replace(/_/g, ' ')}: ${typeof on === 'boolean' ? (on ? 'yes' : 'no') : String(on)}`)
                     .join(', ')
                 : typeof e.value === 'number'
                   ? `${e.value}${e.unit ? ` ${e.unit}` : ''}`
