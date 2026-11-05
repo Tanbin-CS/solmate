@@ -1,27 +1,38 @@
 /**
  * End to end on real data: decode the exported tiles and score the Python screen's top
- * cells in TypeScript. Tiles are gitignored (restore with scripts/web_tiles.sh pull), so
- * this suite skips in CI; the explain() parity suite covers the science there.
+ * cells in TypeScript. The full tile set is gitignored (restore it with scripts/web_tiles.sh
+ * pull); without it, the test reads the few real tiles committed in __fixtures__/tiles
+ * (refresh them with `node scripts/tile-fixture.mjs` after each export), so CI runs it too.
  */
 import { existsSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import jezero from '../../../public/data/v2/screening/jezero_crater.json'
 import mouton from '../../../public/data/v2/screening/mons_mouton_plateau.json'
+import modelJson from '../../../public/data/v2/model.json'
 import { scorePlace } from './place'
 
 const PUBLIC = fileURLToPath(new URL('../../../public/', import.meta.url))
-const hasTiles = existsSync(`${PUBLIC}data/v2/tiles`)
+const FIXTURE = fileURLToPath(new URL('./__fixtures__/tiles/', import.meta.url))
+const fullSet = existsSync(`${PUBLIC}data/v2/tiles`)
 
-describe.skipIf(!hasTiles)('scorePlace on real tiles matches the Python screen', () => {
+describe('scorePlace on real tiles matches the Python screen', () => {
   beforeAll(() => {
     vi.stubGlobal('fetch', async (url: string) => {
-      const path = `${PUBLIC}${url.replace(/^\//, '')}`
+      const rel = url.replace(/^\//, '')
+      const tile = rel.match(/^data\/v2\/tiles\/(.+)$/)
+      const path = tile && !fullSet ? `${FIXTURE}${tile[1]}` : `${PUBLIC}${rel}`
       if (!existsSync(path)) return new Response(null, { status: 404 })
       return new Response(readFileSync(path))
     })
   })
   afterAll(() => vi.unstubAllGlobals())
+
+  it.skipIf(fullSet)('uses a tile fixture from the current export', () => {
+    const fixture = readFileSync(`${FIXTURE}tileset.txt`, 'utf8').trim()
+    // a new export changes the tileset hash: run `node scripts/tile-fixture.mjs` with the new tiles
+    expect(fixture).toBe((modelJson as { tiles: { tileset?: string } }).tiles.tileset)
+  })
 
   for (const screen of [jezero, mouton]) {
     for (const e of screen.top.slice(0, 5)) {

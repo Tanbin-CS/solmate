@@ -29,6 +29,11 @@ Every merge to `main` runs **Deploy** (`.github/workflows/deploy.yml`):
 Tile sets are stored under their content hash, so tiles published for a pull request
 (`scripts/web_tiles.sh push`) never change what a deploy of `main` restores.
 
+CI has no full tile set, so the real-tile tests in `frontend/src/science/v2/place.test.ts` read
+four committed tiles in `__fixtures__/tiles`. After any export, refresh them with
+`node scripts/tile-fixture.mjs` in `frontend/` (the release script does this). A stale fixture
+fails CI with a tileset mismatch instead of skipping.
+
 ## Adding a dataset (event day, 13 Nov)
 See `docs/EVENT_DAY.md`: one config entry, `download_nasa.py --only <name>`, then
 `uv run python -m solmate.pipeline.release --push`. Rehearsed on 3 Nov in about 7 minutes.

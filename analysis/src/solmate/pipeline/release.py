@@ -94,6 +94,11 @@ def main() -> None:
     npm = shutil.which("npm")
     if npm is None:
         raise SystemExit("npm not found: run the web tests with `npm test` in frontend/")
+    node = shutil.which("node")
+    if node is None:
+        raise SystemExit("node not found: run `node scripts/tile-fixture.mjs` in frontend/")
+    # the real-tile tests in CI read a few committed tiles, which must come from this export
+    times["tile fixture"] = _run("tile fixture", [node, "scripts/tile-fixture.mjs"], REPO / "frontend")
     times["web tests"] = _run("web tests", [npm, "test"], REPO / "frontend")
     if args.push:
         times["tiles push"] = _run("tiles push", ["bash", "scripts/web_tiles.sh", "push"], REPO)
