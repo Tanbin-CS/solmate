@@ -425,7 +425,8 @@ export default function TwinTerrain({ earth, target, earthLat, compact = false, 
     let prev = performance.now()
     let hold = 0
     const tick = (now: number) => {
-      const dt = Math.min(0.1, (now - prev) / 1000)
+      // the first frame time can be earlier than performance.now(), so clamp at zero as well
+      const dt = Math.min(0.1, Math.max(0, (now - prev) / 1000))
       prev = now
       setS((v) => {
         if (v >= lengthKm) {

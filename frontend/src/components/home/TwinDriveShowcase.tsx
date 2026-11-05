@@ -70,9 +70,9 @@ export function TwinDriveShowcase({ flagship }: { flagship: Flagship }) {
       )}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <p className="max-w-3xl font-mono text-[12px] leading-relaxed text-slate-400">
-          Same {ROVER.massKg.toLocaleString('en')} kg NASA rover on both: {Math.round(wheelLoadN('earth')).toLocaleString('en')} N on each wheel on Earth,{' '}
-          {Math.round(wheelLoadN(body)).toLocaleString('en')} N on {body === 'moon' ? 'the Moon' : 'Mars'} (g {GRAVITY[body]} m/s²). The ring turns amber past
-          NASA’s {ROVER.driveLimitDeg}° driving limit. Terrain: NASA ASTER GDEM and {body === 'moon' ? 'LRO LOLA' : 'the Mars 2020 CTX DTM'}, 100 m.
+          Same {ROVER.massKg.toLocaleString('en')} kg NASA rover on both: {Math.round(wheelLoadN('earth')).toLocaleString('en')} N per wheel on flat ground on
+          Earth, {Math.round(wheelLoadN(body)).toLocaleString('en')} N on {body === 'moon' ? 'the Moon' : 'Mars'} (g {GRAVITY[body]} m/s²). The ring turns amber
+          past NASA’s {ROVER.driveLimitDeg}° driving limit. Terrain: NASA ASTER GDEM and {body === 'moon' ? 'LRO LOLA' : 'the Mars 2020 CTX DTM'}, 100 m.
         </p>
         <Button asChild variant="outline" className="shrink-0">
           <Link to={link}>
