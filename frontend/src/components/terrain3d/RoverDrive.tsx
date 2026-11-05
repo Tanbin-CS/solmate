@@ -14,9 +14,9 @@ const STATUS_COLOR: Record<TiltStatus, string> = {
   'no-data': '#7d8b9c',
 }
 const STATUS_TEXT: Record<TiltStatus, string> = {
-  ok: 'safe to drive',
-  avoid: 'drivers avoid (over 30°)',
-  tip: 'would tip over (45°+)',
+  ok: 'under NASA’s 30° driving limit',
+  avoid: 'over 30°: NASA drivers avoid this',
+  tip: 'past the 45° NASA design limit',
   'no-data': 'no terrain data',
 }
 
@@ -149,9 +149,9 @@ export function DriveCard({
         <dd className="text-right tabular text-slate-200">{f1(pose.rollDeg)}°</dd>
         <dt>climbed so far</dt>
         <dd className="text-right tabular text-slate-200">{f0(climbTo(trip, pose.s))} m</dd>
-        <dt>sunlight at the rover</dt>
+        <dt>sun at the rover (slider sun)</dt>
         <dd className="text-right tabular text-slate-200">{lit === null ? '–' : lit ? 'in sun' : 'in shadow'}</dd>
-        <dt>weight on each wheel</dt>
+        <dt>weight per wheel, flat ground</dt>
         <dd className="text-right tabular text-slate-200">
           {f0(load)} N <span className="text-slate-500">(g {GRAVITY[body]} m/s²)</span>
         </dd>
@@ -211,7 +211,7 @@ export function TiltChart({ trips, s }: { trips: { trip: Traverse; color: string
         <span>west · 0 km</span>
         <span>
           rover tilt along the line · dashed: <span style={{ color: STATUS_COLOR.avoid }}>30° drivers avoid</span>,{' '}
-          <span style={{ color: STATUS_COLOR.tip }}>45° tips over</span>
+          <span style={{ color: STATUS_COLOR.tip }}>45° design limit</span>
         </span>
         <span>{length.toFixed(0)} km · east</span>
       </figcaption>
@@ -224,9 +224,10 @@ export function DriveNote({ s, onMoon }: { s: number; onMoon: boolean }) {
   return (
     <p className="text-[11px] leading-relaxed text-slate-500">
       {ROVER.name}: {ROVER.massKg.toLocaleString('en')} kg, {ROVER.wheels} wheels of {ROVER.wheelDiameterM * 100} cm, top speed {ROVER.topSpeedMPerH} m per
-      hour, so {s.toFixed(1)} km takes {f0(hoursAtTopSpeed(s))} hours of driving. Drawn {ROVER_SCALE}× its real size. Tilt is measured on 100 m NASA terrain, so
-      rocks and ripples the rover would meet are smoothed out: real tilts are higher. Sunlight counts only hills inside the 20 km block.{' '}
-      {onMoon && 'Perseverance is a Mars rover; the same rover drives both blocks so they compare fairly. '}
+      hour, so {s.toFixed(1)} km takes {f0(hoursAtTopSpeed(s))} hours of driving. Drawn {ROVER_SCALE}× its real size. Tilt is the slope of 100 m NASA terrain
+      under the rover: rocks and ripples are smoothed out, so tilts at rover scale can be steeper or gentler. Weight per wheel is the rover’s weight in each
+      world’s gravity shared by six wheels on flat ground, not a suspension model. The sun is the one set by the sliders, not a real date, and shadows count
+      only hills inside the 20 km block. {onMoon && 'Perseverance is a Mars rover; the same rover drives both blocks so they compare fairly. '}
       <a href={ROVER.source} target="_blank" rel="noreferrer noopener" className="text-slate-300 underline underline-offset-2 hover:text-slate-100">
         NASA rover facts
       </a>

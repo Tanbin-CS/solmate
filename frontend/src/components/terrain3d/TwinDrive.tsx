@@ -103,8 +103,8 @@ export function TwinDriveCard({ lat, lon, placeName, target, open, onOpenChange 
         <span className="font-mono text-[10.5px] text-slate-400">20 km · 100 m NASA terrain</span>
       </div>
       <p className="mt-1 text-[12px] leading-relaxed text-slate-300">
-        Drive the same NASA rover over this place and {target.name}, side by side at the same scale. Tilt, sunlight and wheel load are read live from the
-        ground.
+        Drive the same NASA rover over this place and {target.name}, side by side at the same scale. Tilt and shadow come from the NASA terrain under it; the
+        weight per wheel shows the gravity difference.
       </p>
       <div className="mt-2">
         <Preview grids={grids} body={target.body} />
