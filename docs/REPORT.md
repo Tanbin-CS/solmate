@@ -139,6 +139,21 @@ The best novel lead for Mons Mouton is the cell at 38.75°N 74.05°E, 1550 km fr
 
 Suggested next step: an expert desk review of geology maps and high-resolution imagery, then a short field visit to check surface materials and access before any test is planned. This is an unreviewed lead, not a recommendation. Open it: https://solmate-analog.web.app/explorer?t=mons_mouton&p=38.75%2C74.05
 
+## A planning decision, worked through: field sites for Mons Mouton
+
+Suppose a team must choose where on Earth to rehearse for Mons Mouton, one of NASA's candidate landing regions near the lunar south pole. SolMate's shortlist is the region's 10 best places. Different tests need different things, so the pick depends on the purpose; each row takes the shortlisted place with the best score for that purpose.
+
+| Purpose | Pick | Deciding score | SAI | 100 m median slope | Nearest known analog site |
+|---|---|---|---|---|---|
+| Rover and EVA traverse rehearsal | Puna de Atacama (27.85°S 69.15°W) | 100 m terrain 0.72 of 1 | 81.8 | 13° | 428 km (Atacama (Yungay)) |
+| Thermal and instrument testing | Tibetan Plateau (35.75°N 82.15°E) | Thermal 0.86 of 1 | 84.3 | 16° | 913 km (Qaidam Basin (Dalangtan)) |
+| Ice prospecting and drilling (ISRU) | Tibetan Plateau (35.75°N 82.15°E) | Ice & cold-trap 0.95 of 1 | 84.3 | 16° | 913 km (Qaidam Basin (Dalangtan)) |
+| All-round crew training | 38.75°N 74.05°E | SAI 85.3 of 100 | 85.3 | 17° | 1550 km (Qaidam Basin (Dalangtan)) |
+
+3 different places cover the four purposes. The median slope at 100 m in Mons Mouton itself is 11° (steepest tenth 22°), so a traverse rehearsal should prefer a pick with slopes close to that. The 100 m terrain score is shown beside the SAI, not inside it (docs/VALIDATION.md, addendum 3).
+
+The familiar choice: among the documented Moon analog sites used to test the method, Meteor Crater scores highest against Mons Mouton, with an SAI of 50.1, ahead of 78% of Earth's land. Every pick above scores at least 81.8. Before anything is planned, each pick needs the same desk review as any unreviewed lead: geology maps, high-resolution imagery, access, permits and safety at altitude. The familiar site stays the fallback where logistics decide.
+
 ## Caves, lava tubes and mines
 
 Satellites see only the surface, so SolMate cannot score caves or lava tubes; every result says so. These underground places have been used by space agencies and NASA-funded teams as analogs:

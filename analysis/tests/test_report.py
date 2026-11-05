@@ -29,6 +29,22 @@ def test_report_from_published_data_has_both_case_studies_and_every_target():
     assert len(table["rows"]) == len(data["targets"])
 
 
+def test_planning_decision_picks_the_best_shortlisted_place_for_each_purpose():
+    data = report.load()
+    blocks = report.decision(data)
+    table = next(b for b in blocks if b["type"] == "table")
+    assert [r[0] for r in table["rows"]] == [p[0] for p in report.PURPOSES]
+    short = sorted(data["screens"][report.DECISION]["top"], key=lambda c: -c["sai"])[: report.SHORTLIST]
+    for row, (_, _, value, _) in zip(table["rows"], report.PURPOSES, strict=True):
+        best = max((c for c in short if value(c) is not None), key=value)
+        assert row[1] == report.place(best["lat"], best["lon"])  # the pick is the shortlist's maximum
+        assert row[3] == f"{best['sai']:.1f}"
+    # the familiar choice is the best documented analog site for this target, and the text says so
+    known = data["validation"]["targets"][report.DECISION]["positives"]
+    best_known = max(known, key=lambda k: known[k]["sai"] or 0)
+    assert report.site_name(best_known) in blocks[-1]["text"]
+
+
 def test_case_study_pictures_are_saved_site_files():
     data = report.load()
     figs = [i["src"] for b in report.build(data) if b["type"] == "figure" for i in b["images"]]

@@ -88,6 +88,60 @@ def case_leads(d: dict) -> list[tuple[str, str, dict]]:
     return [(tid, world, leads[tid][0]) for tid, world in CASES]
 
 
+DECISION = "mons_mouton"  # same Moon target as its case study
+SHORTLIST = 10  # the target's ten best places
+PURPOSES = [  # (purpose, what decides it, how to read a candidate's number, how to print it)
+    ("Rover and EVA traverse rehearsal", "100 m terrain", lambda c: (c.get("terrain_100m") or {}).get("score"), "{:.2f} of 1"),
+    ("Thermal and instrument testing", "Thermal", lambda c: c["dims"].get("Th"), "{:.2f} of 1"),
+    ("Ice prospecting and drilling (ISRU)", "Ice & cold-trap", lambda c: c["dims"].get("I"), "{:.2f} of 1"),
+    ("All-round crew training", "SAI", lambda c: c["sai"], "{:.1f} of 100"),
+]
+
+
+def decision(d: dict) -> list[dict]:
+    """A worked planning decision: which shortlisted place to pick for which kind of test, against the familiar choice.
+    Every number is read from the screen and validation files; the picks are plain maxima of existing scores."""
+    t = next(x for x in d["targets"] if x["id"] == DECISION)
+    short = sorted(d["screens"][DECISION]["top"], key=lambda c: -sai_of(c))[:SHORTLIST]
+    tt = d["stage2"].get(DECISION, {})
+    known = d["validation"]["targets"][DECISION]["positives"]
+    best_known, kn = max(known.items(), key=lambda kv: kv[1]["sai"] or 0)
+    rows, picked = [], []
+    for purpose, measure, value, fmt in PURPOSES:
+        c = max((c for c in short if value(c) is not None), key=value)
+        picked.append(c)
+        ti = (c.get("terrain_100m") or {}).get("indicators") or {}
+        rows.append([purpose, place(c["lat"], c["lon"]), f"{measure} {fmt.format(value(c))}", f"{sai_of(c):.1f}",
+                     f"{ti['slope_median']:.0f}°" if ti else "–",
+                     f"{c['nearest_known_km']:.0f} km ({site_name(c['nearest_known'])})"])
+    n_places = len({(c["lat"], c["lon"]) for c in picked})
+    lowest = min(sai_of(c) for c in picked)
+    return [
+        {"type": "h2", "text": f"A planning decision, worked through: field sites for {t['name']}"},
+        {"type": "p", "text": (
+            f"Suppose a team must choose where on Earth to rehearse for {t['name']}, one of NASA's candidate landing regions "
+            f"near the lunar south pole. SolMate's shortlist is the region's {SHORTLIST} best places. Different tests need "
+            "different things, so the pick depends on the purpose; each row takes the shortlisted place with the best score "
+            "for that purpose.")},
+        {"type": "table",
+         "head": ["Purpose", "Pick", "Deciding score", "SAI", "100 m median slope",
+                  "Nearest known analog site"],
+         "rows": rows},
+        {"type": "p", "text": (
+            f"{n_places} different place{'s' if n_places != 1 else ''} cover the four purposes. "
+            + (f"The median slope at 100 m in {t['name']} itself is {tt['slope_median']:.0f}° (steepest tenth "
+               f"{tt['slope_p90']:.0f}°), so a traverse rehearsal should prefer a pick with slopes close to that. "
+               if tt else "")
+            + "The 100 m terrain score is shown beside the SAI, not inside it (docs/VALIDATION.md, addendum 3).")},
+        {"type": "p", "text": (
+            f"The familiar choice: among the documented Moon analog sites used to test the method, {site_name(best_known)} "
+            f"scores highest against {t['name']}, with an SAI of {kn['sai']:.1f}, ahead of {kn['land_percentile']:.0f}% "
+            f"of Earth's land. Every pick above scores at least {lowest:.1f}. Before anything is planned, each pick needs "
+            "the same desk review as any unreviewed lead: geology maps, high-resolution imagery, access, permits and "
+            "safety at altitude. The familiar site stays the fallback where logistics decide.")},
+    ]
+
+
 def load() -> dict:
     j = lambda p: json.loads(p.read_text(encoding="utf-8"))  # noqa: E731
     targets = j(WEB / "targets.json")["targets"]
@@ -220,6 +274,8 @@ def build(d: dict) -> list[dict]:
                 "visit to check surface materials and access before any test is planned. This is an unreviewed lead, not a "
                 f"recommendation. Open it: {explorer(tid, c['lat'], c['lon'])}")},
         ]
+
+    b += decision(d)
 
     sub = d["subsurface"]
     b += [
