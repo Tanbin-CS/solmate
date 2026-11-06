@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { Link } from 'react-router'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { ShieldCheck, TriangleAlert } from 'lucide-react'
+import { Play, ShieldCheck, TriangleAlert } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { fadeUp, stagger } from '@/design/motion'
@@ -247,17 +247,44 @@ export default function HomePage() {
 
       <Section title="Why NASA rehearses on Earth.">
         <motion.div variants={fadeUp(reduced)} className="overflow-hidden rounded-xl border border-border bg-black">
-          <iframe
-            className="aspect-video w-full"
-            src="https://www.youtube-nocookie.com/embed/N0f-QkEVU7U"
-            title="6 NASA Technologies to Get Humans to Mars"
-            loading="lazy"
-            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
+          <VideoEmbed id="N0f-QkEVU7U" title="6 NASA Technologies to Get Humans to Mars" />
         </motion.div>
         <p className="mt-3 font-mono text-xs text-slate-400">Video: NASA, “6 NASA Technologies to Get Humans to Mars”.</p>
       </Section>
     </>
+  )
+}
+
+/**
+ * A YouTube player that loads only when asked. The embed pulls about 900 KB of player code and web
+ * fonts, so the page shows a poster with a play button and swaps in the player on click.
+ */
+function VideoEmbed({ id, title }: { id: string; title: string }) {
+  const [on, setOn] = useState(false)
+  if (on)
+    return (
+      <iframe
+        className="aspect-video w-full"
+        src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1`}
+        title={title}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      />
+    )
+  return (
+    <button
+      type="button"
+      onClick={() => setOn(true)}
+      className="group relative flex aspect-video w-full items-center justify-center bg-cover bg-center"
+      style={{ backgroundImage: `linear-gradient(rgb(5 8 15 / 0.55), rgb(5 8 15 / 0.75)), url(${asset('media/poster.jpg')})` }}
+    >
+      <span className="flex flex-col items-center gap-3 text-slate-100">
+        <span className="flex size-16 items-center justify-center rounded-full bg-data text-ink-950 shadow-lg transition-transform group-hover:scale-105">
+          <Play className="ml-1 size-7" aria-hidden="true" />
+        </span>
+        <span className="text-balance px-6 text-center text-lg font-medium">Play: {title}</span>
+        <span className="font-mono text-xs text-slate-300">Loads the video from YouTube</span>
+      </span>
+    </button>
   )
 }
