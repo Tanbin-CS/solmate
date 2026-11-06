@@ -45,6 +45,8 @@ def datasets(md: str) -> list[dict]:
     out = []
     for r in parse_markdown_tables(md):
         name = r.get("Dataset") or r.get("Source") or ""
+        if not name:  # another kind of table (e.g. the MODIS-to-VIIRS mapping), not a dataset list
+            continue
         out.append({
             "section": r["section"],
             "name": _clean(name),

@@ -27,6 +27,23 @@ def test_parses_each_section_and_strips_markdown():
     assert ds[1]["agency"] == "ESA" and ds[1]["use"] == "Cross-check"
 
 
+def test_tables_that_are_not_dataset_lists_are_skipped():
+    md = """## Earth (scored)
+
+| Dataset | Agency / product | Terms |
+|---|---|---|
+| MODIS LST | NASA LP DAAC | NASA open data |
+
+### After MODIS
+
+| MODIS input (now) | VIIRS successor | Change needed |
+|---|---|---|
+| MYD11C3 | VJ121C3 | check bias |
+"""
+    ds = provenance.datasets(md)
+    assert [d["name"] for d in ds] == ["MODIS LST"]
+
+
 def test_raw_files_summarise_products():
     m = {"files": [
         {"product": "A", "bytes": 10, "time_start": "2023-02-01T00:00Z", "url": "https://x.nasa.gov/a"},
