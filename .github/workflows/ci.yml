@@ -71,6 +71,29 @@ jobs:
       - run: npm test
       - run: npm run build
 
+  e2e:
+    name: Browser smoke and accessibility (Playwright)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+      # The full tile set lives in GCS; the committed test tiles cover the places the smoke tests open.
+      - name: Use the test tiles
+        run: mkdir -p public/data/v2/tiles && cp src/science/v2/__fixtures__/tiles/*.bin.gz public/data/v2/tiles/
+      - run: npm run build
+      - name: Every page loads, throws no errors and has no serious accessibility violations
+        run: npm run e2e
+
   science:
     name: Science (pytest)
     runs-on: ubuntu-latest
