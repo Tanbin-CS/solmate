@@ -341,6 +341,14 @@ function MethodBody({ data }: { data: HomeData }) {
           <li>A 0.1° cell averages about 11 km of ground. The index uses terrain at about 1 km, with a 100 m check beside it; climate, temperature and minerals stay at the coarse scale.</li>
           <li>Novel leads are unreviewed. They need expert review and field data before anyone plans a test there.</li>
           <li>Validation labels come from documented field use, which reflects logistics as well as science; they are a check, not ground truth.</li>
+          <li>
+            MODIS is near the end of its mission. Our MODIS inputs are fixed 2023–24 files that stay in NASA&apos;s archive, so every result can be rebuilt. A future refresh would switch to the VIIRS
+            successors on NOAA-20 (land temperature VJ121C3, albedo VJ143C3, snow VJ110C1); the full plan is in{' '}
+            <a href="https://github.com/Tanbin-CS/solmate/blob/main/docs/DATA_SOURCES.md#after-modis-the-viirs-path" className="text-data hover:underline" target="_blank" rel="noreferrer">
+              DATA_SOURCES
+            </a>
+            .
+          </li>
         </ul>
         <div className="flex flex-wrap gap-3 pt-2">
           <Button asChild>

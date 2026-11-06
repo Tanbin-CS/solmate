@@ -23,6 +23,21 @@ Every input SolMate uses: what it is, who publishes it, how we use it and its te
 | Landsat WELD | NASA/USGS Web-Enabled Landsat Data, via NASA GIBS | 1990 global annual true colour (Landsat 5 TM) | Map imagery and site thumbnails (display only) | NASA open data |
 | GIBS | NASA EOSDIS GIBS | Blue Marble, ASTER GDEM greyscale shaded relief | Basemap, relief view, thumbnails where Landsat has no data (display only) | NASA open data |
 
+### After MODIS: the VIIRS path
+
+NASA's Terra and Aqua satellites, which carry MODIS, are near the end of their missions, and Suomi NPP data left NASA on 1 Nov 2026. SolMate's MODIS inputs are fixed v6.1 files for 2023–24. They stay in NASA's archive and in our sha256-checked mirror, so every published result can be rebuilt as it is.
+
+To refresh the Earth layers after MODIS, each MODIS product has a VIIRS successor from NOAA-20 (JPSS-1) on the same 0.05° grid, all in NASA's CMR catalogue (checked 7 Nov 2026):
+
+| MODIS input (now) | VIIRS successor | Change needed |
+|---|---|---|
+| `MYD11C3.061` land surface temperature, monthly | `VJ121C3.002` LST and emissivity, monthly | Different retrieval method, so check the bias against MODIS over the overlap years before mixing them |
+| `MCD43C3.061` albedo | `VJ143C3.002` albedo, daily | Average to the same months |
+| `MOD10CM.61` snow, monthly | `VJ110C1.2` snow, daily | Build the monthly snow persistence from daily files |
+| `MCD12C1.061` land cover, yearly | No 0.05° VIIRS land-cover product found | Keep the 2023 file; land cover changes slowly |
+
+ASTER, MERRA-2, NASA POWER, GLDAS and the DEMs do not depend on MODIS.
+
 ## Earth (context, shown but not scored)
 
 Added through `config/event_layers.yaml` (see `docs/EVENT_DAY.md`) and shown in the
