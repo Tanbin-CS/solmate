@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { gibsTiles } from './gibs'
+import { gibsTiles, worldviewUrl } from './gibs'
 
 /** Tiles must cover the whole window: every corner and the centre fall inside some tile. */
 function covers(tiles: ReturnType<typeof gibsTiles>) {
@@ -24,5 +24,21 @@ describe('GIBS tile windows', () => {
     const dateLine = gibsTiles({ lat: -16, lon: 179.99, km: 20, kind: 'imagery' })
     expect(covers(dateLine)).toBe(true)
     expect(dateLine.some((t) => t.url.endsWith('/0.jpg'))).toBe(true)
+  })
+})
+
+describe('Worldview link', () => {
+  it('opens a box of the given width centred on the place', () => {
+    const u = new URL(worldviewUrl(0, 10, 20))
+    expect(u.origin).toBe('https://worldview.earthdata.nasa.gov')
+    const [w, s, e, n] = u.searchParams.get('v')!.split(',').map(Number) as [number, number, number, number]
+    expect((w + e) / 2).toBeCloseTo(10, 3)
+    expect((s + n) / 2).toBeCloseTo(0, 3)
+    expect((e - w) * 111.32).toBeCloseTo(20, 0)
+  })
+  it('stays inside valid latitudes near the poles', () => {
+    const [, s, , n] = new URL(worldviewUrl(89.99, 0, 40)).searchParams.get('v')!.split(',').map(Number)
+    expect(n).toBeLessThanOrEqual(90)
+    expect(s).toBeGreaterThan(-90)
   })
 })

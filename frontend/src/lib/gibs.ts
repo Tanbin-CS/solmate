@@ -59,3 +59,12 @@ export function gibsTiles({ lat, lon, km, kind, px = 256 }: GibsSpot): GibsTile[
   }
   return tiles
 }
+
+/** A link that opens the same window in NASA Worldview, where a reader can browse every GIBS layer and date. */
+export function worldviewUrl(lat: number, lon: number, km: number): string {
+  const dLat = km / 2 / 110.574
+  const dLon = km / 2 / (111.32 * Math.max(0.05, Math.cos((lat * Math.PI) / 180)))
+  const f = (x: number) => x.toFixed(4)
+  const v = [lon - dLon, Math.max(-90, lat - dLat), lon + dLon, Math.min(90, lat + dLat)].map(f).join(',')
+  return `https://worldview.earthdata.nasa.gov/?v=${v}`
+}
