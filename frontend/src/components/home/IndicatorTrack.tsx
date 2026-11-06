@@ -25,12 +25,10 @@ function Card({ d, model, flagships }: { d: Card; model: Model; flagships: Flags
           const v = dims[d.id]
           const scored = v !== undefined && Number.isFinite(v)
           return (
-            <div key={f.target.id}>
-              <div className="flex items-baseline justify-between text-xs">
-                <dt style={{ color: BODY[f.target.body].color }}>Best Earth place vs {f.short}</dt>
-                <dd className="tabular text-base text-slate-100">{scored ? Math.round(v * 100) : <span className="text-xs text-slate-400">not scored</span>}</dd>
-              </div>
-              <div className="mt-1 h-1 overflow-hidden rounded-full bg-white/10">
+            <div key={f.target.id} className="grid grid-cols-[1fr_auto] items-baseline gap-x-2 text-xs">
+              <dt style={{ color: BODY[f.target.body].color }}>Best Earth place vs {f.short}</dt>
+              <dd className="tabular text-base text-slate-100">{scored ? Math.round(v * 100) : <span className="text-xs text-slate-400">not scored</span>}</dd>
+              <dd aria-hidden="true" className="col-span-2 mt-1 h-1 overflow-hidden rounded-full bg-white/10">
                 <motion.div
                   className="h-full rounded-full"
                   style={{ background: BODY[f.target.body].color }}
@@ -39,7 +37,7 @@ function Card({ d, model, flagships }: { d: Card; model: Model; flagships: Flags
                   viewport={{ once: true }}
                   transition={{ duration: 0.9, delay: 0.2 + k * 0.1 }}
                 />
-              </div>
+              </dd>
             </div>
           )
         })}
@@ -101,7 +99,7 @@ export function IndicatorTrack({ model, flagships }: { model: Model; flagships: 
   if (!desktop || reduced) {
     return (
       <section className="py-20" aria-label="Analog dimensions">
-        <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-4 [scrollbar-width:none] md:px-10">{items}</div>
+        <div tabIndex={0} role="region" aria-label="The seven dimensions" className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-4 [scrollbar-width:none] md:px-10">{items}</div>
       </section>
     )
   }

@@ -134,6 +134,15 @@
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-ring;
   }
+  /* Text links (text-data hover:underline) sit in running text: underline them always, not only on hover. */
+  a.text-data.hover\:underline {
+    text-decoration-line: underline;
+    text-decoration-color: color-mix(in oklab, currentColor 45%, transparent);
+    text-underline-offset: 3px;
+  }
+  a.text-data.hover\:underline:hover {
+    text-decoration-color: currentColor;
+  }
 }
 
 @layer utilities {

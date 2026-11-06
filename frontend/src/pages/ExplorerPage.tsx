@@ -184,13 +184,13 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
       <div className="px-3 pb-1 pt-3">
         <Tabs value={ui.tab} onValueChange={(v) => ui.setTab(v as ListTab)}>
           <TabsList className="h-8">
-            <TabsTrigger value="top" className="px-2.5 text-xs">
+            <TabsTrigger value="top" aria-controls="explorer-results" className="px-2.5 text-xs">
               Top analogs
             </TabsTrigger>
-            <TabsTrigger value="novel" className="px-2.5 text-xs">
+            <TabsTrigger value="novel" aria-controls="explorer-results" className="px-2.5 text-xs">
               Novel leads
             </TabsTrigger>
-            <TabsTrigger value="leaders" className="px-2.5 text-xs">
+            <TabsTrigger value="leaders" aria-controls="explorer-results" className="px-2.5 text-xs">
               Per dimension
             </TabsTrigger>
           </TabsList>
@@ -219,7 +219,7 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
               : `Best of ${'1.9 million'} land cells screened at 0.1°, at least 50 km apart.`}
         </p>
       </div>
-      <ScrollArea className="min-h-0 flex-1 px-2 pb-3">
+      <ScrollArea id="explorer-results" className="min-h-0 flex-1 px-2 pb-3">
         {screening.status === 'error' ? (
           <ErrorState title="Screening results could not be loaded." detail={screening.error.message} onRetry={screening.retry} />
         ) : screening.status === 'loading' ? (
@@ -265,6 +265,8 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
 
   return (
     <>
+      {/* The map fills the screen, so the page title is for screen readers and document outline only. */}
+      <h1 className="sr-only">Explorer: Earth analogs for {target.name}</h1>
       {isDesktop ? (
         <motion.aside
           initial={{ opacity: 0, x: reduced ? 0 : -16 }}

@@ -110,10 +110,10 @@ export function StoryDeck({ cards, data, onDone, done }: { cards: Card[]; data: 
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-3">
-        <Button variant="outline" size="lg" onClick={() => go(i - 1)} disabled={i === 0} aria-label="Previous card">
+        <Button variant="outline" size="lg" onClick={() => go(i - 1)} disabled={i === 0} aria-label="Back to the previous card">
           <ArrowLeft /> <span className="hidden sm:inline">Back</span>
         </Button>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-slate-400">
           <span className="sm:hidden">Swipe to turn the page</span>
           <span className="hidden sm:inline">Use ← → keys or drag to turn the page</span>
         </p>

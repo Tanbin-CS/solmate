@@ -120,7 +120,7 @@ function DataBody({ data }: { data: DataDoc }) {
           Every layer is resampled to the same {p.grid?.res_deg ?? 0.1}° grid ({p.grid?.rows ?? 1800} × {p.grid?.cols ?? 3600} cells). Coverage is the share of land cells with
           data; the percentiles describe Earth’s land and set the scale for every score.
         </p>
-        <div className="overflow-x-auto rounded-xl border border-border">
+        <div tabIndex={0} role="region" aria-label="Earth stack layers" className="overflow-x-auto rounded-xl border border-border">
           <table className="w-full min-w-[720px] text-left text-sm">
             <thead className="bg-ink-850">
               <tr>
@@ -161,7 +161,7 @@ function DataBody({ data }: { data: DataDoc }) {
           </a>
           , so anyone can fetch the same bytes and rebuild every number. Products served by NASA Earthdata link to Earthdata Search, NASA&apos;s catalogue of the same collections.
         </p>
-        <div className="overflow-x-auto rounded-xl border border-border">
+        <div tabIndex={0} role="region" aria-label="Downloaded NASA files" className="overflow-x-auto rounded-xl border border-border">
           <table className="w-full min-w-[600px] text-left text-sm">
             <thead className="bg-ink-850">
               <tr>
@@ -234,7 +234,7 @@ function DataBody({ data }: { data: DataDoc }) {
       <section aria-labelledby="reproduce" className="grid gap-6 md:grid-cols-2">
         <div className="min-w-0">
           <H2 id="reproduce">Reproduce</H2>
-          <pre className="overflow-x-auto rounded-xl border border-border bg-ink-950 p-5 font-mono text-xs leading-relaxed text-slate-300">
+          <pre tabIndex={0} className="overflow-x-auto rounded-xl border border-border bg-ink-950 p-5 font-mono text-xs leading-relaxed text-slate-300">
             {`git clone ${REPO}
 cd solmate/analysis
 uv sync
@@ -273,7 +273,7 @@ function TargetValues({ target, model }: { target: Target; model: Model }) {
     ...Object.entries(target.breaks_down ?? {}).map(([k, v]) => ({ k, v: v as unknown, kind: 'breaks down' })),
   ]
   return (
-    <div className="overflow-x-auto rounded-xl border border-border">
+    <div tabIndex={0} role="region" aria-label="Target values" className="overflow-x-auto rounded-xl border border-border">
       <table className="w-full min-w-[640px] text-left text-sm">
         <thead className="bg-ink-850">
           <tr>

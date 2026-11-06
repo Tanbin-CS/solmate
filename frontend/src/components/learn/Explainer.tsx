@@ -284,7 +284,6 @@ export function Explainer({ data, onStart, onFree }: { data: LearnData | null; o
             toggleSound()
           }}
           aria-pressed={soundOn && !blocked}
-          aria-label={blocked ? 'Start the sound' : soundOn ? 'Turn sound off' : 'Turn sound on'}
           className="absolute right-3 top-3 z-10 flex items-center gap-1.5 rounded-full bg-ink-950/85 px-3 py-1.5 text-xs font-medium text-slate-100 transition-colors hover:bg-ink-950"
         >
           {blocked && !reduced && <span className="absolute inset-0 animate-ping rounded-full bg-data/30 [animation-duration:1.6s]" aria-hidden="true" />}

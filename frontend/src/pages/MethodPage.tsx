@@ -229,7 +229,7 @@ function MethodBody({ data }: { data: HomeData }) {
           <Stat label="Arcadia Planitia" value={arc.auc_equal.toFixed(2)} note={`95% CI ${arc.auc_ci95[0].toFixed(2)}–${arc.auc_ci95[1].toFixed(2)} · not better than chance`} tone="text-negative" />
         </div>
 
-        <div className="overflow-x-auto rounded-xl border border-border">
+        <div tabIndex={0} role="region" aria-label="Validation results" className="overflow-x-auto rounded-xl border border-border">
           <table className="w-full min-w-[640px] text-left text-sm">
             <thead className="bg-ink-850">
               <tr>
