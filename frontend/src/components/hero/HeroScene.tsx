@@ -81,9 +81,9 @@ function useLayout(): Layout {
   const { size } = useThree()
   const aspect = size.width / size.height
   if (aspect < 1.1) {
-    // portrait (phones, tablets): worlds in the top half, text below
+    // portrait (phones, tablets): worlds in the top half, text below; the Moon left and Mars right, as on desktop
     const camZ = Math.max(12.2, 2.05 / (0.344 * aspect))
-    return { earth: [0, 2.15, 0], earthR: 1.05, mars: [-1.2, 4.15, -1], marsR: 0.36, moon: [1.25, 4.05, -0.6], moonR: 0.28, camZ, look: [0, 0.6, 0], labels: false }
+    return { earth: [0, 2.15, 0], earthR: 1.05, mars: [1.2, 4.15, -1], marsR: 0.36, moon: [-1.25, 4.05, -0.6], moonR: 0.28, camZ, look: [0, 0.6, 0], labels: false }
   }
   // Landscape: place worlds by screen fraction so wide monitors have no empty right side.
   // Earth centres over the match dock (bottom right), Mars to its right, the Moon to its upper left.
