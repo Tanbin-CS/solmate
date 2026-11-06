@@ -115,6 +115,31 @@
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Print: only the place report (components/explorer2/PrintPlace.tsx) prints, in the site's own colours. */
+@media print {
+  @page {
+    margin: 10mm;
+  }
+  html,
+  body {
+    background: var(--color-ink-950, #070b12) !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  body:has([data-print-report]) {
+    display: block !important;
+  }
+  body:has([data-print-report]) > :not([data-print-report]) {
+    display: none !important;
+  }
+  /* Chrome's PDF output shrinks a percentage width here; a fixed width fits A4 and Letter with 10 mm margins. */
+  [data-print-report] {
+    width: 190mm !important;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

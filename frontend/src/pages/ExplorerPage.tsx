@@ -8,6 +8,7 @@ import { ComparePlaces } from '@/components/explorer2/ComparePlaces'
 import { DIM_ORDER, siteName } from '@/components/explorer2/labels'
 import { MapToolbar } from '@/components/explorer2/MapToolbar'
 import { MapView2, type MapCandidate } from '@/components/explorer2/MapView2'
+import { PrintPlace } from '@/components/explorer2/PrintPlace'
 import { PlaceDetail } from '@/components/explorer2/PlaceDetail'
 import { PresetPicker } from '@/components/explorer2/PresetPicker'
 import { TargetPicker } from '@/components/explorer2/TargetPicker'
@@ -56,6 +57,8 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
   const screening = useScreening(target.id)
   const scr = screening.status === 'ready' ? screening.data : null
   const place = usePlaceScore(ui.place, ui.box, target.id, weights)
+  const [printLabel, setPrintLabel] = useState<{ name: string; coords: string } | null>(null)
+  const donePrinting = useCallback(() => setPrintLabel(null), [])
   const terrain = useTerrain100(ui.place, ui.box, target.id)
   const [drawing, setDrawing] = useState(false)
   const goTo = (p: { lat: number; lon: number }, t: string | null) => {
@@ -260,6 +263,7 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
         onPin={() => ui.place && ui.togglePin(ui.place)}
         view3d={ui.view3d}
         onView3d={ui.setView3d}
+        onPrint={setPrintLabel}
       />
     ) : null
 
@@ -267,6 +271,9 @@ function Explorer({ model, targets }: { model: Model; targets: Target[] }) {
     <>
       {/* The map fills the screen, so the page title is for screen readers and document outline only. */}
       <h1 className="sr-only">Explorer: Earth analogs for {target.name}</h1>
+      {printLabel && place?.status === 'ready' && (
+        <PrintPlace result={place.data} target={target} model={model} name={printLabel.name} coords={printLabel.coords} onDone={donePrinting} />
+      )}
       {isDesktop ? (
         <motion.aside
           initial={{ opacity: 0, x: reduced ? 0 : -16 }}

@@ -87,3 +87,16 @@ test('Data page links NASA products to Earthdata Search', async ({ page }) => {
   await expect(links.first()).toBeVisible({ timeout: 20_000 })
   expect(await links.count()).toBeGreaterThanOrEqual(5)
 })
+
+test('A place prints as a report', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'Printing is a desktop task; the phone run covers the pages')
+  await page.goto('/explorer?p=34.95%2C83.35', { waitUntil: 'domcontentloaded' })
+  await page.evaluate(() => {
+    window.print = () => {}
+  })
+  await page.getByRole('button', { name: /Print or save this place/ }).click({ timeout: 30_000 })
+  const report = page.locator('[data-print-report]')
+  await expect(report).toHaveCount(1)
+  await expect(report).toContainText('SolMate Analog Index')
+  await expect(report).toContainText(/Model version [0-9a-f]{12}/)
+})
