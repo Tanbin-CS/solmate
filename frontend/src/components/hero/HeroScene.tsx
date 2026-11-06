@@ -74,7 +74,10 @@ interface Layout {
   moonR: number
   camZ: number
   look: [number, number, number]
-  labels: boolean
+  /** site labels shown on Earth (the top N; a hovered site always gets one) */
+  siteLabels: number
+  /** put each label on the side of its pin facing the screen centre, so it never runs off a narrow screen */
+  flipLabels: boolean
 }
 
 function useLayout(): Layout {
@@ -83,7 +86,7 @@ function useLayout(): Layout {
   if (aspect < 1.1) {
     // portrait (phones, tablets): worlds in the top half, text below; the Moon left and Mars right, as on desktop
     const camZ = Math.max(12.2, 2.05 / (0.344 * aspect))
-    return { earth: [0, 2.15, 0], earthR: 1.05, mars: [1.2, 4.15, -1], marsR: 0.36, moon: [-1.25, 4.05, -0.6], moonR: 0.28, camZ, look: [0, 0.6, 0], labels: false }
+    return { earth: [0, 2.15, 0], earthR: 1.05, mars: [1.2, 4.15, -1], marsR: 0.36, moon: [-1.25, 4.05, -0.6], moonR: 0.28, camZ, look: [0, 0.6, 0], siteLabels: 3, flipLabels: true }
   }
   // Landscape: place worlds by screen fraction so wide monitors have no empty right side.
   // Earth centres over the match dock (bottom right), Mars to its right, the Moon to its upper left.
@@ -103,7 +106,8 @@ function useLayout(): Layout {
     moonR: h0 * 0.125,
     camZ,
     look: [0, 0, 0],
-    labels: true,
+    siteLabels: 3,
+    flipLabels: false,
   }
 }
 
@@ -430,6 +434,8 @@ function Scene(props: Props) {
         tmpB.copy(tmpA).sub(earthSpin.current.getWorldPosition(new Vector3())).normalize()
         const toCam = camera.position.clone().sub(tmpA).normalize()
         const vis = Math.max(0, Math.min(1, (tmpB.dot(toCam) - 0.05) * 5))
+        // on phones a pin right of centre gets its label on its left, so the label stays on screen
+        if (L.flipLabels) el.style.translate = tmpA.project(camera).x > 0 ? 'calc(-100% - 0.75rem) -50%' : ''
         el.style.opacity = String(vis * Math.min(1, Math.max(0, (intro - 0.8) / 0.2)))
         el.style.pointerEvents = vis > 0.5 ? 'auto' : 'none'
       }
@@ -514,7 +520,7 @@ function Scene(props: Props) {
                   <meshBasicMaterial color={ROLE_COLOR[s.role]} toneMapped={false} />
                 </mesh>
                 <PulseRing position={p} color={ROLE_COLOR[s.role]} size={isHover ? 0.05 : 0.034} phase={i * 0.2} strong={isHover} />
-                {L.labels && (i < 3 || isHover) && <Html position={p} zIndexRange={[20, 0]} style={{ pointerEvents: 'none' }}>
+                {(i < L.siteLabels || isHover) && <Html position={p} zIndexRange={[20, 0]} style={{ pointerEvents: 'none' }}>
                   <div
                     ref={(el) => {
                       labelRefs.current.set(s.id, el)
