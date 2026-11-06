@@ -160,7 +160,9 @@ export function Hero({ data }: { data: HomeData | null }) {
         </motion.div>
       )}
 
-      <motion.div style={{ y: sceneY, opacity: sceneFade, scale: sceneScale }} className="absolute inset-0 -z-10 origin-[70%_40%]">
+      {/* One screen tall, not the whole section: on phones the text makes the section taller than the screen, and a
+          taller canvas would push the worlds down into the heading. */}
+      <motion.div style={{ y: sceneY, opacity: sceneFade, scale: sceneScale }} className="absolute inset-x-0 top-0 -z-10 h-[100svh] origin-[70%_40%]">
         {gl ? (
           // If the 3D globe cannot start (lost WebGL context, missing chunk), the still poster takes its place.
           <ErrorBoundary fallback={() => <img src={asset('media/poster.jpg')} alt="" className="h-full w-full object-cover opacity-60" />}>

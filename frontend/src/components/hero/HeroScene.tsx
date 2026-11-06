@@ -83,7 +83,7 @@ function useLayout(): Layout {
   if (aspect < 1.1) {
     // portrait (phones, tablets): worlds in the top half, text below
     const camZ = Math.max(12.2, 2.05 / (0.344 * aspect))
-    return { earth: [0, 2.45, 0], earthR: 1.05, mars: [-1.2, 4.15, -1], marsR: 0.36, moon: [1.25, 4.05, -0.6], moonR: 0.28, camZ, look: [0, 0.6, 0], labels: false }
+    return { earth: [0, 2.15, 0], earthR: 1.05, mars: [-1.2, 4.15, -1], marsR: 0.36, moon: [1.25, 4.05, -0.6], moonR: 0.28, camZ, look: [0, 0.6, 0], labels: false }
   }
   // Landscape: place worlds by screen fraction so wide monitors have no empty right side.
   // Earth centres over the match dock (bottom right), Mars to its right, the Moon to its upper left.
@@ -569,7 +569,8 @@ function Scene(props: Props) {
                 ref={(el) => {
                   worldLabels.current[body] = el
                 }}
-                className="select-none whitespace-nowrap text-center opacity-0"
+                // a soft backing keeps the name readable where the match arcs pass behind it
+                className="select-none whitespace-nowrap rounded-md bg-ink-950/70 px-1.5 py-0.5 text-center opacity-0"
               >
                 <p className="font-mono text-[11px] uppercase tracking-[0.18em]" style={{ color: body === 'mars' ? '#d9785a' : '#c9d3de' }}>
                   {body === 'mars' ? 'Mars' : 'Moon'}
