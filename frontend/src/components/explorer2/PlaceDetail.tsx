@@ -1,6 +1,6 @@
 import { Link } from 'react-router'
 import type { ReactNode } from 'react'
-import { ChevronDown, ChevronUp, Loader2, Mountain, Pin, PinOff, RotateCw, X } from 'lucide-react'
+import { ChevronDown, ChevronUp, Loader2, Mountain, Pin, PinOff, Printer, RotateCw, X } from 'lucide-react'
 import type { TerrainResult } from '@/api/client'
 import { TwinDriveCard } from '@/components/terrain3d/TwinDrive'
 import { Button } from '@/components/ui/button'
@@ -36,6 +36,8 @@ interface Props {
   onPin: () => void
   view3d: boolean
   onView3d: (open: boolean) => void
+  /** Print or save a one-place report; gets the place's display name and coordinates. */
+  onPrint: (label: { name: string; coords: string }) => void
 }
 
 /** A network failure reads as a browser TypeError ("Failed to fetch"); say what it means instead. */
@@ -45,7 +47,7 @@ function errorText(err: Error): string {
     : err.message
 }
 
-export function PlaceDetail({ state, target, model, isBox, title, terrain, stored100, onRefine, onClose, onTarget, nav, pinned, canPin, onPin, view3d, onView3d }: Props) {
+export function PlaceDetail({ state, target, model, isBox, title, terrain, stored100, onRefine, onClose, onTarget, nav, pinned, canPin, onPin, view3d, onView3d, onPrint }: Props) {
   const r = state.status === 'ready' ? state.data : null
   const countries = useCountries()
   const auto = r ? placeLabel(r.centre.lat, r.centre.lon, countries) : null
@@ -85,6 +87,11 @@ export function PlaceDetail({ state, target, model, isBox, title, terrain, store
                 <ChevronDown className="size-4" />
               </IconButton>
             </>
+          )}
+          {r && verdict && place && (
+            <IconButton label="Print or save this place as a PDF report" onClick={() => onPrint({ name: place.name, coords: place.coords })}>
+              <Printer className="size-4" />
+            </IconButton>
           )}
           <IconButton label="Close place details" onClick={onClose}>
             <X className="size-4" />
