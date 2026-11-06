@@ -49,11 +49,11 @@ Ordinary software tools without AI (Python, React, GitHub Actions, gitleaks, Cod
 
 ## Prompts and the reasoning behind them
 
-**Perplexity (GPT 6.1 Sol), research.** We gave it the 2026 challenge statement and asked, in our own words:
+**Perplexity (GPT 6.1 Sol), research.** In our own words, we asked it:
 
-- what makes a good Earth analog for a Moon base region or a Mars site, beyond looking similar;
-- which documented analog sites and catalogues already exist, and what they leave out;
-- which NASA datasets measure terrain, temperature, surface materials, dust and ice on Earth, the Moon and Mars.
+- what the 2026 challenge asks for;
+- what existing work on Earth analogs already does, and where the gaps are;
+- which NASA datasets fit the challenge.
 
 *Why:* we needed a fast map of existing work before choosing what to build. We followed every answer back to its source, and SolMate uses only values read from a NASA product or a published paper, never from the chat answer.
 
@@ -81,13 +81,14 @@ Typical task prompts:
 
 *Why:* we only showed a claim if Jev answered "supports" with confidence 0.8 or more; everything else went to a person. Results are in `frontend/public/data/claims.v1.json` (11 Oct 2026, model `jev-1.13.0`). Jev never touched a score. It has **not** been run on the v2 target values in `targets.yaml`; those were checked against their cited sources and are listed with their citation, method and uncertainty on the Data page.
 
-**GPT 6 Astra, review.** We gave it the repository and the live site and asked for a review only: find bugs, security problems, claims the data does not support and confusing wording, plan the fixes by priority, and change no files.
+**GPT 6 Astra, review.** We gave it the code and asked it to review the code and tell us whether there were any security issues.
 
-*Why:* a model that did not write the code is more likely to spot its mistakes, and a review-only prompt keeps the team in charge of what gets changed. The team read each finding; the ones we accepted went back to Claude Opus 5.5 as fix tasks.
+*Why:* a model that did not write the code is more likely to spot its mistakes, and security was one of our standing rules. The team read each finding; the ones we accepted went back to Claude Opus 5.5 as fix tasks.
 
 ## What data the AI worked on
 
-- **Claude Opus 5.5 and GPT 6 Astra:** this repository's code and docs, the public NASA dataset documentation, and the live site. Both are public.
+- **Claude Opus 5.5:** this repository's code and docs, the public NASA dataset documentation, and the live site. All are public.
+- **GPT 6 Astra:** this repository's code, which is public.
 - **Perplexity:** public web pages and papers.
 - **Jev:** short excerpts from the cited papers and NASA pages, and the claims shown on the site.
 - No personal data or user data was sent to any AI service.
