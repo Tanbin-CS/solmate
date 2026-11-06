@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { GibsImage } from '@/components/common/GibsImage'
 import { asset } from '@/lib/asset'
+import { worldviewUrl } from '@/lib/gibs'
 
 /** Target windows we have imagery for (20 km, same scale as the Earth windows). */
 const TARGET_IMAGES: Readonly<Record<string, { src: string; caption: string }>> = {
@@ -39,7 +40,10 @@ export function PlaceImages({ lat, lon, targetId }: { lat: number; lon: number; 
         )}
       </div>
       <p className="mt-1.5 text-[11px] leading-relaxed text-slate-400">
-        NASA/USGS Landsat WELD 1990 and NASA/METI ASTER GDEM via NASA GIBS. Context only, not scored.
+        NASA/USGS Landsat WELD 1990 and NASA/METI ASTER GDEM via NASA GIBS. Context only, not scored.{' '}
+        <a href={worldviewUrl(lat, lon, 100)} target="_blank" rel="noreferrer" className="text-data hover:underline">
+          Open this place in NASA Worldview<span className="sr-only"> (opens in a new tab)</span>
+        </a>
       </p>
     </section>
   )

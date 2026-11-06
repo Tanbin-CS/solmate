@@ -11,6 +11,9 @@ import { INDICATOR_LABELS } from '@/science/v2/verdict'
 import { cn } from '@/lib/utils'
 
 const REPO = 'https://github.com/Tanbin-CS/solmate'
+/** Files served by NASA Earthdata (LP DAAC, GES DISC, NSIDC…) can be found by product name in Earthdata Search. */
+const isEarthdata = (host: string | null) => !!host && /(^|\.)earthdata(cloud)?\.nasa\.gov$|(^|\.)nsidc\.org$/.test(host)
+const earthdataSearchUrl = (product: string) => `https://search.earthdata.nasa.gov/search?q=${encodeURIComponent(product)}`
 
 interface DataDoc {
   provenance: Provenance
@@ -156,7 +159,7 @@ function DataBody({ data }: { data: DataDoc }) {
           <a href={`${REPO}/blob/main/data/manifest.v2.json`} target="_blank" rel="noreferrer" className="text-data hover:underline">
             data/manifest.v2.json
           </a>
-          , so anyone can fetch the same bytes and rebuild every number.
+          , so anyone can fetch the same bytes and rebuild every number. Products served by NASA Earthdata link to Earthdata Search, NASA&apos;s catalogue of the same collections.
         </p>
         <div className="overflow-x-auto rounded-xl border border-border">
           <table className="w-full min-w-[600px] text-left text-sm">
@@ -167,6 +170,7 @@ function DataBody({ data }: { data: DataDoc }) {
                 <th className={cn(TH, 'text-right')}>Size</th>
                 <th className={TH}>Period</th>
                 <th className={TH}>Served from</th>
+                <th className={TH}>Catalogue</th>
               </tr>
             </thead>
             <tbody>
@@ -177,6 +181,15 @@ function DataBody({ data }: { data: DataDoc }) {
                   <td className="px-4 py-2.5 text-right font-mono tabular text-slate-300">{gb(r.bytes)}</td>
                   <td className="px-4 py-2.5 font-mono text-xs text-slate-400">{r.first ? (r.first === r.last ? r.first : `${r.first} to ${r.last}`) : 'climatology'}</td>
                   <td className="px-4 py-2.5 font-mono text-xs text-slate-400">{r.host}</td>
+                  <td className="px-4 py-2.5 text-xs">
+                    {isEarthdata(r.host) ? (
+                      <a href={earthdataSearchUrl(r.product)} target="_blank" rel="noreferrer" className="text-data hover:underline">
+                        Earthdata Search<span className="sr-only"> for {r.product} (opens in a new tab)</span>
+                      </a>
+                    ) : (
+                      <span className="text-slate-500">–</span>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
