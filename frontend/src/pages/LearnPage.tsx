@@ -102,7 +102,7 @@ export default function LearnPage() {
           {LEVELS.map((l) => {
             const got = isComplete(progress, l.id)
             return (
-              <li key={l.id} className={cn('flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm', got ? 'border-reference/50 bg-reference/10 text-reference' : 'border-border text-slate-500')}>
+              <li key={l.id} className={cn('flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm', got ? 'border-reference/50 bg-reference/10 text-reference' : 'border-dashed border-border text-slate-400')}>
                 <Award className="size-4" aria-hidden="true" />
                 {l.badge}
                 <span className="sr-only">{got ? ', earned' : ', not earned yet'}</span>

@@ -53,7 +53,7 @@ export function LevelPath({ progress, active, onPick }: { progress: Progress; ac
                 {current && !reduced && <span className="absolute -inset-1.5 animate-ping rounded-full border-2 border-data/40 [animation-duration:2s]" aria-hidden="true" />}
                 {complete ? <Check className="size-6" aria-hidden="true" /> : open ? i + 1 : <Lock className="size-5" aria-hidden="true" />}
               </motion.button>
-              <span className={cn('mt-2.5 text-[13px] leading-snug', current ? 'font-medium text-slate-100' : open ? 'text-slate-300' : 'text-slate-500')}>{l.title}</span>
+              <span className={cn('mt-2.5 text-[13px] leading-snug', current ? 'font-medium text-slate-100' : open ? 'text-slate-300' : 'text-slate-400')}>{l.title}</span>
               {complete && <span className="mt-1 text-[11px] text-reference">{l.badge}</span>}
             </li>
           )

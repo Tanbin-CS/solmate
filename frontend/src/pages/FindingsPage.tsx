@@ -74,7 +74,7 @@ function Render({ b }: { b: Block }) {
       )
     case 'table':
       return (
-        <div className="overflow-x-auto rounded-xl border border-border">
+        <div tabIndex={0} role="region" aria-label={b.head.join(", ")} className="overflow-x-auto rounded-xl border border-border">
           <table className="w-full min-w-[520px] text-left text-sm">
             <thead className="bg-ink-850">
               <tr>

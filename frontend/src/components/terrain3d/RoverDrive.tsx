@@ -207,7 +207,7 @@ export function TiltChart({ trips, s }: { trips: { trip: Traverse; color: string
         ))}
         <line x1={x(s)} x2={x(s)} y1={0} y2={H} stroke="#e8edf2" strokeWidth={1} opacity={0.8} vectorEffect="non-scaling-stroke" />
       </svg>
-      <figcaption className="mt-1 flex justify-between font-mono text-[10.5px] text-slate-500">
+      <figcaption className="mt-1 flex justify-between font-mono text-[10.5px] text-slate-400">
         <span>west · 0 km</span>
         <span>
           rover tilt along the line · dashed: <span style={{ color: STATUS_COLOR.avoid }}>30° drivers avoid</span>,{' '}

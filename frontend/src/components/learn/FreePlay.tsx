@@ -161,7 +161,7 @@ export function FreePlay({ data, free, onStars }: { data: LearnData; free: Recor
                 <span className="min-w-0 flex-1">
                   <span className="flex items-start justify-between gap-2 sm:mt-3">
                     <span className={cn('text-[15px] font-semibold', x.body === 'mars' ? 'text-mars' : 'text-reference')}>{x.name.replace(/ \(site [^)]+\)/, '')}</span>
-                    {free[x.id] !== undefined ? <Stars n={free[x.id]!} size="size-3.5" /> : <span className="shrink-0 text-xs text-slate-500">New</span>}
+                    {free[x.id] !== undefined ? <Stars n={free[x.id]!} size="size-3.5" /> : <span className="shrink-0 text-xs text-slate-400">New</span>}
                   </span>
                   <span className="mt-1 block text-[13px] leading-snug text-slate-300">{TARGET_ABOUT[x.id] ?? ''}</span>
                   {on && <span className="mt-2 block text-xs font-medium text-data">Playing now</span>}

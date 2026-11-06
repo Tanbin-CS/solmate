@@ -185,7 +185,7 @@ export function Quiz({ questions, best, onFinish }: { questions: Question[]; bes
               )
             })}
           </div>
-          {picked === null && <p className="mt-4 hidden text-xs text-slate-500 sm:block">Tip: press 1 to {q.options.length} on your keyboard to answer.</p>}
+          {picked === null && <p className="mt-4 hidden text-xs text-slate-400 sm:block">Tip: press 1 to {q.options.length} on your keyboard to answer.</p>}
         </motion.div>
       </AnimatePresence>
 

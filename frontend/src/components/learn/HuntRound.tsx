@@ -315,7 +315,7 @@ export function HuntRound({ round, data, onScored }: { round: { target: string }
             const at = n + 1
             const st = step > at ? 'done' : step === at ? 'now' : 'next'
             return (
-              <li key={s} className={cn('flex items-center gap-3 text-[14.5px] transition-colors', st === 'now' ? 'text-slate-100' : st === 'done' ? 'text-slate-400' : 'text-slate-500')}>
+              <li key={s} className={cn('flex items-center gap-3 text-[14.5px] transition-colors', st === 'now' ? 'text-slate-100' : 'text-slate-400')}>
                 <span
                   className={cn(
                     'flex size-6 shrink-0 items-center justify-center rounded-full border text-[11px] tabular transition-colors',

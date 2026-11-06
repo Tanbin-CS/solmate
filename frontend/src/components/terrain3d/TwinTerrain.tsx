@@ -237,6 +237,7 @@ function DriveScene({
         frameloop="demand"
         dpr={[1, 1.5]}
         camera={{ position: [start[0] - 2.2, start[1] + 1.6, start[2] + 2.6], fov: 45, near: 0.02, far: 200 }}
+        role="img"
         aria-label={`${side.label}: the rover on its 20 km block`}
       >
         <color attach="background" args={['#05080d']} />
@@ -323,7 +324,7 @@ function StatCard({ side, d }: { side: TwinSide; d: Loaded | null }) {
         <dt>relief</dt>
         <dd className="text-right tabular text-slate-200">{f(s?.relief, ' m', 0)}</dd>
       </dl>
-      <p className="mt-2 text-[10.5px] leading-snug text-slate-500">{side.meta.source}</p>
+      <p className="mt-2 text-[10.5px] leading-snug text-slate-400">{side.meta.source}</p>
     </div>
   )
 }
@@ -359,7 +360,7 @@ function Profile({ a, b, row }: { a: { d: Loaded; side: TwinSide }; b: { d: Load
           <path key={l.side.body} d={path(l.p)} fill="none" stroke={BODY_COLOR[l.side.body]} strokeWidth={1.6} />
         ))}
       </svg>
-      <figcaption className="mt-1 space-y-1 font-mono text-[10.5px] text-slate-500">
+      <figcaption className="mt-1 space-y-1 font-mono text-[10.5px] text-slate-400">
         <span className="flex justify-between">
           <span>west</span>
           <span>height above the line&apos;s lowest point · top {Math.round(top)} m</span>
@@ -555,6 +556,7 @@ export default function TwinTerrain({ earth, target, earthLat, compact = false, 
               frameloop="demand"
               dpr={[1, 1.5]}
               camera={{ position: [0, 17, 27], fov: 42, near: 0.1, far: 400 }}
+              role="img"
               aria-label={`3D terrain: ${earth.label} on the left, ${target.label} on the right, 20 km each`}
             >
               <color attach="background" args={['#05080d']} />
@@ -598,7 +600,7 @@ export default function TwinTerrain({ earth, target, earthLat, compact = false, 
               </button>
             </div>
             {colour === 'slope' && (
-              <p className="mt-1.5 flex items-center gap-1.5 font-mono text-[10.5px] text-slate-500">
+              <p className="mt-1.5 flex items-center gap-1.5 font-mono text-[10.5px] text-slate-400">
                 0°
                 <span
                   className="h-1.5 w-28 rounded-full"
