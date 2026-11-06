@@ -45,3 +45,7 @@ frontend/public/data/v2/tiles/
 
 # Short-lived CI credentials (google-github-actions/auth)
 gha-creds-*.json
+
+# Playwright output
+frontend/test-results/
+frontend/playwright-report/
