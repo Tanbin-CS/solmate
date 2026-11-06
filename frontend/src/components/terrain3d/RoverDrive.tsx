@@ -153,7 +153,7 @@ export function DriveCard({
         <dd className="text-right tabular text-slate-200">{lit === null ? '–' : lit ? 'in sun' : 'in shadow'}</dd>
         <dt>weight per wheel, flat ground</dt>
         <dd className="text-right tabular text-slate-200">
-          {f0(load)} N <span className="text-slate-500">(g {GRAVITY[body]} m/s²)</span>
+          {f0(load)} N <span className="text-slate-400">(g {GRAVITY[body]} m/s²)</span>
         </dd>
         <dt>whole line: steepest tilt</dt>
         <dd className="text-right tabular text-slate-200">{f0(trip.maxTiltDeg)}°</dd>

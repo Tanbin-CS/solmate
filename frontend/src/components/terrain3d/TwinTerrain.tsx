@@ -10,7 +10,7 @@ import { Line, OrbitControls } from '@react-three/drei'
 import { BufferAttribute, BufferGeometry, Color, Vector3 } from 'three'
 import { Loader2, Pause, Play } from 'lucide-react'
 import { Slider } from '@/components/ui/slider'
-import { poseAt, ROVER_SCALE, sunlit, traverse, type BodyId, type RoverPose } from '@/lib/rover'
+import { GRAVITY, poseAt, ROVER_SCALE, sunlit, traverse, type BodyId, type RoverPose } from '@/lib/rover'
 import { DriveCard, DriveNote, RoverModel, TiltChart } from './RoverDrive'
 import { loadGrid, rowProfile, SAFE_DEG, slopeDeg, slopeStats, type Grid, type GridMeta, type SlopeStats } from '@/lib/terrain3d'
 
@@ -329,6 +329,49 @@ function StatCard({ side, d }: { side: TwinSide; d: Loaded | null }) {
   )
 }
 
+/**
+ * Phones stack the two 3D views one above the other, so the comparison they show sits far down the
+ * page. This puts the numbers that matter first, side by side, on small screens only.
+ */
+function PhoneSummary({ earth, target, a, b }: { earth: TwinSide; target: TwinSide; a: Loaded; b: Loaded }) {
+  const f = (v: number | undefined, unit: string, digits = 1) => (v === undefined || !Number.isFinite(v) ? '–' : `${v.toFixed(digits)}${unit}`)
+  const rows: [string, string, string][] = [
+    ['Median slope', f(a.stats.median, '°'), f(b.stats.median, '°')],
+    [`Ground under ${SAFE_DEG}°`, `${Math.round(a.stats.gentle * 100)}%`, `${Math.round(b.stats.gentle * 100)}%`],
+    ['Relief', f(a.stats.relief, ' m', 0), f(b.stats.relief, ' m', 0)],
+    ['Gravity', `${GRAVITY.earth} m/s²`, `${GRAVITY[target.body]} m/s²`],
+  ]
+  return (
+    <table className="w-full rounded-lg border border-border text-left text-[12px] md:hidden">
+      <caption className="px-3 pt-2.5 text-left text-[12px] font-medium text-slate-200">At a glance: the same 20 km on both worlds</caption>
+      <thead>
+        <tr className="font-mono text-[10.5px] uppercase tracking-wider text-slate-400">
+          <th scope="col" className="px-3 py-1.5 font-normal">
+            <span className="sr-only">Measure</span>
+          </th>
+          {[earth, target].map((side) => (
+            <th key={side.label} scope="col" className="px-3 py-1.5 text-right font-normal">
+              <span className="mr-1.5 inline-block size-2 rounded-full" style={{ background: BODY_COLOR[side.body] }} aria-hidden />
+              {side.body === 'earth' ? 'Earth' : side.body === 'mars' ? 'Mars' : 'Moon'}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map(([label, x, y]) => (
+          <tr key={label} className="border-t border-border">
+            <th scope="row" className="px-3 py-1.5 font-normal text-slate-300">
+              {label}
+            </th>
+            <td className="px-3 py-1.5 text-right font-mono tabular text-slate-100">{x}</td>
+            <td className="px-3 py-1.5 text-right font-mono tabular text-slate-100">{y}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
+
 /** Height along the drive line for both blocks, on one shared scale, with the steepest slope met on it. */
 function Profile({ a, b, row }: { a: { d: Loaded; side: TwinSide }; b: { d: Loaded; side: TwinSide }; row: number }) {
   const lines = [a, b].map(({ d, side }) => {
@@ -521,6 +564,7 @@ export default function TwinTerrain({ earth, target, earthLat, compact = false, 
 
   return (
     <div className="space-y-4">
+      {data && <PhoneSummary earth={earth} target={target} a={data.a} b={data.b} />}
       {driving ? (
         <div className="grid gap-3 md:grid-cols-2">
           <DriveScene
