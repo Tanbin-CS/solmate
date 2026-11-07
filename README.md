@@ -7,7 +7,7 @@ SolMate scores every land cell on Earth (about 1.9 million at 0.1°) against 11 
 
 **Live app: https://solmate-analog.web.app** (no login, works on phones)
 
-## Judge quick start (3 minutes)
+## Quick start
 
 1. **Pick a target and see Earth's best matches.** Open the [Explorer for Jezero Crater](https://solmate-analog.web.app/explorer?t=jezero_crater). The list ranks the best places on Earth; the *Novel leads* tab shows those more than 300 km from every known analog site.
 2. **Open one place and see why.** [Tibetan Plateau, 34.95°N 83.35°E](https://solmate-analog.web.app/explorer?t=jezero_crater&p=34.95,83.35) shows its score for each characteristic, the NASA value behind each one, and *Where the analogy breaks down* (gravity, air, radiation, and any gap Earth cannot close).
