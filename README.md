@@ -13,6 +13,7 @@ SolMate scores every land cell on Earth (about 1.9 million at 0.1°) against 11 
 2. **Open one place and see why.** [Tibetan Plateau, 34.95°N 83.35°E](https://solmate-analog.web.app/explorer?t=jezero_crater&p=34.95,83.35) shows its score for each characteristic, the NASA value behind each one, and *Where the analogy breaks down* (gravity, air, radiation, and any gap Earth cannot close).
 3. **Drive it in 3D.** [The same place in Twin Drive](https://solmate-analog.web.app/explorer?t=jezero_crater&p=34.95,83.35&view=3d) drives one NASA rover over 20 km of real NASA terrain on Earth and on Mars, side by side at the same scale.
 4. **Click anywhere else on the map** to score that place live in your browser, or draw a box.
+5. **For students (ages 10–16).** The [Learn](https://solmate-analog.web.app/learn) page has six short levels. Each level has story cards, a game such as *Analog Hunter* (it scores places with the same browser code as the Explorer) and a short quiz. Progress stays on the device.
 
 Then read the [Findings](https://solmate-analog.web.app/findings) (the written report), the [Method](https://solmate-analog.web.app/method) (how the score works and how well it holds up) and the [Data](https://solmate-analog.web.app/provenance) page (every dataset, its version and licence).
 
@@ -42,6 +43,28 @@ Every scored value comes from NASA data. Earth: ASTER GDEM v3, SRTMGL30, MODIS (
 4. **100 m terrain on request.** A small Cloud Run API computes terrain from NASA ASTER GDEM for any box; screening leaders already carry it.
 
 No AI model produces any number in SolMate; see [AI_USE.md](docs/AI_USE.md).
+
+## What's next
+
+SolMate's scores are tested against sites NASA already uses, but the new leads it finds have not been checked on the ground yet. To validate the method fully and at a finer scale, the team is looking for:
+
+- **Field checks with scientists.** Geologists or planetary scientists to visit the top new sites, or review existing field studies of them, and compare the rocks, soil, slopes and temperatures with the scores.
+- **Computing power.** Finer grids than 0.1°, and faster re-runs of screening and validation.
+- **Higher-resolution NASA data.** Finer terrain and more mission data for the targets with few known analogs, such as Arcadia Planitia.
+
+These are next steps. SolMate has no research partnership today.
+
+## Team
+
+Team Northern Lights: five computer science students from Dhaka, Bangladesh.
+
+| Name | Role |
+|---|---|
+| Md. Rifat Ul Islam | Project Lead & Systems Architect |
+| Umme Kulsum Esha | Research & Data Science Lead |
+| Md. Abdulla Ibna Sina | Machine Learning & Validation Lead |
+| Nur Hasin Ahammad | NASA Data Integration Lead |
+| Md. Tanbin Islam | Product, Frontend & UX Lead |
 
 ## Repository layout
 
