@@ -17,7 +17,7 @@ The idea and every decision about it are the team's. AI tools helped us research
 | 3. Build | **Claude Opus 5.5** in **Claude Code** (Anthropic) | To write the science pipeline, the web app, the API, the tests, the CI/CD and the docs within the time of a hackathon | Set the goals and the rules, gave every task, checked every change on a local development server, and approved each production release |
 | 4. Decisions while coding | **Jev** (TypeSafe System One) | To answer narrow, typed questions with a probability instead of free text, so a decision can be checked and repeated | Wrote the questions and the answer options, and decided what to do with each answer |
 | 5. Code review | **GPT 6 Astra** | To get a second, independent review of code written by a different model | Read each finding and decided whether to fix it; Claude Opus 5.5 then made the fixes |
-| 6. Videos | **Claude Opus 5.5**, with Playwright, HyperFrames and Remotion | To draft the scripts and shot lists, and to write the code that renders each frame of the videos | Write and record the voice-over in our own voices, choose the story and the shots, and approve each cut |
+| 6. Videos | **Claude Opus 5.5**, with Playwright, HyperFrames and Remotion; **Whisper** for caption timing | To draft the scripts and shot lists, and to write the code that renders each frame of the videos | Write and record the voice-over in our own voices, choose the story and the shots, edit in Adobe Premiere Pro and After Effects, and approve each cut |
 
 ### Skills and tools inside Claude Code
 
@@ -35,13 +35,18 @@ Claude Code can load *skills*: packs of written instructions and checklists that
 
 ### Video tools
 
-Our videos are built as code: Claude Opus 5.5 writes the scenes, and these tools render them. None of them is an AI model. The final videos are still being made; this section will be updated if the tools change.
+Our videos are built as code: Claude Opus 5.5 writes the scenes, and these tools render them. The team then edits them in Adobe Premiere Pro and After Effects. Whisper is the only AI model in this list: it finds when each word is spoken in our recorded voices, so the captions appear on time. The caption text is our own script. The final videos are still being made; this section will be updated if the tools change.
 
 | Tool | What it does |
 |---|---|
 | **Playwright** (Microsoft, Apache-2.0) | Drives a headless Chromium browser that renders each video frame from code, and opens pages for screen captures |
 | **HyperFrames** | Builds video scenes from HTML and renders them to MP4 |
 | **Remotion** | Builds video scenes as React components and renders them to MP4 |
+| **FFmpeg** | Cuts and joins clips, mixes the voice, music and sound effects, and encodes the final MP4 |
+| **Whisper** (OpenAI, MIT) | Speech recognition that times each caption to the recorded voice-over |
+| **CodeFlow** (aeflowtools) | Turns the HTML scenes into editable After Effects layers and keyframes |
+| **Adobe Premiere Pro** | Video editing: cuts, pacing, voice and music |
+| **Adobe After Effects** | Motion graphics and finishing touches on the animated scenes |
 
 Every image in the videos comes from NASA data, our own app, code-drawn graphics or openly licensed map data that we credit on screen. Anything conceptual is labelled on screen. We use no AI-generated voice, faces or stock footage.
 

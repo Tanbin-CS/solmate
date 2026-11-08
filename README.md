@@ -66,6 +66,10 @@ Team Northern Lights: five computer science students from Dhaka, Bangladesh.
 | Nur Hasin Ahammad | NASA Data Integration Lead |
 | Md. Tanbin Islam | Product, Frontend & UX Lead |
 
+## Videos
+
+The videos use the team's own voices and faces, NASA footage, and screen captures of the live app. Scenes are built as code with HyperFrames and rendered with FFmpeg. The team edits them in **Adobe Premiere Pro** and **Adobe After Effects**; the CodeFlow panel turns the HTML scenes into editable After Effects layers. Whisper times the captions to the recorded voice. Every tool, and where AI helped, is listed in [AI_USE.md](docs/AI_USE.md#video-tools).
+
 ## Repository layout
 
 | Path | Contents |
