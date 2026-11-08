@@ -10,7 +10,7 @@ SolMate scores every land cell on Earth (about 1.9 million at 0.1°) against 11 
 ## Judge quick start (3 minutes)
 
 1. **Pick a target and see Earth's best matches.** Open the [Explorer for Jezero Crater](https://solmate-analog.web.app/explorer?t=jezero_crater). The list ranks the best places on Earth; the *Novel leads* tab shows those more than 300 km from every known analog site.
-2. **Open one place and see why.** [Tibetan Plateau, 34.95°N 83.35°E](https://solmate-analog.web.app/explorer?t=jezero_crater&p=34.95,83.35) shows its score for each characteristic, the NASA value behind each one, and *Where the analogy breaks down* (gravity, air, radiation, and any gap Earth cannot close).
+2. **Open one place and see why.** [Tibetan Plateau, 34.95°N 83.35°E](https://solmate-analog.web.app/explorer?t=jezero_crater&p=34.95,83.35) shows its score for each characteristic, the NASA value behind each one, and *Where the analogy breaks down* (gravity, air, radiation, and any gap Earth cannot close). The print icon turns the place into a PDF report (scores, verdict and NASA images) through the browser's *Save as PDF*, with no server or login.
 3. **Drive it in 3D.** [The same place in Twin Drive](https://solmate-analog.web.app/explorer?t=jezero_crater&p=34.95,83.35&view=3d) drives one NASA rover over 20 km of real NASA terrain on Earth and on Mars, side by side at the same scale.
 4. **Click anywhere else on the map** to score that place live in your browser, or draw a box.
 5. **For students (ages 10–16).** The [Learn](https://solmate-analog.web.app/learn) page has six short levels. Each level has story cards, a game such as *Analog Hunter* (it scores places with the same browser code as the Explorer) and a short quiz. Progress stays on the device.
