@@ -57,6 +57,7 @@ Explorer's place panel with their source.
 | Candidate landing regions near the lunar south pole (named for Artemis III; NASA now plans the first crewed landing for Artemis IV) | NASA release, 28 Oct 2024 | The 9 Moon targets | NASA public information |
 | Region centroids | Wueller et al. 2026, doi 10.1029/2025JE009434 | Coordinates of the candidate landing sites | Citation |
 | Lunar mineralogy, albedo, CRaTER dose | Peer-reviewed literature (see `targets.yaml`) | Cited constants | Citation |
+| LRO LROC WAC global mosaic | NASA LRO, via NASA Moon Trek (JPL Solar System Treks) | Moon globe texture on the home page (`frontend/public/media/moon-1k.webp`; display only) | NASA open data |
 
 ## Mars (targets)
 
@@ -68,6 +69,7 @@ Explorer's place panel with their source.
 | MSL RAD | NASA MSL (Hassler et al. 2014) | Mars surface dose (breaks-down) | Citation |
 | SWIM | NASA / PSI Subsurface Water Ice Mapping | Arcadia Planitia target selection and ice | Citation |
 | TES, CRISM | NASA MGS / MRO (literature) | Albedo, mineral classes | Citation |
+| Viking MDIM 2.1 colour mosaic | USGS Astrogeology / NASA Ames, from NASA Viking Orbiter images | Mars globe texture on the home page (`frontend/public/media/mars-1k.webp`; display only) | NASA open data |
 
 ## Validation and novelty labels
 
