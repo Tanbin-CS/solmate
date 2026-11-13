@@ -23,13 +23,29 @@ SAI with equal weights, from the seven ~1 km dimensions. A novel lead is more th
 | Haworth | Puna de Atacama (27.45°S 68.75°W) | 89.0 | Puna de Atacama (27.45°S 68.75°W) | 89.0 | 395 km from Atacama (Yungay) |
 | Malapert Massif | Puna de Atacama (27.85°S 69.15°W) | 88.5 | Puna de Atacama (27.85°S 69.15°W) | 88.5 | 428 km from Atacama (Yungay) |
 | Mons Mouton Plateau | Puna de Atacama (27.95°S 68.85°W) | 81.8 | Puna de Atacama (27.95°S 68.85°W) | 81.8 | 446 km from Atacama (Yungay) |
-| Mons Mouton | 38.75°N 74.05°E | 85.3 | 38.75°N 74.05°E | 85.3 | 1550 km from Qaidam Basin (Dalangtan) |
+| Mons Mouton | Pamir (38.75°N 74.05°E) | 85.3 | Pamir (38.75°N 74.05°E) | 85.3 | 1550 km from Qaidam Basin (Dalangtan) |
 | Nobile Rim 1 | 39.15°N 95.55°E | 84.0 | Tibetan Plateau (35.85°N 81.95°E) | 83.9 | 926 km from Qaidam Basin (Dalangtan) |
-| Nobile Rim 2 | 38.75°N 73.65°E | 86.0 | 38.75°N 73.65°E | 86.0 | 1584 km from Qaidam Basin (Dalangtan) |
+| Nobile Rim 2 | Pamir (38.75°N 73.65°E) | 86.0 | Pamir (38.75°N 73.65°E) | 86.0 | 1584 km from Qaidam Basin (Dalangtan) |
 | de Gerlache Rim 2 | Tibetan Plateau (35.95°N 81.95°E) | 87.7 | Tibetan Plateau (35.95°N 81.95°E) | 87.7 | 922 km from Qaidam Basin (Dalangtan) |
 | Slater Plain | Tibetan Plateau (35.35°N 80.25°E) | 87.5 | Tibetan Plateau (35.35°N 80.25°E) | 87.5 | 1089 km from Qaidam Basin (Dalangtan) |
 | Jezero Crater | Tibetan Plateau (34.95°N 83.35°E) | 84.8 | Tibetan Plateau (34.95°N 83.35°E) | 84.8 | 853 km from Qaidam Basin (Dalangtan) |
 | Arcadia Planitia (site AP-1) | Sistan Basin (32.05°N 61.25°E) | 79.6 | Sistan Basin (32.05°N 61.25°E) | 79.6 | 2027 km from Lonar |
+
+## Water ice at the Moon regions
+
+The LRO Diviner Polar Resource Product, listed in the challenge's Resources tab and added on event day, models where water ice would stay stable near the surface. Inside each region's ~11 km window, the share where ice is stable within 1 m of the surface runs from 11.5% (de Gerlache Rim 2) to 72.6% (Slater Plain); almost nowhere is it stable on the surface itself. These values describe the Moon targets only and change no score; Earth's ice characteristic uses snow cover and frost (MODIS, NASA POWER). For planners, ice-drilling rehearsals belong at the Earth analogs of the regions with the most shallow ice.
+
+| Moon region | Ice stable within 1 m | Ice stable at the surface | Best place on Earth |
+|---|---|---|---|
+| Slater Plain | 72.6% | 0.4% | Tibetan Plateau (35.35°N 80.25°E) |
+| Haworth | 51.0% | 0.2% | Puna de Atacama (27.45°S 68.75°W) |
+| Mons Mouton Plateau | 42.5% | 0.0% | Puna de Atacama (27.95°S 68.85°W) |
+| Mons Mouton | 24.4% | 0.0% | Pamir (38.75°N 74.05°E) |
+| Nobile Rim 2 | 23.0% | 0.4% | Pamir (38.75°N 73.65°E) |
+| Peak near Cabeus B | 17.8% | 0.0% | Tibetan Plateau (35.95°N 81.75°E) |
+| Nobile Rim 1 | 16.9% | 0.0% | 39.15°N 95.55°E |
+| Malapert Massif | 14.9% | 0.0% | Puna de Atacama (27.85°S 69.15°W) |
+| de Gerlache Rim 2 | 11.5% | 0.0% | Tibetan Plateau (35.95°N 81.95°E) |
 
 ## Case study: Jezero Crater (Mars) and the Tibetan Plateau
 
@@ -87,7 +103,7 @@ The best novel lead for Jezero Crater is the cell at 34.95°N 83.35°E, 853 km f
 
 Suggested next step: an expert desk review of geology maps and high-resolution imagery, then a short field visit to check surface materials and access before any test is planned. This is an unreviewed lead, not a recommendation. Open it: https://solmate-analog.web.app/explorer?p=34.95%2C83.35
 
-## Case study: Mons Mouton (Moon) and 38.75°N 74.05°E
+## Case study: Mons Mouton (Moon) and the Pamir
 
 The best novel lead for Mons Mouton is the cell at 38.75°N 74.05°E, 1550 km from the nearest known analog site, Qaidam Basin (Dalangtan). Its SAI is 85.3.
 
@@ -148,7 +164,7 @@ Suppose a team must choose where on Earth to rehearse for Mons Mouton, one of NA
 | Rover and EVA traverse rehearsal | Puna de Atacama (27.85°S 69.15°W) | 100 m terrain 0.72 of 1 | 81.8 | 13° | 428 km (Atacama (Yungay)) |
 | Thermal and instrument testing | Tibetan Plateau (35.75°N 82.15°E) | Thermal 0.86 of 1 | 84.3 | 16° | 913 km (Qaidam Basin (Dalangtan)) |
 | Ice prospecting and drilling (ISRU) | Tibetan Plateau (35.75°N 82.15°E) | Ice & cold-trap 0.95 of 1 | 84.3 | 16° | 913 km (Qaidam Basin (Dalangtan)) |
-| All-round crew training | 38.75°N 74.05°E | SAI 85.3 of 100 | 85.3 | 17° | 1550 km (Qaidam Basin (Dalangtan)) |
+| All-round crew training | Pamir (38.75°N 74.05°E) | SAI 85.3 of 100 | 85.3 | 17° | 1550 km (Qaidam Basin (Dalangtan)) |
 
 3 different places cover the four purposes. The median slope at 100 m in Mons Mouton itself is 11° (steepest tenth 22°), so a traverse rehearsal should prefer a pick with slopes close to that. The 100 m terrain score is shown beside the SAI, not inside it (docs/VALIDATION.md, addendum 3).
 
@@ -253,4 +269,4 @@ AUC is the chance that a site NASA has used as an analog outscores a control (fa
 
 ## Data and reproducibility
 
-All scored inputs are NASA data: MODIS (MYD11C3, MOD10CM, MCD43C3, MCD12C1), ASTER GED and GDEM v3, MERRA-2, NASA POWER and SRTMGL30 on Earth; LRO LOLA and Diviner on the Moon; MOLA, CTX and Mars 2020 results on Mars. Sources, licences and checksums: https://solmate-analog.web.app/provenance. Code: https://github.com/Tanbin-CS/solmate (results version 09ddf6ffce73).
+All scored inputs are NASA data: MODIS (MYD11C3, MOD10CM, MCD43C3, MCD12C1), ASTER GED and GDEM v3, MERRA-2, NASA POWER and SRTMGL30 on Earth; LRO LOLA and Diviner on the Moon (with the Diviner Polar Resource Product as context); MOLA, CTX and Mars 2020 results on Mars. Sources, licences and checksums: https://solmate-analog.web.app/provenance. Code: https://github.com/Tanbin-CS/solmate (results version 09ddf6ffce73).
