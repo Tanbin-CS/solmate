@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://solmate-analog.web.app/sitemap.xml
