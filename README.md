@@ -6,6 +6,7 @@ Challenge: *Identify Earth Locations that Analog the Permanent Moon Base Locatio
 SolMate scores every land cell on Earth (about 1.9 million at 0.1°) against 11 NASA targets: the nine candidate landing regions NASA named near the lunar south pole, Jezero Crater and Arcadia Planitia. Each place gets a **SolMate Analog Index (SAI, 0–100)** built from seven physical characteristics measured with NASA data, a plain statement of where the analogy breaks down, and what the place could be used for.
 
 **Live app: https://solmate-analog.web.app** (no login, works on phones)
+**Video (4 min): https://youtu.be/ebkhCuMG97A**
 
 ## Judge quick start (3 minutes)
 
@@ -67,6 +68,8 @@ Team Northern Lights: five computer science students from Dhaka, Bangladesh.
 | Md. Tanbin Islam | Product, Frontend & UX Lead |
 
 ## Videos
+
+- [SolMate, 4-minute film](https://youtu.be/ebkhCuMG97A) (YouTube, English captions on screen)
 
 The videos use the team's own voices and faces, NASA footage, and screen captures of the live app. Most of the voice-over is our own recorded voices; some lines are AI voice clones made with Cartesia and ElevenLabs. Scenes are built as code with HyperFrames and rendered with FFmpeg. The team edits them in **Adobe Premiere Pro** and **Adobe After Effects**; the CodeFlow panel turns the HTML scenes into editable After Effects layers. Whisper times the captions to the recorded voice. Every tool, and where AI helped, is listed in [AI_USE.md](docs/AI_USE.md#video-tools).
 
