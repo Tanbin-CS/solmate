@@ -43,7 +43,11 @@ export function loadCommon(): Promise<CommonData> {
   return common
 }
 
+/** Target ids are short snake_case names; anything else never reaches a fetch URL. */
+const TARGET_ID = /^[a-z][a-z0-9_]{1,40}$/
+
 export function loadTarget(id: string): Promise<TargetData> {
+  if (!TARGET_ID.test(id)) return Promise.reject(new Error(`Unknown target ${JSON.stringify(id)}`))
   let p = perTarget.get(id)
   if (!p) {
     p = Promise.all([fetchJson(`data/indicators.${id}.v1.json`), fetchJson(`data/validation.${id}.v1.json`)])
