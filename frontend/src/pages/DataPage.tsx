@@ -302,7 +302,9 @@ function TargetValues({ target, model }: { target: Target; model: Model }) {
                   {INDICATOR_LABELS[k] ?? k.replace(/_/g, ' ')}
                   <span className="block font-mono text-xs text-slate-400">{kind}</span>
                 </td>
-                <td className="whitespace-nowrap px-4 py-2.5 text-right font-mono tabular text-slate-200">{value}</td>
+                <td className={cn('px-4 py-2.5 text-right font-mono tabular text-slate-200', k === 'mineral_class' ? 'min-w-56 max-w-sm' : 'whitespace-nowrap')}>
+                  {value}
+                </td>
                 <td className="px-4 py-2.5 text-xs text-slate-300">
                   {e.method ?? '–'}
                   {e.uncertainty && <span className="mt-1 block max-w-xs text-slate-400">{e.uncertainty}</span>}
