@@ -6,6 +6,19 @@ Every input SolMate uses: what it is, who publishes it, how we use it and its te
 - File-level provenance (URL, size, sha256) is in `data/manifest.v2.json`.
 - Layer metadata is in `data/stack/layers.v2.json`.
 
+## Space Apps Resources tab (published 13 Nov 2026)
+
+The challenge's Resources tab lists these NASA resources. SolMate uses each of them:
+- **NASA Earthdata Search**: every Earth download goes through its catalogue (CMR) with an Earthdata Login token (`analysis/download_nasa.py`).
+- **NASA Worldview**: the Explorer links each place to Worldview; the maps use GIBS, the imagery service behind it.
+- **NASA Planetary Data System**: MOLA Mars terrain (PDS Geosciences) and the Diviner Polar Resource Product.
+- **NASA LRO**: LOLA terrain and illumination, Diviner temperatures, and (added on event day) Diviner ice stability.
+- **NASA LRO Diviner**: seasonal polar temperatures (scored, via the thermal dimension) and the Polar Resource Product (context).
+
+Partner-agency resources in the tab: the Copernicus DEM (ESA Copernicus Data Space) is already an optional terrain
+cross-check. CSA RADARSAT (Canada-focused SAR scenes), the ESA Open Science Catalog and JAXA G-Portal were reviewed and
+not added: they do not provide a global gridded layer that a SolMate dimension needs.
+
 ## Earth (scored)
 
 | Dataset | Agency / product | Version, period | Used for (dimension) | Terms |
