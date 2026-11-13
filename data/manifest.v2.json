@@ -338,6 +338,14 @@
    "sha256": "d12fd9becb91bc7d65a49729049381718fecff55784473c3d6664a60b4d96607"
   },
   {
+   "product": "DIVINER",
+   "file": "cache/raw/DIVINER/dlre_prp_south.tab",
+   "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_prp/dlre_prp_south.tab",
+   "time_start": "",
+   "bytes": 604800210,
+   "sha256": "393deaa5d8925d45bb2ed608f937a824f5eae029c2558aad1d2da8206b83a62d"
+  },
+  {
    "product": "GLDAS_NOAH025_M",
    "file": "cache/raw/GLDAS_NOAH025_M/GLDAS_NOAH025_M.A202301.021.nc4",
    "url": "https://data.gesdisc.earthdata.nasa.gov/data/GLDAS/GLDAS_NOAH025_M.2.1/2023/GLDAS_NOAH025_M.A202301.021.nc4",

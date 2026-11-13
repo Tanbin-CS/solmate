@@ -1,0 +1,80 @@
+{
+ "version": 1,
+ "generated_at": "2026-11-13T04:34:38+00:00",
+ "window": "12 x 926.6 m square around the region centroid (same as thermal.v2.json)",
+ "url": "https://pds-geosciences.wustl.edu/missions/lro/diviner.htm",
+ "targets": {
+  "peak_near_cabeus_b": {
+   "ice_stable_surface_pct": 0.0,
+   "ice_stable_1m_pct": 17.8,
+   "temp_avg_median_k": 166.7,
+   "temp_max_median_k": 287.8,
+   "n_triangles": 968,
+   "source": "LRO Diviner Polar Resource Product (PDS LRO-L-DLRE-5-PRP-V2.0; Paige et al. 2010, doi 10.1126/science.1187726)"
+  },
+  "haworth": {
+   "ice_stable_surface_pct": 0.2,
+   "ice_stable_1m_pct": 51.0,
+   "temp_avg_median_k": 115.6,
+   "temp_max_median_k": 234.8,
+   "n_triangles": 968,
+   "source": "LRO Diviner Polar Resource Product (PDS LRO-L-DLRE-5-PRP-V2.0; Paige et al. 2010, doi 10.1126/science.1187726)"
+  },
+  "malapert_massif": {
+   "ice_stable_surface_pct": 0.0,
+   "ice_stable_1m_pct": 14.9,
+   "temp_avg_median_k": 134.4,
+   "temp_max_median_k": 270.5,
+   "n_triangles": 946,
+   "source": "LRO Diviner Polar Resource Product (PDS LRO-L-DLRE-5-PRP-V2.0; Paige et al. 2010, doi 10.1126/science.1187726)"
+  },
+  "mons_mouton_plateau": {
+   "ice_stable_surface_pct": 0.0,
+   "ice_stable_1m_pct": 42.5,
+   "temp_avg_median_k": 121.2,
+   "temp_max_median_k": 229.3,
+   "n_triangles": 968,
+   "source": "LRO Diviner Polar Resource Product (PDS LRO-L-DLRE-5-PRP-V2.0; Paige et al. 2010, doi 10.1126/science.1187726)"
+  },
+  "mons_mouton": {
+   "ice_stable_surface_pct": 0.0,
+   "ice_stable_1m_pct": 24.4,
+   "temp_avg_median_k": 131.7,
+   "temp_max_median_k": 252.7,
+   "n_triangles": 968,
+   "source": "LRO Diviner Polar Resource Product (PDS LRO-L-DLRE-5-PRP-V2.0; Paige et al. 2010, doi 10.1126/science.1187726)"
+  },
+  "nobile_rim_1": {
+   "ice_stable_surface_pct": 0.0,
+   "ice_stable_1m_pct": 16.9,
+   "temp_avg_median_k": 136.5,
+   "temp_max_median_k": 249.3,
+   "n_triangles": 968,
+   "source": "LRO Diviner Polar Resource Product (PDS LRO-L-DLRE-5-PRP-V2.0; Paige et al. 2010, doi 10.1126/science.1187726)"
+  },
+  "nobile_rim_2": {
+   "ice_stable_surface_pct": 0.4,
+   "ice_stable_1m_pct": 23.0,
+   "temp_avg_median_k": 134.5,
+   "temp_max_median_k": 251.2,
+   "n_triangles": 968,
+   "source": "LRO Diviner Polar Resource Product (PDS LRO-L-DLRE-5-PRP-V2.0; Paige et al. 2010, doi 10.1126/science.1187726)"
+  },
+  "de_gerlache_rim_2": {
+   "ice_stable_surface_pct": 0.0,
+   "ice_stable_1m_pct": 11.5,
+   "temp_avg_median_k": 143.6,
+   "temp_max_median_k": 265.7,
+   "n_triangles": 968,
+   "source": "LRO Diviner Polar Resource Product (PDS LRO-L-DLRE-5-PRP-V2.0; Paige et al. 2010, doi 10.1126/science.1187726)"
+  },
+  "slater_plain": {
+   "ice_stable_surface_pct": 0.4,
+   "ice_stable_1m_pct": 72.6,
+   "temp_avg_median_k": 93.2,
+   "temp_max_median_k": 215.5,
+   "n_triangles": 968,
+   "source": "LRO Diviner Polar Resource Product (PDS LRO-L-DLRE-5-PRP-V2.0; Paige et al. 2010, doi 10.1126/science.1187726)"
+  }
+ }
+}

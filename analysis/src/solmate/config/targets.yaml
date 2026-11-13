@@ -14,9 +14,10 @@ notes:
 - 'Lunar polar temperatures vary enormously over metres: sunlit ridges reach ~200-300 K while PSRs a few km away stay at ~25-110
   K. All lunar thermal indicators describe the ILLUMINATED landing area. No Earth place matches them, so lunar thermal indicators
   should use ''toward'' mode.'
-- 'Lunar thermal values are literature-bounded estimates (method: proxy) shared across the 9 regions, not per-site Diviner
-  samples. Next step: sample the Williams et al. 2019 Diviner polar max/min/avg products (diviner.ucla.edu/data, PDS Geosciences)
-  at each centroid and switch to method: computed. That needs a data download, which was not done here.'
+- 'Lunar thermal values below are the literature-bounded proxies (shared across the 9 regions) that were written first. At
+  load time solmate.targets replaces them with per-region values sampled from the Williams et al. 2019 Diviner seasonal polar
+  maps (pipeline target_thermal, data/targets/thermal.v2.json, method: computed). Diviner ice-stability shares (pipeline
+  target_ice, data/targets/ice.v1.json) are added as context values.'
 - Artemis centroids are spherical means of the Wueller et al. 2026 (JGR Planets, LPI) candidate landing sites inside each
   NASA region; NASA's 28 Oct 2024 release gives no coordinates. Every site is within ~8-32 km of its centroid. The centroids
   are approximate and are not NASA polygon centroids.
