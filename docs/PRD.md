@@ -4,6 +4,13 @@ Version 1.0 · 31 Oct 2026 · Owner: Team Northern Lights
 Inputs: [problem](discovery/PROBLEM.md), [users](discovery/USERS.md),
 [competitors](discovery/COMPETITORS.md), [metrics](discovery/METRICS.md).
 
+> **Status, 13 Nov 2026.** This is the plan as written on 31 Oct. Some of it shipped differently or not at all:
+> the mission dossier became a print-to-PDF place report; community nominations with a review queue, the PMTiles
+> offline basemap and the offline dry run were not built (the event is judged online). Twin Drive, the Learn page and
+> process tags were added. [ARCHITECTURE.md, section 8](ARCHITECTURE.md#8-changes-from-the-31-oct-design) lists every
+> change. The nine Moon regions are the ones NASA named for Artemis III; NASA now plans the first crewed landing for
+> Artemis IV, and the regions are unchanged.
+
 ## 1. Summary
 SolMate finds and characterizes Earth places that are analogs for NASA's
 Artemis III candidate base regions on the Moon and for Mars landing and
