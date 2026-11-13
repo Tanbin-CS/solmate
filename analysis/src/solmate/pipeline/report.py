@@ -26,7 +26,8 @@ SITE = "https://solmate-analog.web.app"
 
 # Same boxes as frontend/src/lib/places.ts: broad names only where the cells were checked.
 REGIONS = [("Tibetan Plateau", 30, 38.1, 75, 95), ("Tarim Basin", 38.1, 42, 75, 95),
-           ("Puna de Atacama", -30, -21, -71, -65), ("Sistan Basin", 29, 35, 57, 64)]
+           ("Puna de Atacama", -30, -21, -71, -65), ("Sistan Basin", 29, 35, 57, 64),
+           ("Pamir", 37, 39.3, 72, 75)]
 DIM_NAMES = {"T": "Terrain", "C": "Climate & aridity", "Th": "Thermal", "S": "Surface & barrenness",
              "M": "Mineralogy", "I": "Ice & cold-trap", "D": "Dust & wind", "O": "Mission operations"}
 CASES = [("jezero_crater", "Mars"), ("mons_mouton", "Moon")]
@@ -157,6 +158,30 @@ def load() -> dict:
     }
 
 
+def ice_blocks(targets: list[dict], tops: dict) -> list[dict]:
+    """Water-ice stability at the Moon regions (Diviner Polar Resource Product, added on event day as context)."""
+    moon = [t for t in targets if t["indicators"].get("ice_stable_1m_pct", {}).get("value") is not None]
+    if not moon:
+        return []
+    moon.sort(key=lambda t: -t["indicators"]["ice_stable_1m_pct"]["value"])
+    pct = lambda t, k: t["indicators"][k]["value"]  # noqa: E731
+    hi, lo = moon[0], moon[-1]
+    return [
+        {"type": "h2", "text": "Water ice at the Moon regions"},
+        {"type": "p", "text": (
+            "The LRO Diviner Polar Resource Product, listed in the challenge's Resources tab and added on event day, models "
+            "where water ice would stay stable near the surface. Inside each region's ~11 km window, the share where ice "
+            f"is stable within 1 m of the surface runs from {pct(lo, 'ice_stable_1m_pct'):.1f}% ({lo['name']}) to "
+            f"{pct(hi, 'ice_stable_1m_pct'):.1f}% ({hi['name']}); almost nowhere is it stable on the surface itself. "
+            "These values describe the Moon targets only and change no score; Earth's ice characteristic uses snow cover "
+            "and frost (MODIS, NASA POWER). For planners, ice-drilling rehearsals belong at the Earth analogs of the "
+            "regions with the most shallow ice.")},
+        {"type": "table", "head": ["Moon region", "Ice stable within 1 m", "Ice stable at the surface", "Best place on Earth"],
+         "rows": [[t["name"], f"{pct(t, 'ice_stable_1m_pct'):.1f}%", f"{pct(t, 'ice_stable_surface_pct'):.1f}%",
+                   place(tops[t["id"]][0]["lat"], tops[t["id"]][0]["lon"])] for t in moon]},
+    ]
+
+
 def build(d: dict) -> list[dict]:
     targets, screens, v, model = d["targets"], d["screens"], d["validation"], d["model"]
     reg = v.get("addendum_1", {})
@@ -220,6 +245,7 @@ def build(d: dict) -> list[dict]:
                    f"{leads[t['id']][0]['nearest_known_km']:.0f} km from {site_name(leads[t['id']][0]['nearest_known'])}"]
                   for t in targets]},
     ]
+    b += ice_blocks(targets, tops)
 
     for tid, world, c in case_leads(d):
         t = next(x for x in targets if x["id"] == tid)
@@ -348,7 +374,8 @@ def build(d: dict) -> list[dict]:
         {"type": "h2", "text": "Data and reproducibility"},
         {"type": "p", "text": (
             "All scored inputs are NASA data: MODIS (MYD11C3, MOD10CM, MCD43C3, MCD12C1), ASTER GED and GDEM v3, "
-            "MERRA-2, NASA POWER and SRTMGL30 on Earth; LRO LOLA and Diviner on the Moon; MOLA, CTX and Mars 2020 results "
+            "MERRA-2, NASA POWER and SRTMGL30 on Earth; LRO LOLA and Diviner on the Moon (with the Diviner Polar Resource "
+            "Product as context); MOLA, CTX and Mars 2020 results "
             f"on Mars. Sources, licences and checksums: {SITE}/provenance. Code: https://github.com/Tanbin-CS/solmate "
             f"(results version {model['model_version']}).")},
     ]

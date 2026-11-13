@@ -12,6 +12,7 @@ export const REGIONS: { name: string; south: number; north: number; west: number
   { name: 'Tarim Basin', south: 38.1, north: 42, west: 75, east: 95 },
   { name: 'Puna de Atacama', south: -30, north: -21, west: -71, east: -65 },
   { name: 'Sistan Basin', south: 29, north: 35, west: 57, east: 64 },
+  { name: 'Pamir', south: 37, north: 39.3, west: 72, east: 75 },
 ]
 
 export function regionOf(lat: number, lon: number): string | null {
