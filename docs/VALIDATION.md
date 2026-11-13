@@ -218,6 +218,14 @@ Rehearsal (3 Nov 2026): NASA GLDAS topsoil moisture added as a context layer; th
 procedure from download to files ready to deploy took about 7 minutes (download 3 min 44 s,
 release 3 min 11 s). No score changed.
 
+Event day (13 Nov 2026): the Resources tab listed the LRO Diviner Polar Resource Product
+(PDS `LRO-L-DLRE-5-PRP-V2.0`). Its ice-stability depth has no Earth counterpart, so it
+cannot be a scored layer under rule 2. It was added as context for the nine Moon targets
+only: the share of each region's ~11 km window where water ice is stable at the surface
+and within 1 m (`pipeline/target_ice.py`, `data/targets/ice.v1.json`). Within 1 m it runs
+from 11.5% (de Gerlache Rim 2) to 72.6% (Slater Plain). No score, ranking or validation
+result changed; the results version stayed `09ddf6ffce73`.
+
 ## Addendum 3: the 100 m terrain score (found and changed 3–4 Nov 2026, not pre-registered)
 
 This addendum records a problem found after the results were published, the test that
