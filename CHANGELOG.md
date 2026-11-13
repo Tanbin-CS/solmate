@@ -85,8 +85,8 @@ SolMate v2 for NASA Space Apps 2026, built from 2026-10-30 to 2026-11-13 on top 
 - **explorer**: print or save any place as a PDF report (`899fa94`)
 - **twin-drive**: put an at-a-glance comparison first on phones (`107c9ca`)
 - **science**: add Diviner ice stability to the Moon targets (`bab10ba`)
-- **web**: update the site description and add share tags (`21c60e4`)
-- **report**: add the Moon ice table and name the Pamir leads (`f2c7bb1`)
+- **web**: update the site description and add share tags (`413cdb4`)
+- **report**: add the Moon ice table and name the Pamir leads (`8d9c61c`)
 
 ### Fixes (46)
 
@@ -135,7 +135,7 @@ SolMate v2 for NASA Space Apps 2026, built from 2026-10-30 to 2026-11-13 on top 
 - **a11y**: clear every serious axe finding on all pages (`d5772d3`)
 - **provenance**: read only dataset tables from DATA_SOURCES (`878b0f6`)
 - **web**: stop the mineral class from widening the target table (`50ac494`)
-- **web**: check the target id before the prototype loader fetches (`764c5cc`)
+- **web**: check the target id before the prototype loader fetches (`7776399`)
 
 ### Performance (3)
 
@@ -155,7 +155,7 @@ SolMate v2 for NASA Space Apps 2026, built from 2026-10-30 to 2026-11-13 on top 
 - **web**: run the real-tile parity tests in CI from a tile fixture (`842e648`)
 - **web**: add Playwright smoke and accessibility checks to CI (`2e60edf`)
 
-### Documentation (32)
+### Documentation (33)
 
 - **license**: license the code under Apache-2.0 and add data NOTICE (`36d32f8`)
 - add contributor, security and coding-agent guides (`934673a`)
@@ -185,10 +185,11 @@ SolMate v2 for NASA Space Apps 2026, built from 2026-10-30 to 2026-11-13 on top 
 - name the video editing tools, Premiere Pro and After Effects (`76c35f6`)
 - **data**: list the Moon and Mars globe textures as data sources (`d5bb309`)
 - **data**: map the Space Apps Resources tab to SolMate's sources (`9692eaa`)
-- disclose the AI voice clones and drop Remotion from AI use (`648da9f`)
-- **web**: list target_ice in the Data page reproduce steps (`af73c4a`)
-- **plan**: mark what shipped in the PRD and MoSCOW (`45dd0e7`)
-- **validation**: report the event-day dataset under addendum 2 (`86635d5`)
+- disclose the AI voice clones and drop Remotion from AI use (`b1501fc`)
+- **web**: list target_ice in the Data page reproduce steps (`b72fa02`)
+- **plan**: mark what shipped in the PRD and MoSCOW (`4f80ca0`)
+- **validation**: report the event-day dataset under addendum 2 (`2476254`)
+- add a changelog for v1.0.0 (`ae68735`)
 
 ### Build (10)
 
