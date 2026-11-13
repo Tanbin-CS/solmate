@@ -244,6 +244,7 @@ uv run python -m solmate.pipeline.build_stack
 uv run python -m solmate.pipeline.earth_stats
 uv run python -m solmate.pipeline.target_terrain
 uv run python -m solmate.pipeline.target_thermal
+uv run python -m solmate.pipeline.target_ice
 uv run python -m solmate.pipeline.screen_v2
 uv run python -m solmate.pipeline.refine --top 60
 uv run python -m solmate.pipeline.rescore
