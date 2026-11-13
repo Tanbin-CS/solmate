@@ -45,6 +45,8 @@ export const INDICATOR_LABELS: Readonly<Record<string, string>> = {
   slope_median_deg: 'Typical slope',
   slope_p90_proxy_deg: 'Steepest slopes',
   elev_std_m: 'Local relief',
+  ice_stable_surface_pct: 'Ice stable at the surface',
+  ice_stable_1m_pct: 'Ice stable within 1 m',
 }
 
 const VEGETATION_LAYERS = ['forest_pct', 'shrub_pct', 'grass_savanna_pct', 'cropland_pct', 'wetland_pct']
