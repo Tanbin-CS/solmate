@@ -33,7 +33,7 @@ AUC is the chance that a site NASA has used as an analog outscores a control sit
 
 ## NASA data
 
-Every scored value comes from NASA data. Earth: ASTER GDEM v3, SRTMGL30, MODIS (land surface temperature, albedo, land cover, snow), ASTER GED, MERRA-2 aerosols and NASA POWER, with NASADEM as a terrain cross-check; maps and thumbnails use NASA Landsat WELD and GIBS imagery. Moon: LRO LOLA, LRO Diviner and PGDA illumination. Mars: Mars 2020 CTX DTM, MOLA, MEDA, MSL RAD, SWIM, TES and CRISM. Non-NASA data (Copernicus DEM, AWS terrain tiles, Natural Earth borders) are optional, labelled extras that no score depends on. Full list with versions, DOIs and licences: [DATA_SOURCES.md](docs/DATA_SOURCES.md).
+Every scored value comes from NASA data. Earth: ASTER GDEM v3, SRTMGL30, MODIS (land surface temperature, albedo, land cover, snow), ASTER GED, MERRA-2 aerosols and NASA POWER, with NASADEM as a terrain cross-check; maps and thumbnails use NASA Landsat WELD and GIBS imagery. Moon: LRO LOLA, LRO Diviner (temperatures, and ice stability from the Diviner Polar Resource Product) and PGDA illumination. Mars: Mars 2020 CTX DTM, MOLA, MEDA, MSL RAD, SWIM, TES and CRISM. Non-NASA data (Copernicus DEM, AWS terrain tiles, Natural Earth borders) are optional, labelled extras that no score depends on. Every NASA resource in the challenge's Resources tab (Earthdata Search, Worldview, PDS, LRO and Diviner) is used; the Diviner ice-stability values were added on event day as context, with no score changed. Full list with versions, DOIs and licences: [DATA_SOURCES.md](docs/DATA_SOURCES.md).
 
 ## How it works
 
@@ -68,7 +68,7 @@ Team Northern Lights: five computer science students from Dhaka, Bangladesh.
 
 ## Videos
 
-The videos use the team's own voices and faces, NASA footage, and screen captures of the live app. Scenes are built as code with HyperFrames and rendered with FFmpeg. The team edits them in **Adobe Premiere Pro** and **Adobe After Effects**; the CodeFlow panel turns the HTML scenes into editable After Effects layers. Whisper times the captions to the recorded voice. Every tool, and where AI helped, is listed in [AI_USE.md](docs/AI_USE.md#video-tools).
+The videos use the team's own voices and faces, NASA footage, and screen captures of the live app. Most of the voice-over is our own recorded voices; some lines are AI voice clones made with Cartesia and ElevenLabs. Scenes are built as code with HyperFrames and rendered with FFmpeg. The team edits them in **Adobe Premiere Pro** and **Adobe After Effects**; the CodeFlow panel turns the HTML scenes into editable After Effects layers. Whisper times the captions to the recorded voice. Every tool, and where AI helped, is listed in [AI_USE.md](docs/AI_USE.md#video-tools).
 
 ## Repository layout
 
