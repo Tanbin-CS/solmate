@@ -4,7 +4,7 @@ Space Apps asks every team to name each AI tool it used, explain the prompts and
 
 ## The rule we kept
 
-**No AI model produces a number in SolMate.** Every score, indicator, ranking and validation result comes from deterministic code in `analysis/src/solmate/compute/` (Python) and its TypeScript mirror `frontend/src/science/`, applied to NASA data. Golden tests keep the two in step. The only fitted model is the "Learned" weight preset: a non-negative logistic regression from scikit-learn, trained and checked by cross-validation in `pipeline/validate_v2.py`. That is ordinary statistics, not generative AI, and there is no deep learning anywhere in the project ([ADR 0006](adr/0006-deterministic-compute-learned-weights-no-dl.md)).
+**No AI model produces a number in SolMate.** Every score, indicator, ranking and validation result comes from deterministic code in `analysis/src/solmate/compute/` (Python) and its TypeScript mirror `frontend/src/science/`, applied to NASA data. Golden tests keep the two in step. The only fitted model is the "Learned" weight preset: a non-negative, L2-regularised logistic regression fitted with the SciPy L-BFGS-B optimiser (`compute/validation.py`), trained and checked by cross-validation in `pipeline/validate_v2.py`. That is ordinary statistics, not generative AI, and there is no deep learning anywhere in the project ([ADR 0006](adr/0006-deterministic-compute-learned-weights-no-dl.md)).
 
 ## How we worked
 
